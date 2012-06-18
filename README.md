@@ -36,7 +36,7 @@ Installation of SpiffySecurity uses composer. For composer documentation, please
 ## Providers
 
 To configure your roles SpiffySecurity uses what's called "providers." Providers offer a generic way
-to access your roles. Shipped providers include:
+to assign your roles. Shipped providers include:
 
   - Doctrine DBAL: Uses Doctrine DBAL. Can be used out of the box with DoctrineORMModule.
   - PDO: Uses PHP PDO connection.
@@ -54,25 +54,17 @@ firewall types are provided:
 
 By default, only controller access is enabled. See the module.config.php file for sample setups.
 
-## Setting the active role
+## Setting the identity provider
 
-The active role can be set by using the `role` key in configuration. The role is determined in the following manner:
-
-  - If role is a string, the instance is grabbed from the Service Locator. If that alias does not exist then a new
-    role is created using that string name. This is good for testing when you want to hard code yourself to a role.
-  - If an object is retrieved from the service manager and it is not an instance of RoleInterface then
-    a "getIdentity" method is checked. If that method exists, then the role is pulled using that method.
-  - Finally, if no role is found using the above methods then it is assume that no authentication is available and
-    the anonymous role is used as specified by the `anonymous_role` option.
+The identity provider is a service alias setup to provide a working identity to SpiffySecurity. The default alias is
+my_identity_provider but can be changed via the `identity_provider` key in configuration. The object returned by
+the identity provider must implement `SpiffySecurity\Identity\IdentityInterface`.
 
 ## Sample configuration
 
 ```php
 return array(
     'security' => array(
-        'template' => 'error/403',
-        'role' => 'zfcuser_auth_service',
-
         'firewall' => array(
             'controller' => array(
                 array('controller' => 'profiles', 'action' => 'index', 'roles' => 'member')
@@ -101,7 +93,31 @@ return array(
 
 ## Protecting your services
 
+Protecting your services is as easy as injecting the SpiffySecurity service into your services. You can then use
+the provided `isGranted($role)` method to check if access is allowed.
 
+For example,
+
+```php
+class NewService
+{
+    protected $security;
+
+    public function __construct(\SpiffySecurity\Service\Security $security)
+    {
+        $this->security = $security;
+    }
+
+    public function createPost()
+    {
+        if (!$this->security->isGranted('ROLE_NEWS_MANAGER')) {
+            // code
+        }
+
+        // code
+    }
+}
+```
 
 ## Protecting your objects
 
