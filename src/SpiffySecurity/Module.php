@@ -28,7 +28,20 @@ class Module
             'aliases' => array(
                 'service.security' => 'SpiffySecurity\Service\Security',
             ),
+            'invokables' => array(
+                'isGranted' => 'SpiffySecurity\Controller\Plugin\IsGranted',
+            ),
             'factories' => array(
+                'SpiffySecurity\Controller\Plugin\IsGranted' => function($sm) {
+                    return new \SpiffySecurity\Controller\Plugin\IsGranted(
+                        $sm->get('SpiffySecurity\Service\Security')
+                    );
+                },
+                'SpiffySecurity\View\Helper\IsGranted' => function($sm) {
+                    return new \SpiffySecurity\View\Helper\IsGranted(
+                        $sm->get('SpiffySecurity\Service\Security')
+                    );
+                },
                 'SpiffySecurity\View\UnauthorizedStrategy' => 'SpiffySecurity\Service\UnauthorizedStrategyFactory',
                 'SpiffySecurity\Service\Security'          => 'SpiffySecurity\Service\SecurityFactory'
             )

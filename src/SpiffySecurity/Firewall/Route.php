@@ -67,14 +67,7 @@ class Route extends AbstractFirewall
             }
         }
 
-        foreach($roles as $role) {
-            foreach($identity->getRoles() as $urole) {
-                if ($role == $urole || $this->securityService->getAcl()->inheritsRole($urole, $role)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->securityService->isGranted($roles);
     }
 
     /**

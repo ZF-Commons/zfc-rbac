@@ -47,14 +47,29 @@ class Security
     }
 
     /**
-     * Checks if access is granted to the user.
+     * Checks if access is granted to any of the roles specified.
      *
-     * @param string $role
+     * @param string|array $role
      * @return bool
      */
-    public function isGranted($role)
+    public function isGranted($roles)
     {
-        return in_array($role, $this->identity()->getRoles());
+        if (!is_array($roles)) {
+            $roles = array($roles);
+        }
+
+        foreach($roles as $role) {
+            if (!$this->getAcl()->hasRole($role)) {
+                continue;
+            }
+
+            foreach($this->getIdentity()->getRoles() as $urole) {
+                if ($role == $urole || $this->getAcl()->inheritsRole($urole, $role)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
