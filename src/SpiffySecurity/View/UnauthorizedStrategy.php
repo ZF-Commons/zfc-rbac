@@ -98,15 +98,15 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                     'error'      => $e->getParam('error'),
                     'controller' => $e->getParam('controller'),
                     'action'     => $e->getParam('action'),
-                    'role'       => $e->getParam('role'),
+                    'identity'   => $e->getParam('identity'),
                 ));
 
                 break;
             case Security::ERROR_ROUTE_UNAUTHORIZED:
                 $model = new ViewModel(array(
-                    'error' => $e->getParam('error'),
-                    'route' => $e->getParam('route'),
-                    'role'  => $e->getParam('role')
+                    'error'    => $e->getParam('error'),
+                    'route'    => $e->getParam('route'),
+                    'identity' => $e->getParam('identity')
                 ));
 
                 break;

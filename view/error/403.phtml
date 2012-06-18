@@ -1,9 +1,9 @@
 <h1>A 403 error occured</h1>
 <p>
     <?php if ($error == 'error-route-unauthorized') : ?>
-        Role <?=$role->getRoleId();?> is not authorized to access <?=$route;?>.
+        Identity (with roles <?=implode(',', $identity->getRoles());?>) is not authorized to access <?=$route;?>.
     <?php elseif ($error == 'error-controller-unauthorized') : ?>
-        Role <?=$role->getRoleId();?> is not authorized to access <?=$controller;?>
+        Identity (with roles <?=implode(',', $identity->getRoles());?>) is not authorized to access <?=$controller;?>
         <?php if ($action) : ?>
         ::<?=$action;?>Action()
         <?php endif;?>

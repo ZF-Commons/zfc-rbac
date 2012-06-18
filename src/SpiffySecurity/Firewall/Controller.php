@@ -2,7 +2,9 @@
 
 namespace SpiffySecurity\Firewall;
 
-class Controller implements FirewallInterface
+use SpiffySecurity\Identity\IdentityInterface;
+
+class Controller extends AbstractFirewall
 {
     protected $rules = array();
 
@@ -20,7 +22,14 @@ class Controller implements FirewallInterface
         }
     }
 
-    public function isAllowed($role, $resource)
+    /**
+     * Checks if access is granted to resource for the role.
+     *
+     * @param \SpiffySecurity\Identity\IdentityInterface $identity
+     * @param string $resource
+     * @return bool
+     */
+    public function isAllowed(IdentityInterface $identity, $resource)
     {
         $resource   = explode(':', $resource);
         $controller = $resource[0];
@@ -35,9 +44,21 @@ class Controller implements FirewallInterface
             return true;
         }
 
-        return in_array($role, $roles);
+        foreach($roles as $role) {
+            foreach($identity->getRoles() as $urole) {
+                if ($role == $urole || $this->securityService->getAcl()->inheritsRole($urole, $role)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
+    /**
+     * Get the firewall name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return 'controller';

@@ -1,9 +1,6 @@
 <?php
 return array(
     'security' => array(
-        'template' => 'error/403',
-        'role' => 'zfcuser_auth_service',
-
         'firewall' => array(
             /*
             'controller' => array(

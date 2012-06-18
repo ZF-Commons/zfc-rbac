@@ -55,6 +55,7 @@ firewall types are provided:
 By default, only controller access is enabled. See the module.config.php file for sample setups.
 
 ## Setting the active role
+
 The active role can be set by using the `role` key in configuration. The role is determined in the following manner:
 
   - If role is a string, the instance is grabbed from the Service Locator. If that alias does not exist then a new
@@ -97,3 +98,11 @@ return array(
     ),
 );
 ```
+
+## Protecting your services
+
+
+
+## Protecting your objects
+
+Coming soon, maybe...

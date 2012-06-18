@@ -1,23 +1,60 @@
 <?php
 
-namespace SpiffySecurity\Options;
+namespace SpiffySecurity\Service;
 
 use Zend\Stdlib\Options;
 
 class SecurityOptions extends Options
 {
+    /**
+     * The default role that is used if no role is found from the
+     * role provider.
+     *
+     * @var string
+     */
     protected $anonymousRole = 'anonymous';
 
+    /**
+     * Flag: enable or disable the routing firewall.
+     *
+     * @var bool
+     */
     protected $firewallRoute = false;
 
+    /**
+     * Flag: enable or disable the controller firewall.
+     *
+     * @var bool
+     */
     protected $firewallController = true;
 
+    /**
+     * Set the view template to use on a 403 error.
+     *
+     * @var string
+     */
     protected $template = 'error/403';
 
-    protected $role = 'guest';
+    /**
+     * Set the identity provider to use. The identity provider must be retrievable from the
+     * service locator and must implement \SpiffySecurity\Identity\IdentityInterface.
+     *
+     * @var string
+     */
+    protected $identityProvider =  'my_identity_provider';
 
+    /**
+     * Array of firewall rules.
+     *
+     * @var array
+     */
     protected $firewall = array();
 
+    /**
+     * Array of role providers.
+     *
+     * @var array
+     */
     protected $provider = array();
 
     public function setFirewallController($firewallController)
@@ -53,15 +90,15 @@ class SecurityOptions extends Options
         return $this->firewall;
     }
 
-    public function setRole($role)
+    public function setIdentityProvider($identityProvider)
     {
-        $this->role = $role;
+        $this->identityProvider = $identityProvider;
         return $this;
     }
 
-    public function getRole()
+    public function getIdentityProvider()
     {
-        return $this->role;
+        return $this->identityProvider;
     }
 
     public function setProvider($provider)

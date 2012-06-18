@@ -27,10 +27,6 @@ class SecurityFactory implements FactoryInterface
         $config = $sl->get('Configuration');
         $config = $config['security'];
 
-        if (!isset($config['role'])) {
-            throw new RuntimeException('No role was specified');
-        }
-
         $security = new Security($config);
         $options  = $security->options();
 
@@ -56,22 +52,15 @@ class SecurityFactory implements FactoryInterface
             $security->addFirewall(new $class($firewall));
         }
 
-        $role = $options->getRole();
-        if (is_string($role)) {
-            if ($sl->has($role)) {
-                $role = $sl->get($role);
-            } else {
-                $role = new \Zend\Acl\Role\GenericRole($role);
-            }
+        $identity = $security->options()->getIdentityProvider();
+        if (!$sl->has($identity)) {
+            throw new RuntimeException(sprintf(
+                'An identity provider with the name "%s" does not exist',
+                $identity
+            ));
         }
 
-        if (is_object($role) && method_exists($role, 'getIdentity')) {
-            $role = $role->getIdentity();
-        }
-
-        if ($role instanceof RoleInterface) {
-            $security->setRole($role);
-        }
+        $security->setIdentity($sl->get($identity));
 
         return $security;
     }

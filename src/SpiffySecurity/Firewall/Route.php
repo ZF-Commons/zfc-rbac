@@ -2,7 +2,9 @@
 
 namespace SpiffySecurity\Firewall;
 
-class Route implements FirewallInterface
+use SpiffySecurity\Identity\IdentityInterface;
+
+class Route extends AbstractFirewall
 {
     /**
      * @var array
@@ -35,12 +37,17 @@ class Route implements FirewallInterface
     /**
      * Checks if access is granted to resource for the role.
      *
-     * @param string $role
+     * @param \SpiffySecurity\Identity\IdentityInterface $identity
      * @param string $resource
      * @return bool
      */
-    public function isAllowed($role, $resource)
+    public function isAllowed(IdentityInterface $identity, $resource)
     {
+        // No rules, automatically allow
+        if (empty($this->rules)) {
+            return true;
+        }
+
         // If no rule exists for this resource allow it.
         $result = (bool) preg_match($this->ruleRegex, $resource, $matches);
         if (false === $result) {
@@ -60,7 +67,14 @@ class Route implements FirewallInterface
             }
         }
 
-        return in_array($role, $roles);
+        foreach($roles as $role) {
+            foreach($identity->getRoles() as $urole) {
+                if ($role == $urole || $this->securityService->getAcl()->inheritsRole($urole, $role)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

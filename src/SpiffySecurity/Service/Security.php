@@ -3,12 +3,10 @@
 namespace SpiffySecurity\Service;
 
 use InvalidArgumentException;
-use SpiffySecurity\Firewall\FirewallInterface;
-use SpiffySecurity\Options\SecurityOptions;
+use SpiffySecurity\Acl\Acl;
+use SpiffySecurity\Firewall\AbstractFirewall;
+use SpiffySecurity\Identity;
 use SpiffySecurity\Provider\AbstractProvider;
-use Zend\Acl\Acl;
-use Zend\Acl\Role\GenericRole;
-use Zend\Acl\Role\RoleInterface;
 
 class Security
 {
@@ -16,7 +14,7 @@ class Security
     const ERROR_CONTROLLER_UNAUTHORIZED = 'error-controller-unauthorized';
 
     /**
-     * @var \Zend\Acl\Acl
+     * @var \SpiffySecurity\Acl\Acl
      */
     protected $acl;
 
@@ -26,9 +24,9 @@ class Security
     protected $firewalls = array();
 
     /**
-     * @var \Zend\Acl\Role\RoleInterface
+     * @var \SpiffySecurity\Identity\IdentityInterface
      */
-    protected $role;
+    protected $identity;
 
     /**
      * @var bool
@@ -49,10 +47,39 @@ class Security
     }
 
     /**
+     * Checks if access is granted to the user.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function isGranted($role)
+    {
+        return in_array($role, $this->identity()->getRoles());
+    }
+
+    /**
+     * Returns all parents of a specified role.
+     *
+     * @param $role
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function getParentRoles($role)
+    {
+        if (!isset($this->roles[$role])) {
+            throw new InvalidArgumentException(sprintf(
+                'No role with name %s has not been registered',
+                $role
+            ));
+        }
+        return $this->roles[$role];
+    }
+
+    /**
      * Access to firewalls by name.
      *
      * @param string $name
-     * @return \SpiffySecurity\Firewall\FirewallInterface
+     * @return \SpiffySecurity\Firewall\AbstractFirewall
      */
     public function getFirewall($name)
     {
@@ -66,10 +93,10 @@ class Security
     }
 
     /**
-     * @param \SpiffySecurity\Firewall\FirewallInterface $firewall
+     * @param \SpiffySecurity\Firewall\AbstractFirewall $firewall
      * @return \SpiffySecurity\Service\Security
      */
-    public function addFirewall(FirewallInterface $firewall)
+    public function addFirewall(AbstractFirewall $firewall)
     {
         if (isset($this->firewalls[$firewall->getName()])) {
             throw new InvalidArgumentException(sprintf(
@@ -77,6 +104,7 @@ class Security
                 $firewall->getName()
             ));
         }
+        $firewall->setSecurityService($this);
         $this->firewalls[$firewall->getName()] = $firewall;
         return $this;
     }
@@ -87,34 +115,42 @@ class Security
      */
     public function addProvider(AbstractProvider $provider)
     {
-        $this->reset();
         $this->providers[] = $provider;
         return $this;
     }
 
     /**
-     * @return \Zend\Acl\Role\RoleInterface
+     * @return \SpiffySecurity\Identity\IdentityInterface
      */
-    public function getRole()
+    public function getIdentity()
     {
-        if (null === $this->role) {
-            $this->role = new GenericRole($this->options()->getAnonymousRole());
+        if (null === $this->identity) {
+            $this->setIdentity();
         }
-        return $this->role;
+        return $this->identity;
     }
 
     /**
-     * @param \Zend\Acl\Role\RoleInterface $role
-     * @return Security
+     * @param string|null|\SpiffySecurity\Identity\IdentityInterface $identity
+     * @return \SpiffySecurity\Service\Security
      */
-    public function setRole(RoleInterface $role)
+    public function setIdentity($identity = null)
     {
-        $this->role = $role;
+        if (is_string($identity)) {
+            $identity = new Identity\StandardIdentity($identity);
+        } else if (is_null($identity)) {
+            $identity = new Identity\StandardIdentity($this->options()->getAnonymousRole());
+        } else if (!$identity instanceof Identity\IdentityInterface) {
+            throw new InvalidArgumentException(
+                'Identity must be null, a string, or an instance of SpiffySecurity\Identity\IdentityInterface'
+            );
+        }
+        $this->identity = $identity;
         return $this;
     }
 
     /**
-     * @return \Zend\Acl\Acl
+     * @return \SpiffySecurity\Acl\Acl
      */
     public function getAcl()
     {
@@ -124,7 +160,7 @@ class Security
     }
 
     /**
-     * @return \SpiffySecurity\Options\SecurityOptions
+     * @return \SpiffySecurity\Service\SecurityOptions
      */
     public function options()
     {
@@ -156,53 +192,9 @@ class Security
         // The anonymous role should always be present
         $acl->addRole($this->options()->getAnonymousRole());
 
-        // Setup roles from the providers
-        foreach($this->providers as $provider) {
-            $roles  = $provider->getRoles();
-
-            foreach($roles as $role => $parents) {
-                if (is_int($role)) {
-                    $role   = $parents;
-                    $parent = array();
-                }
-
-                $this->createRoles($roles, $acl, $role, $parents);
-            }
-        }
+        // Add roles from providers
+        $acl->setRolesFromProviders($this->providers);
 
         $this->acl = $acl;
-    }
-
-    /**
-     * Recursive function to create roles and ensure parents are created.
-     *
-     * @param array $roles
-     * @param \Zend\Acl\Acl $acl
-     * @param string $role
-     * @param array $parents
-     */
-    protected function createRoles($roles, $acl, $role, $parents)
-    {
-        if (!is_array($parents)) {
-            $parents = array($parents);
-        }
-
-        foreach($parents as $key => $parent) {
-            if (!$parent) {
-                unset($parents[$key]);
-                continue;
-            }
-            if (!$acl->hasResource($parent)) {
-                if (isset($roles[$parent])) {
-                    $this->createRoles($roles, $acl, $parent, $roles[$parent]);
-                } else if (!$acl->hasRole($parent)) {
-                    $acl->addRole($parent);
-                }
-            }
-        }
-
-        if (!$acl->hasRole($role)) {
-            $acl->addRole($role, $parents);
-        }
     }
 }

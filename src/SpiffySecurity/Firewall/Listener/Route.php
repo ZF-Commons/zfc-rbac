@@ -12,9 +12,9 @@ class Route
         $route    = $e->getRouteMatch()->getMatchedRouteName();
         $security = $app->getServiceManager()->get('SpiffySecurity\Service\Security');
 
-        if (!$security->getFirewall('route')->isAllowed($security->getRole(), $route)) {
+        if (!$security->getFirewall('route')->isAllowed($security->getIdentity(), $route)) {
             $e->setError($security::ERROR_ROUTE_UNAUTHORIZED)
-                ->setParam('role', $security->getRole())
+                ->setParam('identity', $security->getIdentity())
                 ->setParam('route', $route);
 
             $app->events()->trigger('dispatch.error', $e);
