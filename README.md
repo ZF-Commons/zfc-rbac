@@ -63,6 +63,7 @@ the identity provider must implement `SpiffySecurity\Identity\IdentityInterface`
 ## Sample configuration
 
 ```php
+<?php
 return array(
     'security' => array(
         'firewall' => array(
@@ -99,6 +100,7 @@ the provided `isGranted($role)` method to check if access is allowed.
 For example,
 
 ```php
+<?php
 class NewService
 {
     protected $security;
