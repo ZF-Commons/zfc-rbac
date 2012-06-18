@@ -2,7 +2,8 @@
 
 namespace SpiffySecurity\Service;
 
-use SpiffySecurity\Firewall\AbstractFirewall;
+use InvalidArgumentException;
+use SpiffySecurity\Firewall\FirewallInterface;
 use SpiffySecurity\Options\SecurityOptions;
 use SpiffySecurity\Provider\AbstractProvider;
 use Zend\Acl\Acl;
@@ -39,18 +40,51 @@ class Security
      */
     protected $providers = array();
 
+    /**
+     * @param array $options
+     */
     public function __construct(array $options = array())
     {
         $this->options = new SecurityOptions($options);
     }
 
-    public function addFirewall(AbstractFirewall $firewall)
+    /**
+     * Access to firewalls by name.
+     *
+     * @param string $name
+     * @return \SpiffySecurity\Firewall\FirewallInterface
+     */
+    public function getFirewall($name)
     {
-        $this->reset();
-        $this->firewalls[] = $firewall;
+        if (!isset($this->firewalls[$name])) {
+            throw new InvalidArgumentException(sprintf(
+                'No firewall with name "%s" is registered',
+                $name
+            ));
+        }
+        return $this->firewalls[$name];
+    }
+
+    /**
+     * @param \SpiffySecurity\Firewall\FirewallInterface $firewall
+     * @return \SpiffySecurity\Service\Security
+     */
+    public function addFirewall(FirewallInterface $firewall)
+    {
+        if (isset($this->firewalls[$firewall->getName()])) {
+            throw new InvalidArgumentException(sprintf(
+                'Firewall with name "%s" is already registered',
+                $firewall->getName()
+            ));
+        }
+        $this->firewalls[$firewall->getName()] = $firewall;
         return $this;
     }
 
+    /**
+     * @param \SpiffySecurity\Provider\AbstractProvider $provider
+     * @return \SpiffySecurity\Service\Security
+     */
     public function addProvider(AbstractProvider $provider)
     {
         $this->reset();
@@ -58,6 +92,9 @@ class Security
         return $this;
     }
 
+    /**
+     * @return \Zend\Acl\Role\RoleInterface
+     */
     public function getRole()
     {
         if (null === $this->role) {
@@ -66,12 +103,19 @@ class Security
         return $this->role;
     }
 
+    /**
+     * @param \Zend\Acl\Role\RoleInterface $role
+     * @return Security
+     */
     public function setRole(RoleInterface $role)
     {
         $this->role = $role;
         return $this;
     }
 
+    /**
+     * @return \Zend\Acl\Acl
+     */
     public function getAcl()
     {
         $this->load();
@@ -79,17 +123,28 @@ class Security
         return $this->acl;
     }
 
+    /**
+     * @return \SpiffySecurity\Options\SecurityOptions
+     */
     public function options()
     {
         return $this->options;
     }
 
+    /**
+     * Reset to original state.
+     */
     protected function reset()
     {
         $this->acl    = null;
         $this->loaded = false;
     }
 
+    /**
+     * Load acl.
+     *
+     * @return void
+     */
     protected function load()
     {
         if ($this->loaded) {
@@ -98,8 +153,10 @@ class Security
 
         $acl = new Acl;
 
+        // The anonymous role should always be present
         $acl->addRole($this->options()->getAnonymousRole());
 
+        // Setup roles from the providers
         foreach($this->providers as $provider) {
             $roles  = $provider->getRoles();
 
@@ -113,19 +170,17 @@ class Security
             }
         }
 
-        foreach($this->firewalls as $firewall) {
-            foreach($firewall->getRules() as $map) {
-                if (!$acl->hasResource($map['resource'])) {
-                    $acl->addResource($map['resource']);
-                }
-
-                $acl->allow($map['roles'], $map['resource']);
-            }
-        }
-
         $this->acl = $acl;
     }
 
+    /**
+     * Recursive function to create roles and ensure parents are created.
+     *
+     * @param array $roles
+     * @param \Zend\Acl\Acl $acl
+     * @param string $role
+     * @param array $parents
+     */
     protected function createRoles($roles, $acl, $role, $parents)
     {
         if (!is_array($parents)) {

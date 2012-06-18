@@ -9,21 +9,15 @@ class Route
     public function onRoute(MvcEvent $e)
     {
         $app      = $e->getTarget();
-        $sm       = $app->getServiceManager();
-        $security = $sm->get('SpiffySecurity\Service\Security');
-        $acl      = $security->getAcl();
+        $route    = $e->getRouteMatch()->getMatchedRouteName();
+        $security = $app->getServiceManager()->get('SpiffySecurity\Service\Security');
 
-        $route = 'route:' . $e->getRouteMatch()->getMatchedRouteName();
-        if ($acl->hasResource($route)) {
-            $role = $security->getRole();
+        if (!$security->getFirewall('route')->isAllowed($security->getRole(), $route)) {
+            $e->setError($security::ERROR_ROUTE_UNAUTHORIZED)
+                ->setParam('role', $security->getRole())
+                ->setParam('route', $route);
 
-            if (!$acl->isAllowed($role, $route)) {
-                $e->setError($security::ERROR_ROUTE_UNAUTHORIZED)
-                  ->setParam('role', $role)
-                  ->setParam('route', $route);
-
-                $app->events()->trigger('dispatch.error', $e);
-            }
+            $app->events()->trigger('dispatch.error', $e);
         }
     }
 }

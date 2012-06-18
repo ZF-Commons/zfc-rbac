@@ -8,29 +8,16 @@ class Controller
 {
     public function onRoute(MvcEvent $e)
     {
-        $app      = $e->getTarget();
-        $sm       = $app->getServiceManager();
-        $security = $sm->get('SpiffySecurity\Service\Security');
-        $acl      = $security->getAcl();
-        $match    = $app->getMvcEvent()->getRouteMatch();
-
+        $app        = $e->getTarget();
+        $security   = $app->getServiceManager()->get('SpiffySecurity\Service\Security');
+        $match      = $app->getMvcEvent()->getRouteMatch();
         $controller = $match->getParam('controller');
         $action     = $match->getParam('action');
+        $resource   = sprintf('%s:%s', $controller, $action);
 
-        $controllerResource = "controller:{$controller}";
-        $actionResource     = "controller:{$controller}:{$action}";
-        $role               = $security->getRole();
-        $resource           = null;
-
-        if ($acl->hasResource($actionResource)) {
-            $resource = $actionResource;
-        } else if ($acl->hasResource($controllerResource)) {
-            $resource = $controllerResource;
-        }
-
-        if ($resource && !$acl->isAllowed($role, $resource)) {
+        if (!$security->getFirewall('controller')->isAllowed($security->getRole(), $resource)) {
             $e->setError($security::ERROR_CONTROLLER_UNAUTHORIZED)
-              ->setParam('role', $role)
+              ->setParam('role', $security->getRole())
               ->setParam('controller', $controller)
               ->setParam('action', $action);
 
