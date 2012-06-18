@@ -68,11 +68,11 @@ return array(
     'security' => array(
         'firewall' => array(
             'controller' => array(
-                array('controller' => 'profiles', 'action' => 'index', 'roles' => 'member')
+                array('controller' => 'profile', 'action' => 'view', 'roles' => 'guest')
             ),
             'route' => array(
-                array('route' => 'profiles', 'roles' => 'member'),
-                array('route' => 'admin', 'roles' => 'administrator')
+                array('route' => 'profiles/add', 'roles' => 'member'),
+                array('route' => 'admin/*', 'roles' => 'administrator')
             ),
         ),
 
