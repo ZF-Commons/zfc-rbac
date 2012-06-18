@@ -1,0 +1,30 @@
+{
+    "name": "spiffy/spiffy-security",
+    "description": "Zend Framework 2 Module that provides quick & easy security",
+    "type": "library",
+    "keywords": [
+        "module",
+        "zf2"
+    ],
+    "homepage": "http://www.github.com/SpiffyJr/SpiffySecurity/",
+    "authors": [
+        {
+            "name": "Kyle Spraggs",
+            "email": "theman@spiffyjr.me",
+            "homepage": "http://www.spiffyjr.me/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "dev-master"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "SpiffySecurity": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
