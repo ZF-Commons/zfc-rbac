@@ -55,3 +55,12 @@ firewall types are provided:
 By default, only controller access is enabled. See the module.config.php file for sample setups.
 
 ## Setting the active role
+
+The active role can be set by using the `role` key in configuration. The role is determined in the following manner:
+
+  - If role is a string, the instance is grabbed from the Service Locator. If that alias does not exist then a new
+    role is created using that string name. This is good for testing when you want to hard code yourself to a role.
+  - If an object is retrieved from the service manager and it is not an instance of RoleInterface then
+    a "getIdentity" method is checked. If that method exists, then the role is pulled using that method.
+  - Finally, if no role is found using the above methods then it is assume that no authentication is available and
+    the anonymous role is used as specified by the `anonymous_role` option.
