@@ -55,7 +55,6 @@ firewall types are provided:
 By default, only controller access is enabled. See the module.config.php file for sample setups.
 
 ## Setting the active role
-
 The active role can be set by using the `role` key in configuration. The role is determined in the following manner:
 
   - If role is a string, the instance is grabbed from the Service Locator. If that alias does not exist then a new
@@ -64,3 +63,37 @@ The active role can be set by using the `role` key in configuration. The role is
     a "getIdentity" method is checked. If that method exists, then the role is pulled using that method.
   - Finally, if no role is found using the above methods then it is assume that no authentication is available and
     the anonymous role is used as specified by the `anonymous_role` option.
+
+## Sample configuration
+
+```php
+return array(
+    'security' => array(
+        'template' => 'error/403',
+        'role' => 'zfcuser_auth_service',
+
+        'firewall' => array(
+            'controller' => array(
+                array('controller' => 'profiles', 'action' => 'index', 'roles' => 'member')
+            ),
+            'route' => array(
+                array('route' => 'profiles', 'roles' => 'member'),
+                array('route' => 'admin', 'roles' => 'administrator')
+            ),
+        ),
+
+        'provider' => array(
+            'in_memory' => array(
+                'test_role' => 'test_parent',
+            ),
+            'doctrine_dbal' => array(
+                'connection'         => 'doctrine.connection.orm_default',
+                'table'              => 'role',
+                'role_id_column'     => 'id',
+                'role_name_column'   => 'name',
+                'parent_join_column' => 'parent_role_id'
+            )
+        )
+    ),
+);
+```
