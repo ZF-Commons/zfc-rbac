@@ -60,6 +60,11 @@ The identity provider is a service alias setup to provide a working identity to 
 my_identity_provider but can be changed via the `identity_provider` key in configuration. The object returned by
 the identity provider must implement `SpiffySecurity\Identity\IdentityInterface`.
 
+## View helper and controller plugin
+
+An `isGranted($roles)` view helper and controller plugin is available. To use, simply pass an array (or string) of
+roles to check for access. If any of the roles passed have access then `isGranted($roles)` returns true.
+
 ## Sample configuration
 
 ```php
