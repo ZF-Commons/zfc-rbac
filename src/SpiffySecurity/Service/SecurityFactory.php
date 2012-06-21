@@ -2,6 +2,7 @@
 
 namespace SpiffySecurity\Service;
 
+use InvalidArgumentException;
 use RuntimeException;
 use SpiffySecurity\Service\Security;
 use Zend\Acl\Acl;
@@ -11,17 +12,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class SecurityFactory implements FactoryInterface
 {
-    protected $firewallMap = array(
-        'controller' => 'SpiffySecurity\Firewall\Controller',
-        'route'      => 'SpiffySecurity\Firewall\Route'
-    );
-
-    protected $providerMap = array(
-        'doctrine_dbal' => 'SpiffySecurity\Provider\DoctrineDBAL',
-        'in_memory'     => 'SpiffySecurity\Provider\InMemory',
-        'pdo'           => 'SpiffySecurity\Provider\PDO',
-    );
-
     public function createService(ServiceLocatorInterface $sl)
     {
         $config = $sl->get('Configuration');
@@ -30,26 +20,12 @@ class SecurityFactory implements FactoryInterface
         $security = new Security($config);
         $options  = $security->options();
 
-        foreach($options->getProvider() as $type => $provider) {
-            $class = null;
-            if (isset($this->providerMap[$type])) {
-                $class = $this->providerMap[$type];
-            } else if (class_exists($type)) {
-                $class = $type;
-            }
-
-            $security->addProvider(new $class($sl, $provider));
+        foreach($options->getProviders() as $class => $config) {
+            $security->addProvider($class::factory($sl, $config));
         }
 
-        foreach($options->getFirewall() as $type => $firewall) {
-            $class = null;
-            if (isset($this->firewallMap[$type])) {
-                $class = $this->firewallMap[$type];
-            } else if (class_exists($type)) {
-                $class = $type;
-            }
-
-            $security->addFirewall(new $class($firewall));
+        foreach($options->getFirewalls() as $class => $config) {
+            $security->addFirewall(new $class($config));
         }
 
         $identity = $security->options()->getIdentityProvider();

@@ -41,7 +41,7 @@ class Route extends AbstractFirewall
      * @param string $resource
      * @return bool
      */
-    public function isAllowed(IdentityInterface $identity, $resource)
+    public function isGranted(IdentityInterface $identity, $resource)
     {
         // No rules, automatically allow
         if (empty($this->rules)) {
@@ -67,7 +67,7 @@ class Route extends AbstractFirewall
             }
         }
 
-        return $this->securityService->isGranted($roles);
+        return count(array_intersect($identity->getRoles(), $roles)) > 0;
     }
 
     /**

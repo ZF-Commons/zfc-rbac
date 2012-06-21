@@ -15,7 +15,7 @@ class Controller
         $action     = $match->getParam('action');
         $resource   = sprintf('%s:%s', $controller, $action);
 
-        if (!$security->getFirewall('controller')->isAllowed($security->getIdentity(), $resource)) {
+        if (!$security->getFirewall('controller')->isGranted($security->getIdentity(), $resource)) {
             $e->setError($security::ERROR_CONTROLLER_UNAUTHORIZED)
               ->setParam('identity', $security->getIdentity())
               ->setParam('controller', $controller)

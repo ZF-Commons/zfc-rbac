@@ -29,7 +29,7 @@ class Controller extends AbstractFirewall
      * @param string $resource
      * @return bool
      */
-    public function isAllowed(IdentityInterface $identity, $resource)
+    public function isGranted(IdentityInterface $identity, $resource)
     {
         $resource   = explode(':', $resource);
         $controller = $resource[0];

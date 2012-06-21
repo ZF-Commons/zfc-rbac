@@ -3,10 +3,10 @@
 namespace SpiffySecurity\Service;
 
 use InvalidArgumentException;
-use SpiffySecurity\Acl\Acl;
 use SpiffySecurity\Firewall\AbstractFirewall;
 use SpiffySecurity\Identity;
-use SpiffySecurity\Provider\AbstractProvider;
+use SpiffySecurity\Provider\ProviderInterface;
+use Zend\Acl\Acl;
 
 class Security
 {
@@ -14,7 +14,7 @@ class Security
     const ERROR_CONTROLLER_UNAUTHORIZED = 'error-controller-unauthorized';
 
     /**
-     * @var \SpiffySecurity\Acl\Acl
+     * @var \Zend\Acl\Acl
      */
     protected $acl;
 
@@ -47,47 +47,14 @@ class Security
     }
 
     /**
-     * Checks if access is granted to any of the roles specified.
+     * Checks if access is granted to the specified role.
      *
-     * @param string|array $role
+     * @param string $role
      * @return bool
      */
-    public function isGranted($roles)
+    public function isGranted($role)
     {
-        if (!is_array($roles)) {
-            $roles = array($roles);
-        }
-
-        foreach($roles as $role) {
-            if (!$this->getAcl()->hasRole($role)) {
-                continue;
-            }
-
-            foreach($this->getIdentity()->getRoles() as $urole) {
-                if ($role == $urole || $this->getAcl()->inheritsRole($urole, $role)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns all parents of a specified role.
-     *
-     * @param $role
-     * @return mixed
-     * @throws \InvalidArgumentException
-     */
-    public function getParentRoles($role)
-    {
-        if (!isset($this->roles[$role])) {
-            throw new InvalidArgumentException(sprintf(
-                'No role with name %s has not been registered',
-                $role
-            ));
-        }
-        return $this->roles[$role];
+        return in_array($role, $this->getIdentity()->getRoles());
     }
 
     /**
@@ -119,16 +86,15 @@ class Security
                 $firewall->getName()
             ));
         }
-        $firewall->setSecurityService($this);
         $this->firewalls[$firewall->getName()] = $firewall;
         return $this;
     }
 
     /**
-     * @param \SpiffySecurity\Provider\AbstractProvider $provider
+     * @param \SpiffySecurity\Provider\ProviderInterface $provider
      * @return \SpiffySecurity\Service\Security
      */
-    public function addProvider(AbstractProvider $provider)
+    public function addProvider(ProviderInterface $provider)
     {
         $this->providers[] = $provider;
         return $this;
@@ -165,7 +131,7 @@ class Security
     }
 
     /**
-     * @return \SpiffySecurity\Acl\Acl
+     * @return \Zend\Acl\Acl
      */
     public function getAcl()
     {
@@ -208,7 +174,13 @@ class Security
         $acl->addRole($this->options()->getAnonymousRole());
 
         // Add roles from providers
-        $acl->setRolesFromProviders($this->providers);
+        foreach($this->providers as $provider) {
+            foreach($provider->getRoles() as $role) {
+                if (!$acl->hasRole($role)) {
+                    $acl->addRole($role);
+                }
+            }
+        }
 
         $this->acl = $acl;
     }

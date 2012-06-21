@@ -48,14 +48,14 @@ class SecurityOptions extends Options
      *
      * @var array
      */
-    protected $firewall = array();
+    protected $firewalls = array();
 
     /**
      * Array of role providers.
      *
      * @var array
      */
-    protected $provider = array();
+    protected $providers = array();
 
     public function setFirewallController($firewallController)
     {
@@ -79,15 +79,15 @@ class SecurityOptions extends Options
         return $this->firewallRoute;
     }
 
-    public function setFirewall($firewall)
+    public function setFirewalls($firewalls)
     {
-        $this->firewall = $firewall;
+        $this->firewalls = $firewalls;
         return $this;
     }
 
-    public function getFirewall()
+    public function getFirewalls()
     {
-        return $this->firewall;
+        return $this->firewalls;
     }
 
     public function setIdentityProvider($identityProvider)
@@ -101,15 +101,15 @@ class SecurityOptions extends Options
         return $this->identityProvider;
     }
 
-    public function setProvider($provider)
+    public function setProviders($providers)
     {
-        $this->provider = $provider;
+        $this->providers = $providers;
         return $this;
     }
 
-    public function getProvider()
+    public function getProviders()
     {
-        return $this->provider;
+        return $this->providers;
     }
 
     public function setTemplate($template)

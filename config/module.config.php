@@ -1,32 +1,27 @@
 <?php
 return array(
     'security' => array(
-        'firewall' => array(
-            /*
-            'controller' => array(
-                array('controller' => 'profiles', 'action' => 'index', 'roles' => 'member')
-            ),
-            'route' => array(
-                array('route' => 'profiles', 'roles' => 'member'),
-                array('route' => 'admin', 'roles' => 'administrator')
-            ),*/
+        'providers' => array(
+            'SpiffySecurity\Provider\ZendDb' => array(
+                'adapter' => 'Zend\Db\Adapter\Adapter', // alias to your db adapter
+                'options' => array(
+                    'table'       => 'role',
+                    'name_column' => 'name',
+                )
+            )
         ),
 
-        'provider' => array(
-            /*'in_memory' => array(
-                'moderator' => 'member',
-                'admin'     => 'moderator',
-                'guest',
-                'member'    => 'guest',
+        'firewalls' => array(
+            'SpiffySecurity\Firewall\Controller' => array(
+                array('controller' => 'home', 'roles' => array('guest', 'member'))
             ),
-            'doctrine_dbal' => array(
-                'connection'         => 'doctrine.connection.orm_default',
-                'table'              => 'role',
-                'role_id_column'     => 'id',
-                'role_name_column'   => 'name',
-                'parent_join_column' => 'parent_role_id'
-            )*/
-        )
+            'SpiffySecurity\Firewall\Route' => array(
+                array('route' => '^events/*', 'roles' => 'member'),
+                array('route' => '^profiles/*', 'roles' => 'member'),
+                array('route' => '^teams/*', 'roles' => 'member'),
+                array('route' => '^spiffyadmin/*', 'roles' => 'administrator')
+            )
+        ),
     ),
     'view_manager' => array(
         'helper_map' => array(
