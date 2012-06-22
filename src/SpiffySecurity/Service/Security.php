@@ -3,10 +3,11 @@
 namespace SpiffySecurity\Service;
 
 use InvalidArgumentException;
+use RuntimeException;
 use SpiffySecurity\Firewall\AbstractFirewall;
 use SpiffySecurity\Identity;
 use SpiffySecurity\Provider\ProviderInterface;
-use Zend\Acl\Acl;
+use SpiffySecurity\Rbac\Rbac;
 
 class Security
 {
@@ -14,9 +15,9 @@ class Security
     const ERROR_CONTROLLER_UNAUTHORIZED = 'error-controller-unauthorized';
 
     /**
-     * @var \Zend\Acl\Acl
+     * @var \SpiffySecurity\Rbac\Rbac
      */
-    protected $acl;
+    protected $rbac;
 
     /**
      * @var array
@@ -44,17 +45,6 @@ class Security
     public function __construct(array $options = array())
     {
         $this->options = new SecurityOptions($options);
-    }
-
-    /**
-     * Checks if access is granted to the specified role.
-     *
-     * @param string $role
-     * @return bool
-     */
-    public function isGranted($role)
-    {
-        return in_array($role, $this->getIdentity()->getRoles());
     }
 
     /**
@@ -92,10 +82,17 @@ class Security
 
     /**
      * @param \SpiffySecurity\Provider\ProviderInterface $provider
+     * @param bool $force
      * @return \SpiffySecurity\Service\Security
      */
-    public function addProvider(ProviderInterface $provider)
+    public function addProvider(ProviderInterface $provider, $force = false)
     {
+        if ($this->loaded && !$force) {
+            throw new RuntimeException(
+                'Adding new providers after initialization has been disabled. You can override this' .
+                'behaviour by setting $force = true when you add a provider.'
+            );
+        }
         $this->providers[] = $provider;
         return $this;
     }
@@ -131,13 +128,13 @@ class Security
     }
 
     /**
-     * @return \Zend\Acl\Acl
+     * @return \SpiffySecurity\Rbac\Rbac
      */
-    public function getAcl()
+    public function getRbac()
     {
         $this->load();
 
-        return $this->acl;
+        return $this->rbac;
     }
 
     /**
@@ -153,7 +150,7 @@ class Security
      */
     protected function reset()
     {
-        $this->acl    = null;
+        $this->racl    = null;
         $this->loaded = false;
     }
 
@@ -168,20 +165,13 @@ class Security
             return;
         }
 
-        $acl = new Acl;
+        $rbac = new Rbac;
 
-        // The anonymous role should always be present
-        $acl->addRole($this->options()->getAnonymousRole());
-
-        // Add roles from providers
+        // add roles from providers
         foreach($this->providers as $provider) {
-            foreach($provider->getRoles() as $role) {
-                if (!$acl->hasRole($role)) {
-                    $acl->addRole($role);
-                }
-            }
+            $provider->load($rbac);
         }
 
-        $this->acl = $acl;
+        $this->rbac = $rbac;
     }
 }

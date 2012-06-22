@@ -4,10 +4,11 @@ namespace SpiffySecurity\Firewall;
 
 use SpiffySecurity\Identity\IdentityInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Acl\Acl;
 
 abstract class AbstractFirewall
 {
+    const SEPARATOR = ':';
+
     /**
      * Get the firewall name.
      *

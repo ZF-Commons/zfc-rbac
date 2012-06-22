@@ -3,6 +3,7 @@
 namespace SpiffySecurity\Provider;
 
 use DomainException;
+use SpiffySecurity\Rbac\Rbac;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,7 +26,7 @@ class ZendDb implements ProviderInterface
     protected $options;
 
     /**
-     * @param \Zend\Db\Adapter\Adapter $adapter
+     * @param Adapter $adapter
      * @param array $options
      */
     public function __construct(Adapter $adapter, array $options)
@@ -34,37 +35,55 @@ class ZendDb implements ProviderInterface
         $this->options = new ZendDbOptions($options);
     }
 
-    /**
-     * @return array
-     */
-    public function getRoles()
-    {
-        if (null === $this->roles) {
-            $this->load();
-        }
-        return $this->roles;
-    }
-
-    /**
-     * Load the roles from db.
-     */
-    protected function load()
+    public function load(Rbac $rbac)
     {
         $options = $this->options;
         $sql     = new Sql($this->adapter);
 
         $select = $sql->select();
-        $select->columns(array('role' => $options->getNameColumn()));
-        $select->from(array('role' => $options->getTable()));
+
+        if ($options->getJoinColumn()) {
+            $select->columns(array(
+                'id'   => 'id',
+                'name' => $options->getNameColumn(),
+            ));
+            $select->from(array('role' => $options->getTable()));
+            $select->join(
+                array('parent' => $options->getTable()),
+                "role.{$options->getJoinColumn()} = parent.{$options->getIdColumn()}",
+                array('parent_id' => 'id'),
+                $select::JOIN_LEFT
+            );
+        } else {
+            // todo: implement non-joined query
+        }
 
         $stmt    = $sql->prepareStatementForSqlObject($select);
         $results = $stmt->execute();
 
         $roles = array();
         foreach($results as $row) {
-            $roles[] = $row['role'];
+            if (empty($row['parent_id'])) {
+                $row['parent_id'] = 0;
+            }
+            $roles[$row['parent_id']][] = $row;
         }
-        $this->roles = $roles;
+
+        ksort($roles);
+        $this->loadRbac($rbac, $roles);
+    }
+
+    protected function loadRbac(Rbac $rbac, $roles, $parentId = 0, $parentName = null)
+    {
+        foreach ($roles[$parentId] as $role) {
+            $rbac->addChild($role['name']);
+            if ($parentName) {
+                $rbac->addChild($role['name'], $parentName);
+            }
+            if (!empty($roles[$role['id']])) {
+                $this->loadRbac($rbac, $roles, $role['id'], $role['name']);
+            }
+        }
     }
 
     /**
