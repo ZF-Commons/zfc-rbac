@@ -48,6 +48,32 @@ class Security
     }
 
     /**
+     * Returns true if the user has the role.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return in_array($role, $this->getIdentity()->getRoles());
+    }
+
+    /**
+     * Returns true if the user has the permission.
+     *
+     * @param $permission
+     */
+    public function isGranted($permission)
+    {
+        foreach($this->getIdentity()->getRoles() as $role) {
+            if ($this->getRbac()->isGranted($role, $permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Access to firewalls by name.
      *
      * @param string $name
@@ -150,7 +176,7 @@ class Security
      */
     protected function reset()
     {
-        $this->racl    = null;
+        $this->rbac    = null;
         $this->loaded = false;
     }
 
@@ -169,6 +195,7 @@ class Security
 
         // add roles from providers
         foreach($this->providers as $provider) {
+            /** @var $provider ProviderInterface */
             $provider->load($rbac);
         }
 
