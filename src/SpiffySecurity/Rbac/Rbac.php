@@ -6,10 +6,6 @@ use InvalidArgumentException;
 
 class Rbac extends AbstractIterator
 {
-    protected $index    = 0;
-    protected $children = array();
-    protected $tmp      = array();
-
     /**
      * Add an array of children.
      *
@@ -44,20 +40,11 @@ class Rbac extends AbstractIterator
 
         if ($parents) {
             foreach((array) $parents as $parent) {
-                if (empty($parent)) {
-                    continue;
-                }
-                if (!$this->hasChild($parent)) {
-                    $this->addChild($parent);
-                }
                 $this->getChild($parent)->addChild($child);
             }
         }
 
-        if (!$this->hasChild($child->getName())) {
-            $this->children[] = $child;
-        }
-
+        $this->children[] = $child;
         return $this;
     }
 

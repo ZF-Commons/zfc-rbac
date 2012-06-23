@@ -11,17 +11,7 @@ return array(
             )
         ),
 
-        'firewalls' => array(
-            'SpiffySecurity\Firewall\Controller' => array(
-                array('controller' => 'home', 'roles' => array('guest', 'member'))
-            ),
-            'SpiffySecurity\Firewall\Route' => array(
-                array('route' => '^events/*', 'roles' => 'member'),
-                array('route' => '^profiles/*', 'roles' => 'member'),
-                array('route' => '^teams/*', 'roles' => 'member'),
-                array('route' => '^spiffyadmin/*', 'roles' => 'administrator')
-            )
-        ),
+        'firewalls' => array(),
     ),
     'view_manager' => array(
         'helper_map' => array(

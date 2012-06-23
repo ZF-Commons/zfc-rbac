@@ -76,9 +76,10 @@ class ZendDb implements ProviderInterface
     protected function loadRbac(Rbac $rbac, $roles, $parentId = 0, $parentName = null)
     {
         foreach ($roles[$parentId] as $role) {
-            $rbac->addChild($role['name']);
             if ($parentName) {
-                $rbac->addChild($role['name'], $parentName);
+                $rbac->getChild($parentName)->addChild(new \SpiffySecurity\Rbac\Role($role['name']));
+            } else {
+                $rbac->addChild($role['name']);
             }
             if (!empty($roles[$role['id']])) {
                 $this->loadRbac($rbac, $roles, $role['id'], $role['name']);

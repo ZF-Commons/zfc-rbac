@@ -2,8 +2,6 @@
 
 namespace SpiffySecurity\Firewall;
 
-use SpiffySecurity\Identity\IdentityInterface;
-
 class Route extends AbstractFirewall
 {
     /**
@@ -41,7 +39,7 @@ class Route extends AbstractFirewall
      * @param string $role
      * @return bool
      */
-    public function isGranted(IdentityInterface $identity, $role)
+    public function isGranted($role)
     {
         // No rules, automatically allow
         if (empty($this->rules)) {
@@ -67,7 +65,7 @@ class Route extends AbstractFirewall
             }
         }
 
-        return count(array_intersect($identity->getRoles(), $roles)) > 0;
+        return $this->checkRoles($roles);
     }
 
     /**

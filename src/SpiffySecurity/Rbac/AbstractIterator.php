@@ -3,8 +3,9 @@
 namespace SpiffySecurity\Rbac;
 
 use InvalidArgumentException;
+use RecursiveIterator;
 
-abstract class AbstractIterator implements \RecursiveIterator
+abstract class AbstractIterator implements RecursiveIterator
 {
     protected $index    = 0;
     protected $children = array();
@@ -73,7 +74,7 @@ abstract class AbstractIterator implements \RecursiveIterator
      */
     public function hasChildren()
     {
-        return isset($this->children[$this->index]);
+        return count($this->children) > 0;
     }
 
     /**

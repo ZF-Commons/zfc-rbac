@@ -55,7 +55,31 @@ class Security
      */
     public function hasRole($role)
     {
-        return in_array($role, $this->getIdentity()->getRoles());
+        $roles = $this->getIdentity()->getRoles();
+
+        // check direct roles (fastest)
+        if (in_array($role, $roles)) {
+            return true;
+        }
+
+        // check children roles
+        foreach($roles as $identityRole) {
+            $child    = $this->getRbac()->getChild($identityRole);
+            $children = $child->getChildren();
+
+            ini_set('xdebug.var_display_max_depth', 10);
+            var_dump($this->getRbac());
+
+            echo 'child',PHP_EOL;
+            var_dump($child);
+            echo 'children',PHP_EOL;
+            var_dump($children);exit;
+
+            if (in_array($role, $children)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -102,6 +126,7 @@ class Security
                 $firewall->getName()
             ));
         }
+        $firewall->setSecurity($this);
         $this->firewalls[$firewall->getName()] = $firewall;
         return $this;
     }

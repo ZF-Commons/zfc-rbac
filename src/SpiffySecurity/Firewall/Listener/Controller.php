@@ -15,13 +15,17 @@ class Controller
         $action     = $match->getParam('action');
         $resource   = sprintf('%s:%s', $controller, $action);
 
-        if (!$security->getFirewall('controller')->isGranted($security->getIdentity(), $resource)) {
-            $e->setError($security::ERROR_CONTROLLER_UNAUTHORIZED)
-              ->setParam('identity', $security->getIdentity())
-              ->setParam('controller', $controller)
-              ->setParam('action', $action);
+        try {
+            if (!$security->getFirewall('controller')->isGranted($resource)) {
+                $e->setError($security::ERROR_CONTROLLER_UNAUTHORIZED)
+                  ->setParam('identity', $security->getIdentity())
+                  ->setParam('controller', $controller)
+                  ->setParam('action', $action);
 
-            $app->events()->trigger('dispatch.error', $e);
+                $app->events()->trigger('dispatch.error', $e);
+            }
+        } catch (\InvalidArgumentException $e) {
+            return;
         }
     }
 }

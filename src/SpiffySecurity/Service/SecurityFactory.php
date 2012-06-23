@@ -9,6 +9,7 @@ use Zend\Acl\Acl;
 use Zend\Acl\Role\RoleInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 class SecurityFactory implements FactoryInterface
 {
@@ -36,7 +37,14 @@ class SecurityFactory implements FactoryInterface
             ));
         }
 
-        $security->setIdentity($sl->get($identity));
+        try {
+            $security->setIdentity($sl->get($identity));
+        } catch (ServiceNotFoundException $e) {
+            throw new RuntimeException(sprintf(
+                'Unable to set your identity - are you sure the alias "%s" is correct?',
+                $identity
+            ));
+        }
 
         return $security;
     }

@@ -2,8 +2,6 @@
 
 namespace SpiffySecurity\Firewall;
 
-use SpiffySecurity\Identity\IdentityInterface;
-
 class Controller extends AbstractFirewall
 {
     protected $rules = array();
@@ -29,7 +27,7 @@ class Controller extends AbstractFirewall
      * @param string $resource
      * @return bool
      */
-    public function isGranted(IdentityInterface $identity, $resource)
+    public function isGranted($resource)
     {
         $resource   = explode(':', $resource);
         $controller = $resource[0];
@@ -44,7 +42,7 @@ class Controller extends AbstractFirewall
             return true;
         }
 
-        return $this->securityService->isGranted($roles);
+        return $this->checkRoles($roles);
     }
 
     /**

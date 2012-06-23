@@ -7,8 +7,6 @@ use InvalidArgumentException;
 abstract class AbstractRole extends AbstractIterator
 {
     protected $name;
-    protected $index       = 0;
-    protected $children    = array();
     protected $permissions = array();
 
     /**
