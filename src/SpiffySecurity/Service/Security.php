@@ -64,19 +64,13 @@ class Security
 
         // check children roles
         foreach($roles as $identityRole) {
-            $child    = $this->getRbac()->getChild($identityRole);
-            $children = $child->getChildren();
+            $child = $this->getRbac()->getRole($identityRole);
+            $it    = new \RecursiveIteratorIterator($child, \RecursiveIteratorIterator::CHILD_FIRST);
 
-            ini_set('xdebug.var_display_max_depth', 10);
-            var_dump($this->getRbac());
-
-            echo 'child',PHP_EOL;
-            var_dump($child);
-            echo 'children',PHP_EOL;
-            var_dump($children);exit;
-
-            if (in_array($role, $children)) {
-                return true;
+            foreach($it as $leaf) {
+                if ($leaf->getName() === $role) {
+                    return true;
+                }
             }
         }
         return false;

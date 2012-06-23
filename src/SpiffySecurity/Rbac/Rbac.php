@@ -40,7 +40,7 @@ class Rbac extends AbstractIterator
 
         if ($parents) {
             foreach((array) $parents as $parent) {
-                $this->getChild($parent)->addChild($child);
+                $this->getRole($parent)->addChild($child);
             }
         }
 
@@ -54,10 +54,10 @@ class Rbac extends AbstractIterator
      * @param $name
      * @return bool
      */
-    public function hasChild($name)
+    public function hasRole($name)
     {
         try {
-            $this->getChild($name);
+            $this->getRole($name);
             return true;
         } catch (InvalidArgumentException $e) {
             return false;
@@ -71,7 +71,7 @@ class Rbac extends AbstractIterator
      * @return AbstractRole
      * @throws \InvalidArgumentException
      */
-    public function getChild($name)
+    public function getRole($name)
     {
         $it = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::CHILD_FIRST);
         foreach($it as $leaf) {
@@ -95,7 +95,7 @@ class Rbac extends AbstractIterator
      */
     public function isGranted($role, $permission)
     {
-        $role = $this->getChild($role);
+        $role = $this->getRole($role);
         if ($role->hasPermission($permission)) {
             return true;
         }

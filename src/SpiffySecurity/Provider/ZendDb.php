@@ -77,7 +77,7 @@ class ZendDb implements ProviderInterface
     {
         foreach ($roles[$parentId] as $role) {
             if ($parentName) {
-                $rbac->getChild($parentName)->addChild(new \SpiffySecurity\Rbac\Role($role['name']));
+                $rbac->getRole($parentName)->addChild(new \SpiffySecurity\Rbac\Role($role['name']));
             } else {
                 $rbac->addChild($role['name']);
             }
