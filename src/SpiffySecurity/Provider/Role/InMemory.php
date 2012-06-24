@@ -1,25 +1,22 @@
 <?php
 
-namespace SpiffySecurity\Provider;
+namespace SpiffySecurity\Provider\Role;
 
-use DomainException;
+use SpiffySecurity\Rbac\Rbac;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class InMemory implements ProviderInterface
+class InMemory implements RoleInterface
 {
     /**
-     * @var array
+     * Load permissions into roles.
+     *
+     * @abstract
+     * @param Rbac $rbac
+     * @return mixed
      */
-    protected $roles;
-
-    public function __construct(array $roles = array())
+    public function load(Rbac $rbac)
     {
-        $this->roles = $roles;
-    }
-
-    public function getRoles()
-    {
-        return $this->roles;
+        exit;
     }
 
     /**
@@ -32,6 +29,6 @@ class InMemory implements ProviderInterface
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
     {
-        return new \SpiffySecurity\Provider\InMemory($spec);
+        return new \SpiffySecurity\Provider\Role\InMemory($spec);
     }
 }

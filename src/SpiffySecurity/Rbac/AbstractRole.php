@@ -27,8 +27,6 @@ abstract class AbstractRole extends AbstractIterator
      */
     public function addPermission($name)
     {
-        // todo: permissions are stored via name-index which should be faster than in_array
-        // micro-optimization unnecessary?
         $this->permissions[$name] = true;
         return $this;
     }

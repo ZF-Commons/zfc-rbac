@@ -55,82 +55,156 @@ class SecurityOptions extends Options
      *
      * @var array
      */
-    protected $providers = array();
+    protected $roleProviders = array();
 
-    public function setFirewallController($firewallController)
-    {
-        $this->firewallController = $firewallController;
-        return $this;
-    }
+    /**
+     * Array of permission providers.
+     *
+     * @var array
+     */
+    protected $permissionProviders = array();
 
-    public function getFirewallController()
-    {
-        return $this->firewallController;
-    }
-
-    public function setFirewallRoute($firewallRoute)
-    {
-        $this->firewallRoute = $firewallRoute;
-        return $this;
-    }
-
-    public function getFirewallRoute()
-    {
-        return $this->firewallRoute;
-    }
-
-    public function setFirewalls($firewalls)
-    {
-        $this->firewalls = $firewalls;
-        return $this;
-    }
-
-    public function getFirewalls()
-    {
-        return $this->firewalls;
-    }
-
-    public function setIdentityProvider($identityProvider)
-    {
-        $this->identityProvider = $identityProvider;
-        return $this;
-    }
-
-    public function getIdentityProvider()
-    {
-        return $this->identityProvider;
-    }
-
-    public function setProviders($providers)
-    {
-        $this->providers = $providers;
-        return $this;
-    }
-
-    public function getProviders()
-    {
-        return $this->providers;
-    }
-
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-        return $this;
-    }
-
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
+    /**
+     * @param string $anonymousRole
+     * @return SecurityOptions
+     */
     public function setAnonymousRole($anonymousRole)
     {
         $this->anonymousRole = $anonymousRole;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getAnonymousRole()
     {
         return $this->anonymousRole;
+    }
+
+    /**
+     * @param boolean $firewallController
+     * @return SecurityOptions
+     */
+    public function setFirewallController($firewallController)
+    {
+        $this->firewallController = $firewallController;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getFirewallController()
+    {
+        return $this->firewallController;
+    }
+
+    /**
+     * @param boolean $firewallRoute
+     * @return SecurityOptions
+     */
+    public function setFirewallRoute($firewallRoute)
+    {
+        $this->firewallRoute = $firewallRoute;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getFirewallRoute()
+    {
+        return $this->firewallRoute;
+    }
+
+    /**
+     * @param array $firewalls
+     * @return SecurityOptions
+     */
+    public function setFirewalls($firewalls)
+    {
+        $this->firewalls = $firewalls;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFirewalls()
+    {
+        return $this->firewalls;
+    }
+
+    /**
+     * @param string $identityProvider
+     * @return SecurityOptions
+     */
+    public function setIdentityProvider($identityProvider)
+    {
+        $this->identityProvider = $identityProvider;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentityProvider()
+    {
+        return $this->identityProvider;
+    }
+
+    /**
+     * @param array $permissionProviders
+     * @return SecurityOptions
+     */
+    public function setPermissionProviders($permissionProviders)
+    {
+        $this->permissionProviders = $permissionProviders;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissionProviders()
+    {
+        return $this->permissionProviders;
+    }
+
+    /**
+     * @param array $roleProviders
+     * @return SecurityOptions
+     */
+    public function setRoleProviders($roleProviders)
+    {
+        $this->roleProviders = $roleProviders;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoleProviders()
+    {
+        return $this->roleProviders;
+    }
+
+    /**
+     * @param string $template
+     * @return SecurityOptions
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

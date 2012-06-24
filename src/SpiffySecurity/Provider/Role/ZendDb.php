@@ -1,6 +1,6 @@
 <?php
 
-namespace SpiffySecurity\Provider;
+namespace SpiffySecurity\Provider\Role;
 
 use DomainException;
 use SpiffySecurity\Rbac\Rbac;
@@ -8,7 +8,7 @@ use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ZendDb implements ProviderInterface
+class ZendDb implements RoleInterface
 {
     /**
      * @var \Zend\Db\Adapter\Adapter
@@ -21,7 +21,7 @@ class ZendDb implements ProviderInterface
     protected $roles;
 
     /**
-     * @var \SpiffySecurity\Provider\ZendDbOptions
+     * @var \SpiffySecurity\Provider\Role\ZendDbOptions
      */
     protected $options;
 
@@ -35,6 +35,13 @@ class ZendDb implements ProviderInterface
         $this->options = new ZendDbOptions($options);
     }
 
+    /**
+     * Load permissions into roles.
+     *
+     * @abstract
+     * @param Rbac $rbac
+     * @return mixed
+     */
     public function load(Rbac $rbac)
     {
         $options = $this->options;
@@ -93,7 +100,7 @@ class ZendDb implements ProviderInterface
      * @static
      * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
      * @param mixed $spec
-     * @return \SpiffySecurity\Provider\ZendDb
+     * @return \SpiffySecurity\Provider\Role\ZendDb
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
     {
@@ -111,6 +118,6 @@ class ZendDb implements ProviderInterface
             throw new DomainException('Adapter should be a service locator alias or an array');
         }
 
-        return new \SpiffySecurity\Provider\ZendDb($adapter, $options);
+        return new \SpiffySecurity\Provider\Role\ZendDb($adapter, $options);
     }
 }

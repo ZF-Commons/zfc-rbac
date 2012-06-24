@@ -4,9 +4,11 @@ namespace SpiffySecurity\Service;
 
 use InvalidArgumentException;
 use RuntimeException;
+use SpiffySecurity\Exception;
 use SpiffySecurity\Firewall\AbstractFirewall;
 use SpiffySecurity\Identity;
-use SpiffySecurity\Provider\ProviderInterface;
+use SpiffySecurity\Provider\Role\RoleInterface;
+use SpiffySecurity\Provider\Permission\PermissionInterface;
 use SpiffySecurity\Rbac\Rbac;
 
 class Security
@@ -37,7 +39,12 @@ class Security
     /**
      * @var array
      */
-    protected $providers = array();
+    protected $roleProviders = array();
+
+    /**
+     * @var array
+     */
+    protected $permissionProviders = array();
 
     /**
      * @param array $options
@@ -92,6 +99,24 @@ class Security
     }
 
     /**
+     * Throws an exception if access is denied to the required permission.
+     *
+     * @param $permission
+     * @return bool
+     * @throws \SpiffySecurity\Exception\AccessForbidden
+     */
+    public function isGrantedStrict($permission)
+    {
+        if (!$this->isGranted($permission)) {
+            throw new Exception\AccessForbidden(sprintf(
+                'Access forbidden to %s',
+                $permission
+            ));
+        }
+        return true;
+    }
+
+    /**
      * Access to firewalls by name.
      *
      * @param string $name
@@ -126,11 +151,11 @@ class Security
     }
 
     /**
-     * @param \SpiffySecurity\Provider\ProviderInterface $provider
+     * @param PermissionInterface $provider
      * @param bool $force
      * @return \SpiffySecurity\Service\Security
      */
-    public function addProvider(ProviderInterface $provider, $force = false)
+    public function addPermissionProvider(PermissionInterface $provider, $force = false)
     {
         if ($this->loaded && !$force) {
             throw new RuntimeException(
@@ -138,7 +163,24 @@ class Security
                 'behaviour by setting $force = true when you add a provider.'
             );
         }
-        $this->providers[] = $provider;
+        $this->permissionProviders[] = $provider;
+        return $this;
+    }
+
+    /**
+     * @param RoleInterface $provider
+     * @param bool $force
+     * @return \SpiffySecurity\Service\Security
+     */
+    public function addRoleProvider(RoleInterface $provider, $force = false)
+    {
+        if ($this->loaded && !$force) {
+            throw new RuntimeException(
+                'Adding new providers after initialization has been disabled. You can override this' .
+                'behaviour by setting $force = true when you add a provider.'
+            );
+        }
+        $this->roleProviders[] = $provider;
         return $this;
     }
 
@@ -212,9 +254,13 @@ class Security
 
         $rbac = new Rbac;
 
-        // add roles from providers
-        foreach($this->providers as $provider) {
-            /** @var $provider ProviderInterface */
+        foreach($this->roleProviders as $provider) {
+            /** @var $provider RoleInterface */
+            $provider->load($rbac);
+        }
+
+        foreach($this->permissionProviders as $provider) {
+            /** @var $provider PermissionInterface */
             $provider->load($rbac);
         }
 

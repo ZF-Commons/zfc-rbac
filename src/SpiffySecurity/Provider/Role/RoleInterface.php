@@ -1,11 +1,11 @@
 <?php
 
-namespace SpiffySecurity\Provider;
+namespace SpiffySecurity\Provider\Role;
 
 use SpiffySecurity\Rbac\Rbac;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-interface ProviderInterface
+interface RoleInterface
 {
     /**
      * Factory to create the provider.
