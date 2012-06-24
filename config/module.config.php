@@ -1,10 +1,8 @@
 <?php
 return array(
     'security' => array(
-        'role_providers' => array(
-        ),
-
-        'firewalls' => array(),
+        // put your options here
+        // see SpiffySecurity\Service\SecurityOptions for options
     ),
     'view_manager' => array(
         'helper_map' => array(
