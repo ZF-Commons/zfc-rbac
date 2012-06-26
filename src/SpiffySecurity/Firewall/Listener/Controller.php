@@ -6,7 +6,7 @@ use Zend\Mvc\MvcEvent;
 
 class Controller
 {
-    public function onRoute(MvcEvent $e)
+    public static function onRoute(MvcEvent $e)
     {
         $app        = $e->getTarget();
         $security   = $app->getServiceManager()->get('SpiffySecurity\Service\Security');

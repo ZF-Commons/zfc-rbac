@@ -6,7 +6,7 @@ use Zend\Mvc\MvcEvent;
 
 class Route
 {
-    public function onRoute(MvcEvent $e)
+    public static function onRoute(MvcEvent $e)
     {
         $app      = $e->getTarget();
         $route    = $e->getRouteMatch()->getMatchedRouteName();
