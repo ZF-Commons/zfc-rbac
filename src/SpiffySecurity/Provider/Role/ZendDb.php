@@ -74,7 +74,7 @@ class ZendDb implements RoleInterface
 
             $roles[$parentName][] = $row['name'];
         }
-        $this->loadRbac($rbac, $roles);
+        return $roles;
     }
 
     /**
