@@ -45,11 +45,20 @@ abstract class AbstractRole extends AbstractIterator
     /**
      * Add a child.
      *
-     * @param AbstractRole $child
+     * @param AbstractRole|string $child
      * @return Role
      */
-    public function addChild(AbstractRole $child)
+    public function addChild($child)
     {
+        if (is_string($child)) {
+            $child = new Role($child);
+        }
+        if (!$child instanceof AbstractRole) {
+            throw new InvalidArgumentException(
+                'Child must be a string or instance of SpiffySecurity\Role\AbstractRole'
+            );
+        }
+
         $this->children[] = $child;
         return $this;
     }

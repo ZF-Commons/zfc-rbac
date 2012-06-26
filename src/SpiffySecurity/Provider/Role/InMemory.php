@@ -7,6 +7,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class InMemory implements RoleInterface
 {
+    protected $options;
+
+    public function __construct(array $spec = array())
+    {
+        $this->options = new InMemoryOptions($spec);
+    }
+
     /**
      * Load permissions into roles.
      *
@@ -16,7 +23,21 @@ class InMemory implements RoleInterface
      */
     public function load(Rbac $rbac)
     {
-        exit;
+        $roles  = $this->options->getRoles();
+        $result = array();
+        foreach($roles as $role => $parents) {
+            if (is_numeric($role)) {
+                $role    = $parents;
+                $parents = array();
+            }
+            if (empty($parents)) {
+                $result[0][] = $role;
+            }
+            foreach($parents as $parent) {
+                $result[$parent][] = $role;
+            }
+        }
+        return $result;
     }
 
     /**

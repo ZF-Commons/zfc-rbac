@@ -51,14 +51,13 @@ class ZendDb implements RoleInterface
 
         if ($options->getJoinColumn()) {
             $select->columns(array(
-                'id'   => 'id',
                 'name' => $options->getNameColumn(),
             ));
             $select->from(array('role' => $options->getTable()));
             $select->join(
                 array('parent' => $options->getTable()),
                 "role.{$options->getJoinColumn()} = parent.{$options->getIdColumn()}",
-                array('parent_id' => 'id'),
+                array('parent' => 'name'),
                 $select::JOIN_LEFT
             );
         } else {
@@ -70,28 +69,12 @@ class ZendDb implements RoleInterface
 
         $roles = array();
         foreach($results as $row) {
-            if (empty($row['parent_id'])) {
-                $row['parent_id'] = 0;
-            }
-            $roles[$row['parent_id']][] = $row;
-        }
+            $parentName = isset($row['parent']) ? $row['parent'] : 0;
+            unset($row['parent']);
 
-        ksort($roles);
+            $roles[$parentName][] = $row['name'];
+        }
         $this->loadRbac($rbac, $roles);
-    }
-
-    protected function loadRbac(Rbac $rbac, $roles, $parentId = 0, $parentName = null)
-    {
-        foreach ($roles[$parentId] as $role) {
-            if ($parentName) {
-                $rbac->getRole($parentName)->addChild(new \SpiffySecurity\Rbac\Role($role['name']));
-            } else {
-                $rbac->addChild($role['name']);
-            }
-            if (!empty($roles[$role['id']])) {
-                $this->loadRbac($rbac, $roles, $role['id'], $role['name']);
-            }
-        }
     }
 
     /**

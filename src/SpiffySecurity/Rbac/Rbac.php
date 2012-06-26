@@ -7,27 +7,13 @@ use InvalidArgumentException;
 class Rbac extends AbstractIterator
 {
     /**
-     * Add an array of children.
-     *
-     * @param array $children
-     * @return AbstractRole
-     */
-    public function addChildren(array $children)
-    {
-        foreach($children as $child) {
-            $this->addChild($child);
-        }
-        return $this;
-    }
-
-    /**
      * Add a child.
      *
      * @param string|AbstractRole $child
      * @return AbstractRole
      * @throws \InvalidArgumentException
      */
-    public function addChild($child, $parents = null)
+    public function addRole($child, $parents = null)
     {
         if (is_string($child)) {
             $child = new Role($child);

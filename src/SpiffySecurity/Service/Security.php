@@ -256,7 +256,7 @@ class Security
 
         foreach($this->roleProviders as $provider) {
             /** @var $provider RoleInterface */
-            $provider->load($rbac);
+            $this->recursiveRoles($rbac, $provider->load($rbac));
         }
 
         foreach($this->permissionProviders as $provider) {
@@ -265,5 +265,19 @@ class Security
         }
 
         $this->rbac = $rbac;
+    }
+
+    protected function recursiveRoles(Rbac $rbac, $roles, $parentName = 0)
+    {
+        foreach ($roles[$parentName] as $role) {
+            if ($parentName) {
+                $rbac->getRole($parentName)->addChild($role);
+            } else {
+                $rbac->addRole($role);
+            }
+            if (!empty($roles[$role])) {
+                $this->recursiveroles($rbac, $roles, $role);
+            }
+        }
     }
 }
