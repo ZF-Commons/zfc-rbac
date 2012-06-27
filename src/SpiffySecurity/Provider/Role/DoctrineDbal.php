@@ -7,7 +7,7 @@ use Doctrine\DBAL\Connection;
 use SpiffySecurity\Rbac\Rbac;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DoctrineDBAL implements RoleInterface
+class DoctrineDbal implements RoleInterface
 {
     /**
      * @var Connection
@@ -20,7 +20,7 @@ class DoctrineDBAL implements RoleInterface
     protected $roles;
 
     /**
-     * @var DoctrineDBALOptions
+     * @var DoctrineDbalOptions
      */
     protected $options;
 
@@ -31,7 +31,7 @@ class DoctrineDBAL implements RoleInterface
     public function __construct(connection $connection, array $options)
     {
         $this->connection = $connection;
-        $this->options    = new DoctrineDBALOptions($options);
+        $this->options    = new DoctrineDbalOptions($options);
     }
 
     /**
@@ -88,6 +88,6 @@ class DoctrineDBAL implements RoleInterface
             throw new DomainException('Failed to find DBAL Connection');
         }
 
-        return new \SpiffySecurity\Provider\Role\DoctrineDBAL($adapter, $options);
+        return new \SpiffySecurity\Provider\Role\DoctrineDbal($adapter, $options);
     }
 }

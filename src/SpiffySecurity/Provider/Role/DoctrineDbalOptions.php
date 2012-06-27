@@ -4,7 +4,7 @@ namespace SpiffySecurity\Provider\Role;
 
 use Zend\Stdlib\Options;
 
-class DoctrineDBALOptions extends Options
+class DoctrineDbalOptions extends Options
 {
     /**
      * The name of the table the roles are stored in.
