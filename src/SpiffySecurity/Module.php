@@ -12,14 +12,14 @@ class Module
         $strategy = $sm->get('SpiffySecurity\View\UnauthorizedStrategy');
 
         if ($security->options()->getFirewallRoute()) {
-            $app->events()->attach('route', array('SpiffySecurity\Firewall\Listener\Route', 'onRoute'), -1000);
+            $app->getEventManager()->attach('route', array('SpiffySecurity\Firewall\Listener\Route', 'onRoute'), -1000);
         }
 
         if ($security->options()->getFirewallController()) {
-            $app->events()->attach('route', array('SpiffySecurity\Firewall\Listener\Controller', 'onRoute'), -1000);
+            $app->getEventManager()->attach('route', array('SpiffySecurity\Firewall\Listener\Controller', 'onRoute'), -1000);
         }
 
-        $app->events()->attach($strategy);
+        $app->getEventManager()->attach($strategy);
     }
 
     public function getServiceConfiguration()

@@ -2,9 +2,9 @@
 
 namespace SpiffySecurity\Provider\Role;
 
-use Zend\Stdlib\Options;
+use Zend\Stdlib\AbstractOptions;
 
-class ZendDbOptions extends Options
+class ZendDbOptions extends AbstractOptions
 {
     /**
      * The name of the table the roles are stored in.

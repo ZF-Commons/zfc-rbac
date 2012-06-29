@@ -2,9 +2,9 @@
 
 namespace SpiffySecurity\Service;
 
-use Zend\Stdlib\Options;
+use Zend\Stdlib\AbstractOptions;
 
-class SecurityOptions extends Options
+class SecurityOptions extends AbstractOptions
 {
     /**
      * The default role that is used if no role is found from the

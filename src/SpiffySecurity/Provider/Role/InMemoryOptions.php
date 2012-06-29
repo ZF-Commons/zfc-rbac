@@ -2,9 +2,9 @@
 
 namespace SpiffySecurity\Provider\Role;
 
-use Zend\Stdlib\Options;
+use Zend\Stdlib\AbstractOptions;
 
-class InMemoryOptions extends Options
+class InMemoryOptions extends AbstractOptions
 {
     /**
      * The array map of roles keyed with parents and having values of
