@@ -269,7 +269,7 @@ class Security
 
     protected function recursiveRoles(Rbac $rbac, $roles, $parentName = 0)
     {
-        foreach ($roles[$parentName] as $role) {
+        foreach ((array) $roles[$parentName] as $role) {
             if ($parentName) {
                 $rbac->getRole($parentName)->addChild($role);
             } else {
