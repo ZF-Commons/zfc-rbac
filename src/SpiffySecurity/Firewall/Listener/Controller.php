@@ -22,7 +22,7 @@ class Controller
                   ->setParam('controller', $controller)
                   ->setParam('action', $action);
 
-                $app->events()->trigger('dispatch.error', $e);
+                $app->getEventManager()->trigger('dispatch.error', $e);
             }
         } catch (\InvalidArgumentException $e) {
             return;

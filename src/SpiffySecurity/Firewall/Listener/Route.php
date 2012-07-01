@@ -18,7 +18,7 @@ class Route
                     ->setParam('identity', $security->getIdentity())
                     ->setParam('route', $route);
 
-                $app->events()->trigger('dispatch.error', $e);
+                $app->getEventManager()->trigger('dispatch.error', $e);
             }
         } catch (\InvalidArgumentException $e) {
             return;
