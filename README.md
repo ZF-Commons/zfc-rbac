@@ -71,7 +71,7 @@ roles to check for access. If any of the roles passed have access then `isGrante
 <?php
 return array(
     'security' => array(
-        'firewall' => array(
+        'firewalls' => array(
             'controller' => array(
                 array('controller' => 'profile', 'action' => 'view', 'roles' => 'guest')
             ),
@@ -81,8 +81,8 @@ return array(
             ),
         ),
 
-        'provider' => array(
-            'in_memory' => array(
+        'role_providers' => array(
+            'SpiffySecurity\Provider\Role\InMemory' => array(
                 'test_role' => 'test_parent',
             ),
             'doctrine_dbal' => array(
