@@ -22,7 +22,7 @@ class Module
         $app->getEventManager()->attach($strategy);
     }
 
-    public function getServiceConfiguration()
+    public function getServiceConfig()
     {
         return array(
             'aliases' => array(
