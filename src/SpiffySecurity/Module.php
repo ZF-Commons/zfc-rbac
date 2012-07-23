@@ -37,17 +37,26 @@ class Module
                         $sm->get('SpiffySecurity\Service\Security')
                     );
                 },
-                'SpiffySecurity\View\Helper\IsGranted' => function($sm) {
-                    return new \SpiffySecurity\View\Helper\IsGranted(
-                        $sm->get('SpiffySecurity\Service\Security')
-                    );
-                },
                 'SpiffySecurity\View\UnauthorizedStrategy' => 'SpiffySecurity\Service\UnauthorizedStrategyFactory',
                 'SpiffySecurity\Service\Security'          => 'SpiffySecurity\Service\SecurityFactory'
             )
         );
     }
 
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'SpiffySecurity\View\Helper\IsGranted' => function($sm) {
+                    $sl = $sm->getServiceLocator();
+                    return new \SpiffySecurity\View\Helper\IsGranted(
+                        $sl->get('SpiffySecurity\Service\Security')
+                    );
+                },
+            )
+        );
+    }
+    
     public function getConfig()
     {
         return include __DIR__ . '/../../config/module.config.php';
