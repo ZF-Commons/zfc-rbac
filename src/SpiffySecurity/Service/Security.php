@@ -7,14 +7,21 @@ use RuntimeException;
 use SpiffySecurity\Exception;
 use SpiffySecurity\Firewall\AbstractFirewall;
 use SpiffySecurity\Identity;
-use SpiffySecurity\Provider\Role\RoleInterface;
-use SpiffySecurity\Provider\Permission\PermissionInterface;
+use SpiffySecurity\Provider\Event;
+use SpiffySecurity\Provider\ProviderInterface;
 use SpiffySecurity\Rbac\Rbac;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\EventManager;
 
 class Security
 {
     const ERROR_ROUTE_UNAUTHORIZED      = 'error-route-unauthorized';
     const ERROR_CONTROLLER_UNAUTHORIZED = 'error-controller-unauthorized';
+
+    /**
+     * @var EventManagerInterface
+     */
+    protected $events;
 
     /**
      * @var \SpiffySecurity\Rbac\Rbac
@@ -27,24 +34,14 @@ class Security
     protected $firewalls = array();
 
     /**
-     * @var \SpiffySecurity\Identity\IdentityInterface
+     * @var Identity\IdentityInterface
      */
     protected $identity;
 
     /**
-     * @var bool
-     */
-    protected $loaded = false;
-
-    /**
      * @var array
      */
-    protected $roleProviders = array();
-
-    /**
-     * @var array
-     */
-    protected $permissionProviders = array();
+    protected $providers = array();
 
     /**
      * @param array $options
@@ -55,6 +52,37 @@ class Security
     }
 
     /**
+     * Set the event manager instance used by this context
+     *
+     * @param  EventManagerInterface $events
+     * @return Security
+     */
+    public function setEventManager(EventManagerInterface $events)
+    {
+        $events->setIdentifiers(array(
+            __CLASS__,
+            get_called_class(),
+        ));
+        $this->events = $events;
+        return $this;
+    }
+
+    /**
+     * Retrieve the event manager
+     *
+     * Lazy-loads an EventManager instance if none registered.
+     *
+     * @return EventManagerInterface
+     */
+    public function getEventManager()
+    {
+        if (!$this->events) {
+            $this->setEventManager(new EventManager());
+        }
+        return $this->events;
+    }
+
+    /**
      * Returns true if the user has the role.
      *
      * @param string $role
@@ -62,25 +90,7 @@ class Security
      */
     public function hasRole($role)
     {
-        $roles = $this->getIdentity()->getRoles();
-
-        // check direct roles (fastest)
-        if (in_array($role, $roles)) {
-            return true;
-        }
-
-        // check children roles
-        foreach($roles as $identityRole) {
-            $child = $this->getRbac()->getRole($identityRole);
-            $it    = new \RecursiveIteratorIterator($child, \RecursiveIteratorIterator::CHILD_FIRST);
-
-            foreach($it as $leaf) {
-                if ($leaf->getName() === $role) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->getRbac()->hasRole($role);
     }
 
     /**
@@ -90,30 +100,22 @@ class Security
      */
     public function isGranted($permission)
     {
+        $rbac = $this->getRbac();
+
         foreach($this->getIdentity()->getRoles() as $role) {
-            if ($this->getRbac()->isGranted($role, $permission)) {
-                return true;
+            $event = new Event;
+            $event->setRole($role)
+                  ->setPermission($permission)
+                  ->setRbac($rbac);
+
+            $response = $this->getEventManager()->trigger(Event::EVENT_IS_GRANTED, $event);
+            foreach($response as $result) {
+                if ($result === true) {
+                    return true;
+                }
             }
         }
         return false;
-    }
-
-    /**
-     * Throws an exception if access is denied to the required permission.
-     *
-     * @param $permission
-     * @return bool
-     * @throws \SpiffySecurity\Exception\AccessForbidden
-     */
-    public function isGrantedStrict($permission)
-    {
-        if (!$this->isGranted($permission)) {
-            throw new Exception\AccessForbidden(sprintf(
-                'Access forbidden to %s',
-                $permission
-            ));
-        }
-        return true;
     }
 
     /**
@@ -130,6 +132,7 @@ class Security
                 $name
             ));
         }
+
         return $this->firewalls[$name];
     }
 
@@ -145,47 +148,26 @@ class Security
                 $firewall->getName()
             ));
         }
+
         $firewall->setSecurity($this);
         $this->firewalls[$firewall->getName()] = $firewall;
         return $this;
     }
 
     /**
-     * @param PermissionInterface $provider
-     * @param bool $force
+     * @param ProviderInterface $provider
      * @return \SpiffySecurity\Service\Security
      */
-    public function addPermissionProvider(PermissionInterface $provider, $force = false)
+    public function addProvider(ProviderInterface $provider)
     {
-        if ($this->loaded && !$force) {
-            throw new RuntimeException(
-                'Adding new providers after initialization has been disabled. You can override this' .
-                'behaviour by setting $force = true when you add a provider.'
-            );
-        }
-        $this->permissionProviders[] = $provider;
+        $provider->attachListeners($this->getEventManager());
+
+        $this->providers[] = $provider;
         return $this;
     }
 
     /**
-     * @param RoleInterface $provider
-     * @param bool $force
-     * @return \SpiffySecurity\Service\Security
-     */
-    public function addRoleProvider(RoleInterface $provider, $force = false)
-    {
-        if ($this->loaded && !$force) {
-            throw new RuntimeException(
-                'Adding new providers after initialization has been disabled. You can override this' .
-                'behaviour by setting $force = true when you add a provider.'
-            );
-        }
-        $this->roleProviders[] = $provider;
-        return $this;
-    }
-
-    /**
-     * @return \SpiffySecurity\Identity\IdentityInterface
+     * @return Identity\IdentityInterface
      */
     public function getIdentity()
     {
@@ -196,7 +178,7 @@ class Security
     }
 
     /**
-     * @param string|null|\SpiffySecurity\Identity\IdentityInterface $identity
+     * @param string|null|\Identity\IdentityInterface $identity
      * @return \SpiffySecurity\Service\Security
      */
     public function setIdentity($identity = null)
@@ -210,6 +192,7 @@ class Security
                 'Identity must be null, a string, or an instance of SpiffySecurity\Identity\IdentityInterface'
             );
         }
+
         $this->identity = $identity;
         return $this;
     }
@@ -219,8 +202,21 @@ class Security
      */
     public function getRbac()
     {
-        $this->load();
+        if (null === $this->rbac) {
+            $this->rbac = new Rbac;
 
+            $event = new Event;
+            $event->setRbac($this->rbac);
+
+            $this->getEventManager()->trigger(Event::EVENT_ON_LOAD, $event);
+
+            $this->getEventManager()->trigger(Event::EVENT_LOAD_ROLES, $event);
+            $this->getEventManager()->trigger(Event::EVENT_LOAD_PERMISSIONS, $event);
+        }
+        echo '<pre>';
+        print_r($this->rbac);
+        echo '</pre>';
+        exit;
         return $this->rbac;
     }
 
@@ -230,65 +226,5 @@ class Security
     public function options()
     {
         return $this->options;
-    }
-
-    /**
-     * Reset to original state.
-     */
-    protected function reset()
-    {
-        $this->rbac    = null;
-        $this->loaded = false;
-    }
-
-    /**
-     * Load acl.
-     *
-     * @return void
-     */
-    protected function load()
-    {
-        if ($this->loaded) {
-            return;
-        }
-
-        $rbac = new Rbac;
-
-        foreach($this->roleProviders as $provider) {
-            /** @var $provider RoleInterface */
-            $this->recursiveRoles($rbac, $provider->load($rbac));
-        }
-
-        foreach($this->permissionProviders as $provider) {
-            /** @var $provider PermissionInterface */
-            $provider->load($rbac);
-        }
-
-        $this->rbac = $rbac;
-    }
-
-    /**
-     * Recursive function to add roles according to their parent role.
-     * 
-     * @param Rbac $rbac
-     * @param $roles
-     * @param int $parentName
-     * @return mixed
-     */
-    protected function recursiveRoles(Rbac $rbac, $roles, $parentName = 0)
-    {
-        if (!isset($roles[$parentName])) {
-            return;
-        }
-        foreach ((array) $roles[$parentName] as $role) {
-            if ($parentName) {
-                $rbac->getRole($parentName)->addChild($role);
-            } else {
-                $rbac->addRole($role);
-            }
-            if (!empty($roles[$role])) {
-                $this->recursiveroles($rbac, $roles, $role);
-            }
-        }
     }
 }

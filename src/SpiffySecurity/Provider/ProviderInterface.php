@@ -1,11 +1,11 @@
 <?php
 
-namespace SpiffySecurity\Provider\Role;
+namespace SpiffySecurity\Provider;
 
-use SpiffySecurity\Rbac\Rbac;
+use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-interface RoleInterface
+interface ProviderInterface
 {
     /**
      * Factory to create the provider.
@@ -18,5 +18,12 @@ interface RoleInterface
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec);
 
-    public function load(Rbac $rbac);
+    /**
+     * Attach to the listeners.
+     *
+     * @abstract
+     * @param \Zend\EventManager\EventManager $events
+     * @return void
+     */
+    public function attachListeners(EventManager $events);
 }

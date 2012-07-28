@@ -1,6 +1,6 @@
 <?php
 
-namespace SpiffySecurity\Provider\Role;
+namespace SpiffySecurity\Provider\Generic\Role;
 
 use Zend\Stdlib\AbstractOptions;
 
@@ -13,7 +13,7 @@ class InMemoryOptions extends AbstractOptions
      *
      * @var array
      */
-    protected $roles;
+    protected $roles = array();
 
     /**
      * @param array $roles

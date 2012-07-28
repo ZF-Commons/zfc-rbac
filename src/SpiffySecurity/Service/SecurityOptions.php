@@ -44,6 +44,13 @@ class SecurityOptions extends AbstractOptions
     protected $identityProvider =  'my_identity_provider';
 
     /**
+     * flag: enable or disable the use of lazy-loading providers.
+     *
+     * @var bool
+     */
+    protected $enableLazyProviders = true;
+
+    /**
      * Array of firewall rules.
      *
      * @var array
@@ -51,18 +58,11 @@ class SecurityOptions extends AbstractOptions
     protected $firewalls = array();
 
     /**
-     * Array of role providers.
+     * Array of providers.
      *
      * @var array
      */
-    protected $roleProviders = array();
-
-    /**
-     * Array of permission providers.
-     *
-     * @var array
-     */
-    protected $permissionProviders = array();
+    protected $providers = array();
 
     /**
      * @param string $anonymousRole
@@ -155,39 +155,21 @@ class SecurityOptions extends AbstractOptions
     }
 
     /**
-     * @param array $permissionProviders
+     * @param array $providers
      * @return SecurityOptions
      */
-    public function setPermissionProviders($permissionProviders)
+    public function setProviders($providers)
     {
-        $this->permissionProviders = $permissionProviders;
+        $this->providers = $providers;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getPermissionProviders()
+    public function getProviders()
     {
-        return $this->permissionProviders;
-    }
-
-    /**
-     * @param array $roleProviders
-     * @return SecurityOptions
-     */
-    public function setRoleProviders($roleProviders)
-    {
-        $this->roleProviders = $roleProviders;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRoleProviders()
-    {
-        return $this->roleProviders;
+        return $this->providers;
     }
 
     /**

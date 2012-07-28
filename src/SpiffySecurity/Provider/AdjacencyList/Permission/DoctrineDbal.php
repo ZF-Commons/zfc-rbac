@@ -1,13 +1,13 @@
 <?php
 
-namespace SpiffySecurity\Provider\Role;
+namespace SpiffySecurity\Provider\AdjacencyList\Permission;
 
 use DomainException;
 use Doctrine\DBAL\Connection;
-use SpiffySecurity\Rbac\Rbac;
+use SpiffySecurity\Provider\ProviderInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DoctrineDbal implements RoleInterface
+class DoctrineDbal implements ProviderInterface
 {
     /**
      * @var Connection
@@ -46,24 +46,29 @@ class DoctrineDbal implements RoleInterface
         $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->connection);
         $options = $this->options;
 
-        if ($options->getJoinColumn()) {
-            $builder->select("role.{$options->getNameColumn()} AS name, parent.{$options->getNameColumn()} AS parent")
-                    ->from('role', 'role')
-                    ->leftJoin('role', 'role', 'parent', "role.{$options->getJoinColumn()} = parent.{$options->getIdColumn()}");
-        } else {
-            // todo: implement non-joined query
-        }
+        $builder->select("
+                    p.{$options->getPermissionNameColumn()} AS permission,
+                    r.{$options->getRoleNameColumn()} AS role
+                ")
+                ->from('permission', 'p')
+                ->leftJoin(
+                    'p',
+                    'role_permission',
+                    'rp',
+                    "rp.{$options->getPermissionJoinColumn()} = p.{$options->getPermissionIdColumn()}"
+                )->leftJoin(
+                    'p',
+                    'role',
+                    'r',
+                    "rp.{$options->getRoleJoinColumn()} = r.{$options->getRoleIdColumn()}"
+                );
 
         $result = $builder->execute();
-
-        $roles = array();
+        $perms  = array();
         foreach($result as $row) {
-            $parentName = isset($row['parent']) ? $row['parent'] : 0;
-            unset($row['parent']);
-
-            $roles[$parentName][] = $row['name'];
+            $perms[$row['role']][] = $row['permission'];
         }
-        return $roles;
+        return $perms;
     }
 
     /**
@@ -72,7 +77,7 @@ class DoctrineDbal implements RoleInterface
      * @static
      * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
      * @param mixed $spec
-     * @return \SpiffySecurity\Provider\Role\DoctrineDBAL
+     * @return \SpiffySecurity\Provider\AdjacencyList\Permission\DoctrineDbal
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
     {
@@ -88,6 +93,6 @@ class DoctrineDbal implements RoleInterface
             throw new DomainException('Failed to find DBAL Connection');
         }
 
-        return new \SpiffySecurity\Provider\Role\DoctrineDbal($adapter, $options);
+        return new DoctrineDbal($adapter, $options);
     }
 }

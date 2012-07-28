@@ -3,6 +3,7 @@
 namespace SpiffySecurity\Rbac;
 
 use InvalidArgumentException;
+use RecursiveIteratorIterator;
 
 class Rbac extends AbstractIterator
 {
@@ -59,7 +60,7 @@ class Rbac extends AbstractIterator
      */
     public function getRole($name)
     {
-        $it = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::CHILD_FIRST);
+        $it = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::CHILD_FIRST);
         foreach($it as $leaf) {
             if ($leaf->getName() == $name) {
                 return $leaf;
@@ -70,28 +71,5 @@ class Rbac extends AbstractIterator
             'No child with name "%s" could be found',
             $name
         ));
-    }
-
-    /**
-     * Checks if a role is allowed to access permission.
-     *
-     * @param string $role
-     * @param string $permission
-     * @return bool
-     */
-    public function isGranted($role, $permission)
-    {
-        $role = $this->getRole($role);
-        if ($role->hasPermission($permission)) {
-            return true;
-        }
-
-        $it = new \RecursiveIteratorIterator($role, \RecursiveIteratorIterator::CHILD_FIRST);
-        foreach($it as $leaf) {
-            if ($leaf->hasPermission($permission)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
