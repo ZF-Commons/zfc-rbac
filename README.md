@@ -1,6 +1,6 @@
 # SpiffySecurity Module for Zend Framework 2
 
-SpiffySecurity is an ACL module for Zend Framework 2 geared towards quick & easy setup. Getting ACL
+SpiffySecurity is an access control module for Zend Framework 2 geared towards quick & easy setup. Getting access control
 working should take you less than 5 minutes.
 
 ## Requirements
@@ -68,8 +68,8 @@ the identity provider must implement `SpiffySecurity\Identity\IdentityInterface`
 
 ## View helper and controller plugin
 
-An `isGranted($roles)` view helper and controller plugin is available. To use, simply pass an array (or string) of
-roles to check for access. If any of the roles passed have access then `isGranted($roles)` returns true.
+An `isGranted($permission)` view helper and controller plugin is available. To use, simply pass a permission to check
+for access.
 
 ## Sample configuration
 

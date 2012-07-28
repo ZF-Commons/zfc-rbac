@@ -213,10 +213,6 @@ class Security
             $this->getEventManager()->trigger(Event::EVENT_LOAD_ROLES, $event);
             $this->getEventManager()->trigger(Event::EVENT_LOAD_PERMISSIONS, $event);
         }
-        echo '<pre>';
-        print_r($this->rbac);
-        echo '</pre>';
-        exit;
         return $this->rbac;
     }
 
