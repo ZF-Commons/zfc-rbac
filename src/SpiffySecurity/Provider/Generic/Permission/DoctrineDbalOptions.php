@@ -1,6 +1,6 @@
 <?php
 
-namespace SpiffySecurity\Provider\AdjacencyList\Permission;
+namespace SpiffySecurity\Provider\Generic\Permission;
 
 use Zend\Stdlib\AbstractOptions;
 

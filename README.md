@@ -35,12 +35,18 @@ Installation of SpiffySecurity uses composer. For composer documentation, please
 
 ## Providers
 
-To configure your roles SpiffySecurity uses what's called "providers." Providers offer a generic way
-to assign your roles. Shipped providers include:
+Providers are listeners that hook into various events to provide roles and permissions. SpiffySecurity ships with
+several providers that you can use out of the box:
 
-  - Doctrine DBAL: Uses Doctrine DBAL. Can be used out of the box with DoctrineORMModule.
-  - PDO: Uses PHP PDO connection.
-  - InMemory: Primarily used for testing. Allows you to setup roles directly in configuration.
+  - Generic Providers:
+    - Permission (Generic\DoctrineDbal): Uses DoctrineDBAL to configure permissions.
+    - Permission (Generic\InMemory): In memory permission adapter used primarily for testing or small sites.
+    - Role (Generic\InMemory): In memory role adapter used primarily for testing or small sites.
+    - Role (AdjacencyList\Role): Used for pre-loading roles in an adjacency list style.
+    - Lazy (NestedSet\DoctrineDbal): Used to lazy-load permissions/roles from DoctrineDBAL. This is used to for sites
+                                     with lots of permissions/roles so that the entire tree isn't in memory. It also
+                                     uses the nested set model rather than adjacency list for performant tree reads.
+                                     It's recommended to use this adapter standalone.
 
 See the module.config.php file for sample setups.
 

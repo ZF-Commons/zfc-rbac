@@ -46,7 +46,7 @@ class DoctrineDbal extends AbstractProvider implements ProviderInterface
      */
     public function attachListeners(EventManager $events)
     {
-        $events->attach(Event::EVENT_ON_LOAD, array($this, 'onLoad'));
+        $events->attach(Event::EVENT_LOAD_ROLES, array($this, 'loadRoles'));
     }
 
     /**
@@ -55,30 +55,28 @@ class DoctrineDbal extends AbstractProvider implements ProviderInterface
      * @param Event $e
      * @return array
      */
-    public function onLoad(Event $e)
+    public function loadRoles(Event $e)
     {
         $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->connection);
         $options = $this->options;
 
-        $builder->select('(COUNT(parent.name)-1) AS depth, node.name')
-            ->from($options->getTable(), 'node')
-            ->from($options->getTable(), 'parent')
-            ->where('node.lft BETWEEN parent.lft AND parent.rgt')
-            ->groupBy('node.name')
-            ->orderBy('node.lft');
+        $builder->select("role.{$options->getNameColumn()} AS name, parent.{$options->getNameColumn()} AS parent")
+                ->from($options->getTable(), 'role')
+                ->leftJoin(
+                    'role',
+                    $options->getTable(),
+                    'parent',
+                    "role.{$options->getJoinColumn()} = parent.{$options->getIdColumn()}"
+                );
 
         $result = $builder->execute();
-        $roles  = array();
-        $last   = null;
-        foreach($result as $row) {
-            if ($row['depth'] == 0) {
-                $last   = null;
-                $parent = 0;
-            } else {
-                $parent = $last;
-            }
 
-            $last = $roles[$parent][] = $row['name'];
+        $roles = array();
+        foreach($result as $row) {
+            $parentName = isset($row['parent']) ? $row['parent'] : 0;
+            unset($row['parent']);
+
+            $roles[$parentName][] = $row['name'];
         }
 
         $this->recursiveRoles($e->getRbac(), $roles);

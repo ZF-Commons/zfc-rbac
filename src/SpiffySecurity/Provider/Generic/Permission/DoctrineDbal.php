@@ -1,10 +1,12 @@
 <?php
 
-namespace SpiffySecurity\Provider\AdjacencyList\Permission;
+namespace SpiffySecurity\Provider\Generic\Permission;
 
 use DomainException;
 use Doctrine\DBAL\Connection;
+use SpiffySecurity\Provider\Event;
 use SpiffySecurity\Provider\ProviderInterface;
+use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class DoctrineDbal implements ProviderInterface
@@ -35,14 +37,24 @@ class DoctrineDbal implements ProviderInterface
     }
 
     /**
+     * Attach to the listeners.
+     *
+     * @param \Zend\EventManager\EventManager $events
+     * @return void
+     */
+    public function attachListeners(EventManager $events)
+    {
+        $events->attach(Event::EVENT_LOAD_PERMISSIONS, array($this, 'loadPermissions'));
+    }
+
+    /**
      * Load permissions into roles.
      *
-     * @abstract
-     * @param Rbac $rbac
-     * @return mixed
+     * @param Event $e
      */
-    public function load(Rbac $rbac)
+    public function loadPermissions(Event $e)
     {
+        $rbac    = $e->getRbac();
         $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->connection);
         $options = $this->options;
 
@@ -63,12 +75,11 @@ class DoctrineDbal implements ProviderInterface
                     "rp.{$options->getRoleJoinColumn()} = r.{$options->getRoleIdColumn()}"
                 );
 
-        $result = $builder->execute();
-        $perms  = array();
-        foreach($result as $row) {
-            $perms[$row['role']][] = $row['permission'];
+        foreach($builder->execute() as $row) {
+            if ($rbac->hasRole($row['role'])) {
+                $rbac->getRole($row['role'])->addPermission($row['permission']);
+            }
         }
-        return $perms;
     }
 
     /**
@@ -76,8 +87,8 @@ class DoctrineDbal implements ProviderInterface
      *
      * @static
      * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     * @param mixed $spec
-     * @return \SpiffySecurity\Provider\AdjacencyList\Permission\DoctrineDbal
+     * @param array $spec
+     * @return DoctrineDbal
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
     {
