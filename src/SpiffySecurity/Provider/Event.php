@@ -7,10 +7,13 @@ use Zend\EventManager\Event as BaseEvent;
 
 class Event extends BaseEvent
 {
+    // Primarily for lazy-loading roles/permission
+    const EVENT_HAS_ROLE         = 'has.role';
     const EVENT_IS_GRANTED       = 'is.granted';
+
+    // Primarily for pre-loading roles/permissions
     const EVENT_LOAD_ROLES       = 'load.roles';
     const EVENT_LOAD_PERMISSIONS = 'load.permissions';
-    const EVENT_ON_LOAD          = 'on.load';
 
     /**
      * @var Rbac

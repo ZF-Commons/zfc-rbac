@@ -35,11 +35,10 @@ class Route extends AbstractFirewall
     /**
      * Checks if access is granted.
      *
-     * @param \SpiffySecurity\Identity\IdentityInterface $identity
-     * @param string $role
+     * @param string $resource
      * @return bool
      */
-    public function isGranted($role)
+    public function isGranted($resource)
     {
         // No rules, automatically allow
         if (empty($this->rules)) {
@@ -47,7 +46,7 @@ class Route extends AbstractFirewall
         }
 
         // If no rule exists for this resource allow it.
-        $result = (bool) preg_match($this->ruleRegex, $role, $matches);
+        $result = (bool) preg_match($this->ruleRegex, $resource, $matches);
         if (false === $result) {
             return true;
         }
@@ -65,7 +64,7 @@ class Route extends AbstractFirewall
             }
         }
 
-        return $this->checkRoles($roles);
+        return $this->security->hasRole($roles);
     }
 
     /**

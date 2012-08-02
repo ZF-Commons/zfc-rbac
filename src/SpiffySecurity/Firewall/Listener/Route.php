@@ -12,16 +12,12 @@ class Route
         $route    = $e->getRouteMatch()->getMatchedRouteName();
         $security = $app->getServiceManager()->get('SpiffySecurity\Service\Security');
 
-        try {
-            if (!$security->getFirewall('route')->isGranted($route)) {
-                $e->setError($security::ERROR_ROUTE_UNAUTHORIZED)
-                    ->setParam('identity', $security->getIdentity())
-                    ->setParam('route', $route);
+        if (!$security->getFirewall('route')->isGranted($route)) {
+            $e->setError($security::ERROR_ROUTE_UNAUTHORIZED)
+              ->setParam('identity', $security->getIdentity())
+              ->setParam('route', $route);
 
-                $app->getEventManager()->trigger('dispatch.error', $e);
-            }
-        } catch (\InvalidArgumentException $e) {
-            return;
+            $app->getEventManager()->trigger('dispatch.error', $e);
         }
     }
 }

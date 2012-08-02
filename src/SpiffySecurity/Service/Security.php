@@ -83,14 +83,39 @@ class Security
     }
 
     /**
-     * Returns true if the user has the role.
+     * Returns true if the user has the role (can pass an array).
      *
-     * @param string $role
+     * @param string|array $roles
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($roles)
     {
-        return $this->getRbac()->hasRole($role);
+        if (!$this->getIdentity()) {
+            return false;
+        }
+
+        if (!is_array($roles)) {
+            $roles = array($roles);
+        }
+
+        $rbac = $this->getRbac();
+
+        // Have to iterate and load roles to verify that parents are loaded.
+        // If it wasn't for inheritance we could just check the getIdentity()->getRoles() method.
+        foreach($roles as $role) {
+            foreach((array) $this->getIdentity()->getRoles() as $userRole) {
+                $event = new Event;
+                $event->setRole($userRole)
+                      ->setRbac($rbac);
+
+                $this->getEventManager()->trigger(Event::EVENT_HAS_ROLE, $event);
+
+                if ($this->getRbac()->hasRole($role)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -108,11 +133,9 @@ class Security
                   ->setPermission($permission)
                   ->setRbac($rbac);
 
-            $response = $this->getEventManager()->trigger(Event::EVENT_IS_GRANTED, $event);
-            foreach($response as $result) {
-                if ($result === true) {
-                    return true;
-                }
+            $this->getEventManager()->trigger(Event::EVENT_IS_GRANTED, $event);
+            if ($rbac->getRole($role)->hasPermission($permission)) {
+                return true;
             }
         }
         return false;
@@ -207,8 +230,6 @@ class Security
 
             $event = new Event;
             $event->setRbac($this->rbac);
-
-            $this->getEventManager()->trigger(Event::EVENT_ON_LOAD, $event);
 
             $this->getEventManager()->trigger(Event::EVENT_LOAD_ROLES, $event);
             $this->getEventManager()->trigger(Event::EVENT_LOAD_PERMISSIONS, $event);

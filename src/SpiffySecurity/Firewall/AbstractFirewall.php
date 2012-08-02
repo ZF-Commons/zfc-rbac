@@ -26,7 +26,6 @@ abstract class AbstractFirewall
      * Checks if access is granted to resource for the role.
      *
      * @abstract
-     * @param \SpiffySecurity\Identity\IdentityInterface $identity
      * @param string $resource
      * @return bool
      */
@@ -40,21 +39,5 @@ abstract class AbstractFirewall
     {
         $this->security = $security;
         return $this;
-    }
-
-    /**
-     * Checks if any of the roles are owned by the identity.
-     *
-     * @param array $roles
-     * @return bool
-     */
-    protected function checkRoles(array $roles)
-    {
-        foreach($roles as $role) {
-            if ($this->security->hasRole($role)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
