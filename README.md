@@ -132,6 +132,17 @@ class NewService
 }
 ```
 
-## Protecting your objects
+## Dynamic assertions
 
-Coming soon, maybe...
+Dynamic assertions are available by passing an instance of SpiffySecurity\AssertionInterface or a Closure to
+isGranted() as the second parameter. For example,
+
+```php
+$event = new \My\Event;
+$event->setUserId(1);
+
+// Verify the user has both event.update permission and that the user id matches the event user id
+$security->isGranted('event.update', function($security) use ($event) {
+    return $security->getIdentity()->getId() === $event->getUserId();
+});
+```
