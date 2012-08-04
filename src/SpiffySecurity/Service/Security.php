@@ -131,10 +131,14 @@ class Security
         $rbac = $this->getRbac();
 
         if ($assertion) {
-            if ($assertion instanceof AssertionInterface && !$assertion->assert($this)) {
-                return false;
-            } else if (is_callable($assertion) && !$assertion($this)) {
-                return false;
+            if ($assertion instanceof AssertionInterface) {
+                if (!$assertion->assert($this)) {
+                    return false;
+                }
+            } else if (is_callable($assertion)) {
+                if (!$assertion($this)) {
+                    return false;
+                }
             } else {
                 throw new InvalidArgumentException(
                     'Assertions must be a Closure or an instance of SpiffySecurity\AssertionInterface'
