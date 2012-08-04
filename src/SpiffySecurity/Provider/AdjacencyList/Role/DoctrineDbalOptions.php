@@ -1,6 +1,6 @@
 <?php
 
-namespace SpiffySecurity\Provider\Role;
+namespace SpiffySecurity\Provider\AdjacencyList\Role;
 
 use Zend\Stdlib\AbstractOptions;
 

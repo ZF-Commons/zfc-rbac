@@ -17,8 +17,8 @@ class IsGranted extends AbstractHelper
         $this->securityService = $securityService;
     }
 
-    public function __invoke($roles)
+    public function __invoke($permission)
     {
-        return $this->securityService->isGranted($roles);
+        return $this->securityService->isGranted($permission);
     }
 }

@@ -1,13 +1,17 @@
 <?php
 
-namespace SpiffySecurity\Provider\Role;
+namespace SpiffySecurity\Provider\AdjacencyList\Role;
 
 use DomainException;
 use Doctrine\DBAL\Connection;
+use SpiffySecurity\Provider\AbstractProvider;
+use SpiffySecurity\Provider\Event;
+use SpiffySecurity\Provider\ProviderInterface;
 use SpiffySecurity\Rbac\Rbac;
+use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DoctrineDbal implements RoleInterface
+class DoctrineDbal extends AbstractProvider implements ProviderInterface
 {
     /**
      * @var Connection
@@ -35,24 +39,35 @@ class DoctrineDbal implements RoleInterface
     }
 
     /**
-     * Load permissions into roles.
+     * Attach to the listeners.
      *
-     * @abstract
-     * @param Rbac $rbac
-     * @return mixed
+     * @param \Zend\EventManager\EventManager $events
+     * @return void
      */
-    public function load(Rbac $rbac)
+    public function attachListeners(EventManager $events)
+    {
+        $events->attach(Event::EVENT_LOAD_ROLES, array($this, 'loadRoles'));
+    }
+
+    /**
+     * Load roles at RBAC creation.
+     *
+     * @param Event $e
+     * @return array
+     */
+    public function loadRoles(Event $e)
     {
         $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->connection);
         $options = $this->options;
 
-        if ($options->getJoinColumn()) {
-            $builder->select("role.{$options->getNameColumn()} AS name, parent.{$options->getNameColumn()} AS parent")
-                    ->from('role', 'role')
-                    ->leftJoin('role', 'role', 'parent', "role.{$options->getJoinColumn()} = parent.{$options->getIdColumn()}");
-        } else {
-            // todo: implement non-joined query
-        }
+        $builder->select("role.{$options->getNameColumn()} AS name, parent.{$options->getNameColumn()} AS parent")
+                ->from($options->getTable(), 'role')
+                ->leftJoin(
+                    'role',
+                    $options->getTable(),
+                    'parent',
+                    "role.{$options->getJoinColumn()} = parent.{$options->getIdColumn()}"
+                );
 
         $result = $builder->execute();
 
@@ -63,7 +78,8 @@ class DoctrineDbal implements RoleInterface
 
             $roles[$parentName][] = $row['name'];
         }
-        return $roles;
+
+        $this->recursiveRoles($e->getRbac(), $roles);
     }
 
     /**
@@ -72,7 +88,7 @@ class DoctrineDbal implements RoleInterface
      * @static
      * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
      * @param mixed $spec
-     * @return \SpiffySecurity\Provider\Role\DoctrineDBAL
+     * @return DoctrineDbal
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
     {
@@ -88,6 +104,6 @@ class DoctrineDbal implements RoleInterface
             throw new DomainException('Failed to find DBAL Connection');
         }
 
-        return new \SpiffySecurity\Provider\Role\DoctrineDbal($adapter, $options);
+        return new DoctrineDbal($adapter, $options);
     }
 }

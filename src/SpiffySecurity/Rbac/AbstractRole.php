@@ -3,10 +3,23 @@
 namespace SpiffySecurity\Rbac;
 
 use InvalidArgumentException;
+use RecursiveIteratorIterator;
 
 abstract class AbstractRole extends AbstractIterator
 {
+    /**
+     * @var null|AbstractRole
+     */
+    protected $parent;
+
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var array
+     */
     protected $permissions = array();
 
     /**
@@ -32,14 +45,24 @@ abstract class AbstractRole extends AbstractIterator
     }
 
     /**
-     * Checks if a permission exists.
+     * Checks if a permission exists for this role or any child roles.
      *
      * @param string $name
      * @return bool
      */
     public function hasPermission($name)
     {
-        return isset($this->permissions[$name]);
+        if (isset($this->permissions[$name])) {
+            return true;
+        }
+
+        $it = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach($it as $leaf) {
+            if ($leaf->hasPermission($name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -59,7 +82,26 @@ abstract class AbstractRole extends AbstractIterator
             );
         }
 
+        $child->setParent($this);
         $this->children[] = $child;
         return $this;
+    }
+
+    /**
+     * @param AbstractRole $parent
+     * @return AbstractRole
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * @return null|AbstractRole
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

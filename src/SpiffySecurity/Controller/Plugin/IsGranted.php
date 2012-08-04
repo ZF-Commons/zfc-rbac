@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 class IsGranted extends AbstractPlugin
 {
-    public function __invoke($roles)
+    public function __invoke($permission)
     {
         $controller = $this->getController();
         if (!$controller instanceof ServiceLocatorAwareInterface) {
@@ -19,6 +19,6 @@ class IsGranted extends AbstractPlugin
         return $this->getController()
                     ->getServiceLocator()
                     ->get('SpiffySecurity\Service\Security')
-                    ->isGranted($roles);
+                    ->isGranted($permission);
     }
 }

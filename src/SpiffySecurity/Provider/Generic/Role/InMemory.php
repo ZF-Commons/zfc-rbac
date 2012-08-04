@@ -1,11 +1,14 @@
 <?php
 
-namespace SpiffySecurity\Provider\Role;
+namespace SpiffySecurity\Provider\Generic\Role;
 
-use SpiffySecurity\Rbac\Rbac;
+use SpiffySecurity\Provider\AbstractProvider;
+use SpiffySecurity\Provider\Event;
+use SpiffySecurity\Provider\ProviderInterface;
+use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class InMemory implements RoleInterface
+class InMemory extends AbstractProvider implements ProviderInterface
 {
     protected $options;
 
@@ -15,17 +18,28 @@ class InMemory implements RoleInterface
     }
 
     /**
-     * Load permissions into roles.
+     * Attach to the listeners.
      *
-     * @abstract
-     * @param Rbac $rbac
-     * @return mixed
+     * @param \Zend\EventManager\EventManager $events
+     * @return void
      */
-    public function load(Rbac $rbac)
+    public function attachListeners(EventManager $events)
     {
+        $events->attach(Event::EVENT_LOAD_ROLES, array($this, 'loadRoles'));
+    }
+
+    /**
+     * Load roles into RBAC on load.
+     *
+     * @param Event $e
+     */
+    public function loadRoles(Event $e)
+    {
+        $rbac   = $e->getRbac();
         $roles  = $this->options->getRoles();
         $result = array();
-        foreach($roles as $role => $parents) {
+
+        foreach((array) $roles as $role => $parents) {
             if (is_numeric($role)) {
                 $role    = $parents;
                 $parents = array();
@@ -37,7 +51,8 @@ class InMemory implements RoleInterface
                 $result[$parent][] = $role;
             }
         }
-        return $result;
+
+        $this->recursiveRoles($rbac, $result);
     }
 
     /**
@@ -50,6 +65,6 @@ class InMemory implements RoleInterface
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
     {
-        return new \SpiffySecurity\Provider\Role\InMemory($spec);
+        return new InMemory($spec);
     }
 }
