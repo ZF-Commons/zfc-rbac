@@ -138,6 +138,7 @@ Dynamic assertions are available by passing an instance of SpiffySecurity\Assert
 isGranted() as the second parameter. For example,
 
 ```php
+<?php
 $event = new \My\Event;
 $event->setUserId(1);
 
