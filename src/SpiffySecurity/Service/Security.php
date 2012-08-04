@@ -2,8 +2,10 @@
 
 namespace SpiffySecurity\Service;
 
+use Closure;
 use InvalidArgumentException;
 use RuntimeException;
+use SpiffySecurity\AssertionInterface;
 use SpiffySecurity\Exception;
 use SpiffySecurity\Firewall\AbstractFirewall;
 use SpiffySecurity\Identity;
@@ -121,11 +123,24 @@ class Security
     /**
      * Returns true if the user has the permission.
      *
-     * @param $permission
+     * @param string $permission
+     * @param null|Closure|AssertionInterface $assertion
      */
-    public function isGranted($permission)
+    public function isGranted($permission, $assertion = null)
     {
         $rbac = $this->getRbac();
+
+        if ($assertion) {
+            if ($assertion instanceof AssertionInterface && !$assertion->assert($this)) {
+                return false;
+            } else if (is_callable($assertion) && !$assertion($this)) {
+                return false;
+            } else {
+                throw new InvalidArgumentException(
+                    'Assertions must be a Closure or an instance of SpiffySecurity\AssertionInterface'
+                );
+            }
+        }
 
         foreach($this->getIdentity()->getRoles() as $role) {
             $event = new Event;
