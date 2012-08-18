@@ -42,7 +42,7 @@ class Controller extends AbstractFirewall
             return true;
         }
 
-        return $this->checkRoles($roles);
+        return $this->security->hasRole($roles);
     }
 
     /**
