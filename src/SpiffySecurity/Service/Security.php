@@ -112,7 +112,11 @@ class Security
 
                 $this->getEventManager()->trigger(Event::EVENT_HAS_ROLE, $event);
 
-                if ($this->getRbac()->hasRole($role)) {
+                if (! $this->getRbac()->hasRole($role)) {
+                    continue;
+                }
+                
+                if ($userRole == $role) {
                     return true;
                 }
             }
