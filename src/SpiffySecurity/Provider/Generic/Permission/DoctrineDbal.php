@@ -57,20 +57,19 @@ class DoctrineDbal implements ProviderInterface
         $rbac    = $e->getRbac();
         $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->connection);
         $options = $this->options;
-
-        $builder->select("
+		$builder->select("
                     p.{$options->getPermissionNameColumn()} AS permission,
                     r.{$options->getRoleNameColumn()} AS role
                 ")
-                ->from('permission', 'p')
+                ->from($options->getPermissionTable(), 'p')
                 ->leftJoin(
                     'p',
-                    'role_permission',
+                    $options->getRoleJoinTable(),
                     'rp',
                     "rp.{$options->getPermissionJoinColumn()} = p.{$options->getPermissionIdColumn()}"
                 )->leftJoin(
                     'p',
-                    'role',
+                    $options->getRoleTable(),
                     'r',
                     "rp.{$options->getRoleJoinColumn()} = r.{$options->getRoleIdColumn()}"
                 );
