@@ -78,16 +78,17 @@ for access.
 return array(
 	'security' => array(
         'firewalls' => array(
-            'ZfcRbac\Firewall\Controller' => array(
+            'SpiffySecurity\Firewall\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => 'guest')
             ),
-            'ZfcRbac\Firewall\Route' => array(
+            'SpiffySecurity\Firewall\Route' => array(
                 array('route' => 'profiles/add', 'roles' => 'member'),
                 array('route' => 'admin/*', 'roles' => 'administrator')
             ),
+<<<<<<< HEAD
         ),    	
     	'providers' => array(
-        	'ZfcRbac\Provider\AdjacencyList\Role\DoctrineDbal' => array(
+        	'SpiffySecurity\Provider\AdjacencyList\Role\DoctrineDbal' => array(
         		'connection'	=> 'doctrine.connection.orm_default',
         		'options' => array(
 	                'table'         => 'rbac_role',
@@ -96,7 +97,7 @@ return array(
 	                'join_column' 	=> 'parent_role_id'
         		)
         	),
-    		'ZfcRbac\Provider\Generic\Permission\DoctrineDbal' => array(
+    		'SpiffySecurity\Provider\Generic\Permission\DoctrineDbal' => array(
     			'connection'         	=> 'doctrine.connection.orm_default',
     			'options' => array(
 	                'permission_table'      => 'rbac_permission',
@@ -112,12 +113,28 @@ return array(
     		),
         ),		
 		'identity_provider' => 'standard_identity'				
+=======
+        ),
+
+        'role_providers' => array(
+            'ZfcRbac\Provider\Role\InMemory' => array(
+                'test_role' => 'test_parent',
+            ),
+            'doctrine_dbal' => array(
+                'connection'         => 'doctrine.connection.orm_default',
+                'table'              => 'role',
+                'role_id_column'     => 'id',
+                'role_name_column'   => 'name',
+                'parent_join_column' => 'parent_role_id'
+            )
+        )
+>>>>>>> refactor/zf2rbac
     ),
 	'service_manager' => array(
 		'factories' => array(
 			'standard_identity' => function ($sm) {
 				$roles = array('guest','member','admin');
-				$identity = new \ZfcRbac\Identity\StandardIdentity($roles);
+				$identity = new SpiffySecurity\Identity\StandardIdentity($roles);
 				return $identity;
 			},
 		)
