@@ -2,11 +2,10 @@
 
 namespace ZfcRbac\View;
 
-use ZfcRbac\Service\Security;
+use ZfcRbac\Service\Rbac;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
 use Zend\View\Model\ViewModel;
@@ -93,7 +92,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         }
 
         switch ($error) {
-            case Security::ERROR_CONTROLLER_UNAUTHORIZED:
+            case Rbac::ERROR_CONTROLLER_UNAUTHORIZED:
                 $model = new ViewModel(array(
                     'error'      => $e->getParam('error'),
                     'controller' => $e->getParam('controller'),
@@ -102,7 +101,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 ));
 
                 break;
-            case Security::ERROR_ROUTE_UNAUTHORIZED:
+            case Rbac::ERROR_ROUTE_UNAUTHORIZED:
                 $model = new ViewModel(array(
                     'error'    => $e->getParam('error'),
                     'route'    => $e->getParam('route'),

@@ -10,7 +10,7 @@ class Route
     {
         $app      = $e->getTarget();
         $route    = $e->getRouteMatch()->getMatchedRouteName();
-        $security = $app->getServiceManager()->get('ZfcRbac\Service\Security');
+        $security = $app->getServiceManager()->get('ZfcRbac\Service\Rbac');
 
         if (!$security->getFirewall('route')->isGranted($route)) {
             $e->setError($security::ERROR_ROUTE_UNAUTHORIZED)

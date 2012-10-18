@@ -9,7 +9,7 @@ class Controller
     public static function onRoute(MvcEvent $e)
     {
         $app        = $e->getTarget();
-        $security   = $app->getServiceManager()->get('ZfcRbac\Service\Security');
+        $security   = $app->getServiceManager()->get('ZfcRbac\Service\Rbac');
         $match      = $app->getMvcEvent()->getRouteMatch();
         $controller = $match->getParam('controller');
         $action     = $match->getParam('action');

@@ -8,7 +8,7 @@ class Module
     {
         $app      = $e->getTarget();
         $sm       = $app->getServiceManager();
-        $security = $sm->get('ZfcRbac\Service\Security');
+        $security = $sm->get('ZfcRbac\Service\Rbac');
         $strategy = $sm->get('ZfcRbac\View\UnauthorizedStrategy');
 
         if ($security->options()->getFirewallRoute()) {
@@ -26,7 +26,7 @@ class Module
     {
         return array(
             'aliases' => array(
-                'service.security' => 'ZfcRbac\Service\Security',
+                'service.security' => 'ZfcRbac\Service\Rbac',
             ),
             'invokables' => array(
                 'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
@@ -34,11 +34,11 @@ class Module
             'factories' => array(
                 'ZfcRbac\Controller\Plugin\IsGranted' => function($sm) {
                     return new \ZfcRbac\Controller\Plugin\IsGranted(
-                        $sm->get('ZfcRbac\Service\Security')
+                        $sm->get('ZfcRbac\Service\Rbac')
                     );
                 },
                 'ZfcRbac\View\UnauthorizedStrategy' => 'ZfcRbac\Service\UnauthorizedStrategyFactory',
-                'ZfcRbac\Service\Security'          => 'ZfcRbac\Service\SecurityFactory'
+                'ZfcRbac\Service\Rbac'              => 'ZfcRbac\Service\RbacFactory'
             )
         );
     }
@@ -50,7 +50,7 @@ class Module
                 'ZfcRbac\View\Helper\IsGranted' => function($sm) {
                     $sl = $sm->getServiceLocator();
                     return new \ZfcRbac\View\Helper\IsGranted(
-                        $sl->get('ZfcRbac\Service\Security')
+                        $sl->get('ZfcRbac\Service\Rbac')
                     );
                 },
             )

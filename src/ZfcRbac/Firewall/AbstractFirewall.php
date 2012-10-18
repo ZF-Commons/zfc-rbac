@@ -2,17 +2,16 @@
 
 namespace ZfcRbac\Firewall;
 
-use ZfcRbac\Service\Security;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\Rbac;
 
 abstract class AbstractFirewall
 {
     const SEPARATOR = ':';
 
     /**
-     * @var Security
+     * @var Rbac
      */
-    protected $security;
+    protected $rbac;
 
     /**
      * Get the firewall name.
@@ -32,12 +31,12 @@ abstract class AbstractFirewall
     abstract public function isGranted($resource);
 
     /**
-     * @param \ZfcRbac\Service\Security $security
+     * @param \ZfcRbac\Service\Rbac $rbac
      * @return AbstractFirewall
      */
-    public function setSecurity($security)
+    public function setRbac($rbac)
     {
-        $this->security = $security;
+        $this->rbac = $rbac;
         return $this;
     }
 }

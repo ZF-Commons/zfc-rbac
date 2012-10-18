@@ -2,13 +2,13 @@
 
 namespace ZfcRbac\View\Helper;
 
-use ZfcRbac\Service\Security as SecurityService;
+use ZfcRbac\Service\Rbac as SecurityService;
 use Zend\View\Helper\AbstractHelper;
 
 class IsGranted extends AbstractHelper
 {
     /**
-     * @var \ZfcRbac\Service\Security
+     * @var \ZfcRbac\Service\Rbac
      */
     protected $securityService;
 

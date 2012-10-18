@@ -4,7 +4,7 @@ namespace ZfcRbac\Service;
 
 use Zend\Stdlib\AbstractOptions;
 
-class SecurityOptions extends AbstractOptions
+class RbacOptions extends AbstractOptions
 {
     /**
      * The default role that is used if no role is found from the

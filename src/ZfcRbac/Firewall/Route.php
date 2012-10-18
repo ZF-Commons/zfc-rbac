@@ -64,7 +64,7 @@ class Route extends AbstractFirewall
             }
         }
 
-        return $this->security->hasRole($roles);
+        return $this->rbac->hasRole($roles);
     }
 
     /**

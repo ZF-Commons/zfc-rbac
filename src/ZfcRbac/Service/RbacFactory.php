@@ -4,30 +4,30 @@ namespace ZfcRbac\Service;
 
 use InvalidArgumentException;
 use RuntimeException;
-use ZfcRbac\Service\Security;
+use ZfcRbac\Service\Rbac;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
-class SecurityFactory implements FactoryInterface
+class RbacFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $sl)
     {
         $config = $sl->get('Configuration');
-        $config = $config['security'];
+        $config = $config['zfcrbac'];
 
-        $security = new Security($config);
-        $options  = $security->options();
+        $rbac    = new Rbac($config);
+        $options = $rbac->options();
 
         foreach($options->getProviders() as $class => $config) {
-            $security->addProvider($class::factory($sl, $config));
+            $rbac->addProvider($class::factory($sl, $config));
         }
 
         foreach($options->getFirewalls() as $class => $config) {
-            $security->addFirewall(new $class($config));
+            $rbac->addFirewall(new $class($config));
         }
 
-        $identity = $security->options()->getIdentityProvider();
+        $identity = $rbac->options()->getIdentityProvider();
         if (!$sl->has($identity)) {
             throw new RuntimeException(sprintf(
                 'An identity provider with the name "%s" does not exist',
@@ -36,7 +36,7 @@ class SecurityFactory implements FactoryInterface
         }
 
         try {
-            $security->setIdentity($sl->get($identity));
+            $rbac->setIdentity($sl->get($identity));
         } catch (ServiceNotFoundException $e) {
             throw new RuntimeException(sprintf(
                 'Unable to set your identity - are you sure the alias "%s" is correct?',
@@ -44,6 +44,6 @@ class SecurityFactory implements FactoryInterface
             ));
         }
 
-        return $security;
+        return $rbac;
     }
 }

@@ -76,7 +76,7 @@ for access.
 ```php
 <?php
 return array(
-	'security' => array(
+	'zfcrbac' => array(
         'firewalls' => array(
             'ZfcRbac\Firewall\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => 'guest')
@@ -136,16 +136,16 @@ For example,
 <?php
 class NewService
 {
-    protected $security;
+    protected $rbac;
 
-    public function __construct(\ZfcRbac\Service\Security $security)
+    public function __construct(\ZfcRbac\Service\Rbac $rbac)
     {
-        $this->security = $security;
+        $this->rbac = $rbac;
     }
 
     public function createPost()
     {
-        if (!$this->security->isGranted('ROLE_NEWS_MANAGER')) {
+        if (!$this->rbac->isGranted('ROLE_NEWS_MANAGER')) {
             // code
         }
 
@@ -165,7 +165,7 @@ $event = new \My\Event;
 $event->setUserId(1);
 
 // Verify the user has both event.update permission and that the user id matches the event user id
-$security->isGranted('event.update', function($security) use ($event) {
-    return $security->getIdentity()->getId() === $event->getUserId();
+$rbac->isGranted('event.update', function($rbac) use ($event) {
+    return $rbac->getIdentity()->getId() === $event->getUserId();
 });
 ```

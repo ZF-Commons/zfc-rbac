@@ -13,9 +13,9 @@ use ZfcRbac\Provider\ProviderInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\Permissions\Rbac\AssertionInterface;
-use Zend\Permissions\Rbac\Rbac;
+use Zend\Permissions\Rbac\Rbac as ZendRbac;
 
-class Security
+class Rbac
 {
     const ERROR_ROUTE_UNAUTHORIZED      = 'error-route-unauthorized';
     const ERROR_CONTROLLER_UNAUTHORIZED = 'error-controller-unauthorized';
@@ -50,14 +50,14 @@ class Security
      */
     public function __construct(array $options = array())
     {
-        $this->options = new SecurityOptions($options);
+        $this->options = new RbacOptions($options);
     }
 
     /**
      * Set the event manager instance used by this context
      *
      * @param  EventManagerInterface $events
-     * @return Security
+     * @return Rbac
      */
     public function setEventManager(EventManagerInterface $events)
     {
@@ -193,7 +193,7 @@ class Security
 
     /**
      * @param \ZfcRbac\Firewall\AbstractFirewall $firewall
-     * @return \ZfcRbac\Service\Security
+     * @return Rbac
      */
     public function addFirewall(AbstractFirewall $firewall)
     {
@@ -204,14 +204,14 @@ class Security
             ));
         }
 
-        $firewall->setSecurity($this);
+        $firewall->setRbac($this);
         $this->firewalls[$firewall->getName()] = $firewall;
         return $this;
     }
 
     /**
      * @param ProviderInterface $provider
-     * @return \ZfcRbac\Service\Security
+     * @return Rbac
      */
     public function addProvider(ProviderInterface $provider)
     {
@@ -234,7 +234,7 @@ class Security
 
     /**
      * @param string|null|Identity\IdentityInterface $identity
-     * @return \ZfcRbac\Service\Security
+     * @return Rbac
      */
     public function setIdentity($identity = null)
     {
@@ -258,7 +258,7 @@ class Security
     public function getRbac()
     {
         if (null === $this->rbac) {
-            $this->rbac = new Rbac();
+            $this->rbac = new ZendRbac();
 
             $event = new Event;
             $event->setRbac($this->rbac);
@@ -270,7 +270,7 @@ class Security
     }
 
     /**
-     * @return \ZfcRbac\Service\SecurityOptions
+     * @return RbacOptions
      */
     public function options()
     {

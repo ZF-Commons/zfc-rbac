@@ -1,8 +1,8 @@
 <?php
 return array(
-    'security' => array(
+    'zfcrbac' => array(
         // put your options here
-        // see ZfcRbac\Service\SecurityOptions for options
+        // see ZfcRbac\Service\RbacOptions for options
     ),
     'view_manager' => array(
         'helper_map' => array(
