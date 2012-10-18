@@ -20,7 +20,7 @@ Installation of ZfcRbac uses composer. For composer documentation, please refer 
      ```json
      {
          "require": {
-             "spiffy/spiffy-security": "dev-master"
+             "zf-commons/zfc-rbac": "dev-master"
          }
      }
      ```
