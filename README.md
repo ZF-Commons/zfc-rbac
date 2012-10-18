@@ -1,6 +1,6 @@
-# SpiffySecurity Module for Zend Framework 2
+# ZfcRbac Module for Zend Framework 2
 
-SpiffySecurity is an access control module for Zend Framework 2 geared towards quick & easy setup. Getting access control
+ZfcRbac is an access control module for Zend Framework 2 geared towards quick & easy setup. Getting access control
 working should take you less than 5 minutes.
 
 ## Requirements
@@ -9,7 +9,7 @@ working should take you less than 5 minutes.
 
 ## Installation
 
-Installation of SpiffySecurity uses composer. For composer documentation, please refer to
+Installation of ZfcRbac uses composer. For composer documentation, please refer to
 [getcomposer.org](http://getcomposer.org/).
 
 #### Installation steps
@@ -30,12 +30,12 @@ Installation of SpiffySecurity uses composer. For composer documentation, please
   5. open `my/project/directory/configs/application.config.php` and add the following key to your `modules`:
 
      ```php
-     'SpiffySecurity',
+     'ZfcRbac',
      ```
 
 ## Providers
 
-Providers are listeners that hook into various events to provide roles and permissions. SpiffySecurity ships with
+Providers are listeners that hook into various events to provide roles and permissions. ZfcRbac ships with
 several providers that you can use out of the box:
 
   - Generic Providers:
@@ -62,9 +62,9 @@ By default, only controller access is enabled. See the module.config.php file fo
 
 ## Setting the identity provider
 
-The identity provider is a service alias setup to provide a working identity to SpiffySecurity. The default alias is
+The identity provider is a service alias setup to provide a working identity to ZfcRbac. The default alias is
 my_identity_provider but can be changed via the `identity_provider` key in configuration. The object returned by
-the identity provider must implement `SpiffySecurity\Identity\IdentityInterface`.
+the identity provider must implement `ZfcRbac\Identity\IdentityInterface`.
 
 ## View helper and controller plugin
 
@@ -88,7 +88,7 @@ return array(
         ),
 
         'role_providers' => array(
-            'SpiffySecurity\Provider\Role\InMemory' => array(
+            'ZfcRbac\Provider\Role\InMemory' => array(
                 'test_role' => 'test_parent',
             ),
             'doctrine_dbal' => array(
@@ -105,7 +105,7 @@ return array(
 
 ## Protecting your services
 
-Protecting your services is as easy as injecting the SpiffySecurity service into your services. You can then use
+Protecting your services is as easy as injecting the ZfcRbac service into your services. You can then use
 the provided `isGranted($role)` method to check if access is allowed.
 
 For example,
@@ -116,7 +116,7 @@ class NewService
 {
     protected $security;
 
-    public function __construct(\SpiffySecurity\Service\Security $security)
+    public function __construct(\ZfcRbac\Service\Security $security)
     {
         $this->security = $security;
     }
@@ -134,7 +134,7 @@ class NewService
 
 ## Dynamic assertions
 
-Dynamic assertions are available by passing an instance of SpiffySecurity\AssertionInterface or a Closure to
+Dynamic assertions are available by passing an instance of ZfcRbac\AssertionInterface or a Closure to
 isGranted() as the second parameter. For example,
 
 ```php
