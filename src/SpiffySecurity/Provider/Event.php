@@ -2,7 +2,7 @@
 
 namespace SpiffySecurity\Provider;
 
-use SpiffySecurity\Rbac\Rbac;
+use Zend\Permissions\Rbac\Rbac;
 use Zend\EventManager\Event as BaseEvent;
 
 class Event extends BaseEvent
@@ -48,7 +48,7 @@ class Event extends BaseEvent
     }
 
     /**
-     * @param \SpiffySecurity\Rbac\Rbac $rbac
+     * @param \Zend\Permissions\Rbac\Rbac $rbac
      */
     public function setRbac(Rbac $rbac)
     {
@@ -57,7 +57,7 @@ class Event extends BaseEvent
     }
 
     /**
-     * @return \SpiffySecurity\Rbac\Rbac
+     * @return \Zend\Permissions\Rbac\Rbac
      */
     public function getRbac()
     {

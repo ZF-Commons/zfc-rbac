@@ -11,9 +11,9 @@ use SpiffySecurity\Firewall\AbstractFirewall;
 use SpiffySecurity\Identity;
 use SpiffySecurity\Provider\Event;
 use SpiffySecurity\Provider\ProviderInterface;
-use SpiffySecurity\Rbac\Rbac;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
+use Zend\Permissions\Rbac\Rbac;
 
 class Security
 {
@@ -26,7 +26,7 @@ class Security
     protected $events;
 
     /**
-     * @var \SpiffySecurity\Rbac\Rbac
+     * @var \Zend\Permissions\Rbac\Rbac
      */
     protected $rbac;
 
@@ -240,12 +240,12 @@ class Security
     }
 
     /**
-     * @return \SpiffySecurity\Rbac\Rbac
+     * @return \Zend\Permissions\Rbac\Rbac
      */
     public function getRbac()
     {
         if (null === $this->rbac) {
-            $this->rbac = new Rbac;
+            $this->rbac = new Rbac();
 
             $event = new Event;
             $event->setRbac($this->rbac);

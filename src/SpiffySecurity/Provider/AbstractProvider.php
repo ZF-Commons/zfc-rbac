@@ -2,7 +2,7 @@
 
 namespace SpiffySecurity\Provider;
 
-use SpiffySecurity\Rbac\Rbac;
+use Zend\Permissions\Rbac\Rbac;
 
 class AbstractProvider
 {

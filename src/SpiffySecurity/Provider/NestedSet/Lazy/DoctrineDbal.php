@@ -7,7 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use SpiffySecurity\Provider\Event;
 use SpiffySecurity\Provider\ProviderInterface;
-use SpiffySecurity\Rbac\Rbac;
+use Zend\Permissions\Rbac\Rbac;
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
