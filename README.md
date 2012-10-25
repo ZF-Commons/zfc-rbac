@@ -63,8 +63,8 @@ By default, only controller access is enabled. See the module.config.php file fo
 ## Setting the identity provider
 
 The identity provider is a service alias setup to provide a working identity to ZfcRbac. The default alias is
-my_identity_provider but can be changed via the `identity_provider` key in configuration. The object returned by
-the identity provider must implement `ZfcRbac\Identity\IdentityInterface`.
+to use Zend\Authentication\AuthenticationService, but can be changed via the `identity_provider` key in configuration.
+The object returned by the identity provider must implement `ZfcRbac\Identity\IdentityInterface`.
 
 ## View helper and controller plugin
 

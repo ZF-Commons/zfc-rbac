@@ -238,16 +238,21 @@ class Rbac
     }
 
     /**
-     * @param string|null|Identity\IdentityInterface $identity
+     * @param  string|null|AuthenticationService|Identity\IdentityInterface $identity
+     * @throws InvalidArgumentException
      * @return Rbac
      */
     public function setIdentity($identity = null)
     {
+        if ($identity instanceof AuthenticationService) {
+            $identity = $identity->getIdentity();
+        }
+
         if (is_string($identity)) {
             $identity = new Identity\StandardIdentity($identity);
-        } else if (is_null($identity)) {
+        } elseif (is_null($identity)) {
             $identity = new Identity\StandardIdentity($this->options()->getAnonymousRole());
-        } else if (!$identity instanceof Identity\IdentityInterface) {
+        } elseif (!$identity instanceof Identity\IdentityInterface) {
             throw new InvalidArgumentException(
                 'Identity must be null, a string, or an instance of ZfcRbac\Identity\IdentityInterface'
             );
