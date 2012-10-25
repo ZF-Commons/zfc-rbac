@@ -66,6 +66,7 @@ class Rbac
             get_called_class(),
         ));
         $this->events = $events;
+
         return $this;
     }
 
@@ -136,8 +137,10 @@ class Rbac
     /**
      * Returns true if the user has the permission.
      *
-     * @param string $permission
+     * @param string                          $permission
      * @param null|Closure|AssertionInterface $assertion
+     * @throws InvalidArgumentException
+     * @return bool
      */
     public function isGranted($permission, $assertion = null)
     {
@@ -177,7 +180,8 @@ class Rbac
      * Access to firewalls by name.
      *
      * @param string $name
-     * @return \ZfcRbac\Firewall\AbstractFirewall
+     * @throws InvalidArgumentException
+     * @return AbstractFirewall
      */
     public function getFirewall($name)
     {
@@ -192,7 +196,8 @@ class Rbac
     }
 
     /**
-     * @param \ZfcRbac\Firewall\AbstractFirewall $firewall
+     * @param  AbstractFirewall $firewall
+     * @throws InvalidArgumentException
      * @return Rbac
      */
     public function addFirewall(AbstractFirewall $firewall)
@@ -206,6 +211,7 @@ class Rbac
 
         $firewall->setRbac($this);
         $this->firewalls[$firewall->getName()] = $firewall;
+
         return $this;
     }
 
@@ -229,11 +235,12 @@ class Rbac
         if (null === $this->identity) {
             $this->setIdentity();
         }
+
         return $this->identity;
     }
 
     /**
-     * @param string|null|Identity\IdentityInterface $identity
+     * @param  string|null|Identity\IdentityInterface $identity
      * @return Rbac
      */
     public function setIdentity($identity = null)
@@ -253,7 +260,7 @@ class Rbac
     }
 
     /**
-     * @return \Zend\Permissions\Rbac\Rbac
+     * @return ZendRbac
      */
     public function getRbac()
     {

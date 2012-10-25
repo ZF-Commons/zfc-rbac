@@ -2,7 +2,7 @@
 
 namespace ZfcRbac\Provider;
 
-use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 interface ProviderInterface
@@ -11,7 +11,6 @@ interface ProviderInterface
      * Factory to create the provider.
      *
      * @static
-     * @abstract
      * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
      * @param mixed $spec
      * @return mixed
@@ -21,9 +20,8 @@ interface ProviderInterface
     /**
      * Attach to the listeners.
      *
-     * @abstract
-     * @param \Zend\EventManager\EventManager $events
+     * @param EventManagerInterface $events
      * @return void
      */
-    public function attachListeners(EventManager $events);
+    public function attachListeners(EventManagerInterface $events);
 }

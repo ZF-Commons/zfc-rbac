@@ -66,7 +66,7 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param string $anonymousRole
-     * @return SecurityOptions
+     * @return RbacOptions
      */
     public function setAnonymousRole($anonymousRole)
     {
@@ -84,7 +84,7 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param boolean $firewallController
-     * @return SecurityOptions
+     * @return RbacOptions
      */
     public function setFirewallController($firewallController)
     {
@@ -102,7 +102,7 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param boolean $firewallRoute
-     * @return SecurityOptions
+     * @return RbacOptions
      */
     public function setFirewallRoute($firewallRoute)
     {
@@ -120,9 +120,9 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param array $firewalls
-     * @return SecurityOptions
+     * @return RbacOptions
      */
-    public function setFirewalls($firewalls)
+    public function setFirewalls(array $firewalls)
     {
         $this->firewalls = $firewalls;
         return $this;
@@ -138,7 +138,7 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param string $identityProvider
-     * @return SecurityOptions
+     * @return RbacOptions
      */
     public function setIdentityProvider($identityProvider)
     {
@@ -156,9 +156,9 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param array $providers
-     * @return SecurityOptions
+     * @return RbacOptions
      */
-    public function setProviders($providers)
+    public function setProviders(array $providers)
     {
         $this->providers = $providers;
         return $this;
@@ -174,7 +174,7 @@ class RbacOptions extends AbstractOptions
 
     /**
      * @param string $template
-     * @return SecurityOptions
+     * @return RbacOptions
      */
     public function setTemplate($template)
     {
