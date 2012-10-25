@@ -3,12 +3,16 @@
 namespace ZfcRbac\Controller\Plugin;
 
 use RuntimeException;
-use ZfcRbac\Service\Rbac as SecurityService;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 class IsGranted extends AbstractPlugin
 {
+    /**
+     * @param  $permission
+     * @throws RuntimeException
+     * @return bool
+     */
     public function __invoke($permission)
     {
         $controller = $this->getController();
@@ -16,9 +20,9 @@ class IsGranted extends AbstractPlugin
             throw new RuntimeException('Controller must implement ServiceLocatorAwareInterface to use this plugin');
         }
 
-        return $this->getController()
-                    ->getServiceLocator()
-                    ->get('ZfcRbac\Service\Rbac')
-                    ->isGranted($permission);
+        $securityService = $controller->getServiceLocator()
+                                      ->get('ZfcRbac\Service\Rbac');
+
+        return $securityService->isGranted($permission);
     }
 }

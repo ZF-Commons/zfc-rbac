@@ -6,6 +6,9 @@ use Zend\Mvc\MvcEvent;
 
 class Route
 {
+    /**
+     * @param MvcEvent $e
+     */
     public static function onRoute(MvcEvent $e)
     {
         $app      = $e->getTarget();
