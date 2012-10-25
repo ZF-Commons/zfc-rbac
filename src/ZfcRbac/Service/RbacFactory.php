@@ -17,7 +17,7 @@ class RbacFactory implements FactoryInterface
         $config = $config['zfcrbac'];
 
         $rbac    = new Rbac($config);
-        $options = $rbac->options();
+        $options = $rbac->getOptions();
 
         foreach($options->getProviders() as $class => $config) {
             $rbac->addProvider($class::factory($sl, $config));
@@ -27,7 +27,7 @@ class RbacFactory implements FactoryInterface
             $rbac->addFirewall(new $class($config));
         }
 
-        $identity = $rbac->options()->getIdentityProvider();
+        $identity = $rbac->getOptions()->getIdentityProvider();
         if (!$sl->has($identity)) {
             throw new RuntimeException(sprintf(
                 'An identity provider with the name "%s" does not exist',
