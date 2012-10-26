@@ -20,16 +20,16 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
-        $app      = $e->getTarget();
-        $sm       = $app->getServiceManager();
-        $security = $sm->get('ZfcRbac\Service\Rbac');
-        $strategy = $sm->get('ZfcRbac\View\UnauthorizedStrategy');
+        $app         = $e->getTarget();
+        $sm          = $app->getServiceManager();
+        $rbacService = $sm->get('ZfcRbac\Service\Rbac');
+        $strategy    = $sm->get('ZfcRbac\View\UnauthorizedStrategy');
 
-        if ($security->getOptions()->getFirewallRoute()) {
+        if ($rbacService->getOptions()->getFirewallRoute()) {
             $app->getEventManager()->attach('route', array('ZfcRbac\Firewall\Listener\Route', 'onRoute'), -1000);
         }
 
-        if ($security->getOptions()->getFirewallController()) {
+        if ($rbacService->getOptions()->getFirewallController()) {
             $app->getEventManager()->attach('route', array('ZfcRbac\Firewall\Listener\Controller', 'onRoute'), -1000);
         }
 
