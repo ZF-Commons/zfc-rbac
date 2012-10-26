@@ -41,7 +41,7 @@ class RbacOptions extends AbstractOptions
      *
      * @var string
      */
-    protected $identityProvider =  'my_identity_provider';
+    protected $identityProvider =  'Zend\Authentication\AuthenticationService';
 
     /**
      * flag: enable or disable the use of lazy-loading providers.
