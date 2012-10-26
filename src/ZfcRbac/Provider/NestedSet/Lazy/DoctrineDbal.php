@@ -5,13 +5,13 @@ namespace ZfcRbac\Provider\NestedSet\Lazy;
 use DomainException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
 use Zend\Permissions\Rbac\Rbac;
-use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Provider\AbstractProvider;
+use ZfcRbac\Provider\Event;
 
-class DoctrineDbal implements ProviderInterface
+class DoctrineDbal extends AbstractProvider
 {
     /**
      * Simple array cache so that resources aren't queried more than once per request.
@@ -37,31 +37,6 @@ class DoctrineDbal implements ProviderInterface
     protected $options;
 
     /**
-     * Factory to create the provider.
-     *
-     * @static
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     * @param array $spec
-     * @return DoctrineDBAL
-     */
-    public static function factory(ServiceLocatorInterface $sl, array $spec)
-    {
-        $adapter = isset($spec['connection']) ? $spec['connection'] : null;
-        if (!$adapter) {
-            throw new DomainException('Missing required parameter: connection');
-        }
-
-        $options = isset($spec['options']) ? (array) $spec['options'] : array();
-        if (!is_string($adapter) || $sl->has($adapter)) {
-            $adapter = $sl->get($adapter);
-        } else {
-            throw new DomainException('Failed to find DBAL Connection');
-        }
-
-        return new DoctrineDbal($adapter, $options);
-    }
-
-    /**
      * @param Connection $connection
      * @param array $options
      */
@@ -74,19 +49,28 @@ class DoctrineDbal implements ProviderInterface
     /**
      * Attach to the listeners.
      *
-     * @param \Zend\EventManager\EventManager $events
+     * @param EventManagerInterface $events
      * @return void
      */
-    public function attachListeners(EventManager $events)
+    public function attach(EventManagerInterface $events)
     {
         $events->attach(Event::EVENT_HAS_ROLE, array($this, 'hasRole'));
         $events->attach(Event::EVENT_IS_GRANTED, array($this, 'isGranted'));
     }
 
     /**
+     * @param EventManagerInterface $events
+     * @return void
+     */
+    public function detach(EventManagerInterface $events)
+    {
+        $events->detach($this);
+    }
+
+    /**
      * Loads roles for an identity.
      *
-     * @param \ZfcRbac\Provider\Event $e
+     * @param Event $e
      */
     public function hasRole(Event $e)
     {
@@ -109,7 +93,6 @@ class DoctrineDbal implements ProviderInterface
      */
     public function isGranted(Event $e)
     {
-        $granted    = false;
         $rbac       = $e->getRbac();
         $role       = $e->getRole();
         $permission = $e->getPermission();
@@ -174,5 +157,31 @@ class DoctrineDbal implements ProviderInterface
         }
 
         return $builder;
+    }
+
+    /**
+     * Factory to create the provider.
+     *
+     * @static
+     * @param ServiceLocatorInterface $sl
+     * @param array                   $spec
+     * @throws DomainException
+     * @return DoctrineDBAL
+     */
+    public static function factory(ServiceLocatorInterface $sl, array $spec)
+    {
+        $adapter = isset($spec['connection']) ? $spec['connection'] : null;
+        if (!$adapter) {
+            throw new DomainException('Missing required parameter: connection');
+        }
+
+        $options = isset($spec['options']) ? (array) $spec['options'] : array();
+        if (!is_string($adapter) || $sl->has($adapter)) {
+            $adapter = $sl->get($adapter);
+        } else {
+            throw new DomainException('Failed to find DBAL Connection');
+        }
+
+        return new DoctrineDbal($adapter, $options);
     }
 }

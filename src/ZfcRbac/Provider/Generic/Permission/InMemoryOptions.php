@@ -18,7 +18,7 @@ class InMemoryOptions extends AbstractOptions
      * @param array $permissions
      * @return InMemoryOptions
      */
-    public function setPermissions($permissions)
+    public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
         return $this;

@@ -5,15 +5,15 @@ namespace ZfcRbac\Service;
 use Closure;
 use InvalidArgumentException;
 use RecursiveIteratorIterator;
-use ZfcRbac\Exception;
-use ZfcRbac\Firewall\AbstractFirewall;
-use ZfcRbac\Identity;
-use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\Permissions\Rbac\AssertionInterface;
 use Zend\Permissions\Rbac\Rbac as ZendRbac;
+use ZfcRbac\Exception;
+use ZfcRbac\Firewall\AbstractFirewall;
+use ZfcRbac\Identity;
+use ZfcRbac\Provider\Event;
+use ZfcRbac\Provider\AbstractProvider;
 
 class Rbac
 {
@@ -216,14 +216,14 @@ class Rbac
     }
 
     /**
-     * @param ProviderInterface $provider
+     * @param AbstractProvider $provider
      * @return Rbac
      */
-    public function addProvider(ProviderInterface $provider)
+    public function addProvider(AbstractProvider $provider)
     {
-        $provider->attachListeners($this->getEventManager());
-
+        $provider->attach($this->getEventManager());
         $this->providers[] = $provider;
+
         return $this;
     }
 
@@ -241,6 +241,7 @@ class Rbac
 
     /**
      * @param  string|null|Identity\IdentityInterface $identity
+     * @throws InvalidArgumentException
      * @return Rbac
      */
     public function setIdentity($identity = null)
