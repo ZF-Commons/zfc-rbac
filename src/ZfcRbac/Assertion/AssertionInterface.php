@@ -1,6 +1,6 @@
 <?php
 
-namespace ZfcRbac;
+namespace ZfcRbac\Assertion;
 
 use ZfcRbac\Service\Rbac;
 

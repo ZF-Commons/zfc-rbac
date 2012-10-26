@@ -7,8 +7,8 @@ use InvalidArgumentException;
 use RecursiveIteratorIterator;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
-use Zend\Permissions\Rbac\AssertionInterface;
 use Zend\Permissions\Rbac\Rbac as ZendRbac;
+use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Firewall\AbstractFirewall;
 use ZfcRbac\Identity;
@@ -138,38 +138,42 @@ class Rbac
      * Returns true if the user has the permission.
      *
      * @param string                          $permission
-     * @param null|Closure|AssertionInterface $assertion
+     * @param null|Closure|AssertionInterface $assert
      * @throws InvalidArgumentException
      * @return bool
      */
-    public function isGranted($permission, $assertion = null)
+    public function isGranted($permission, $assert = null)
     {
         $rbac = $this->getRbac();
 
-        if ($assertion) {
-            if ($assertion instanceof AssertionInterface) {
-                if (!$assertion->assert($this)) {
+        if ($assert) {
+            if ($assert instanceof AssertionInterface) {
+                if (!$assert->assert($this)) {
                     return false;
                 }
-            } elseif (is_callable($assertion)) {
-                if (!$assertion($this)) {
+            } elseif (is_callable($assert)) {
+                if (!$assert($this)) {
                     return false;
                 }
             } else {
                 throw new InvalidArgumentException(
-                    'Assertions must be a Closure or an instance of ZfcRbac\AssertionInterface'
+                    'Assertions must be a Callable or an instance of ZfcRbac\AssertionInterface'
                 );
             }
         }
 
         foreach($this->getIdentity()->getRoles() as $role) {
+            if (!$rbac->hasRole($role)) {
+                continue;
+            }
+
             $event = new Event;
             $event->setRole($role)
-                ->setPermission($permission)
-                ->setRbac($rbac);
+                  ->setPermission($permission)
+                  ->setRbac($rbac);
 
             $this->getEventManager()->trigger(Event::EVENT_IS_GRANTED, $event);
-            if ($rbac->getRole($role)->hasPermission($permission)) {
+            if ($rbac->isGranted($role, $permission)) {
                 return true;
             }
         }
