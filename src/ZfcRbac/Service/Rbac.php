@@ -5,6 +5,7 @@ namespace ZfcRbac\Service;
 use Closure;
 use InvalidArgumentException;
 use RecursiveIteratorIterator;
+use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\Permissions\Rbac\Rbac as ZendRbac;
