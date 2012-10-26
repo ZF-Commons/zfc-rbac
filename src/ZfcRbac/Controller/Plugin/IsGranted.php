@@ -3,7 +3,6 @@
 namespace ZfcRbac\Controller\Plugin;
 
 use RuntimeException;
-use ZfcRbac\Service\Rbac as SecurityService;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
