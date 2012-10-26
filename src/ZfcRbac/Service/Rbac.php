@@ -151,7 +151,7 @@ class Rbac
                 if (!$assertion->assert($this)) {
                     return false;
                 }
-            } else if (is_callable($assertion)) {
+            } elseif (is_callable($assertion)) {
                 if (!$assertion($this)) {
                     return false;
                 }
@@ -247,9 +247,9 @@ class Rbac
     {
         if (is_string($identity)) {
             $identity = new Identity\StandardIdentity($identity);
-        } else if (is_null($identity)) {
+        } elseif (is_null($identity)) {
             $identity = new Identity\StandardIdentity($this->options()->getAnonymousRole());
-        } else if (!$identity instanceof Identity\IdentityInterface) {
+        } elseif (!$identity instanceof Identity\IdentityInterface) {
             throw new InvalidArgumentException(
                 'Identity must be null, a string, or an instance of ZfcRbac\Identity\IdentityInterface'
             );

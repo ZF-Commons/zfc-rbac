@@ -160,7 +160,7 @@ class DoctrineDbal implements ProviderInterface
                 if (!$rbac->hasRole($row['name'])) {
                     $rbac->getRole($parent)->addChild($row['name']);
                 }
-            } else if (!$rbac->hasRole($row['name'])) {
+            } elseif (!$rbac->hasRole($row['name'])) {
                 $rbac->addRole($row['name']);
             }
 

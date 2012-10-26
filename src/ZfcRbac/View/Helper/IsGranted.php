@@ -2,22 +2,22 @@
 
 namespace ZfcRbac\View\Helper;
 
-use ZfcRbac\Service\Rbac as SecurityService;
+use ZfcRbac\Service\Rbac as RbacService;
 use Zend\View\Helper\AbstractHelper;
 
 class IsGranted extends AbstractHelper
 {
     /**
-     * @var SecurityService
+     * @var RbacService
      */
-    protected $securityService;
+    protected $rbacService;
 
     /**
-     * @param SecurityService $securityService
+     * @param RbacService $rbacService
      */
-    public function __construct(SecurityService $securityService)
+    public function __construct(RbacService $rbacService)
     {
-        $this->securityService = $securityService;
+        $this->rbacService = $rbacService;
     }
 
     /**
@@ -26,6 +26,6 @@ class IsGranted extends AbstractHelper
      */
     public function __invoke($permission)
     {
-        return $this->securityService->isGranted($permission);
+        return $this->rbacService->isGranted($permission);
     }
 }

@@ -10,10 +10,10 @@ class UnauthorizedStrategyFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $sl)
     {
-        $security = $sl->get('ZfcRbac\Service\Rbac');
+        $rbacService = $sl->get('ZfcRbac\Service\Rbac');
 
         $strategy = new UnauthorizedStrategy;
-        $strategy->setUnauthorizedTemplate($security->options()->getTemplate());
+        $strategy->setUnauthorizedTemplate($rbacService->options()->getTemplate());
 
         return $strategy;
     }

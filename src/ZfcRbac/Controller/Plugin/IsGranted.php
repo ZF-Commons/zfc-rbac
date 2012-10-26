@@ -20,9 +20,9 @@ class IsGranted extends AbstractPlugin
             throw new RuntimeException('Controller must implement ServiceLocatorAwareInterface to use this plugin');
         }
 
-        $securityService = $controller->getServiceLocator()
-                                      ->get('ZfcRbac\Service\Rbac');
+        $rbacService = $controller->getServiceLocator()
+                                  ->get('ZfcRbac\Service\Rbac');
 
-        return $securityService->isGranted($permission);
+        return $rbacService->isGranted($permission);
     }
 }
