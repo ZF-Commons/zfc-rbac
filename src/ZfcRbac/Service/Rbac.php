@@ -109,7 +109,7 @@ class Rbac
             foreach((array) $this->getIdentity()->getRoles() as $userRole) {
                 $event = new Event;
                 $event->setRole($userRole)
-                      ->setRbac($rbac);
+                    ->setRbac($rbac);
 
                 $this->getEventManager()->trigger(Event::EVENT_HAS_ROLE, $event);
 
@@ -165,8 +165,8 @@ class Rbac
         foreach($this->getIdentity()->getRoles() as $role) {
             $event = new Event;
             $event->setRole($role)
-                  ->setPermission($permission)
-                  ->setRbac($rbac);
+                ->setPermission($permission)
+                ->setRbac($rbac);
 
             $this->getEventManager()->trigger(Event::EVENT_IS_GRANTED, $event);
             if ($rbac->getRole($role)->hasPermission($permission)) {
