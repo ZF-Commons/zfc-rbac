@@ -2,7 +2,6 @@
 
 namespace ZfcRbac\Service;
 
-use InvalidArgumentException;
 use RuntimeException;
 use ZfcRbac\Service\Rbac;
 use Zend\ServiceManager\FactoryInterface;
