@@ -11,9 +11,10 @@ class Controller
         $app        = $e->getTarget();
         $security   = $app->getServiceManager()->get('ZfcRbac\Service\Rbac');
         $match      = $app->getMvcEvent()->getRouteMatch();
-        $controller = $match->getParam('controller');
+        $controller = strtolower(str_replace($match->getParam('__NAMESPACE__').'\\', '', $match->getParam('controller')));
         $action     = $match->getParam('action');
-        $resource   = sprintf('%s:%s', $controller, $action);
+        $namespace  = $match->getParam('__NAMESPACE__');
+        $resource   = sprintf('%s:%s:%s', $namespace, $controller, $action);
 
         try {
             if (!$security->getFirewall('controller')->isGranted($resource)) {

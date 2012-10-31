@@ -13,9 +13,9 @@ class Controller extends AbstractFirewall
                 $rule['roles'] = array($rule['roles']);
             }
             if (isset($rule['action'])) {
-                $this->rules[$rule['controller']][$rule['action']] = $rule['roles'];
+                $this->rules[$rule['namespace']][$rule['controller']][$rule['action']] = $rule['roles'];
             } else {
-                $this->rules[$rule['controller']] = $rule['roles'];
+                $this->rules[$rule['namespace']][$rule['controller']] = $rule['roles'];
             }
         }
     }
@@ -30,14 +30,15 @@ class Controller extends AbstractFirewall
     public function isGranted($resource)
     {
         $resource   = explode(':', $resource);
-        $controller = $resource[0];
+        $namespace  = $resource[0];
+        $controller = $resource[1];
         $action     = isset($resource[1]) ? $resource[1] : null;
 
         // Check action first
-        if (isset($this->rules[$controller][$action])) {
-            $roles = $this->rules[$controller][$action];
-        } else if (isset($this->rules[$controller])) {
-            $roles = $this->rules[$controller];
+        if (isset($this->rules[$namespace][$controller][$action])) {
+            $roles = $this->rules[$namespace][$controller][$action];
+        } else if (isset($this->rules[$namespace][$controller])) {
+            $roles = $this->rules[$namespace][$controller];
         } else {
             return true;
         }
