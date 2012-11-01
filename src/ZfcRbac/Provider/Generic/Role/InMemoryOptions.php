@@ -19,7 +19,7 @@ class InMemoryOptions extends AbstractOptions
      * @param array $roles
      * @return InMemoryOptions
      */
-    public function setRoles($roles)
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
         return $this;

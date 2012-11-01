@@ -20,12 +20,12 @@ class Route extends AbstractFirewall
     public function __construct(array $rules)
     {
         $regex = array();
-        foreach($rules as $key => $rule) {
+        foreach($rules as $rule) {
             if (!is_array($rule['roles'])) {
                 $rule['roles'] = array($rule['roles']);
             }
-            $this->rules[] = $rule['roles'];
 
+            $this->rules[] = $rule['roles'];
             $regex[] = str_replace('/', '\/', '(' . $rule['route'] . ')');
         }
 

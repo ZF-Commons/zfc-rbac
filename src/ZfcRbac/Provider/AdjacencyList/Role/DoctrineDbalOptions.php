@@ -37,45 +37,73 @@ class DoctrineDbalOptions extends AbstractOptions
      */
     protected $joinColumn = 'parent_role_id';
 
+    /**
+     * @param  string $idColumn
+     * @return DoctrineDbalOptions
+     */
     public function setIdColumn($idColumn)
     {
-        $this->idColumn = $idColumn;
+        $this->idColumn = (string) $idColumn;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getIdColumn()
     {
         return $this->idColumn;
     }
 
+    /**
+     * @param  string $joinColumn
+     * @return DoctrineDbalOptions
+     */
     public function setJoinColumn($joinColumn)
     {
-        $this->joinColumn = $joinColumn;
+        $this->joinColumn = (string) $joinColumn;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getJoinColumn()
     {
         return $this->joinColumn;
     }
 
+    /**
+     * @param  string $nameColumn
+     * @return DoctrineDbalOptions
+     */
     public function setNameColumn($nameColumn)
     {
-        $this->nameColumn = $nameColumn;
+        $this->nameColumn = (string) $nameColumn;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getNameColumn()
     {
         return $this->nameColumn;
     }
 
+    /**
+     * @param  string $table
+     * @return DoctrineDbalOptions
+     */
     public function setTable($table)
     {
-        $this->table = $table;
+        $this->table = (string) $table;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getTable()
     {
         return $this->table;
