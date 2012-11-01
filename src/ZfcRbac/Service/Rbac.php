@@ -47,6 +47,12 @@ class Rbac
     protected $providers = array();
 
     /**
+     * @var RbacOptions
+     */
+    protected $options;
+
+
+    /**
      * @param array $options
      */
     public function __construct(array $options = array())
@@ -283,7 +289,7 @@ class Rbac
     /**
      * @return RbacOptions
      */
-    public function options()
+    public function getOptions()
     {
         return $this->options;
     }

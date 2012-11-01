@@ -13,7 +13,7 @@ class UnauthorizedStrategyFactory implements FactoryInterface
         $security = $sl->get('ZfcRbac\Service\Rbac');
 
         $strategy = new UnauthorizedStrategy;
-        $strategy->setUnauthorizedTemplate($security->options()->getTemplate());
+        $strategy->setUnauthorizedTemplate($security->getOptions()->getTemplate());
 
         return $strategy;
     }
