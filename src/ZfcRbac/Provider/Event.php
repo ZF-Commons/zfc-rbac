@@ -2,18 +2,18 @@
 
 namespace ZfcRbac\Provider;
 
-use Zend\Permissions\Rbac\Rbac;
 use Zend\EventManager\Event as BaseEvent;
+use Zend\Permissions\Rbac\Rbac;
 
 class Event extends BaseEvent
 {
     // Primarily for lazy-loading roles/permission
-    const EVENT_HAS_ROLE         = 'has.role';
-    const EVENT_IS_GRANTED       = 'is.granted';
+    const EVENT_HAS_ROLE         = 'hasRole';
+    const EVENT_IS_GRANTED       = 'isGranted';
 
     // Primarily for pre-loading roles/permissions
-    const EVENT_LOAD_ROLES       = 'load.roles';
-    const EVENT_LOAD_PERMISSIONS = 'load.permissions';
+    const EVENT_LOAD_ROLES       = 'loadRoles';
+    const EVENT_LOAD_PERMISSIONS = 'loadPermissions';
 
     /**
      * @var Rbac
@@ -32,10 +32,11 @@ class Event extends BaseEvent
 
     /**
      * @param string $permission
+     * @return Event
      */
     public function setPermission($permission)
     {
-        $this->permission = $permission;
+        $this->permission = (string) $permission;
         return $this;
     }
 
@@ -48,7 +49,8 @@ class Event extends BaseEvent
     }
 
     /**
-     * @param \Zend\Permissions\Rbac\Rbac $rbac
+     * @param  Rbac $rbac
+     * @return Event
      */
     public function setRbac(Rbac $rbac)
     {
@@ -57,7 +59,7 @@ class Event extends BaseEvent
     }
 
     /**
-     * @return \Zend\Permissions\Rbac\Rbac
+     * @return Rbac
      */
     public function getRbac()
     {
@@ -66,6 +68,7 @@ class Event extends BaseEvent
 
     /**
      * @param string $role
+     * @return Event
      */
     public function setRole($role)
     {

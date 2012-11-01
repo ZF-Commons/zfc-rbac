@@ -14,6 +14,16 @@ abstract class AbstractFirewall
     protected $rbac;
 
     /**
+     * @param  Rbac $rbac
+     * @return AbstractFirewall
+     */
+    public function setRbac(Rbac $rbac)
+    {
+        $this->rbac = $rbac;
+        return $this;
+    }
+
+    /**
      * Get the firewall name.
      *
      * @abstract
@@ -29,14 +39,4 @@ abstract class AbstractFirewall
      * @return bool
      */
     abstract public function isGranted($resource);
-
-    /**
-     * @param \ZfcRbac\Service\Rbac $rbac
-     * @return AbstractFirewall
-     */
-    public function setRbac($rbac)
-    {
-        $this->rbac = $rbac;
-        return $this;
-    }
 }

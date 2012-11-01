@@ -4,12 +4,12 @@ namespace ZfcRbac\Provider\Generic\Permission;
 
 use DomainException;
 use Doctrine\DBAL\Connection;
-use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
-use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Provider\AbstractProvider;
+use ZfcRbac\Provider\Event;
 
-class DoctrineDbal implements ProviderInterface
+class DoctrineDbal extends AbstractProvider
 {
     /**
      * @var Connection
@@ -39,12 +39,20 @@ class DoctrineDbal implements ProviderInterface
     /**
      * Attach to the listeners.
      *
-     * @param \Zend\EventManager\EventManager $events
+     * @param  EventManagerInterface $events
      * @return void
      */
-    public function attachListeners(EventManager $events)
+    public function attach(EventManagerInterface $events)
     {
         $events->attach(Event::EVENT_LOAD_PERMISSIONS, array($this, 'loadPermissions'));
+    }
+
+    /**
+     * @param EventManagerInterface $events
+     */
+    public function detach(EventManagerInterface $events)
+    {
+        $events->detach($this);
     }
 
     /**
@@ -85,8 +93,9 @@ class DoctrineDbal implements ProviderInterface
      * Factory to create the provider.
      *
      * @static
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     * @param array $spec
+     * @param ServiceLocatorInterface $sl
+     * @param array                   $spec
+     * @throws DomainException
      * @return DoctrineDbal
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)

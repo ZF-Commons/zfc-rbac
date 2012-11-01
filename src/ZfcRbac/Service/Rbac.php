@@ -9,12 +9,12 @@ use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\Permissions\Rbac\Rbac as ZendRbac;
-use ZfcRbac\AssertionInterface;
+use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Firewall\AbstractFirewall;
 use ZfcRbac\Identity;
 use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
+use ZfcRbac\Provider\AbstractProvider;
 
 class Rbac
 {
@@ -73,6 +73,7 @@ class Rbac
             get_called_class(),
         ));
         $this->events = $events;
+
         return $this;
     }
 
@@ -115,7 +116,7 @@ class Rbac
             foreach((array) $this->getIdentity()->getRoles() as $userRole) {
                 $event = new Event;
                 $event->setRole($userRole)
-                      ->setRbac($rbac);
+                    ->setRbac($rbac);
 
                 $this->getEventManager()->trigger(Event::EVENT_HAS_ROLE, $event);
 
@@ -143,8 +144,10 @@ class Rbac
     /**
      * Returns true if the user has the permission.
      *
-     * @param string $permission
+     * @param string                          $permission
      * @param null|Closure|AssertionInterface $assert
+     * @throws InvalidArgumentException
+     * @return bool
      */
     public function isGranted($permission, $assert = null)
     {
@@ -177,7 +180,6 @@ class Rbac
                   ->setRbac($rbac);
 
             $this->getEventManager()->trigger(Event::EVENT_IS_GRANTED, $event);
-
             if ($rbac->isGranted($role, $permission)) {
                 return true;
             }
@@ -189,7 +191,8 @@ class Rbac
      * Access to firewalls by name.
      *
      * @param string $name
-     * @return \ZfcRbac\Firewall\AbstractFirewall
+     * @throws InvalidArgumentException
+     * @return AbstractFirewall
      */
     public function getFirewall($name)
     {
@@ -204,7 +207,8 @@ class Rbac
     }
 
     /**
-     * @param \ZfcRbac\Firewall\AbstractFirewall $firewall
+     * @param  AbstractFirewall $firewall
+     * @throws InvalidArgumentException
      * @return Rbac
      */
     public function addFirewall(AbstractFirewall $firewall)
@@ -218,18 +222,19 @@ class Rbac
 
         $firewall->setRbac($this);
         $this->firewalls[$firewall->getName()] = $firewall;
+
         return $this;
     }
 
     /**
-     * @param ProviderInterface $provider
+     * @param AbstractProvider $provider
      * @return Rbac
      */
-    public function addProvider(ProviderInterface $provider)
+    public function addProvider(AbstractProvider $provider)
     {
-        $provider->attachListeners($this->getEventManager());
-
+        $provider->attach($this->getEventManager());
         $this->providers[] = $provider;
+
         return $this;
     }
 
@@ -241,6 +246,7 @@ class Rbac
         if (null === $this->identity) {
             $this->setIdentity();
         }
+
         return $this->identity;
     }
 
@@ -270,7 +276,7 @@ class Rbac
     }
 
     /**
-     * @return \Zend\Permissions\Rbac\Rbac
+     * @return ZendRbac
      */
     public function getRbac()
     {

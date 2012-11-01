@@ -4,14 +4,13 @@ namespace ZfcRbac\Provider\AdjacencyList\Role;
 
 use DomainException;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Zend\EventManager\EventManagerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Provider\AbstractProvider;
 use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
-use Zend\Permissions\Rbac\Rbac;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DoctrineDbal extends AbstractProvider implements ProviderInterface
+class DoctrineDbal extends AbstractProvider
 {
     /**
      * @var Connection
@@ -41,12 +40,21 @@ class DoctrineDbal extends AbstractProvider implements ProviderInterface
     /**
      * Attach to the listeners.
      *
-     * @param \Zend\EventManager\EventManager $events
+     * @param  EventManagerInterface $events
      * @return void
      */
-    public function attachListeners(EventManager $events)
+    public function attach(EventManagerInterface $events)
     {
         $events->attach(Event::EVENT_LOAD_ROLES, array($this, 'loadRoles'));
+    }
+
+    /**
+     * @param EventManagerInterface $events
+     * @return void
+     */
+    public function detach(EventManagerInterface $events)
+    {
+        $events->detach($this);
     }
 
     /**
@@ -57,7 +65,7 @@ class DoctrineDbal extends AbstractProvider implements ProviderInterface
      */
     public function loadRoles(Event $e)
     {
-        $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->connection);
+        $builder = new QueryBuilder($this->connection);
         $options = $this->options;
 
         $builder->select("role.{$options->getNameColumn()} AS name, parent.{$options->getNameColumn()} AS parent")
@@ -86,8 +94,9 @@ class DoctrineDbal extends AbstractProvider implements ProviderInterface
      * Factory to create the provider.
      *
      * @static
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     * @param mixed $spec
+     * @param ServiceLocatorInterface $sl
+     * @param array                   $spec
+     * @throws DomainException
      * @return DoctrineDbal
      */
     public static function factory(ServiceLocatorInterface $sl, array $spec)
