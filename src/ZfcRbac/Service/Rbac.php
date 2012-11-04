@@ -258,7 +258,7 @@ class Rbac
         if (is_string($identity)) {
             $identity = new Identity\StandardIdentity($identity);
         } elseif (is_null($identity)) {
-            $identity = new Identity\StandardIdentity($this->options()->getAnonymousRole());
+            $identity = new Identity\StandardIdentity($this->getOptions()->getAnonymousRole());
         } elseif (!$identity instanceof Identity\IdentityInterface) {
             throw new InvalidArgumentException(
                 'Identity must be null, a string, or an instance of ZfcRbac\Identity\IdentityInterface'
