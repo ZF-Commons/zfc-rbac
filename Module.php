@@ -37,6 +37,20 @@ class Module implements
     }
 
     /**
+     * @return array
+     */
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
+    }
+
+    /**
      * @return array|\Zend\ServiceManager\Config
      */
     public function getServiceConfig()
