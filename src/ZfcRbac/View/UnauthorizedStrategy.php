@@ -14,6 +14,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
 {
     /**
      * Name of unauthorized template
+     *
      * @var string
      */
     protected $unauthorizedTemplate = '403';
