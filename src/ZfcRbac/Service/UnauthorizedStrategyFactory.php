@@ -17,7 +17,7 @@ class UnauthorizedStrategyFactory implements FactoryInterface
         $rbacService = $sl->get('ZfcRbac\Service\Rbac');
 
         $strategy = new UnauthorizedStrategy();
-        $strategy->setUnauthorizedTemplate($rbacService->options()->getTemplate());
+        $strategy->setUnauthorizedTemplate($rbacService->getOptions()->getTemplate());
 
         return $strategy;
     }
