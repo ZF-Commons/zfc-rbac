@@ -2,16 +2,21 @@
 
 namespace ZfcRbac\Provider\Generic\Role;
 
+use Zend\EventManager\EventManagerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Provider\AbstractProvider;
 use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class InMemory extends AbstractProvider implements ProviderInterface
+class InMemory extends AbstractProvider
 {
+    /**
+     * @var InMemoryOptions
+     */
     protected $options;
 
+    /**
+     * @param array $spec
+     */
     public function __construct(array $spec = array())
     {
         $this->options = new InMemoryOptions($spec);
@@ -20,12 +25,21 @@ class InMemory extends AbstractProvider implements ProviderInterface
     /**
      * Attach to the listeners.
      *
-     * @param \Zend\EventManager\EventManager $events
+     * @param EventManagerInterface $events
      * @return void
      */
-    public function attachListeners(EventManager $events)
+    public function attach(EventManagerInterface $events)
     {
         $events->attach(Event::EVENT_LOAD_ROLES, array($this, 'loadRoles'));
+    }
+
+    /**
+     * @param EventManagerInterface $events
+     * @return void
+     */
+    public function detach(EventManagerInterface $events)
+    {
+        $events->detach($this);
     }
 
     /**
@@ -39,7 +53,7 @@ class InMemory extends AbstractProvider implements ProviderInterface
         $roles  = $this->options->getRoles();
         $result = array();
 
-        foreach((array) $roles as $role => $parents) {
+        foreach($roles as $role => $parents) {
             if (is_numeric($role)) {
                 $role    = $parents;
                 $parents = array();

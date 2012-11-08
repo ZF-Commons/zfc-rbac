@@ -4,14 +4,21 @@ namespace ZfcRbac\Firewall;
 
 class Controller extends AbstractFirewall
 {
+    /**
+     * @var array
+     */
     protected $rules = array();
 
+    /**
+     * @param array $rules
+     */
     public function __construct(array $rules)
     {
         foreach($rules as $rule) {
             if (!is_array($rule['roles'])) {
                 $rule['roles'] = array($rule['roles']);
             }
+
             if (isset($rule['action'])) {
                 $this->rules[$rule['controller']][$rule['action']] = $rule['roles'];
             } else {
@@ -23,7 +30,6 @@ class Controller extends AbstractFirewall
     /**
      * Checks if access is granted to resource for the role.
      *
-     * @param \ZfcRbac\Identity\IdentityInterface $identity
      * @param string $resource
      * @return bool
      */
@@ -36,7 +42,7 @@ class Controller extends AbstractFirewall
         // Check action first
         if (isset($this->rules[$controller][$action])) {
             $roles = $this->rules[$controller][$action];
-        } else if (isset($this->rules[$controller])) {
+        } elseif (isset($this->rules[$controller])) {
             $roles = $this->rules[$controller];
         } else {
             return true;

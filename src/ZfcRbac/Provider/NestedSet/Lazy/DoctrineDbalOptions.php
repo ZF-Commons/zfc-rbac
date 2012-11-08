@@ -71,10 +71,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $permissionIdColumn
+     * @return DoctrineDbalOptions
      */
     public function setPermissionIdColumn($permissionIdColumn)
     {
-        $this->permissionIdColumn = $permissionIdColumn;
+        $this->permissionIdColumn = (string) $permissionIdColumn;
+        return $this;
     }
 
     /**
@@ -87,10 +89,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $permissionJoinColumn
+     * @return DoctrineDbalOptions
      */
     public function setPermissionJoinColumn($permissionJoinColumn)
     {
-        $this->permissionJoinColumn = $permissionJoinColumn;
+        $this->permissionJoinColumn = (string) $permissionJoinColumn;
+        return $this;
     }
 
     /**
@@ -103,10 +107,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $permissionNameColumn
+     * @return DoctrineDbalOptions
      */
     public function setPermissionNameColumn($permissionNameColumn)
     {
-        $this->permissionNameColumn = $permissionNameColumn;
+        $this->permissionNameColumn = (string) $permissionNameColumn;
+        return $this;
     }
 
     /**
@@ -119,10 +125,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $permissionTable
+     * @return DoctrineDbalOptions
      */
     public function setPermissionTable($permissionTable)
     {
-        $this->permissionTable = $permissionTable;
+        $this->permissionTable = (string) $permissionTable;
+        return $this;
     }
 
     /**
@@ -135,10 +143,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $roleIdColumn
+     * @return DoctrineDbalOptions
      */
     public function setRoleIdColumn($roleIdColumn)
     {
-        $this->roleIdColumn = $roleIdColumn;
+        $this->roleIdColumn = (string) $roleIdColumn;
+        return $this;
     }
 
     /**
@@ -151,10 +161,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $roleJoinColumn
+     * @return DoctrineDbalOptions
      */
     public function setRoleJoinColumn($roleJoinColumn)
     {
-        $this->roleJoinColumn = $roleJoinColumn;
+        $this->roleJoinColumn = (string) $roleJoinColumn;
+        return $this;
     }
 
     /**
@@ -167,10 +179,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $roleJoinTable
+     * @return DoctrineDbalOptions
      */
     public function setRoleJoinTable($roleJoinTable)
     {
-        $this->roleJoinTable = $roleJoinTable;
+        $this->roleJoinTable = (string) $roleJoinTable;
+        return $this;
     }
 
     /**
@@ -183,10 +197,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $roleNameColumn
+     * @return DoctrineDbalOptions
      */
     public function setRoleNameColumn($roleNameColumn)
     {
-        $this->roleNameColumn = $roleNameColumn;
+        $this->roleNameColumn = (string) $roleNameColumn;
+        return $this;
     }
 
     /**
@@ -199,10 +215,12 @@ class DoctrineDbalOptions extends AbstractOptions
 
     /**
      * @param string $roleTable
+     * @return DoctrineDbalOptions
      */
     public function setRoleTable($roleTable)
     {
-        $this->roleTable = $roleTable;
+        $this->roleTable = (string) $roleTable;
+        return $this;
     }
 
     /**

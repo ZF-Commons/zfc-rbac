@@ -2,8 +2,8 @@
 
 namespace ZfcRbac\Exception;
 
-class AccessForbidden extends \RuntimeException
-                      implements ExceptionInterface
-{
+use RuntimeException;
 
-}
+class AccessForbidden extends RuntimeException
+                      implements ExceptionInterface
+{}

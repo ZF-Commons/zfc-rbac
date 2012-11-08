@@ -2,16 +2,21 @@
 
 namespace ZfcRbac\Provider\Generic\Permission;
 
+use Zend\EventManager\EventManagerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Provider\AbstractProvider;
 use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\ProviderInterface;
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class InMemory implements ProviderInterface
+class InMemory extends AbstractProvider
 {
+    /**
+     * @var InMemoryOptions
+     */
     protected $options;
 
+    /**
+     * @param array $spec
+     */
     public function __construct(array $spec = array())
     {
         $this->options = new InMemoryOptions($spec);
@@ -20,24 +25,34 @@ class InMemory implements ProviderInterface
     /**
      * Attach to the listeners.
      *
-     * @param \Zend\EventManager\EventManager $events
+     * @param  EventManagerInterface $events
      * @return void
      */
-    public function attachListeners(EventManager $events)
+    public function attach(EventManagerInterface $events)
     {
         $events->attach(Event::EVENT_LOAD_PERMISSIONS, array($this, 'loadPermissions'));
     }
 
     /**
+     * @param EventManagerInterface $events
+     * @return void
+     */
+    public function detach(EventManagerInterface $events)
+    {
+        $events->detach($this);
+    }
+
+    /**
      * Load permissions into roles.
      *
-     * @param Event $rbac
+     * @param  Event $e
+     * @return void
      */
     public function loadPermissions(Event $e)
     {
         $rbac = $e->getRbac();
 
-        foreach((array) $this->options->getPermissions() as $role => $permissions) {
+        foreach($this->options->getPermissions() as $role => $permissions) {
             foreach((array) $permissions as $permission) {
                 $rbac->getRole($role)->addPermission($permission);
             }
