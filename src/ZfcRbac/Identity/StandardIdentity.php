@@ -2,6 +2,8 @@
 
 namespace ZfcRbac\Identity;
 
+use InvalidArgumentException;
+
 class StandardIdentity implements IdentityInterface
 {
     /**
@@ -16,8 +18,12 @@ class StandardIdentity implements IdentityInterface
      */
     public function __construct($roles)
     {
+        if (is_string($roles)) {
+            $roles = (array) $roles;
+        }
+
         if (!is_array($roles)) {
-            $roles = array($roles);
+            throw new InvalidArgumentException('StandardIdentity only accepts strings or arrays');
         }
 
         $this->roles = $roles;

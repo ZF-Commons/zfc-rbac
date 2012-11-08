@@ -7,6 +7,7 @@ use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use ZfcRbac\Collector\RbacCollector;
 
 class Module implements
     BootstrapListenerInterface,
@@ -52,8 +53,11 @@ class Module implements
                 'ZfcRbac\Controller\Plugin\IsGranted' => function($sm) {
                     return new Controller\Plugin\IsGranted($sm->get('ZfcRbac\Service\Rbac'));
                 },
+                'ZfcRbac\Collector\RbacCollector' => function($sm) {
+                    return new RbacCollector($sm->get('ZfcRbac\Service\Rbac'));
+                },
                 'ZfcRbac\View\UnauthorizedStrategy' => 'ZfcRbac\Service\UnauthorizedStrategyFactory',
-                'ZfcRbac\Service\Rbac'              => 'ZfcRbac\Service\RbacFactory'
+                'ZfcRbac\Service\Rbac' => 'ZfcRbac\Service\RbacFactory'
             )
         );
     }
