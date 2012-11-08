@@ -4,20 +4,9 @@ namespace ZfcRbac\Provider;
 
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Permissions\Rbac\Rbac;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-abstract class AbstractProvider implements ListenerAggregateInterface
+abstract class AbstractProvider implements ListenerAggregateInterface, ProviderInterface
 {
-    /**
-     * Factory to create the provider.
-     *
-     * @static
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     * @param mixed $spec
-     * @return mixed
-     */
-    abstract public static function factory(ServiceLocatorInterface $sl, array $spec);
-
     /**
      * Recursive function to add roles according to their parent role.
      *
