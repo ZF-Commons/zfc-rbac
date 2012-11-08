@@ -79,7 +79,7 @@ return array(
 	'zfcrbac' => array(
         'firewalls' => array(
             'ZfcRbac\Firewall\Controller' => array(
-                array('controller' => 'index', 'action' => 'index', 'roles' => 'guest')
+                array('controller' => 'index', 'actions' => 'index', 'roles' => 'guest')
             ),
             'ZfcRbac\Firewall\Route' => array(
                 array('route' => 'profiles/add', 'roles' => 'member'),
