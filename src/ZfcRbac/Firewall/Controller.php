@@ -19,8 +19,12 @@ class Controller extends AbstractFirewall
                 $rule['roles'] = array($rule['roles']);
             }
 
-            if (isset($rule['action'])) {
-                $this->rules[$rule['controller']][$rule['action']] = $rule['roles'];
+            if (isset($rule['actions'])) {
+                $rule['actions'] = (array) $rule['actions'];
+
+                foreach ($rule['actions'] as $action) {
+                    $this->rules[$rule['controller']][$action] = $rule['roles'];
+                }
             } else {
                 $this->rules[$rule['controller']] = $rule['roles'];
             }
