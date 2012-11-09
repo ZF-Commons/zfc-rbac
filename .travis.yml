@@ -1,12 +1,8 @@
 language: php
 
 php:
-  - 5.3.3
   - 5.3
   - 5.4
-
-env:
- - ZF2_PATH=./zf2/library
 
 before_install:
  - curl -s https://getcomposer.org/installer | php
