@@ -9,7 +9,9 @@ env:
  - ZF2_PATH=./zf2/library
 
 before_install:
- - cd test; git clone --depth=1 https://github.com/zendframework/zf2.git
+ - curl -s https://getcomposer.org/installer | php
+ - php composer.phar install
+ - cd tests
 
 script:
  - phpunit
