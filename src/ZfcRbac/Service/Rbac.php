@@ -116,7 +116,7 @@ class Rbac
             foreach((array) $this->getIdentity()->getRoles() as $userRole) {
                 $event = new Event;
                 $event->setRole($userRole)
-                    ->setRbac($rbac);
+                      ->setRbac($rbac);
 
                 $this->getEventManager()->trigger(Event::EVENT_HAS_ROLE, $event);
 
@@ -151,6 +151,10 @@ class Rbac
      */
     public function isGranted($permission, $assert = null)
     {
+        if (!is_string($permission)) {
+            throw new InvalidArgumentException('isGranted() expects a string for permission');
+        }
+
         $rbac = $this->getRbac();
 
         if ($assert) {
