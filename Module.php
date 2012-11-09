@@ -46,18 +46,24 @@ class Module implements
             'aliases' => array(
                 'service.security' => 'ZfcRbac\Service\Rbac',
             ),
-            'invokables' => array(
-                'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
-            ),
             'factories' => array(
-                'ZfcRbac\Controller\Plugin\IsGranted' => function($sm) {
-                    return new Controller\Plugin\IsGranted($sm->get('ZfcRbac\Service\Rbac'));
-                },
                 'ZfcRbac\Collector\RbacCollector' => function($sm) {
                     return new RbacCollector($sm->get('ZfcRbac\Service\Rbac'));
                 },
                 'ZfcRbac\View\UnauthorizedStrategy' => 'ZfcRbac\Service\UnauthorizedStrategyFactory',
                 'ZfcRbac\Service\Rbac' => 'ZfcRbac\Service\RbacFactory'
+            )
+        );
+    }
+
+    /**
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getControllerPluginConfig()
+    {
+        return array(
+            'invokables' => array(
+                'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
             )
         );
     }
