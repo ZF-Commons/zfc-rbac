@@ -5,12 +5,14 @@ namespace ZfcRbac;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 
 class Module implements
     BootstrapListenerInterface,
     ConfigProviderInterface,
+    ControllerPluginProviderInterface,
     ServiceProviderInterface,
     ViewHelperProviderInterface
 {
@@ -45,15 +47,21 @@ class Module implements
             'aliases' => array(
                 'service.security' => 'ZfcRbac\Service\Rbac',
             ),
-            'invokables' => array(
-                'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
-            ),
             'factories' => array(
-                'ZfcRbac\Controller\Plugin\IsGranted' => function($sm) {
-                    return new Controller\Plugin\IsGranted($sm->get('ZfcRbac\Service\Rbac'));
-                },
                 'ZfcRbac\View\UnauthorizedStrategy' => 'ZfcRbac\Service\UnauthorizedStrategyFactory',
                 'ZfcRbac\Service\Rbac'              => 'ZfcRbac\Service\RbacFactory'
+            )
+        );
+    }
+
+    /**
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getControllerPluginConfig()
+    {
+        return array(
+            'invokables' => array(
+                'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
             )
         );
     }
