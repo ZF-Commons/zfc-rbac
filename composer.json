@@ -21,10 +21,7 @@
 
     "autoload": {
         "psr-0": {
-            "ZfcRbac": "src/"
-        },
-        "classmap": [
-            "./"
-        ]
+            "ZfcRbac\\": "src/"
+        }
     }
 }
