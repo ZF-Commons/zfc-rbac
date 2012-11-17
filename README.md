@@ -50,6 +50,8 @@ several providers that you can use out of the box:
 
 See the module.config.php file for sample setups.
 
+If you're willing to use a provider requiring SQL. You can use the `data/schema.sql` file to help you install the tables.
+
 ## Firewalls
 
 Firewalls protect your resources by allowing access only to the roles you specify. By default, two
@@ -72,6 +74,8 @@ An `isGranted($permission)` view helper and controller plugin is available. To u
 for access.
 
 ## Sample configuration
+
+Add this code in a `zfcrbac.global.php` file into your `config/autoload` directory.
 
 ```php
 <?php
