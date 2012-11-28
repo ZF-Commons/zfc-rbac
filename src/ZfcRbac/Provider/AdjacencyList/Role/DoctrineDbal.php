@@ -68,7 +68,7 @@ class DoctrineDbal extends AbstractProvider
         $builder = new QueryBuilder($this->connection);
         $options = $this->options;
 
-        $builder->select("role.{$options->getNameColumn()} AS name, parent.{$options->getNameColumn()} AS parent")
+        $builder->select("role.{$options->getNameColumn()} AS name, role.{$options->getIdColumn()} as id, parent.{$options->getNameColumn()} AS parent")
                 ->from($options->getTable(), 'role')
                 ->leftJoin(
                     'role',
@@ -84,10 +84,20 @@ class DoctrineDbal extends AbstractProvider
             $parentName = isset($row['parent']) ? $row['parent'] : 0;
             unset($row['parent']);
 
-            $roles[$parentName][] = $row['name'];
+            $roles[$parentName][] = $this->createRole($row);
         }
 
         $this->recursiveRoles($e->getRbac(), $roles);
+    }
+    
+    /**
+     * Factory to create a custom role object
+     * 
+     * @param array $row
+     * @return string|AbstractRole
+     */
+    protected function createRole(array $row) {
+        return $row['name'];
     }
 
     /**
@@ -113,6 +123,6 @@ class DoctrineDbal extends AbstractProvider
             throw new DomainException('Failed to find DBAL Connection');
         }
 
-        return new DoctrineDbal($adapter, $options);
+        return new static($adapter, $options);
     }
 }

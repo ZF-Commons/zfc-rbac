@@ -4,6 +4,7 @@ namespace ZfcRbac\Provider;
 
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Permissions\Rbac\Rbac;
+use Zend\Permissions\Rbac\AbstractRole;
 
 abstract class AbstractProvider implements ListenerAggregateInterface, ProviderInterface
 {
@@ -27,8 +28,10 @@ abstract class AbstractProvider implements ListenerAggregateInterface, ProviderI
                 $rbac->addRole($role);
             }
 
-            if (!empty($roles[$role])) {
-                $this->recursiveroles($rbac, $roles, $role);
+            $name = ($role instanceof AbstractRole) ? $role->getName() : $role;
+            
+            if (!empty($roles[$name])) {
+                $this->recursiveroles($rbac, $roles, $name);
             }
         }
     }
