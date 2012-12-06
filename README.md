@@ -149,7 +149,7 @@ class NewService
 
     public function createPost()
     {
-        if (!$this->rbac->isGranted('ROLE_NEWS_MANAGER')) {
+        if (!$this->rbac->isGranted('PERMISSION_MANAGE_NEWS')) {
             // code
         }
 
