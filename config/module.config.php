@@ -1,6 +1,7 @@
 <?php
 return array(
     'zfcrbac' => array(
+        // put your options here
         // see ZfcRbac\Service\RbacOptions for options
     ),
     'view_manager' => array(
