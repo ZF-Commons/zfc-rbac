@@ -36,4 +36,14 @@ class StandardIdentity implements IdentityInterface
     {
         return $this->roles;
     }
+
+    /**
+     * Check if an identity has a role
+     * @param string $role Role to check
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return in_array($role, $this->roles);
+    }
 }
