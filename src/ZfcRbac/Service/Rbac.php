@@ -255,7 +255,7 @@ class Rbac
     }
 
     /**
-     * @param  string|null|AuthenticationService|Identity\IdentityInterface $identity
+     * @param  string|array|null|AuthenticationService|Identity\IdentityInterface $identity
      * @throws InvalidArgumentException
      * @return Rbac
      */
@@ -265,7 +265,7 @@ class Rbac
             $identity = $identity->getIdentity();
         }
 
-        if (is_string($identity)) {
+        if (is_string($identity) || is_array($identity)) {
             $identity = new Identity\StandardIdentity($identity);
         } elseif (is_null($identity)) {
             $identity = new Identity\StandardIdentity($this->getOptions()->getAnonymousRole());
