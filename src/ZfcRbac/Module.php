@@ -75,9 +75,14 @@ class Module implements
     {
         return array(
             'factories' => array(
-                'ZfcRbac\View\Helper\IsGranted' => function($sm) {
+                'isGranted' => function($sm) {
                     $sl = $sm->getServiceLocator();
                     return new View\Helper\IsGranted($sl->get('ZfcRbac\Service\Rbac'));
+                },
+                'hasRole' => function($sm) {
+            	    $rbacIdentity = $sm->getServiceLocator()->get('jmluser_identity');
+                    $helper = new View\Helper\HasRole($rbacIdentity);
+                    return $helper;
                 },
             )
         );
