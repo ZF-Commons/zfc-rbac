@@ -24,4 +24,12 @@ class StandardIdentityTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('InvalidArgumentException', 'StandardIdentity only accepts strings or arrays');
         new StandardIdentity(false);
     }
+
+    public function testIdentityHasRole()
+    {
+        $identity = new StandardIdentity(array('admin', 'member'));
+        $this->assertTrue($identity->hasRole('admin'));
+        $this->assertTrue($identity->hasRole('member'));
+        $this->assertFalse($identity->hasRole('other'));
+    }
 }
