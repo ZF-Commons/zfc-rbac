@@ -77,6 +77,8 @@ for access.
 
 Add this code in a `zfcrbac.global.php` file into your `config/autoload` directory.
 
+### Doctrine providers
+
 ```php
 <?php
 return array(
@@ -128,6 +130,59 @@ return array(
     ),
 );
 ```
+
+### Zend Db providers
+
+```php
+<?php
+return array(
+    'zfcrbac' => array(
+        'firewalls' => array(
+            'ZfcRbac\Firewall\Controller' => array(
+                array('controller' => 'index', 'actions' => 'index', 'roles' => 'guest')
+            ),
+        ),
+        'providers' => array(
+            'ZfcRbac\Provider\AdjacencyList\Role\ZendDb' => array(
+                'connection' => 'Zend\Db\Adapter\Adapter',
+            ),
+            'ZfcRbac\Provider\Generic\Permission\ZendDb' => array(
+                'connection' => 'Zend\Db\Adapter\Adapter',
+            ),
+        ),
+        'identity_provider' => 'standard_identity'
+    ),
+);
+```
+
+### InMemory providers
+
+With this provider, a role can have multiple parents.
+
+```php
+<?php
+return array(
+    'zfcrbac' => array(
+        'firewalls' => array(
+            'ZfcRbac\Firewall\Controller' => array(
+                array('controller' => 'index', 'actions' => 'index', 'roles' => 'guest')
+            ),
+        ),
+        'providers' => array(
+            'ZfcRbac\Provider\Generic\Role\InMemory' => array(
+                'roles' => array(
+                    'admin',
+                    // "member" is a child of "admin"
+                    'member' => array('admin'),
+                    'guest' => array('member'),
+                ),
+            ),
+        ),
+        'identity_provider' => 'standard_identity'
+    ),
+);
+```
+
 
 ## Protecting your services
 
