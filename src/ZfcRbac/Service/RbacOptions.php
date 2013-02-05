@@ -189,4 +189,23 @@ class RbacOptions extends AbstractOptions
     {
         return $this->template;
     }
+    
+    /**
+     * @return bool
+     */
+    public function getEnableLazyProviders()
+    {
+    	return $this->enableLazyProviders;
+    }
+
+    /**
+     * @param bool $value
+     * @return RbacOptions
+     */
+    public function setEnableLazyProviders($value)
+    {
+    	$this->enableLazyProviders = (bool) $value;
+    	return $this;
+    }
+
 }
