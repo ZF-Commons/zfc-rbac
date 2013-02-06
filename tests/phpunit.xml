@@ -1,10 +1,5 @@
-<phpunit bootstrap="bootstrap.php">
-    
+<phpunit bootstrap="./Bootstrap.php">
     <testsuite name="ZfcRbac Test Suite">
-
         <directory>./ZfcRbacTest</directory>
-
     </testsuite>
-
-</phpunit>
-
+4</phpunit>

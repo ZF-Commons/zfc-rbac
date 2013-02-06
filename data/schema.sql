@@ -1,3 +1,7 @@
+-- Schema for Adjacency List model
+-- A role can have only one parent
+-- A parent role can have multiple children
+
 CREATE TABLE `rbac_permission` (
   `perm_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `perm_name` varchar(32) NULL,
@@ -7,7 +11,7 @@ CREATE TABLE `rbac_permission` (
 
 CREATE TABLE `rbac_role` (
   `role_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_role_id` int(11) unsigned NOT NULL,
+  `parent_role_id` int(11) unsigned DEFAULT NULL,
   `role_name` varchar(32) NULL,
   PRIMARY KEY (`role_id`),
   KEY `parent_role_id` (`parent_role_id`)
