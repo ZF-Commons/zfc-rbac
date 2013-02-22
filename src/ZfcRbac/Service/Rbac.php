@@ -174,7 +174,7 @@ class Rbac
         }
 
         foreach($this->getIdentity()->getRoles() as $role) {
-            if (!$rbac->hasRole($role)) {
+            if (!$this->hasRole($role)) {
                 continue;
             }
 
