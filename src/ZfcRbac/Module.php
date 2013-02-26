@@ -4,6 +4,7 @@ namespace ZfcRbac;
 
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
@@ -11,6 +12,7 @@ use ZfcRbac\Collector\RbacCollector;
 
 class Module implements
     BootstrapListenerInterface,
+    AutoloaderProviderInterface,
     ConfigProviderInterface,
     ServiceProviderInterface,
     ViewHelperProviderInterface
@@ -35,6 +37,20 @@ class Module implements
         }
 
         $app->getEventManager()->attach($strategy);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__,
+                ),
+            ),
+        );
     }
 
     /**
