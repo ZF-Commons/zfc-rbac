@@ -7,7 +7,12 @@ class Route extends AbstractFirewall
     /**
      * @var array
      */
-    protected $rules = array();
+    protected $roles = array();
+
+    /**
+     * @var array
+     */
+    protected $permissions = array();
 
     /**
      * @var string
@@ -21,11 +26,22 @@ class Route extends AbstractFirewall
     {
         $regex = array();
         foreach($rules as $rule) {
-            if (!is_array($rule['roles'])) {
-                $rule['roles'] = array($rule['roles']);
+            if (isset($rule['roles'])) {
+                if (!is_array($rule['roles'])) {
+                    $rule['roles'] = array($rule['roles']);
+                }
             }
 
-            $this->rules[] = $rule['roles'];
+            $this->rules[] = isset($rule['roles']) ? $rule['roles'] : array();
+
+            if (isset($rule['permissions'])) {
+                if (!is_array($rule['permissions'])) {
+                    $rule['permissions'] = array($rule['permissions']);
+                }
+            }
+
+            $this->permissions[] = isset($rule['permissions']) ? $rule['permissions'] : array();
+
             $regex[] = str_replace('/', '\/', '(' . $rule['route'] . ')');
         }
 
@@ -41,7 +57,7 @@ class Route extends AbstractFirewall
     public function isGranted($resource)
     {
         // No rules, automatically allow
-        if (empty($this->rules)) {
+        if (empty($this->rules) && empty($this->permissions)) {
             return true;
         }
 
@@ -55,16 +71,34 @@ class Route extends AbstractFirewall
         // Take the matches, find the first non-empty string (excluding the start), and use that as the
         // key to find the proper role list.
         $roles = array();
+        $permissions = array();
         foreach($matches as $key => $value) {
             if ($key === 0) {
                 continue;
             }
             if ($value !== '') {
                 $roles = $this->rules[$key-1];
+                $permissions = $this->permissions[$key-1];
             }
         }
 
-        return $this->rbac->hasRole($roles);
+        $result = true;
+
+        if (!empty($roles)) {
+            $result = $this->rbac->hasRole($roles);
+        }
+
+        if ($result && !empty($permissions)) {
+            $granted = false;
+            foreach ($permissions as $permission) {
+                if ($this->rbac->isGranted($permission)) {
+                    $granted = true;
+                }
+            }
+            $result = $granted;
+        }
+
+        return $result;
     }
 
     /**
