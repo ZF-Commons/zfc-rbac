@@ -32,7 +32,7 @@ class Route extends AbstractFirewall
                 }
             }
 
-            $this->rules[] = isset($rule['roles']) ? $rule['roles'] : array();
+            $this->roles[] = isset($rule['roles']) ? $rule['roles'] : array();
 
             if (isset($rule['permissions'])) {
                 if (!is_array($rule['permissions'])) {
@@ -57,7 +57,7 @@ class Route extends AbstractFirewall
     public function isGranted($resource)
     {
         // No rules, automatically allow
-        if (empty($this->rules) && empty($this->permissions)) {
+        if (empty($this->roles) && empty($this->permissions)) {
             return true;
         }
 
@@ -77,7 +77,7 @@ class Route extends AbstractFirewall
                 continue;
             }
             if ($value !== '') {
-                $roles = $this->rules[$key-1];
+                $roles = $this->roles[$key-1];
                 $permissions = $this->permissions[$key-1];
             }
         }
