@@ -104,7 +104,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
                 || Rbac::ERROR_CONTROLLER_UNAUTHORIZED === $error
                 || (
                     Application::ERROR_EXCEPTION === $error
-                    && ($event->getParam('exception') instanceof AccessForbidden)
+                    && ($e->getParam('exception') instanceof AccessForbidden)
                 )
             )
         ) {
