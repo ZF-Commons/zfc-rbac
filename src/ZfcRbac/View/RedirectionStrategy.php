@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbac\View;
+namespace ZfcRbac\View;
 
 use ZfcRbac\Service\Rbac;
 use Zend\EventManager\EventManagerInterface;
