@@ -7,7 +7,7 @@ CREATE TABLE `rbac_permission` (
 
 CREATE TABLE `rbac_role` (
   `role_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_role_id` int(11) unsigned NOT NULL,
+  `parent_role_id` int(11) unsigned NULL,
   `role_name` varchar(32) NULL,
   PRIMARY KEY (`role_id`),
   KEY `parent_role_id` (`parent_role_id`)
