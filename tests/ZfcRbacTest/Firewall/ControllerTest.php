@@ -1,6 +1,6 @@
 <?php
 
-namespace ZfcRbacTest\Controller;
+namespace ZfcRbacTest\Firewall;
 
 use PHPUnit_Framework_TestCase;
 use ZfcRbac\Firewall\Controller as ControllerFirewall;
