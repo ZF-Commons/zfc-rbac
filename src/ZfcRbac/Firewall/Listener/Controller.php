@@ -20,14 +20,18 @@ class Controller
         $resource    = sprintf('%s:%s', $controller, $action);
 
         try {
-            if (!$rbacService->getFirewall('controller')->isGranted($resource)) {
-                $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED)
-                  ->setParam('identity', $rbacService->getIdentity())
-                  ->setParam('controller', $controller)
-                  ->setParam('action', $action);
-
-                $app->getEventManager()->trigger('dispatch.error', $e);
+            if ($rbacService->getFirewall('controller')->isGranted($resource)) {
+                return;
             }
+        } catch (InvalidArgumentException $e) {
+            //if Exception, default to unauthorized
+        }
+        try {
+            $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED)
+                ->setParam('identity', $rbacService->getIdentity())
+                ->setParam('controller', $controller)
+                ->setParam('action', $action);
+            $app->getEventManager()->trigger('dispatch.error', $e);
         } catch (InvalidArgumentException $e) {
             return;
         }
