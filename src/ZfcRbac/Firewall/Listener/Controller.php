@@ -23,7 +23,7 @@ class Controller
             if ($rbacService->getFirewall('controller')->isGranted($resource)) {
                 return;
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $ex) {
             //if Exception, default to unauthorized
         }
         try {
@@ -32,7 +32,7 @@ class Controller
                 ->setParam('controller', $controller)
                 ->setParam('action', $action);
             $app->getEventManager()->trigger('dispatch.error', $e);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $ex) {
             return;
         }
     }
