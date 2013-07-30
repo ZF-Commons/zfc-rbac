@@ -1,6 +1,6 @@
 # ZfcRbac Module for Zend Framework 2 [![Master Branch Build Status](https://secure.travis-ci.org/ZF-Commons/ZfcRbac.png?branch=master)](http://travis-ci.org/ZF-Commons/ZfcRbac)
 
-Current version: 0.2.0 (10th of may 2013)
+[![Latest Stable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/stable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
 
 ZfcRbac is an access control module for Zend Framework 2 geared towards quick & easy setup. Getting access control
 working should take you less than 5 minutes.
