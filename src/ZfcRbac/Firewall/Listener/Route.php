@@ -12,8 +12,7 @@ class Route
      */
     public static function onRoute(MvcEvent $e)
     {
-        if (!$e->getRequest() instanceof HttpRequest)
-        {
+        if (!$e->getRequest() instanceof HttpRequest) {
             return;
         }
         $app         = $e->getTarget();
