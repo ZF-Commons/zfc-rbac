@@ -4,7 +4,7 @@ namespace ZfcRbac\Firewall\Listener;
 
 use InvalidArgumentException;
 use Zend\Mvc\MvcEvent;
-use Zend\Http\Request;
+use Zend\Http\Request as HttpRequest;
 
 class Controller
 {
@@ -13,7 +13,7 @@ class Controller
      */
     public static function onRoute(MvcEvent $e)
     {
-        if (!$e->getRequest() instanceof Request)
+        if (!$e->getRequest() instanceof HttpRequest)
         {
             return;
         }
