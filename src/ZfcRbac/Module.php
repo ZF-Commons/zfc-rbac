@@ -9,7 +9,6 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use ZfcRbac\Collector\RbacCollector;
-use Zend\Console\Console;
 
 class Module implements
     BootstrapListenerInterface,
@@ -24,9 +23,6 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
-        if (Console::isConsole()) {
-            return;
-        }
         $app         = $e->getTarget();
         $sm          = $app->getServiceManager();
         $rbacService = $sm->get('ZfcRbac\Service\Rbac');
