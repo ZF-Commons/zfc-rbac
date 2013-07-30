@@ -4,6 +4,7 @@ namespace ZfcRbac\Firewall\Listener;
 
 use InvalidArgumentException;
 use Zend\Mvc\MvcEvent;
+use Zend\Http\Request;
 
 class Controller
 {
@@ -12,6 +13,10 @@ class Controller
      */
     public static function onRoute(MvcEvent $e)
     {
+        if (!$e->getRequest() instanceof Request)
+        {
+            return;
+        }
         $app         = $e->getTarget();
         $rbacService = $app->getServiceManager()->get('ZfcRbac\Service\Rbac');
         $match       = $app->getMvcEvent()->getRouteMatch();
