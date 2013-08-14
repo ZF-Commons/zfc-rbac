@@ -14,7 +14,7 @@ use ZfcRbac\Exception;
 use ZfcRbac\Firewall\AbstractFirewall;
 use ZfcRbac\Identity;
 use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\AbstractProvider;
+use ZfcRbac\Provider\ProviderInterface;
 
 class Rbac
 {
@@ -231,10 +231,10 @@ class Rbac
     }
 
     /**
-     * @param AbstractProvider $provider
+     * @param ProviderInterface $provider
      * @return Rbac
      */
-    public function addProvider(AbstractProvider $provider)
+    public function addProvider(ProviderInterface $provider)
     {
         $provider->attach($this->getEventManager());
         $this->providers[] = $provider;

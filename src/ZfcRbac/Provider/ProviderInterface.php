@@ -3,8 +3,9 @@
 namespace ZfcRbac\Provider;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 
-interface ProviderInterface
+interface ProviderInterface extends ListenerAggregateInterface
 {
     /**
      * Factory to create the provider.
