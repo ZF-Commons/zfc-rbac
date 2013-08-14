@@ -2,7 +2,6 @@
 
 namespace ZfcRbac\Provider;
 
-use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Permissions\Rbac\Rbac;
 
 abstract class AbstractProvider implements ProviderInterface
