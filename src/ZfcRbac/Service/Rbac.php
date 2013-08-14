@@ -113,7 +113,7 @@ class Rbac
         // Have to iterate and load roles to verify that parents are loaded.
         // If it wasn't for inheritance we could just check the getIdentity()->getRoles() method.
         foreach($roles as $role) {
-            foreach((array) $this->getIdentity()->getRoles() as $userRole) {
+            foreach($this->getIdentity()->getRoles() as $userRole) {
                 $event = new Event;
                 $event->setRole($userRole)
                       ->setRbac($rbac);
