@@ -2,10 +2,9 @@
 
 namespace ZfcRbac\Provider;
 
-use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Permissions\Rbac\Rbac;
 
-abstract class AbstractProvider implements ListenerAggregateInterface, ProviderInterface
+abstract class AbstractProvider implements ProviderInterface
 {
     /**
      * Recursive function to add roles according to their parent role.

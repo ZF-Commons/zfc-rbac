@@ -14,7 +14,7 @@ use ZfcRbac\Exception;
 use ZfcRbac\Firewall\AbstractFirewall;
 use ZfcRbac\Identity;
 use ZfcRbac\Provider\Event;
-use ZfcRbac\Provider\AbstractProvider;
+use ZfcRbac\Provider\ProviderInterface;
 
 class Rbac
 {
@@ -112,8 +112,12 @@ class Rbac
 
         // Have to iterate and load roles to verify that parents are loaded.
         // If it wasn't for inheritance we could just check the getIdentity()->getRoles() method.
+        $userRoles = $this->getIdentity()->getRoles();
+        if (is_string($userRoles)) {
+            $userRoles = array($userRoles);
+        }
         foreach($roles as $role) {
-            foreach((array) $this->getIdentity()->getRoles() as $userRole) {
+            foreach($userRoles as $userRole) {
                 $event = new Event;
                 $event->setRole($userRole)
                       ->setRbac($rbac);
@@ -231,10 +235,10 @@ class Rbac
     }
 
     /**
-     * @param AbstractProvider $provider
+     * @param ProviderInterface $provider
      * @return Rbac
      */
-    public function addProvider(AbstractProvider $provider)
+    public function addProvider(ProviderInterface $provider)
     {
         $provider->attach($this->getEventManager());
         $this->providers[] = $provider;
