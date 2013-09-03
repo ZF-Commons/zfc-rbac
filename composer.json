@@ -16,9 +16,14 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": ">=2.1"
+        "zendframework/zend-mvc": ">=2.1",
+        "zendframework/zend-permissions-rbac": ">=2.1",
+        "zendframework/zend-servicemanager": ">=2.1",
+        "zendframework/zend-view": ">=2.1"
     },
-
+    "suggests": {
+        "zendframework/zend-developer-tools": "zend-developer-tools if you want to show informations about the roles"
+    },
     "autoload": {
         "psr-0": {
             "ZfcRbac\\": "src/"

@@ -4,6 +4,7 @@ namespace ZfcRbac\Firewall\Listener;
 
 use InvalidArgumentException;
 use Zend\Mvc\MvcEvent;
+use Zend\Http\Request as HttpRequest;
 
 class Controller
 {
@@ -12,6 +13,9 @@ class Controller
      */
     public static function onRoute(MvcEvent $e)
     {
+        if (!$e->getRequest() instanceof HttpRequest) {
+            return;
+        }
         $app         = $e->getTarget();
         $rbacService = $app->getServiceManager()->get('ZfcRbac\Service\Rbac');
         $match       = $app->getMvcEvent()->getRouteMatch();
@@ -20,15 +24,19 @@ class Controller
         $resource    = sprintf('%s:%s', $controller, $action);
 
         try {
-            if (!$rbacService->getFirewall('controller')->isGranted($resource)) {
-                $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED)
-                  ->setParam('identity', $rbacService->getIdentity())
-                  ->setParam('controller', $controller)
-                  ->setParam('action', $action);
-
-                $app->getEventManager()->trigger('dispatch.error', $e);
+            if ($rbacService->getFirewall('controller')->isGranted($resource)) {
+                return;
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $ex) {
+            //if Exception, default to unauthorized
+        }
+        try {
+            $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED)
+                ->setParam('identity', $rbacService->getIdentity())
+                ->setParam('controller', $controller)
+                ->setParam('action', $action);
+            $app->getEventManager()->trigger('dispatch.error', $e);
+        } catch (InvalidArgumentException $ex) {
             return;
         }
     }
