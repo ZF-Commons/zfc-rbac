@@ -21,7 +21,8 @@ abstract class AbstractProvider implements ProviderInterface
         }
         foreach ((array) $roles[$parentName] as $role) {
             if ($parentName) {
-                $rbac->getRole($parentName)->addChild($role);
+                $childRole = $rbac->hasRole($role) ? $rbac->getRole($role) : $role;
+                $rbac->getRole($parentName)->addChild($childRole);
             } else {
                 $rbac->addRole($role);
             }
