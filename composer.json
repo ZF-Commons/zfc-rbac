@@ -1,5 +1,5 @@
 {
-    "name": "jmleroux/zfc-rbac",
+    "name": "zf-commons/zfc-rbac",
     "description": "Zend Framework 2 Module that provides a layer of features of Zend\\Permissions\\Rbac",
     "type": "library",
     "keywords": [
