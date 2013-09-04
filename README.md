@@ -75,6 +75,8 @@ The object returned by the identity provider must implement `ZfcRbac\Identity\Id
 An `isGranted($permission)` view helper and controller plugin is available. To use, simply pass a permission to check
 for access.
 
+A `hasRole($role)` view helper is available. To use, simply pass a role or an array of roles to check for access.
+
 ## Sample configuration
 
 Add this code in a `zfcrbac.global.php` file into your `config/autoload` directory.
