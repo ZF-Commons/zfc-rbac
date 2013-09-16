@@ -98,7 +98,11 @@ class Module implements
                     $sl = $sm->getServiceLocator();
                     return new View\Helper\IsGranted($sl->get('ZfcRbac\Service\Rbac'));
                 },
-            )
+                'hasRole' => function($sm) {
+                    $sl = $sm->getServiceLocator();
+                    return new View\Helper\HasRole($sl->get('ZfcRbac\Service\Rbac'));
+                },
+            ),
         );
     }
 
