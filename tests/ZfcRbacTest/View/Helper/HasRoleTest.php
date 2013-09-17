@@ -8,7 +8,7 @@ use ZfcRbacTest\RbacServiceTestCase;
 
 class HasRoleTest extends RbacServiceTestCase
 {
-    public function testInvokingProxiesToRbacService()
+    public function testHasRoleViewHelper()
     {
         $rbacService = new RbacService;
         $rbacService->setIdentity('role1');

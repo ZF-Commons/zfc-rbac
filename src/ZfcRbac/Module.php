@@ -80,6 +80,7 @@ class Module implements
         return array(
             'invokables' => array(
                 'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
+                'hasRole' => 'ZfcRbac\Controller\Plugin\HasRole',
             )
         );
     }
