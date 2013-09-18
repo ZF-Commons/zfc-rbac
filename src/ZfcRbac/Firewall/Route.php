@@ -26,22 +26,8 @@ class Route extends AbstractFirewall
     {
         $regex = array();
         foreach($rules as $rule) {
-            if (isset($rule['roles'])) {
-                if (!is_array($rule['roles'])) {
-                    $rule['roles'] = array($rule['roles']);
-                }
-            }
-
-            $this->roles[] = isset($rule['roles']) ? $rule['roles'] : array();
-
-            if (isset($rule['permissions'])) {
-                if (!is_array($rule['permissions'])) {
-                    $rule['permissions'] = array($rule['permissions']);
-                }
-            }
-
-            $this->permissions[] = isset($rule['permissions']) ? $rule['permissions'] : array();
-
+            $this->roles[] = isset($rule['roles']) ? (array) $rule['roles'] : array();
+            $this->permissions[] = isset($rule['permissions']) ? (array) $rule['permissions'] : array();
             $regex[] = str_replace('/', '\/', '(' . $rule['route'] . ')');
         }
 
