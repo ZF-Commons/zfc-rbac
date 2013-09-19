@@ -209,6 +209,26 @@ class ControllerTest extends PHPUnit_Framework_TestCase
                     ),
                 )
             ),
+
+            array(
+                array(
+                    array(
+                        'controller' => 'IndexController',
+                        'actions' => 'foo',
+                        'roles' => 'guest'
+                    ),
+                    array(
+                        'controller' => 'IndexController',
+                        'roles' => '*'
+                    ),
+                ),
+                array(
+                    array(
+                        'resource' => 'IndexController:bar',
+                        'result' => true
+                    ),
+                )
+            ),
         );
     }
 
