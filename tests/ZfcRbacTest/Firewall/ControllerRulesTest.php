@@ -12,10 +12,104 @@ class ControllerRulesTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 array(
-                    'rules' => array(
+                    array(
                         'actions' => 'foo',
                         'roles' => 'guest'
-                    )
+                    ),
+                    array(
+                        'actions' => 'bar',
+                        'roles' => 'guest'
+                    ),
+                ),
+                'controllerName' => 'IndexController',
+                array(
+                    array(
+                        'resource' => 'IndexController:foo',
+                        'result' => true
+                    ),
+                    array(
+                        'resource' => 'IndexController:bar',
+                        'result' => true
+                    ),
+                )
+            ),
+
+            array(
+                array(
+                    array(
+                        'actions' => array('foo', 'bar'),
+                        'roles' => 'guest'
+                    ),
+                ),
+                'controllerName' => 'IndexController',
+                array(
+                    array(
+                        'resource' => 'IndexController:foo',
+                        'result' => true
+                    ),
+                    array(
+                        'resource' => 'IndexController:bar',
+                        'result' => true
+                    ),
+                )
+            ),
+
+            array(
+                array(
+                    array(
+                        'actions' => 'foo',
+                        'roles' => 'guest'
+                    ),
+                ),
+                'controllerName' => 'IndexController',
+                array(
+                    array(
+                        'resource' => 'IndexController:foo',
+                        'result' => true
+                    ),
+                    array(
+                        'resource' => 'IndexController:bar',
+                        'result' => false
+                    ),
+                )
+            ),
+
+            array(
+                array(
+                    array(
+                        'roles' => '*'
+                    ),
+                    array(
+                        'actions' => 'foo',
+                        'roles' => 'guest'
+                    ),
+                ),
+                'controllerName' => 'IndexController',
+                array(
+                    array(
+                        'resource' => 'IndexController:foo',
+                        'result' => true
+                    ),
+                    array(
+                        'resource' => 'IndexController:bar',
+                        'result' => true
+                    ),
+                )
+            ),
+
+            array(
+                array(
+                    array(
+                        'roles' => '*'
+                    ),
+                    array(
+                        'actions' => 'foo',
+                        'roles' => 'guest'
+                    ),
+                    array(
+                        'actions' => 'bar',
+                        'roles' => 'otherRole'
+                    ),
                 ),
                 'controllerName' => 'IndexController',
                 array(
