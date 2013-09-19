@@ -57,11 +57,22 @@ class Controller extends AbstractFirewall
         if (isset($this->rules[$controller]['actions'][$action])) {
             $roles = $this->rules[$controller]['actions'][$action]['roles'];
             $permissions = $this->rules[$controller]['actions'][$action]['permissions'];
-        } elseif (isset($this->rules[$controller]['global'])) {
+        }
+        // then check global permissions
+        elseif (isset($this->rules[$controller]['global'])) {
             $roles = $this->rules[$controller]['global']['roles'];
             $permissions = $this->rules[$controller]['global']['permissions'];
-        } else {
+        }
+        // no global permission and this action is not in a rule
+        // Note : if a rule is set for an action, you must set a rule for the other actions
+        // or a global rule for this controller
+        else {
             return false;
+        }
+
+        // global wildcard role
+        if (in_array('*', $roles)) {
+            return true;
         }
 
         if (!empty($roles)) {
