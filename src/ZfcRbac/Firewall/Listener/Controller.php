@@ -27,17 +27,14 @@ class Controller
             if ($rbacService->getFirewall('controller')->isGranted($resource)) {
                 return;
             }
-        } catch (InvalidArgumentException $ex) {
-            //if Exception, default to unauthorized
-        }
-        try {
             $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED)
                 ->setParam('identity', $rbacService->getIdentity())
                 ->setParam('controller', $controller)
                 ->setParam('action', $action);
-            $app->getEventManager()->trigger('dispatch.error', $e);
         } catch (InvalidArgumentException $ex) {
-            return;
+            $e->setError($rbacService::ERROR_RUNTIME)
+                ->setParam('message', $ex->getMessage());
         }
+        $app->getEventManager()->trigger('dispatch.error', $e);
     }
 }

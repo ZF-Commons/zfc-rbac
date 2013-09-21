@@ -6,6 +6,7 @@ use Closure;
 use InvalidArgumentException;
 use RecursiveIteratorIterator;
 use Zend\Authentication\AuthenticationService;
+use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\Permissions\Rbac\Rbac as ZendRbac;
@@ -16,10 +17,11 @@ use ZfcRbac\Identity;
 use ZfcRbac\Provider\Event;
 use ZfcRbac\Provider\ProviderInterface;
 
-class Rbac
+class Rbac implements EventManagerAwareInterface
 {
     const ERROR_ROUTE_UNAUTHORIZED      = 'error-route-unauthorized';
     const ERROR_CONTROLLER_UNAUTHORIZED = 'error-controller-unauthorized';
+    const ERROR_RUNTIME = 'error-rbac';
 
     /**
      * @var EventManagerInterface
@@ -294,8 +296,15 @@ class Rbac
             $event = new Event;
             $event->setRbac($this->rbac);
 
-            $this->getEventManager()->trigger(Event::EVENT_LOAD_ROLES, $event);
-            $this->getEventManager()->trigger(Event::EVENT_LOAD_PERMISSIONS, $event);
+            try {
+                $this->getEventManager()->trigger(Event::EVENT_LOAD_ROLES, $event);
+                $this->getEventManager()->trigger(Event::EVENT_LOAD_PERMISSIONS, $event);
+            } catch (Exception\InvalidArgumentException $ex) {
+                $app = $e->getTarget();
+                $mvcEvent->setError($rbacService::ERROR_RUNTIME)
+                    ->setParam('message', 'Roles or Permissions configuration error');
+                $app->getEventManager()->trigger('dispatch.error', $mvcEvent);
+            }
         }
         return $this->rbac;
     }
