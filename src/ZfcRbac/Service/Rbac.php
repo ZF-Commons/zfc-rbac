@@ -104,7 +104,7 @@ class Rbac
             return false;
         }
 
-        if (!is_array($roles)) {
+        if (!is_array($roles) && !($roles instanceof \Traversable)) {
             $roles = array($roles);
         }
 
