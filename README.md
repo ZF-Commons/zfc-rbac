@@ -177,3 +177,5 @@ $rbac->isGranted('event.update', function($rbac) use ($event) {
     return $rbac->getIdentity()->getId() === $event->getUserId();
 });
 ```
+Dynamis assertions are also available for the ```isGranted()``` controller plugin, but not in the view helper,
+as the need for dynamic assertions in views is quite unlikely (and not recommended).
