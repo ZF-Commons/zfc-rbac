@@ -110,6 +110,13 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 ));
 
                 break;
+            case Rbac::ERROR_RUNTIME:
+                $model = new ViewModel(array(
+                    'error'    => $e->getParam('error'),
+                    'message'  => $e->getParam('message'),
+                ));
+
+                break;
             default:
                 return;
                 break;
