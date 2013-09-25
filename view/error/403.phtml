@@ -5,8 +5,13 @@
     <?php elseif ($error == 'error-controller-unauthorized') : ?>
         Identity (with roles <?php echo implode(',', $identity->getRoles());?>) is not authorized to access <?php echo $controller;?>
         <?php if ($action) : ?>
-        ::<?php echo $action;?>Action()
+            ::<?php echo $action;?>Action()
         <?php endif;?>
         .
+    <?php elseif ($error == 'error-rbac') : ?>
+        RBAC error<br/>
+        <?php if ($this->message) : ?>
+            <?php echo $this->message;?>
+        <?php endif;?>
     <?php endif;?>
 </p>
