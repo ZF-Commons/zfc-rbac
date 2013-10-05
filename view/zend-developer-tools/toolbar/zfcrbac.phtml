@@ -1,47 +1,69 @@
+<?php
+/* @var $collection \ZfcRbac\Collector\RbacCollector */
+$collection = $this->collector->getCollection();
+?>
 <div class="zdt-toolbar-entry">
     <div class="zdt-toolbar-preview">
-        <img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzU1MkQ0QURDODkyMTFFMUE4RDU5MDZBOEM2RTM5QjYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzU1MkQ0QUVDODkyMTFFMUE4RDU5MDZBOEM2RTM5QjYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3NTUyRDRBQkM4OTIxMUUxQThENTkwNkE4QzZFMzlCNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3NTUyRDRBQ0M4OTIxMUUxQThENTkwNkE4QzZFMzlCNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PryYMQ8AAAN9SURBVHjapFRdSJNhFH6/7dvUzQWbOLacM92UNW1E4WDRhWKhiN0JEUU3/RAIXdiV0I1dKF7oRRe7mCmIonZRJM0agqRgiZIs0VnD5s/mVNRl4eZ+3E/PO76FjBVWBx7O9573fc97znPO+Riv10uOyVXgJnAOOAvkkMziARzAG+BlQUHBLyfMxsYG1bcAMyCJRqORra2tA4fDEfR4PEeQOAOhhxKJBMnLyxPodDpBSUlJrkQiyeX89AMPVCrVIYtD97CwjI6Ouru7u7/Mzc35uAiWgW3gCOBxF+OAFDgDaBCZsr6+XtbS0nKdZdnzsBmYmZmZjwqF4mJxcfGjeDz+an19fYWcUIqKiqhzo8VieVZbW6vCmmEXFhbicrmcuFyux5Q3OLVBuwDKBY02keZHBJwGlKurq9XQ9YAqGAzG6CYLTo7ghHCp3OVA+foG6nzpKcN+CnYlvvnHXxEIBMk1a7fbvRUVFZkykuGyLNMGLU66oFsCVPP39vaI2+02aLXaXJFIRItE/hYjIyMbXV1dU+iO5+zAwMCV2dnZybq6Oqlery9paGjILysrk6jVapFUKs1KjyQcDsdwMQj+/BMTE76pqakfoO1tb2+vqbKykjCDg4MfDAaDCTxOLy0tvWhvb+fPz8/ni8ViLbjKgz3B4/GYVJqwhdCbHvSrq7m52d/Y2FiOs/fpHqhjWLxIuKKYEKGpv5/2KNmBzQE48U25YbkeZOBcAacm4DZnT96PxWLJF9n9/f3vWKRnJqfApepMBclUlFTb8BcXF8Xg6oJGozn1LwWhWFtbO2hra/sE3cMODQ3JQajVbDYbMEb5VVVVcsykKDs7m/3TlOzu7obQcr6xsbFdaHtPT88hikSY4eHh9xiZS36//2lHR8fy9PR0eSAQUGMUZYhcAM6SteAmhsFebHt7OwyqPKWlpZ+bmpqCRqPxDujRmUwmhsUmU1hYSNCDD1tbW2kKbmzO+Xy+yc3NTS8chPh8Pg/2BP3rYExlSqVSKxQK9XjgRorXSCSSrCyLkYlyVU6JGgfUiI5Q/E7S7hD6KNU88DeJRj2kB/4HfX19X5OO4cxptVrVaNQcCF8mk2WftLoY2xA43+ns7HTabLYn8LfEjI+Pk5qaGiEW15B+FQi+jCKJ8EcWw3kWUmGOp4biRcFtEL87v9PpXMEIvoP5NffLIz8FGAAqeUQbl180BwAAAABJRU5ErkJggg==" alt="Database (Zend\Db)">
-        <span class="zdt-toolbar-info">
-
-        </span>
+        <!-- Image Provided by https://github.com/Nitecon with New BSD License to ZfcRbac -->
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAewQAAHsEBw2lUUwAAAAl2cEFnAAAAFAAAABQAozsq0QAAAylJREFUOMudVM1rXFUU/51775s3X+9NZpKmE0MC2lBGS6QahRIMuOnC6l7Upbsqhf4FhS66qRstIoV2UwhaLdUu6qISKBRhIqb5KJMJSSbTyUeTaGo68+Z9zPu410UjLaZpmBw4m8v93fM7v9+5h/CSGD1bgAYIszf5yVhxK7h4Y/mGkeCh5UZ7YviLDkeGcqg9uoKZhcmetwazZ5knz1VX7FP9h+LJvi59obzqWF2GBseXu7B0+9K7J5cWrMRirTmlmZrXczihFQpmX29vasRMiY+bS9bx7TWH+75E04uiuhPOgtFYoPB7xDCXSAk72x3vbthh4er12iMq3Xr/prdqn4oirHXk4y7pIqYRDiknzLTqPoVu+F9tEAFSKkgAiiiIJfk2cfJSmVjm4aZnnvlq9nvBGTr6crou3eg1ckLAiSAjCSggzgkwtL3k0gjoVgBYI0DMCtAKZI8QSUGGVFBKAUQ7dxnaCUaAmeDgjJSQwDNllWrroWdOPCXCGTxhb7ibPiew6HmG7YVSCg0nhB+qNdF44s+1crpigSLQwRgKRlhcd2Xtb29JVKr2VLol7ZSg9MH6BRgj3K/attOS02J8ZnsyK6iaS4vBA8kHwPElJpasKoAH4vKd9ZU3+pJ3okgf1LX2NWREKK3YKK86vwFYFV9+8AruV6zrJNVn/V2xfLu+BBK4N1tf/6se/MCIwBkDbk9sb/Z3xbo703zYjHMQFBiwbwoiFBcs/PLHP9+6vhxVgBLFeQsn38xE45XmN0aCDx/JJ4fNBIfcZyYFI0zXbPxYfHz3cTO8RIBU2Nk2TU/hvYLZKK+5c5yzkbcHjM6enA4zqSGT2p1ZQ8NGPcTXv66X/qw0TwtO83KnPgcAuxVh+qGNa2cKKxduLj/YssKhfFY/nEkJhAqIFBDtfCkJ4F65gfM/LU/dLdVPZ5Ji3H1uje2y4MRRE5PV5rETR43zHw51fjR0xIg9dZ9guSHGZp74P49v3apsuOcYoSz/p8wLPSUACsjkO2KfvjNgfHH81fTrni9RnG+UJirWd64vRwE09sLuN7cD2bT4PIwULDe6AmDxZYB/AbS8alQXJDY6AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDEzLTEwLTA1VDAwOjAzOjEyLTA0OjAwtQbKIQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxMy0xMC0wNVQwMDowMzoxMi0wNDowMMRbcp0AAAAASUVORK5CYII=" alt="ZfcRbac">
+        <span class="zdt-toolbar-info">Details</span>
     </div>
     <div class="zdt-toolbar-detail">
-        <span class="zdt-toolbar-info zdt-toolbar-info-heading">Your roles</span>
+        <span class="zdt-toolbar-info-heading">ZfcRbac Details</span>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-toolbar-info-heading">Identity Roles Assigned</span>
+            <?php if (count($collection['roles']) > 0): ?>
+                <?php foreach ($collection['roles'] as $role): ?>
+                    <span class="zdt-toolbar-info">
+                        <span class="zdt-detail-value"><?php echo $role; ?></span>
+                    </span>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <span class="zdt-toolbar-info">
+                    <span class="zdt-detail-value">No Roles Assigned</span>
+                </span>
+            <?php endif; ?>
+        </span>
+        <span class="zdt-toolbar-info-heading">Module Settings Details</span>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-detail-label">Identity Provider</span>
+            <span class="zdt-detail-value">&nbsp;</span>
+            <span class="zdt-detail-value-right"><?php echo $collection['options']['identity_provider']; ?></span>
+        </span>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-detail-label">Anonymous Role</span>
+            <span class="zdt-detail-value">&nbsp;</span>
+            <span class="zdt-detail-value-right"><?php echo $collection['options']['anonymousRole']; ?></span>
+        </span>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-detail-label">Routing Firewall Enabled</span>
+            <span class="zdt-detail-value">&nbsp;</span>
+            <span class="zdt-detail-value-right"><?php echo ($collection['options']['firewallRoute'])?"Yes":"No"; ?></span>
+        </span>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-detail-label">Controller Firewall Enabled</span>
+            <span class="zdt-detail-value">&nbsp;</span>
+            <span class="zdt-detail-value-right"><?php echo ($collection['options']['firewallController'])?"Yes":"No"; ?></span>
+        </span>
+
     </div>
 </div>
-<style>
-.zdt-toolbar-entry .zdt-toolbar-detail .ddt-toolbar-info {
+<div class="zdt-toolbar-entry">
+    <div class="zdt-toolbar-preview">
+        <!-- Image Provided by https://github.com/Nitecon with New BSD License to ZfcRbac -->
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAewQAAHsEBw2lUUwAAAAl2cEFnAAAAFAAAABQAozsq0QAAAylJREFUOMudVM1rXFUU/51775s3X+9NZpKmE0MC2lBGS6QahRIMuOnC6l7Upbsqhf4FhS66qRstIoV2UwhaLdUu6qISKBRhIqb5KJMJSSbTyUeTaGo68+Z9zPu410UjLaZpmBw4m8v93fM7v9+5h/CSGD1bgAYIszf5yVhxK7h4Y/mGkeCh5UZ7YviLDkeGcqg9uoKZhcmetwazZ5knz1VX7FP9h+LJvi59obzqWF2GBseXu7B0+9K7J5cWrMRirTmlmZrXczihFQpmX29vasRMiY+bS9bx7TWH+75E04uiuhPOgtFYoPB7xDCXSAk72x3vbthh4er12iMq3Xr/prdqn4oirHXk4y7pIqYRDiknzLTqPoVu+F9tEAFSKkgAiiiIJfk2cfJSmVjm4aZnnvlq9nvBGTr6crou3eg1ckLAiSAjCSggzgkwtL3k0gjoVgBYI0DMCtAKZI8QSUGGVFBKAUQ7dxnaCUaAmeDgjJSQwDNllWrroWdOPCXCGTxhb7ibPiew6HmG7YVSCg0nhB+qNdF44s+1crpigSLQwRgKRlhcd2Xtb29JVKr2VLol7ZSg9MH6BRgj3K/attOS02J8ZnsyK6iaS4vBA8kHwPElJpasKoAH4vKd9ZU3+pJ3okgf1LX2NWREKK3YKK86vwFYFV9+8AruV6zrJNVn/V2xfLu+BBK4N1tf/6se/MCIwBkDbk9sb/Z3xbo703zYjHMQFBiwbwoiFBcs/PLHP9+6vhxVgBLFeQsn38xE45XmN0aCDx/JJ4fNBIfcZyYFI0zXbPxYfHz3cTO8RIBU2Nk2TU/hvYLZKK+5c5yzkbcHjM6enA4zqSGT2p1ZQ8NGPcTXv66X/qw0TwtO83KnPgcAuxVh+qGNa2cKKxduLj/YssKhfFY/nEkJhAqIFBDtfCkJ4F65gfM/LU/dLdVPZ5Ji3H1uje2y4MRRE5PV5rETR43zHw51fjR0xIg9dZ9guSHGZp74P49v3apsuOcYoSz/p8wLPSUACsjkO2KfvjNgfHH81fTrni9RnG+UJirWd64vRwE09sLuN7cD2bT4PIwULDe6AmDxZYB/AbS8alQXJDY6AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDEzLTEwLTA1VDAwOjAzOjEyLTA0OjAwtQbKIQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxMy0xMC0wNVQwMDowMzoxMi0wNDowMMRbcp0AAAAASUVORK5CYII=" alt="ZfcRbac">
+        <span class="zdt-toolbar-info">Firewalls</span>
+    </div>
+    <div class="zdt-toolbar-detail">
+        <div class="zdt-toolbar-detail-inner">
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">ZfcRbac Firewall Details</span>
+            <span class="zdt-detail-pre">
+                <?php
+                $d = new \Zend\Debug\Debug();
+                $d->dump($collection['firewalls']);
+                ?>
+            </span>
+        </div>
 
-    font-size: 11px;
-    max-width: 600px;
-    witdh: 600px;
-    max-height: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-.zdt-toolbar-entry .zdt-toolbar-detail .ddt-detail-query {
-
-    white-space: normal;
-    width: 400px;
-}
-
-.zdt-toolbar-entry .zdt-toolbar-detail .ddt-detail-query .highlight {
-
-    color: #80DC09;
-    font-weight: bold;
-}
-
-.zdt-toolbar-entry .zdt-toolbar-info .clear {
-
-    clear: both;
-    display: block;
-}
-
-.zdt-toolbar-entry .zdt-toolbar-detail .ddt-toolbar-info hr {
-
-    border: 0;
-    border-top: 1px solid #80DC09;
-    clear: both;
-}
-</style>
+    </div>
+</div>

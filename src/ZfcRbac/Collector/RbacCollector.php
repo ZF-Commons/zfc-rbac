@@ -2,28 +2,36 @@
 
 namespace ZfcRbac\Collector;
 
+use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
-use ZfcRbac\Service\Rbac as RbacService;
 
-class RbacCollector implements CollectorInterface
-{
+class RbacCollector implements CollectorInterface, Serializable {
     /**
      * Collector priority
      */
+
     const PRIORITY = 10;
 
-    public function __construct(RbacService $rbacService)
-    {
-    }
+    /**
+     * @var array|null
+     */
+    protected $collectedRoles = array();
+    /**
+     * @var array|null
+     */
+    protected $collectedFirewalls = array();
+    /**
+     * @var array|null
+     */
+    protected $collectedOptions = array();
 
     /**
      * Collector Name.
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return 'zfcrbac';
     }
 
@@ -32,8 +40,7 @@ class RbacCollector implements CollectorInterface
      *
      * @return integer
      */
-    public function getPriority()
-    {
+    public function getPriority() {
         return self::PRIORITY;
     }
 
@@ -42,6 +49,53 @@ class RbacCollector implements CollectorInterface
      *
      * @param MvcEvent $mvcEvent
      */
-    public function collect(MvcEvent $mvcEvent)
-    {}
+    public function collect(MvcEvent $mvcEvent) {
+        if (!$application = $mvcEvent->getApplication()) {
+            return;
+        }
+        $sm = $mvcEvent->getApplication()->getServiceManager();
+        $config = $sm->get('Config');
+        $rbacConfig = $config['zfcrbac'];
+        $this->collectedOptions = $rbacConfig;
+        $identityProvider = $sm->get($rbacConfig['identity_provider']);
+
+        if (is_object($identityProvider->getIdentity())) {
+            $identity = $identityProvider->getIdentity();
+            $this->collectedRoles = $identity->getRoles();
+        }
+        $rbacService = $sm->get('ZfcRbac\Service\Rbac');
+        $rbacOptions = $rbacService->getOptions();
+        $this->collectedFirewalls = $rbacOptions->firewalls;
+        
+        
+        
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getCollection() {
+        return $this->collection;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function serialize() {
+        return serialize(
+                array(
+                    'roles' => $this->collectedRoles,
+                    'firewalls' => $this->collectedFirewalls,
+                    'options' => $this->collectedOptions
+                )
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function unserialize($serialized) {
+        $this->collection = unserialize($serialized);
+    }
+
 }
