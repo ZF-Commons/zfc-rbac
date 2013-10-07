@@ -58,17 +58,20 @@ class RbacCollector implements CollectorInterface, Serializable {
         $rbacConfig = $config['zfcrbac'];
         $this->collectedOptions = $rbacConfig;
         $identityProvider = $sm->get($rbacConfig['identity_provider']);
-
-        if (is_object($identityProvider->getIdentity())) {
+        $rbacService = $sm->get('ZfcRbac\Service\Rbac');
+        if (method_exists($identityProvider,'getIdentity')) {
             $identity = $identityProvider->getIdentity();
             $this->collectedRoles = $identity->getRoles();
+        }else{
+            $rbac = $rbacService->getRbac();
+            $roles = array();
+            foreach ($rbac as $role){
+                $roles[] = $role->getName();
+            }
+            $this->collectedRoles = $roles;
         }
-        $rbacService = $sm->get('ZfcRbac\Service\Rbac');
         $rbacOptions = $rbacService->getOptions();
         $this->collectedFirewalls = $rbacOptions->firewalls;
-        
-        
-        
     }
 
     /**
