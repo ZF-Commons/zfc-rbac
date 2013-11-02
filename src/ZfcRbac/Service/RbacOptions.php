@@ -29,6 +29,13 @@ class RbacOptions extends AbstractOptions
     protected $firewallController = true;
 
     /**
+     * Flag: enable or disable the ControllerRules firewall.
+     *
+     * @var bool
+     */
+    protected $firewallControllerRules = true;
+
+    /**
      * Set the view template to use on a 403 error.
      *
      * @var string
@@ -116,6 +123,22 @@ class RbacOptions extends AbstractOptions
     public function getFirewallRoute()
     {
         return $this->firewallRoute;
+    }
+
+    /**
+     * @param boolean $firewallControllerRules
+     */
+    public function setFirewallControllerRules($firewallControllerRules)
+    {
+        $this->firewallControllerRules = $firewallControllerRules;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getFirewallControllerRules()
+    {
+        return $this->firewallControllerRules;
     }
 
     /**

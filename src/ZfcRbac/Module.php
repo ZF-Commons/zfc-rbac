@@ -36,6 +36,10 @@ class Module implements
             $app->getEventManager()->attach('route', array('ZfcRbac\Firewall\Listener\Controller', 'onRoute'), -1000);
         }
 
+        if ($rbacService->getOptions()->getFirewallControllerRules()) {
+            $app->getEventManager()->attach('dispatch', array('ZfcRbac\Firewall\Listener\ControllerRules', 'onDispatch'), -1000);
+        }
+
         $app->getEventManager()->attach($strategy);
     }
 
