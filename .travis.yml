@@ -1,13 +1,21 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
+  - 5.5
 
-before_install:
- - curl -s https://getcomposer.org/installer | php
- - php composer.phar install
- - cd tests
+before_script:
+  - composer self-update
+  - composer update --prefer-source
 
 script:
- - phpunit
+  - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml --group Coverage
+  - ./vendor/bin/phpunit --group=Functional
+  - ./vendor/bin/phpcs --standard=PSR2 ./src/
+
+after_script:
+  - php vendor/bin/coveralls -v
+
+notifications:
+  irc: "irc.freenode.org#zftalk.modules"
+  email: false
