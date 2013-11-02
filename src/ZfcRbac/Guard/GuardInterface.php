@@ -16,7 +16,7 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Firewall;
+namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
 

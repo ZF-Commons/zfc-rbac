@@ -20,13 +20,12 @@ namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
 use Zend\Permissions\Rbac\RoleInterface;
-use ZfcRbac\Exception;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
- * A route guard can protect a route or a hierarchy of routes (using regexes)
+ * A controller guard can protect a controller and a set of actions
  */
-class RouteGuard implements GuardInterface
+class ControllerGuard implements GuardInterface
 {
     /**
      * Authorization service that is used to fetch the current roles
@@ -36,9 +35,7 @@ class RouteGuard implements GuardInterface
     protected $authorizationService;
 
     /**
-     * Route guard rules
-     *
-     * Those rules are an associative array that map a regex rule with one or multiple roles
+     * Controller guard rules
      *
      * @var array
      */
@@ -72,18 +69,34 @@ class RouteGuard implements GuardInterface
     }
 
     /**
-     * Add route rules
+     * Add controller rules
+     *
+     * A controller rule is made the following way:
+     *
+     * array(
+     *      'controller' => 'ControllerName',
+     *      'actions'    => array()/string
+     *      'roles'      => array()/string
+     * )
      *
      * @param  array $rules
      * @return void
      */
     public function addRules(array $rules)
     {
-        foreach ($rules as $key => $value) {
-            $routeRegex = is_int($key) ? $value : $key;
-            $roles      = is_int($key) ? array() : (array) $value;
+        foreach ($rules as $rule) {
+            $controller = $rule['controller'];
+            $actions    = isset($rule['actions']) ? (array) $rule['actions'] : array();
+            $roles      = (array) $rule['roles'];
 
-            $this->rules[$routeRegex] = $roles;
+            if (empty($actions)) {
+                $this->rules[$controller] = $roles;
+                continue;
+            }
+
+            foreach ($actions as $action) {
+                $this->rules[$controller][$action] = $roles;
+            }
         }
     }
 
@@ -92,31 +105,19 @@ class RouteGuard implements GuardInterface
      */
     public function isGranted(MvcEvent $event)
     {
-        $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
-        $roles            = (array) $this->authorizationService->getIdentityRoles();
+        $controller = $event->getRouteMatch()->getParam('controller');
+        $action     = $event->getRouteMatch()->getParam('action');
+        $roles      = (array) $this->authorizationService->getIdentityRoles();
 
-        $allowedRoles = array();
-        $found        = false;
-
-        foreach (array_keys($this->rules) as $routeRegex) {
-            $result = preg_match('/' . preg_quote($routeRegex, '/') . '/', $matchedRouteName);
-
-            if (false === $result) {
-                throw new Exception\RuntimeException(sprintf(
-                    'Unable to test regex: "%s"',
-                    $routeRegex
-                ));
-            } elseif ($result) {
-                $allowedRoles = $this->rules[$routeRegex];
-                $found        = true;
-
-                break;
-            }
+        // Authorize if controller is not in the list
+        if (!isset($this->rules[$controller])) {
+            return true;
         }
 
-        // If no rules apply, it is considered as valid
-        if (!$found) {
-            return true;
+        if (isset($this->rules[$controller][$action])) {
+            $allowedRoles = $this->rules[$controller][$action];
+        } else {
+            $allowedRoles = $this->rules[$controller];
         }
 
         // Iterate through each roles of the identity, and check if we have a match
