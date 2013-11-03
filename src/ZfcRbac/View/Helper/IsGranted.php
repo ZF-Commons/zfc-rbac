@@ -44,11 +44,12 @@ class IsGranted extends AbstractHelper
     /**
      * Check against the given permission
      *
-     * @param  string $permission
+     * @param  string                                                  $permission
+     * @param  callable|\Zend\Permissions\Rbac\AssertionInterface|null $assert
      * @return bool
      */
-    public function __invoke($permission)
+    public function __invoke($permission, $assert = null)
     {
-        return $this->authorizationService->isGranted($permission);
+        return $this->authorizationService->isGranted($permission, $assert);
     }
 } 
