@@ -213,6 +213,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
 
         $routeGuard->onRoute($event);
 
+        $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(RouteGuard::GUARD_UNAUTHORIZED, $event->getParam('guard-result'));
     }
 }

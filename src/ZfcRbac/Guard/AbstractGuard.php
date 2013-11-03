@@ -66,6 +66,8 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
             $event->setParam('guard-result', self::GUARD_RUNTIME_ERROR);
         }
 
+        $event->stopPropagation(true);
+
         $application  = $event->getApplication();
         $eventManager = $application->getEventManager();
 
