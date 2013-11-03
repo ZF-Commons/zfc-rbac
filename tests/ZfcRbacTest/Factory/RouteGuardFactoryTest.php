@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\RouteGuardFactory;
+use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
@@ -32,7 +33,8 @@ class RouteGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $options = new ModuleOptions(array(
             'identity_provider' => 'ZfcRbac\Identity\AuthenticationProvider',
             'guards'            => array(
-                'route_rules' => array(
+                'protection_policy' => GuardInterface::POLICY_ALLOW,
+                'route_rules'       => array(
                     'route' => 'role'
                 )
             )
@@ -41,14 +43,15 @@ class RouteGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
         $serviceManager->setService(
-            'ZfcRbac\Identity\AuthenticationProvider',
-            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
+            'ZfcRbac\Service\AuthorizationService',
+            $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
         );
 
         $factory    = new RouteGuardFactory();
         $routeGuard = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $routeGuard);
+        $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());
     }
 }
  

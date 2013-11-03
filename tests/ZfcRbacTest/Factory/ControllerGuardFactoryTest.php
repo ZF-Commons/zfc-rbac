@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\ControllerGuardFactory;
+use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
@@ -32,7 +33,8 @@ class ControllerGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $options = new ModuleOptions(array(
             'identity_provider' => 'ZfcRbac\Identity\AuthenticationProvider',
             'guards'            => array(
-                'controller_rules' => array(
+                'protection_policy' => GuardInterface::POLICY_ALLOW,
+                'controller_rules'  => array(
                     array(
                         'controller' => 'MyController',
                         'actions'    => 'edit',
@@ -45,14 +47,15 @@ class ControllerGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
         $serviceManager->setService(
-            'ZfcRbac\Identity\AuthenticationProvider',
-            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
+            'ZfcRbac\Service\AuthorizationService',
+            $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
         );
 
         $factory         = new ControllerGuardFactory();
         $controllerGuard = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $controllerGuard);
+        $this->assertEquals(GuardInterface::POLICY_ALLOW, $controllerGuard->getProtectionPolicy());
     }
 }
  

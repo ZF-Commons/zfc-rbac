@@ -97,7 +97,7 @@ class RouteGuard extends AbstractGuard
         $permission   = null;
 
         foreach (array_keys($this->rules) as $routeRegex) {
-            $result = preg_match('/' . preg_quote($routeRegex, '/') . '/', $matchedRouteName);
+            $result = preg_match('`' . $routeRegex . '`', $matchedRouteName);
 
             if (false === $result) {
                 throw new Exception\RuntimeException(sprintf(
@@ -106,7 +106,7 @@ class RouteGuard extends AbstractGuard
                 ));
             } elseif ($result) {
                 $allowedRoles = $this->rules[$routeRegex];
-                $permission   = $routeRegex;
+                $permission   = self::RULE_PREFIX . '.' . $routeRegex;
 
                 break;
             }

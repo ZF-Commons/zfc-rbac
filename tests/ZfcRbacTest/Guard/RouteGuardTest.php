@@ -20,7 +20,10 @@ namespace ZfcRbacTest\Guard;
 
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * @covers \ZfcRbac\Guard\RouteGuard
@@ -89,44 +92,142 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
     public function routeDataProvider()
     {
         return array(
+            // Assert basic one-to-one mapping with both policies
             array(
-                'rules'            => array('admin' => 'member'),
-                'matchedRouteName' => 'admin',
-                'role'             => 'member',
-                'isGranted'        => true
+                'rules'            => array('adminRoute' => 'admin'),
+                'matchedRouteName' => 'adminRoute',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
             ),
             array(
-                'rules'            => array('admin*' => 'member'),
-                'matchedRouteName' => 'admin/bar',
-                'role'             => 'member',
-                'isGranted'        => true
+                'rules'            => array('adminRoute' => 'admin'),
+                'matchedRouteName' => 'adminRoute',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert that policy changes result for non-specified route guards
+            array(
+                'rules'            => array('route' => 'member'),
+                'matchedRouteName' => 'anotherRoute',
+                'rolesToCreate'    => array('member'),
+                'identityRole'     => 'member',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
             ),
             array(
-                'rules'            => array('something' => 'member'),
-                'matchedRouteName' => 'admin',
-                'role'             => 'member',
-                'isGranted'        => true
+                'rules'            => array('route' => 'member'),
+                'matchedRouteName' => 'anotherRoute',
+                'rolesToCreate'    => array('member'),
+                'identityRole'     => 'member',
+                'isGranted'        => false,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert that regexes work for both policies
+            array(
+                'rules'            => array('admin/[dashboard|settings]' => 'admin'),
+                'matchedRouteName' => 'admin/dashboard',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
             ),
             array(
-                'rules'            => array('admin' => 'member'),
-                'matchedRouteName' => 'admin',
-                'role'             => 'guest',
-                'isGranted'        => false
+                'rules'            => array('admin/[dashboard|settings]' => 'admin'),
+                'matchedRouteName' => 'admin/dashboard',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert that it can grant access with multiple rules
+            array(
+                'rules'            => array(
+                    'route1' => 'admin',
+                    'route2' => 'admin'
+                ),
+                'matchedRouteName' => 'route1',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
             ),
             array(
                 'rules'            => array(
-                    'users/edit'   => array('member'),
-                    'users/delete' => array('admin')
+                    'route1' => 'admin',
+                    'route2' => 'admin'
                 ),
-                'matchedRouteName' => 'users/edit',
-                'role'             => 'admin',
-                'isGranted'        => false
+                'matchedRouteName' => 'route1',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert that it can grant/deny access with multiple rules based on the policy
+            array(
+                'rules'            => array(
+                    'route1' => 'admin',
+                    'route2' => 'admin'
+                ),
+                'matchedRouteName' => 'route3',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
             ),
             array(
-                'rules'            => array('users/delete' => array('member', 'admin')),
-                'matchedRouteName' => 'users/delete',
-                'role'             => 'guest',
-                'isGranted'        => false
+                'rules'            => array(
+                    'route1' => 'admin',
+                    'route2' => 'admin'
+                ),
+                'matchedRouteName' => 'route3',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => false,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert it can deny access if a role does not have access
+            array(
+                'rules'            => array('route' => 'admin'),
+                'matchedRouteName' => 'route',
+                'rolesToCreate'    => array('admin', 'guest'),
+                'identityRole'     => 'guest',
+                'isGranted'        => false,
+                'policy'           => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules'            => array('route' => 'admin'),
+                'matchedRouteName' => 'route',
+                'rolesToCreate'    => array('admin', 'guest'),
+                'identityRole'     => 'guest',
+                'isGranted'        => false,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert it can grant access using child-parent relationship between roles
+            array(
+                'rules'            => array('home' => 'guest'),
+                'matchedRouteName' => 'home',
+                'rolesToCreate'    => array('admin', 'guest' => 'admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules'            => array('home' => 'guest'),
+                'matchedRouteName' => 'home',
+                'rolesToCreate'    => array('admin', 'guest' => 'admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
             ),
         );
     }
@@ -134,8 +235,14 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider routeDataProvider
      */
-    public function testRouteGranted(array $rules, $matchedRouteName, $role, $isGranted)
-    {
+    public function testRouteGranted(
+        array $rules,
+        $matchedRouteName,
+        array $rolesToCreate,
+        $identityRole,
+        $isGranted,
+        $protectionPolicy
+    ) {
         $event      = new MvcEvent();
         $routeMatch = new RouteMatch(array());
         $routeMatch->setMatchedRouteName($matchedRouteName);
@@ -145,29 +252,24 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
                          ->method('getIdentityRoles')
-                         ->will($this->returnValue($role));
+                         ->will($this->returnValue($identityRole));
 
-        $routeGuard = new RouteGuard($identityProvider, $rules);
+        $rbac = new Rbac();
+
+        foreach ($rolesToCreate as $roleToCreate => $parent) {
+            if (is_int($roleToCreate)) {
+                $rbac->addRole($parent);
+            } else {
+                $rbac->addRole($roleToCreate, $parent);
+            }
+        }
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $routeGuard = new RouteGuard($authorizationService, $rules);
+        $routeGuard->setProtectionPolicy($protectionPolicy);
 
         $this->assertEquals($isGranted, $routeGuard->isGranted($event));
-    }
-
-    public function testCanWorkWithParentChildRelationship()
-    {
-        /*$event      = new MvcEvent();
-        $routeMatch = new RouteMatch(array());
-        $routeMatch->setMatchedRouteName($matchedRouteName);
-
-        $event->setRouteMatch($routeMatch);
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentityRoles')
-                        ->will($this->returnValue($role));
-
-        $routeGuard = new RouteGuard($identityProvider, $rules);
-
-        $this->assertEquals($isGranted, $routeGuard->isGranted($event));*/
     }
 
     public function testProperlySetAuthorizedParamOnAuthorization()
@@ -182,7 +284,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                     ->method('getEventManager')
                     ->will($this->returnValue($eventManager));
 
-        $routeMatch->setMatchedRouteName('admin');
+        $routeMatch->setMatchedRouteName('adminRoute');
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
@@ -191,8 +293,13 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentityRoles')
                          ->will($this->returnValue('member'));
 
-        $routeGuard = new RouteGuard($identityProvider, array(
-            'admin' => 'member'
+        $rbac = new Rbac();
+        $rbac->addRole('member');
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $routeGuard = new RouteGuard($authorizationService, array(
+            'adminRoute' => 'member'
         ));
 
         $routeGuard->onRoute($event);
@@ -217,7 +324,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                      ->method('trigger')
                      ->with(MvcEvent::EVENT_DISPATCH_ERROR);
 
-        $routeMatch->setMatchedRouteName('admin');
+        $routeMatch->setMatchedRouteName('adminRoute');
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
@@ -226,8 +333,14 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentityRoles')
                          ->will($this->returnValue('member'));
 
-        $routeGuard = new RouteGuard($identityProvider, array(
-            'admin' => 'guest'
+        $rbac = new Rbac();
+        $rbac->addRole('member');
+        $rbac->addRole('guest');
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $routeGuard = new RouteGuard($authorizationService, array(
+            'adminRoute' => 'guest'
         ));
 
         $routeGuard->onRoute($event);

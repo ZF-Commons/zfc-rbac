@@ -134,7 +134,7 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
         $rbac = $this->authorizationService->getRbac();
 
         foreach ($roles as $role) {
-            $rbac->getRole($role)->addPermission(self::RULE_PREFIX . '.' . $permission);
+            $rbac->getRole($role)->addPermission($permission);
         }
     }
 } 

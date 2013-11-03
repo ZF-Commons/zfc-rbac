@@ -116,10 +116,10 @@ class ControllerGuard extends AbstractGuard
 
         if (isset($this->rules[$controller][$action])) {
             $allowedRoles = $this->rules[$controller][$action];
-            $permission   = $controller . '.' . $action;
+            $permission   = self::RULE_PREFIX . '.' . $controller . '.' . $action;
         } else {
             $allowedRoles = $this->rules[$controller];
-            $permission   = $controller;
+            $permission   = self::RULE_PREFIX . '.' . $controller;
         }
 
         // Lazy-load the permission inside the container

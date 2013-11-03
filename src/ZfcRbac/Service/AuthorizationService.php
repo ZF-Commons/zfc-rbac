@@ -81,6 +81,11 @@ class AuthorizationService
         $roles = (array) $this->identityProvider->getIdentityRoles();
 
         foreach ($roles as $role) {
+            // If role does not exist, we consider this as not valid
+            if (!$this->rbac->hasRole($role)) {
+                return false;
+            }
+
             // @TODO: what happen if an identity has multiple role, and that one role tells "yes", and the other
             // tells "no" ? What is the standard behaviour for this?
             if ($this->rbac->isGranted($role, $permission, $assertion)) {
