@@ -14,7 +14,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
     public function onBootstrap(EventInterface $event)
     {
         /** @var \Zend\Mvc\Application $application */
-        $application    = $event->getApplication();
+        $application    = $event->getTarget();
         $serviceManager = $application->getServiceManager();
         $eventManager   = $application->getEventManager();
 
