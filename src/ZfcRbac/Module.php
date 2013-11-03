@@ -6,6 +6,9 @@ use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
+/**
+ * Module class for ZfcRbac
+ */
 class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {
     /**
