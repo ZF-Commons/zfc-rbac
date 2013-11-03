@@ -2,10 +2,36 @@
 
 namespace ZfcRbac;
 
+use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
-class Module implements ConfigProviderInterface
+class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function onBootstrap(EventInterface $event)
+    {
+        /** @var \Zend\Mvc\Application $application */
+        $application    = $event->getApplication();
+        $serviceManager = $application->getServiceManager();
+        $eventManager   = $application->getEventManager();
+
+        /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
+        $guardsOptions = $moduleOptions->getGuards();
+
+        // Register controller and route guards, if any are specified
+        if ($routeRules = $guardsOptions->getRouteRules()) {
+            $eventManager->attachAggregate($serviceManager->get('ZfcRbac\Guard\RouteGuard'));
+        }
+
+        if ($controllerRules = $guardsOptions->getControllerRules()) {
+            $eventManager->attachAggregate($serviceManager->get('ZfcRbac\Guard\ControllerGuard'));
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

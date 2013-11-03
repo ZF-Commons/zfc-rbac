@@ -19,6 +19,8 @@
 return array(
     'service_manager' => array(
         'factories' => array(
+            'ZfcRbac\Guard\ControllerGuard'                   => 'ZfcRbac\Factory\ControllerGuardFactory',
+            'ZfcRbac\Guard\RouteGuard'                        => 'ZfcRbac\Factory\RouteGuardFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
             'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory'
@@ -54,6 +56,9 @@ return array(
         'guest_role' => 'guest',
 
         // Default role
-        'default_role' => 'member'
+        'default_role' => 'member',
+
+        // Guards options
+        'guards' => array()
     )
 );

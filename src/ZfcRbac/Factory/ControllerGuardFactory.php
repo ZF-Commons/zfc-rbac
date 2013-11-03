@@ -16,25 +16,28 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest;
+namespace ZfcRbac\Factory;
 
-use ZfcRbacTest\Util\ServiceManagerFactory;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Guard\ControllerGuard;
 
 /**
- * @covers \ZfcRbac\Options\ModuleOptions
+ * Create a controller guard
  */
-class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
+class ControllerGuardFactory implements FactoryInterface
 {
-    public function testAssertModuleDefaultOptions()
+    /**
+     * {@inheritDoc}
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = ServiceManagerFactory::getServiceManager()->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
 
-        $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
-        $this->assertFalse($moduleOptions->getCreateMissingRoles());
-        $this->assertEquals('guest', $moduleOptions->getGuestRole());
-        $this->assertEquals('member', $moduleOptions->getDefaultRole());
-        $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
+        return new ControllerGuard(
+            $serviceLocator->get($moduleOptions->getIdentityProvider()),
+            $moduleOptions->getGuards()->getControllerRules()
+        );
     }
 }
- 

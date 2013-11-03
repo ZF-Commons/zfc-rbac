@@ -54,6 +54,13 @@ class ModuleOptions extends AbstractOptions
     protected $defaultRole;
 
     /**
+     * Guards options
+     *
+     * @var GuardsOptions
+     */
+    protected $guards;
+
+    /**
      * Set the key of the identity provider used to retrieve the identity
      *
      * @param  string $identityProvider
@@ -132,5 +139,26 @@ class ModuleOptions extends AbstractOptions
     public function getDefaultRole()
     {
         return $this->defaultRole;
+    }
+
+    /**
+     * Set the guards options
+     *
+     * @param  array $guards
+     * @return void
+     */
+    public function setGuards(array $guards)
+    {
+        $this->guards = new GuardsOptions($guards);
+    }
+
+    /**
+     * Get the guards options
+     *
+     * @return GuardsOptions
+     */
+    public function getGuards()
+    {
+        return $this->guards;
     }
 } 

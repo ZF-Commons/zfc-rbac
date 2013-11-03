@@ -48,6 +48,14 @@ return array(
          * This role is used by the authorization service when the authentication service returns an identity,
          * but that no role is set
          */
-        // 'default_role' => 'member'
+        // 'default_role' => 'member',
+
+        /**
+         * Set the guards options
+         *
+         * You can set route guards using the "route_rules" sub key, or the controller guards using the
+         * "controller_rules" sub key. Please refer to the documentation for the exact syntax
+         */
+        // 'guards' => array()
     )
 );
