@@ -235,6 +235,38 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'policy'        => GuardInterface::POLICY_DENY
             ),
 
+            // Test assert policy can deny other actions from controller when only one is specified
+            array(
+                'rules' => array(
+                    array(
+                        'controller' => 'BlogController',
+                        'action'     => 'edit',
+                        'roles'      => 'member'
+                    ),
+                ),
+                'controller'    => 'BlogController',
+                'action'        => 'read',
+                'rolesToCreate' => array('member'),
+                'identityRole'  => 'member',
+                'isGranted'     => true,
+                'policy'        => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules' => array(
+                    array(
+                        'controller' => 'BlogController',
+                        'actions'    => 'edit',
+                        'roles'      => 'member'
+                    ),
+                ),
+                'controller'    => 'BlogController',
+                'action'        => 'read',
+                'rolesToCreate' => array('member'),
+                'identityRole'  => 'member',
+                'isGranted'     => false,
+                'policy'        => GuardInterface::POLICY_DENY
+            ),
+
             // Assert it can uses child-parent relationship
             array(
                 'rules'            => array(
