@@ -31,7 +31,9 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $options = new ModuleOptions(array(
             'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
-            'create_missing_roles' => true
+            'create_missing_roles' => true,
+            'guest_role'           => 'guest',
+            'default_role'         => 'default'
         ));
 
         $serviceManager = new ServiceManager();
@@ -46,6 +48,11 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('ZfcRbac\Service\AuthorizationService', $authorizationService);
         $this->assertTrue($authorizationService->getRbac()->getCreateMissingRoles());
+
+        // We need to check that the factory properly added guest and default role inside the Rbac container
+        $rbac = $authorizationService->getRbac();
+        $this->assertTrue($rbac->hasRole('guest'));
+        $this->assertTrue($rbac->hasRole('default'));
     }
 }
  

@@ -40,6 +40,15 @@ class AuthorizationServiceFactory implements FactoryInterface
         $rbac = new Rbac();
         $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
 
+        // We need to register the guest and default role inside the container
+        if ($guestRole = $moduleOptions->getGuestRole()) {
+            $rbac->addRole($guestRole);
+        }
+
+        if ($defaultRole = $moduleOptions->getDefaultRole()) {
+            $rbac->addRole($defaultRole);
+        }
+
         return new AuthorizationService($rbac, $identityProvider);
     }
 }
