@@ -25,6 +25,24 @@ return array(
         )
     ),
 
+    'view_helpers' => array(
+        'factories' => array(
+            'ZfcRbac\View\Helper\IsGranted' => 'ZfcRbac\Factory\IsGrantedViewHelperFactory'
+        ),
+        'aliases' => array(
+            'IsGranted' => 'ZfcRbac\View\Helper\IsGranted'
+        )
+    ),
+
+    'controller_plugins' => array(
+        'factories' => array(
+            'ZfcRbac\Mvc\Controller\Plugin\IsGranted' => 'ZfcRbac\Factory\IsGrantedPluginFactory'
+        ),
+        'aliases' => array(
+            'IsGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted'
+        )
+    ),
+
     'zfc_rbac' => array(
         // Identity provider service key
         'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
