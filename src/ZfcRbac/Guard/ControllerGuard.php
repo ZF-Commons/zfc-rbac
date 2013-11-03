@@ -18,10 +18,8 @@
 
 namespace ZfcRbac\Guard;
 
-use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Rbac\RoleInterface;
-use ZfcRbac\Identity\IdentityProviderInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * A controller guard can protect a controller and a set of actions
@@ -29,11 +27,12 @@ use ZfcRbac\Identity\IdentityProviderInterface;
 class ControllerGuard extends AbstractGuard
 {
     /**
-     * Authorization service that is used to fetch the current roles
+     * Rule prefix that is used to avoid conflicts in the Rbac container
      *
-     * @var IdentityProviderInterface
+     * Rules will be added to the Rbac container using the following syntax:
+     *      __controller__.$controller.$action
      */
-    protected $identityProvider;
+    const RULE_PREFIX = '__controller__';
 
     /**
      * Controller guard rules
@@ -45,12 +44,12 @@ class ControllerGuard extends AbstractGuard
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface $identityProvider
-     * @param array                     $rules
+     * @param AuthorizationService $authorizationService
+     * @param array                $rules
      */
-    public function __construct(IdentityProviderInterface $identityProvider, array $rules = array())
+    public function __construct(AuthorizationService $authorizationService, array $rules = array())
     {
-        $this->identityProvider = $identityProvider;
+        parent::__construct($authorizationService);
 
         if (!empty($rules)) {
             $this->setRules($rules);
@@ -86,7 +85,7 @@ class ControllerGuard extends AbstractGuard
     public function addRules(array $rules)
     {
         foreach ($rules as $rule) {
-            $controller = $rule['controller'];
+            $controller = strtolower($rule['controller']);
             $actions    = isset($rule['actions']) ? (array) $rule['actions'] : array();
             $roles      = (array) $rule['roles'];
 
@@ -96,6 +95,7 @@ class ControllerGuard extends AbstractGuard
             }
 
             foreach ($actions as $action) {
+                $action                            = strtolower($action);
                 $this->rules[$controller][$action] = $roles;
             }
         }
@@ -106,31 +106,25 @@ class ControllerGuard extends AbstractGuard
      */
     public function isGranted(MvcEvent $event)
     {
-        $controller = $event->getRouteMatch()->getParam('controller');
-        $action     = $event->getRouteMatch()->getParam('action');
+        $controller = strtolower($event->getRouteMatch()->getParam('controller'));
+        $action     = strtolower($event->getRouteMatch()->getParam('action'));
 
-        // Authorize if controller is not in the list
+        // If no rules apply, it is considered as granted or not based on the protection policy
         if (!isset($this->rules[$controller])) {
-            return true;
+            return $this->protectionPolicy === self::POLICY_DENY ? false : true;
         }
 
         if (isset($this->rules[$controller][$action])) {
             $allowedRoles = $this->rules[$controller][$action];
+            $permission   = $controller . '.' . $action;
         } else {
             $allowedRoles = $this->rules[$controller];
+            $permission   = $controller;
         }
 
-        $roles = (array) $this->identityProvider->getIdentityRoles();
+        // Lazy-load the permission inside the container
+        $this->loadRule($allowedRoles, $permission);
 
-        // Iterate through each roles of the identity, and check if we have a match
-        foreach ($roles as $role) {
-            $role = $role instanceof RoleInterface ? $role->getName() : (string) $role;
-
-            if (in_array($role, $allowedRoles)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->authorizationService->isGranted($permission);
     }
 }

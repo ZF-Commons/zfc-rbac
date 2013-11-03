@@ -33,11 +33,13 @@ class ControllerGuardFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions        = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
+        $guardsOptions        = $moduleOptions->getGuards();
 
-        return new ControllerGuard(
-            $serviceLocator->get($moduleOptions->getIdentityProvider()),
-            $moduleOptions->getGuards()->getControllerRules()
-        );
+        $controllerGuard = new ControllerGuard($authorizationService, $guardsOptions->getControllerRules());
+        $controllerGuard->setProtectionPolicy($guardsOptions->getProtectionPolicy());
+
+        return $controllerGuard;
     }
 }

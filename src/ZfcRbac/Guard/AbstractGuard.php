@@ -23,6 +23,7 @@ use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Abstract guard that registers on the "onRoute" event
@@ -30,16 +31,34 @@ use ZfcRbac\Exception;
 abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterface
 {
     /**
-     * Various constants for guard that can be added to the MVC event result
-     */
-    const GUARD_AUTHORIZED    = 'guard-authorized';
-    const GUARD_UNAUTHORIZED  = 'guard-unauthorized';
-    const GUARD_RUNTIME_ERROR = 'guard-runtime-error';
-
-    /**
      * Traits used
      */
     use ListenerAggregateTrait;
+
+    /**
+     * Rule prefix used to avoid name clashes in Rbac container
+     */
+    const RULE_PREFIX = '';
+
+    /**
+     * @var AuthorizationService
+     */
+    protected $authorizationService;
+
+    /**
+     * @var string
+     */
+    protected $protectionPolicy = self::POLICY_DENY;
+
+    /**
+     * Constructor
+     *
+     * @param AuthorizationService $authorizationService
+     */
+    public function __construct(AuthorizationService $authorizationService)
+    {
+        $this->authorizationService = $authorizationService;
+    }
 
     /**
      * {@inheritDoc}
@@ -47,6 +66,27 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1);
+    }
+
+    /**
+     * Set the protection policy
+     *
+     * @param  string $protectionPolicy
+     * @return void
+     */
+    public function setProtectionPolicy($protectionPolicy)
+    {
+        $this->protectionPolicy = $protectionPolicy;
+    }
+
+    /**
+     * Get the protection policy
+     *
+     * @return string
+     */
+    public function getProtectionPolicy()
+    {
+        return $this->protectionPolicy;
     }
 
     /**
@@ -77,5 +117,24 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
         $eventManager = $application->getEventManager();
 
         $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+    }
+
+    /**
+     * Load a rule inside the Rbac container
+     *
+     * This avoids to load all the route permissions inside the Rbac container by only adding
+     * those on demand
+     *
+     * @param  array  $roles
+     * @param  string $permission
+     * @return void
+     */
+    protected function loadRule(array $roles, $permission)
+    {
+        $rbac = $this->authorizationService->getRbac();
+
+        foreach ($roles as $role) {
+            $rbac->getRole($role)->addPermission(self::RULE_PREFIX . '.' . $permission);
+        }
     }
 } 

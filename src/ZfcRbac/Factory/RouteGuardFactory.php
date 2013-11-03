@@ -33,11 +33,13 @@ class RouteGuardFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions        = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
+        $guardsOptions        = $moduleOptions->getGuards();
 
-        return new RouteGuard(
-            $serviceLocator->get($moduleOptions->getIdentityProvider()),
-            $moduleOptions->getGuards()->getRouteRules()
-        );
+        $routeGuard = new RouteGuard($authorizationService, $guardsOptions->getRouteRules());
+        $routeGuard->setProtectionPolicy($guardsOptions->getProtectionPolicy());
+
+        return $routeGuard;
     }
 }

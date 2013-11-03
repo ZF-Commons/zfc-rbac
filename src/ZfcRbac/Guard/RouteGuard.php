@@ -19,9 +19,8 @@
 namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Exception;
-use ZfcRbac\Identity\IdentityProviderInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using regexes)
@@ -29,11 +28,11 @@ use ZfcRbac\Identity\IdentityProviderInterface;
 class RouteGuard extends AbstractGuard
 {
     /**
-     * Authorization service that is used to fetch the current roles
+     * Rule prefix that is used to avoid conflicts in the Rbac container
      *
-     * @var IdentityProviderInterface
+     * Rules will be added to the Rbac container using the following syntax: __route__.$routeRegex
      */
-    protected $identityProvider;
+    const RULE_PREFIX = '__route__';
 
     /**
      * Route guard rules
@@ -47,12 +46,12 @@ class RouteGuard extends AbstractGuard
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface $identityProvider
-     * @param array                     $rules
+     * @param AuthorizationService $authorizationService
+     * @param array                $rules
      */
-    public function __construct(IdentityProviderInterface $identityProvider, array $rules = array())
+    public function __construct(AuthorizationService $authorizationService, array $rules = array())
     {
-        $this->identityProvider = $identityProvider;
+        parent::__construct($authorizationService);
 
         if (!empty($rules)) {
             $this->setRules($rules);
@@ -95,7 +94,7 @@ class RouteGuard extends AbstractGuard
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
 
         $allowedRoles = array();
-        $found        = false;
+        $permission   = null;
 
         foreach (array_keys($this->rules) as $routeRegex) {
             $result = preg_match('/' . preg_quote($routeRegex, '/') . '/', $matchedRouteName);
@@ -107,28 +106,20 @@ class RouteGuard extends AbstractGuard
                 ));
             } elseif ($result) {
                 $allowedRoles = $this->rules[$routeRegex];
-                $found        = true;
+                $permission   = $routeRegex;
 
                 break;
             }
         }
 
-        // If no rules apply, it is considered as valid
-        if (!$found) {
-            return true;
+        // If no rules apply, it is considered as granted or not based on the protection policy
+        if (!$permission) {
+            return $this->protectionPolicy === self::POLICY_DENY ? false : true;
         }
 
-        $roles = (array) $this->identityProvider->getIdentityRoles();
+        // Lazy load the permission inside the container
+        $this->loadRule($allowedRoles, $permission);
 
-        // Iterate through each roles of the identity, and check if we have a match
-        foreach ($roles as $role) {
-            $role = $role instanceof RoleInterface ? $role->getName() : (string) $role;
-
-            if (in_array($role, $allowedRoles)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->authorizationService->isGranted($permission);
     }
 }

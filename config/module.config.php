@@ -16,6 +16,8 @@
  * and is licensed under the MIT license.
  */
 
+use ZfcRbac\Guard\GuardInterface;
+
 return array(
     'service_manager' => array(
         'factories' => array(
@@ -59,6 +61,8 @@ return array(
         'default_role' => 'member',
 
         // Guards options
-        'guards' => array()
+        'guards' => array(
+            'protection_policy' => GuardInterface::POLICY_DENY
+        )
     )
 );

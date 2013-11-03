@@ -77,8 +77,8 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
      */
     public function testRulesConversions(array $rules, array $expected)
     {
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $routeGuard       = new RouteGuard($identityProvider, $rules);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false);
+        $routeGuard           = new RouteGuard($authorizationService, $rules);
 
         $reflProperty = new \ReflectionProperty($routeGuard, 'rules');
         $reflProperty->setAccessible(true);
@@ -150,6 +150,24 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $routeGuard = new RouteGuard($identityProvider, $rules);
 
         $this->assertEquals($isGranted, $routeGuard->isGranted($event));
+    }
+
+    public function testCanWorkWithParentChildRelationship()
+    {
+        /*$event      = new MvcEvent();
+        $routeMatch = new RouteMatch(array());
+        $routeMatch->setMatchedRouteName($matchedRouteName);
+
+        $event->setRouteMatch($routeMatch);
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->any())
+                         ->method('getIdentityRoles')
+                        ->will($this->returnValue($role));
+
+        $routeGuard = new RouteGuard($identityProvider, $rules);
+
+        $this->assertEquals($isGranted, $routeGuard->isGranted($event));*/
     }
 
     public function testProperlySetAuthorizedParamOnAuthorization()

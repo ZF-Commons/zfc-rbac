@@ -19,12 +19,21 @@
 namespace ZfcRbac\Options;
 
 use Zend\Stdlib\AbstractOptions;
+use ZfcRbac\Exception;
+use ZfcRbac\Guard\GuardInterface;
 
 /**
  * Options for guards
  */
 class GuardsOptions extends AbstractOptions
 {
+    /**
+     * Protection policy (can be "deny" or "allow")
+     *
+     * @var string
+     */
+    protected $protectionPolicy;
+
     /**
      * Route rules
      *
@@ -38,6 +47,35 @@ class GuardsOptions extends AbstractOptions
      * @var array
      */
     protected $controllerRules = array();
+
+    /**
+     * Set the protection policy used by the guards
+     *
+     * @param  string $protectionPolicy
+     * @return void
+     * @throws Exception\RuntimeException
+     */
+    public function setProtectionPolicy($protectionPolicy)
+    {
+        if (!in_array($protectionPolicy, array(GuardInterface::POLICY_ALLOW, GuardInterface::POLICY_DENY))) {
+            throw new Exception\RuntimeException(sprintf(
+                'An invalid protection policy was set. Can only be "deny" or "allow", "%s" given',
+                $protectionPolicy
+            ));
+        }
+
+        $this->protectionPolicy = (string) $protectionPolicy;
+    }
+
+    /**
+     * Get the protection policy
+     *
+     * @return string
+     */
+    public function getProtectionPolicy()
+    {
+        return $this->protectionPolicy;
+    }
 
     /**
      * @param  array $routeRules

@@ -52,10 +52,44 @@ return array(
 
         /**
          * Set the guards options
-         *
-         * You can set route guards using the "route_rules" sub key, or the controller guards using the
-         * "controller_rules" sub key. Please refer to the documentation for the exact syntax
          */
-        // 'guards' => array()
+        'guards' => array(
+            /**
+             * Specify your route rules. You can use regex as route names.
+             *
+             * Route rules have the following format:
+             *      array('routeRegex' => array('role1', 'role2')
+             *
+             * Please note that the relationship between roles are taken into account here. For more information,
+             * pleaser refer to the documentation about guards
+             */
+            // 'route_rules' => array(),
+
+            /**
+             * Specify your controller rules.
+             *
+             * Controller rules have the following format:
+             *      array(
+             *          array(
+             *              'controller' => 'MyController',
+             *              'actions'    => array() // optional
+             *              'roles'      => array('role1', 'role2')
+             *          )
+             *      )
+             */
+            // 'controller_rules' => array(),
+
+            /**
+             * As soon as one rule for either route or controller is specified, a guard will be automatically
+             * created and will start to hook into the MVC loop.
+             *
+             * If the protection policy is set to DENY (default), then any route/controller will be denied by
+             * default UNLESS it is explicitly added as a rule. On the other hand, if it is set to ALLOW, then
+             * not specified route/controller will be implicitly approved.
+             *
+             * DENY is the most secure way, but it is more work for the developer
+             */
+            // protection_policy = GuardInterface::DENY,
+        )
     )
 );
