@@ -105,5 +105,25 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
     }
 
+    /**
+     * This test ensures that if an identity has multiple role, all of them must be granted
+     */
+    public function testNeedAllRoleToBeGranted()
+    {
+        $rbac = new Rbac();
 
+        $rbac->addRole('reader');
+        $rbac->addRole('writer');
+
+        $rbac->getRole('reader')->addPermission('read');
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->once())
+                         ->method('getIdentityRoles')
+                         ->will($this->returnValue(array('reader', 'writer')));
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $this->assertFalse($authorizationService->isGranted('read'));
+    }
 }

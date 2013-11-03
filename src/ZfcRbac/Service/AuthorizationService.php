@@ -72,6 +72,9 @@ class AuthorizationService
     /**
      * Check if the permission is granted to the current identity
      *
+     * Note: if an identity has multiple role, ALL the roles must be granted for the permission
+     * to be granted
+     *
      * @param  string                                                  $permission
      * @param  callable|\Zend\Permissions\Rbac\AssertionInterface|null $assertion
      * @return bool
@@ -80,19 +83,21 @@ class AuthorizationService
     {
         $roles = (array) $this->identityProvider->getIdentityRoles();
 
+        if (empty($roles)) {
+            return false;
+        }
+
         foreach ($roles as $role) {
             // If role does not exist, we consider this as not valid
             if (!$this->rbac->hasRole($role)) {
                 return false;
             }
 
-            // @TODO: what happen if an identity has multiple role, and that one role tells "yes", and the other
-            // tells "no" ? What is the standard behaviour for this?
-            if ($this->rbac->isGranted($role, $permission, $assertion)) {
-                return true;
+            if (!$this->rbac->isGranted($role, $permission, $assertion)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 }
