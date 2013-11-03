@@ -46,7 +46,7 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1);
     }
 
     /**
@@ -61,11 +61,16 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
                 return;
             } else {
                 $event->setParam('guard-result', self::GUARD_UNAUTHORIZED);
+                $event->setParam('exception', new Exception\UnauthorizedException(
+                    'You are not authorized to access this resource'
+                ));
             }
         } catch (Exception\RuntimeException $exception) {
             $event->setParam('guard-result', self::GUARD_RUNTIME_ERROR);
+            $event->setParam('exception', $exception);
         }
 
+        $event->setError($event->getParam('guard-result'));
         $event->stopPropagation(true);
 
         $application  = $event->getApplication();

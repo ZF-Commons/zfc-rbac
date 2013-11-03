@@ -246,6 +246,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $routeGuard->onRoute($event);
 
         $this->assertEquals(ControllerGuard::GUARD_AUTHORIZED, $event->getParam('guard-result'));
+        $this->assertNull($event->getParam('exception'));
     }
 
     public function testProperlySetUnauthorizedAndTriggerEventOnUnauthorization()
@@ -287,6 +288,8 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getParam('guard-result'));
+        $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getError());
+        $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
     }
 }
  

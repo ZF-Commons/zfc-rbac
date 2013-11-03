@@ -60,6 +60,16 @@ class AuthorizationService
     }
 
     /**
+     * Get the identity provider
+     *
+     * @return IdentityProviderInterface
+     */
+    public function getIdentityProvider()
+    {
+        return $this->identityProvider;
+    }
+
+    /**
      * Check if the permission is granted to the current identity
      *
      * @param  string                                                  $permission
