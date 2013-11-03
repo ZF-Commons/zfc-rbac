@@ -21,7 +21,7 @@ namespace ZfcRbac\Guard;
 use Zend\Mvc\MvcEvent;
 use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Exception;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Identity\IdentityProviderInterface;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using regexes)
@@ -31,9 +31,9 @@ class RouteGuard implements GuardInterface
     /**
      * Authorization service that is used to fetch the current roles
      *
-     * @var AuthorizationService
+     * @var IdentityProviderInterface
      */
-    protected $authorizationService;
+    protected $identityProvider;
 
     /**
      * Route guard rules
@@ -47,12 +47,12 @@ class RouteGuard implements GuardInterface
     /**
      * Constructor
      *
-     * @param AuthorizationService $authorizationService
-     * @param array                $rules
+     * @param IdentityProviderInterface $identityProvider
+     * @param array                     $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = array())
+    public function __construct(IdentityProviderInterface $identityProvider, array $rules = array())
     {
-        $this->authorizationService = $authorizationService;
+        $this->identityProvider = $identityProvider;
 
         if (!empty($rules)) {
             $this->setRules($rules);
@@ -93,7 +93,7 @@ class RouteGuard implements GuardInterface
     public function isGranted(MvcEvent $event)
     {
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
-        $roles            = (array) $this->authorizationService->getIdentityRoles();
+        $roles            = (array) $this->identityProvider->getIdentityRoles();
 
         $allowedRoles = array();
         $found        = false;

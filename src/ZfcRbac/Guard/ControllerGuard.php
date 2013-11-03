@@ -20,7 +20,7 @@ namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
 use Zend\Permissions\Rbac\RoleInterface;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Identity\IdentityProviderInterface;
 
 /**
  * A controller guard can protect a controller and a set of actions
@@ -30,9 +30,9 @@ class ControllerGuard implements GuardInterface
     /**
      * Authorization service that is used to fetch the current roles
      *
-     * @var AuthorizationService
+     * @var IdentityProviderInterface
      */
-    protected $authorizationService;
+    protected $identityProvider;
 
     /**
      * Controller guard rules
@@ -44,12 +44,12 @@ class ControllerGuard implements GuardInterface
     /**
      * Constructor
      *
-     * @param AuthorizationService $authorizationService
-     * @param array                $rules
+     * @param IdentityProviderInterface $identityProvider
+     * @param array                     $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = array())
+    public function __construct(IdentityProviderInterface $identityProvider, array $rules = array())
     {
-        $this->authorizationService = $authorizationService;
+        $this->identityProvider = $identityProvider;
 
         if (!empty($rules)) {
             $this->setRules($rules);

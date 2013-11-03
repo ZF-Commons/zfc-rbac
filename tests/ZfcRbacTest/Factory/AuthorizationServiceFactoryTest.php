@@ -30,15 +30,15 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $options = new ModuleOptions(array(
-            'authentication_service' => 'Zend\Authentication\AuthenticationService',
-            'create_missing_roles'   => true
+            'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
+            'create_missing_roles' => true
         ));
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
         $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
+            'ZfcRbac\Identity\AuthenticationProvider',
+            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
         );
 
         $factory              = new AuthorizationServiceFactory();

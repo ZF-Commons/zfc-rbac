@@ -19,14 +19,15 @@
 return array(
     'service_manager' => array(
         'factories' => array(
-            'ZfcRbac\Options\ModuleOptions'        => 'ZfcRbac\Factory\ModuleOptionsFactory',
-            'ZfcRbac\Service\AuthorizationService' => 'ZfcRbac\Factory\AuthorizationServiceFactory'
+            'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
+            'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
+            'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory'
         )
     ),
 
     'zfc_rbac' => array(
-        // Authentication service key
-        'authentication_service' => 'Zend\Authentication\AuthenticationService',
+        // Identity provider service key
+        'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
 
         // Don't create missing roles in the Rbac container by default
         'create_missing_roles' => false,

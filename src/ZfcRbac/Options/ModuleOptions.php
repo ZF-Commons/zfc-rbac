@@ -26,11 +26,11 @@ use Zend\Stdlib\AbstractOptions;
 class ModuleOptions extends AbstractOptions
 {
     /**
-     * Key of the authentication service used to retrieve the identity
+     * Key of the identity provider used to retrieve the identity
      *
      * @var string
      */
-    protected $authenticationService;
+    protected $identityProvider;
 
     /**
      * Should the RBAC container automatically create roles for missing roles?
@@ -54,24 +54,24 @@ class ModuleOptions extends AbstractOptions
     protected $defaultRole;
 
     /**
-     * Set the authentication service key
+     * Set the key of the identity provider used to retrieve the identity
      *
-     * @param  string $authenticationService
+     * @param  string $identityProvider
      * @return void
      */
-    public function setAuthenticationService($authenticationService)
+    public function setIdentityProvider($identityProvider)
     {
-        $this->authenticationService = (string) $authenticationService;
+        $this->identityProvider = (string) $identityProvider;
     }
 
     /**
-     * Get the authentication service key
+     * Get the key of the identity provider used to retrieve the identity
      *
      * @return string
      */
-    public function getAuthenticationService()
+    public function getIdentityProvider()
     {
-        return $this->authenticationService;
+        return $this->identityProvider;
     }
 
     /**

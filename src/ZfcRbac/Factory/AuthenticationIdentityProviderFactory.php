@@ -16,24 +16,30 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest;
+namespace ZfcRbac\Factory;
 
-use ZfcRbacTest\Util\ServiceManagerFactory;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Identity\AuthenticationIdentityProvider;
 
 /**
- * @covers \ZfcRbac\Options\ModuleOptions
+ * Factory to create the authentication identity provider
  */
-class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
+class AuthenticationIdentityProviderFactory implements FactoryInterface
 {
-    public function testAssertModuleDefaultOptions()
+    /**
+     * {@inheritDoc}
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = ServiceManagerFactory::getServiceManager()->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions          = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $authenticationProvider = $serviceLocator->get('Zend\Authentication\AuthenticationService');
 
-        $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
-        $this->assertFalse($moduleOptions->getCreateMissingRoles());
-        $this->assertEquals('guest', $moduleOptions->getGuestRole());
-        $this->assertEquals('member', $moduleOptions->getDefaultRole());
+        return new AuthenticationIdentityProvider(
+            $authenticationProvider,
+            $moduleOptions->getGuestRole(),
+            $moduleOptions->getDefaultRole()
+        );
     }
 }
- 

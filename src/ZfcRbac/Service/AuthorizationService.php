@@ -18,12 +18,9 @@
 
 namespace ZfcRbac\Service;
 
-use Zend\Authentication\AuthenticationService;
-use Zend\Permissions\Rbac\IdentityInterface;
 use Zend\Permissions\Rbac\Rbac;
-use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Exception;
-use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Identity\IdentityProviderInterface;
 
 /**
  * Authorization service is a simple service that internally uses a Rbac container
@@ -36,27 +33,20 @@ class AuthorizationService
     protected $rbac;
 
     /**
-     * @var AuthenticationService
+     * @var IdentityProviderInterface
      */
-    protected $authenticationService;
-
-    /**
-     * @var ModuleOptions
-     */
-    protected $moduleOptions;
+    protected $identityProvider;
 
     /**
      * Constructor
      *
-     * @param Rbac                  $rbac
-     * @param AuthenticationService $authenticationService
-     * @param ModuleOptions         $options
+     * @param Rbac                      $rbac
+     * @param IdentityProviderInterface $identityProvider
      */
-    public function __construct(Rbac $rbac, AuthenticationService $authenticationService, ModuleOptions $options)
+    public function __construct(Rbac $rbac, IdentityProviderInterface $identityProvider)
     {
-        $this->rbac                  = $rbac;
-        $this->authenticationService = $authenticationService;
-        $this->moduleOptions         = $options;
+        $this->rbac             = $rbac;
+        $this->identityProvider = $identityProvider;
     }
 
     /**
@@ -70,36 +60,6 @@ class AuthorizationService
     }
 
     /**
-     * Get the roles of the current identity
-     *
-     * @return string|string[]|RoleInterface|RoleInterface[]
-     * @throws Exception\RuntimeException If the authentication service does not return a valid identity object
-     */
-    public function getIdentityRoles()
-    {
-        if (!$this->authenticationService->hasIdentity()) {
-            return $this->moduleOptions->getGuestRole();
-        }
-
-        $identity = $this->authenticationService->getIdentity();
-
-        if (!$identity instanceof IdentityInterface) {
-            throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac identities must implement ZfcRbac\Permissions\Rbac\IdentityInterface, "%s" given',
-                is_object($identity) ? get_class($identity) : gettype($identity)
-            ));
-        }
-
-        $roles = $identity->getRoles();
-
-        if (empty($roles)) {
-            return $this->moduleOptions->getDefaultRole();
-        }
-
-        return $roles;
-    }
-
-    /**
      * Check if the permission is granted to the current identity
      *
      * @param  string                                                  $permission
@@ -108,9 +68,11 @@ class AuthorizationService
      */
     public function isGranted($permission, $assertion = null)
     {
-        $roles = (array) $this->getIdentityRoles();
+        $roles = (array) $this->identityProvider->getIdentityRoles();
 
         foreach ($roles as $role) {
+            // @TODO: what happen if an identity has multiple role, and that one role tells "yes", and the other
+            // tells "no" ? What is the standard behaviour for this?
             if ($this->rbac->isGranted($role, $permission, $assertion)) {
                 return true;
             }

@@ -16,24 +16,19 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest;
+namespace ZfcRbac\Identity;
 
-use ZfcRbacTest\Util\ServiceManagerFactory;
+use Zend\Permissions\Rbac\RoleInterface;
 
 /**
- * @covers \ZfcRbac\Options\ModuleOptions
+ * An identity provider is an object that returns an object that implement Zend\Permissions\Rbac\IdentityInterface
  */
-class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
+interface IdentityProviderInterface 
 {
-    public function testAssertModuleDefaultOptions()
-    {
-        /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = ServiceManagerFactory::getServiceManager()->get('ZfcRbac\Options\ModuleOptions');
-
-        $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
-        $this->assertFalse($moduleOptions->getCreateMissingRoles());
-        $this->assertEquals('guest', $moduleOptions->getGuestRole());
-        $this->assertEquals('member', $moduleOptions->getDefaultRole());
-    }
-}
- 
+    /**
+     * Get the roles of the current identity
+     *
+     * @return string|string[]|RoleInterface|RoleInterface[]
+     */
+    public function getIdentityRoles();
+} 

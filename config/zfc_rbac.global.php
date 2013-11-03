@@ -19,12 +19,12 @@
 return array(
     'zfc_rbac' => array(
         /**
-         * Key that is used to fetch the authentication service
+         * Key that is used to fetch the identity provider
          *
          * Please note that when an identity is found, it MUST implements the Zend\Permissions\Rbac\IdentityInterface
          * interface, otherwise it will throw an exception.
          */
-        // 'authentication_service' => 'Zend\Authentication\AuthenticationService',
+        // 'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
 
         /**
          * This option allows to specify if you want the Rbac container to automatically create roles inside the
