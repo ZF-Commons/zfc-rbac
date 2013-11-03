@@ -21,7 +21,7 @@ return array(
         /**
          * Key that is used to fetch the identity provider
          *
-         * Please note that when an identity is found, it MUST implements the Zend\Permissions\Rbac\IdentityInterface
+         * Please note that when an identity is found, it MUST implements the ZfcRbac\Identity\IdentityInterface
          * interface, otherwise it will throw an exception.
          */
         // 'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',

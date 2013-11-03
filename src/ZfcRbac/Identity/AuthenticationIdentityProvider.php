@@ -19,7 +19,7 @@
 namespace ZfcRbac\Identity;
 
 use Zend\Authentication\AuthenticationService;
-use Zend\Permissions\Rbac\IdentityInterface;
+use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Exception;
 
 /**
@@ -69,7 +69,7 @@ class AuthenticationIdentityProvider implements IdentityProviderInterface
 
         if (!$identity instanceof IdentityInterface) {
             throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac identities must implement ZfcRbac\Permissions\Rbac\IdentityInterface, "%s" given',
+                'ZfcRbac identities must implement ZfcRbac\Identity\IdentityInterface, "%s" given',
                 is_object($identity) ? get_class($identity) : gettype($identity)
             ));
         }

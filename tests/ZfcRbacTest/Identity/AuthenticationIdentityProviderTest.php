@@ -71,7 +71,7 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
                                     ->method('hasIdentity')
                                     ->will($this->returnValue(true));
 
-        $identity = $this->getMock('Zend\Permissions\Rbac\IdentityInterface');
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
         $identity->expects($this->once())
                  ->method('getRoles')
                  ->will($this->returnValue('myRole'));
@@ -101,7 +101,7 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
                                     ->method('hasIdentity')
                                     ->will($this->returnValue(true));
 
-        $identity = $this->getMock('Zend\Permissions\Rbac\IdentityInterface');
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
         $identity->expects($this->once())
                  ->method('getRoles')
                  ->will($this->returnValue($role));
