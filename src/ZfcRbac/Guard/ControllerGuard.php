@@ -107,7 +107,6 @@ class ControllerGuard implements GuardInterface
     {
         $controller = $event->getRouteMatch()->getParam('controller');
         $action     = $event->getRouteMatch()->getParam('action');
-        $roles      = (array) $this->identityProvider->getIdentityRoles();
 
         // Authorize if controller is not in the list
         if (!isset($this->rules[$controller])) {
@@ -119,6 +118,8 @@ class ControllerGuard implements GuardInterface
         } else {
             $allowedRoles = $this->rules[$controller];
         }
+
+        $roles = (array) $this->identityProvider->getIdentityRoles();
 
         // Iterate through each roles of the identity, and check if we have a match
         foreach ($roles as $role) {

@@ -93,7 +93,6 @@ class RouteGuard implements GuardInterface
     public function isGranted(MvcEvent $event)
     {
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
-        $roles            = (array) $this->identityProvider->getIdentityRoles();
 
         $allowedRoles = array();
         $found        = false;
@@ -118,6 +117,8 @@ class RouteGuard implements GuardInterface
         if (!$found) {
             return true;
         }
+
+        $roles = (array) $this->identityProvider->getIdentityRoles();
 
         // Iterate through each roles of the identity, and check if we have a match
         foreach ($roles as $role) {
