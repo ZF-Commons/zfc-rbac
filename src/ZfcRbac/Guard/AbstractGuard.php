@@ -36,11 +36,6 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
     use ListenerAggregateTrait;
 
     /**
-     * Rule prefix used to avoid name clashes in Rbac container
-     */
-    const RULE_PREFIX = '';
-
-    /**
      * @var AuthorizationService
      */
     protected $authorizationService;
