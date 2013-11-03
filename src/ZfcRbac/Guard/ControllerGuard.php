@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Guard;
 
+use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
 use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
@@ -25,7 +26,7 @@ use ZfcRbac\Identity\IdentityProviderInterface;
 /**
  * A controller guard can protect a controller and a set of actions
  */
-class ControllerGuard implements GuardInterface
+class ControllerGuard extends AbstractGuard
 {
     /**
      * Authorization service that is used to fetch the current roles

@@ -26,7 +26,7 @@ use ZfcRbac\Identity\IdentityProviderInterface;
 /**
  * A route guard can protect a route or a hierarchy of routes (using regexes)
  */
-class RouteGuard implements GuardInterface
+class RouteGuard extends AbstractGuard
 {
     /**
      * Authorization service that is used to fetch the current roles
