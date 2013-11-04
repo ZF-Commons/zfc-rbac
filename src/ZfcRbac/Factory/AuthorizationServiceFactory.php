@@ -41,6 +41,7 @@ class AuthorizationServiceFactory implements FactoryInterface
         $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
 
         // We need to register the guest and default role inside the container
+        // @TODO: should we just add a role provider into the role provider chain? It may be cleaner
         if ($guestRole = $moduleOptions->getGuestRole()) {
             $rbac->addRole($guestRole);
         }

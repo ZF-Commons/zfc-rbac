@@ -39,7 +39,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
      */
     public function __construct(RoleProviderInterface $roleProvider)
     {
-        $this->roleProviderInterface = $roleProvider;
+        $this->roleProvider = $roleProvider;
     }
 
     /**

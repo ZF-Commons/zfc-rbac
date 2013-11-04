@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Service;
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RbacEvent;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -125,5 +126,31 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
         $this->assertFalse($authorizationService->isGranted('read'));
+    }
+
+    public function testLazyLoadRolesAndPermissions()
+    {
+        $rbac = new Rbac();
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->exactly(2))
+                         ->method('getIdentityRoles')
+                         ->will($this->returnValue(array()));
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $authorizationService->setEventManager($eventManager);
+
+        $eventManager->expects($this->exactly(2))
+                     ->method('trigger')
+                     ->with($this->logicalOr(
+                        $this->equalTo(RbacEvent::EVENT_LOAD_ROLES),
+                        $this->equalTo(RbacEvent::EVENT_LOAD_PERMISSIONS)
+                     ));
+
+        // Call twice to assert initialization is not done twice
+        $authorizationService->isGranted('foo');
+        $authorizationService->isGranted('foo');
     }
 }
