@@ -45,7 +45,7 @@ class Route extends AbstractFirewall
             $regex[] = str_replace('/', '\/', '(' . $rule['route'] . ')');
         }
 
-        $this->ruleRegex = sprintf('/%s/', implode('|', $regex));
+        $this->ruleRegex = sprintf('/^(%s)/', implode('|', $regex));
     }
 
     /**
