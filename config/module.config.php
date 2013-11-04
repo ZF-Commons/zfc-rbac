@@ -25,6 +25,8 @@ return array(
             'ZfcRbac\Guard\RouteGuard'                        => 'ZfcRbac\Factory\RouteGuardFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
+            'ZfcRbac\Role\RoleLoaderListener'                 => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
+            'ZfcRbac\Role\RoleProviderChain'                  => 'ZfcRbac\Factory\RoleProviderChainFactory',
             'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory'
         )
     ),

@@ -23,9 +23,13 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
 
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
+
+        // Register the role and permissions loaders
+        $eventManager->attachAggregate($serviceManager->get('ZfcRbac\Role\RoleLoaderListener'));
+
+        // Register the guards listeners (if specified)
         $guardsOptions = $moduleOptions->getGuards();
 
-        // Register controller and route guards, if any are specified
         if ($routeRules = $guardsOptions->getRouteRules()) {
             $eventManager->attachAggregate($serviceManager->get('ZfcRbac\Guard\RouteGuard'));
         }

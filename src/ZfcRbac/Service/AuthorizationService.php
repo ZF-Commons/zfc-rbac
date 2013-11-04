@@ -123,6 +123,9 @@ class AuthorizationService implements EventManagerAwareInterface
     /**
      * Load roles and permissions inside the container
      *
+     * @see \ZfcRbac\Role\RoleLoaderListener
+     * @see \ZfcRbac\Provider\ProviderLoaderListener
+     *
      * @return void
      */
     protected function load()

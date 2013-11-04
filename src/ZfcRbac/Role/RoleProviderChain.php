@@ -20,13 +20,50 @@ namespace ZfcRbac\Role;
 
 use Zend\Permissions\Rbac\RoleInterface;
 
+/**
+ * Simple implementation for a role provider chain
+ */
 class RoleProviderChain implements RoleProviderInterface
 {
+    /**
+     * List of role providers
+     *
+     * @var RoleProviderInterface[]
+     */
+    protected $roleProviders;
+
+    /**
+     * Constructor
+     *
+     * @param array $roleProviders
+     */
+    public function __construct(array $roleProviders = array())
+    {
+        $this->roleProviders = $roleProviders;
+    }
+
+    /**
+     * Add a role provider in the chain
+     *
+     * @param  RoleProviderInterface $roleProvider
+     * @return void
+     */
+    public function addRoleProvider(RoleProviderInterface $roleProvider)
+    {
+        $this->roleProviders[] = $roleProvider;
+    }
+
     /**
      * @return string|string[]|RoleInterface|RoleInterface[]
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        $roles = array();
+
+        foreach ($this->roleProviders as $roleProvider) {
+            $roles[] = $roleProvider->getRoles();
+        }
+
+        return $roles;
     }
 }
