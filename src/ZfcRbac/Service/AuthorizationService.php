@@ -18,6 +18,8 @@
 
 namespace ZfcRbac\Service;
 
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityProviderInterface;
@@ -25,8 +27,13 @@ use ZfcRbac\Identity\IdentityProviderInterface;
 /**
  * Authorization service is a simple service that internally uses a Rbac container
  */
-class AuthorizationService 
+class AuthorizationService implements EventManagerAwareInterface
 {
+    /**
+     * Traits used
+     */
+    use EventManagerAwareTrait;
+
     /**
      * @var Rbac
      */
@@ -36,6 +43,13 @@ class AuthorizationService
      * @var IdentityProviderInterface
      */
     protected $identityProvider;
+
+    /**
+     * Is the container correctly loaded?
+     *
+     * @var bool
+     */
+    protected $isLoaded = false;
 
     /**
      * Constructor
@@ -81,6 +95,11 @@ class AuthorizationService
      */
     public function isGranted($permission, $assertion = null)
     {
+        // First load everything inside the container
+        if (!$this->isLoaded) {
+            $this->load();
+        }
+
         $roles = (array) $this->identityProvider->getIdentityRoles();
 
         if (empty($roles)) {
@@ -99,5 +118,21 @@ class AuthorizationService
         }
 
         return true;
+    }
+
+    /**
+     * Load roles and permissions inside the container
+     *
+     * @return void
+     */
+    protected function load()
+    {
+        $eventManager = $this->getEventManager();
+        $rbacEvent    = new RbacEvent($this->rbac);
+
+        $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
+        $eventManager->trigger(RbacEvent::EVENT_LOAD_PERMISSIONS, $rbacEvent);
+
+        $this->isLoaded = true;
     }
 }

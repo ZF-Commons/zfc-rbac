@@ -255,7 +255,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'rules' => array(
                     array(
                         'controller' => 'BlogController',
-                        'actions'    => 'edit',
+                        'action'     => 'edit',
                         'roles'      => 'member'
                     ),
                 ),
