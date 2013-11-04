@@ -26,12 +26,28 @@ class Route extends AbstractFirewall
     {
         $regex = array();
         foreach($rules as $rule) {
-            $this->roles[] = isset($rule['roles']) ? (array) $rule['roles'] : array();
-            $this->permissions[] = isset($rule['permissions']) ? (array) $rule['permissions'] : array();
-            $regex[] = str_replace('/', '\/', '(' . $rule['route'] . ')');
+            if (isset($rule['roles'])) {
+                if (!is_array($rule['roles'])) {
+                    $rule['roles'] = array($rule['roles']);
+                }
+            }
+
+            $this->roles[] = isset($rule['roles']) ? $rule['roles'] : array();
+
+            if (isset($rule['permissions'])) {
+                if (!is_array($rule['permissions'])) {
+                    $rule['permissions'] = array($rule['permissions']);
+                }
+            }
+
+            $this->permissions[] = isset($rule['permissions']) ? $rule['permissions'] : array();
+
+            $strRegex = '('. $rule['route'] . ')';
+            $strRegex = str_replace('/*', '/?.*', $strRegex);
+            $regex[] = $strRegex;
         }
 
-        $this->ruleRegex = sprintf('/%s/', implode('|', $regex));
+        $this->ruleRegex = sprintf('#^(?:%s)#', implode('|', $regex));
     }
 
     /**
