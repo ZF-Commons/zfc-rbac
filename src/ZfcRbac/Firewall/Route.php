@@ -42,10 +42,12 @@ class Route extends AbstractFirewall
 
             $this->permissions[] = isset($rule['permissions']) ? $rule['permissions'] : array();
 
-            $regex[] = str_replace('/', '\/', '(' . $rule['route'] . ')');
+            $strRegex = '('. $rule['route'] . ')';
+            $strRegex = str_replace('/*', '/?.*', $strRegex);
+            $regex[] = $strRegex;
         }
 
-        $this->ruleRegex = sprintf('/^(%s)/', implode('|', $regex));
+        $this->ruleRegex = sprintf('#^(?:%s)#', implode('|', $regex));
     }
 
     /**
