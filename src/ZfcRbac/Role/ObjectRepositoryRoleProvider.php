@@ -18,8 +18,54 @@
 
 namespace ZfcRbac\Role;
 
+use Doctrine\Common\Persistence\ObjectRepository;
+use RecursiveIteratorIterator;
+use Zend\Permissions\Rbac\RoleInterface;
+use ZfcRbac\Service\RbacEvent;
 
-class ObjectRepositoryRoleProvider 
+/**
+ * Role provider that uses Doctrine object repository to fetch roles
+ *
+ * This provider can be used for small applications that do not have a lot of roles, as everything
+ * is loaded in memory. The loaded entity must implement Zend\Permissions\Rbac\RoleInterface
+ */
+class ObjectRepositoryRoleProvider implements RoleProviderInterface
 {
+    /**
+     * @var ObjectRepository
+     */
+    protected $objectRepository;
 
-} 
+    /**
+     * Constructor
+     *
+     * @param ObjectRepository $objectRepository
+     */
+    public function __construct(ObjectRepository $objectRepository)
+    {
+        $this->objectRepository = $objectRepository;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRoles(RbacEvent $event)
+    {
+        $loadedRoles  = $this->objectRepository->findAll();
+        $cleanedRoles = array();
+
+        foreach ($loadedRoles as $role) {
+            if (!$role instanceof RoleInterface) {
+                continue;
+            }
+
+            if ($parent = $role->getParent()) {
+                $cleanedRoles[$role->getName()][] = $parent->getName();
+            } else {
+                $cleanedRoles[$role->getName()] = array();
+            }
+        }
+
+        return $cleanedRoles;
+    }
+}

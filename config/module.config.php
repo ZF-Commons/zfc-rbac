@@ -52,6 +52,7 @@ return array(
 
     'zfc_rbac' => array(
         'guards'                => array(),
+        
         'unauthorized_strategy' => array(),
         'redirect_strategy'     => array(),
 

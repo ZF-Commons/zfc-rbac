@@ -18,4 +18,35 @@
 
 return array(
     'zfc_rbac' => array(),
+
+    'doctrine' => array(
+        'driver' => array(
+            'application_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/ZfcRbacTest/Asset')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'ZfcRbacTest\Asset' => 'application_driver'
+                )
+            )
+        ),
+
+        'connection' => array(
+            'orm_default' => array(
+                'params' => array(
+                    'host'          => null,
+                    'port'          => null,
+                    'user'          => null,
+                    'password'      => null,
+                    'dbname'        => null,
+                    'driver'        => 'pdo_sqlite',
+                    'driverClass'   => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
+                    'path'          => null,
+                    'memory'        => true,
+                ),
+            ),
+        ),
+    ),
 );

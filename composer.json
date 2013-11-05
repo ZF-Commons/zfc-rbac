@@ -21,6 +21,7 @@
             "homepage": "http://www.michaelgallego.fr"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
         "zendframework/zend-mvc": "~2.2",
@@ -30,13 +31,16 @@
     "suggests": {
         "zendframework/zend-view": "if you use ZendDeveloperTools",
         "zendframework/zend-developer-tools": "zend-developer-tools if you want to show informations about the roles",
-        "doctrine/common": "if you want to use Doctrine role and permission providers"
+        "doctrine/doctrine-module": "if you want to use Doctrine role and permission providers"
     },
     "require-dev": {
         "zendframework/zendframework": "~2.2",
         "phpunit/phpunit": "~3.7",
         "squizlabs/php_codesniffer": "1.4.*",
-        "satooshi/php-coveralls": "~0.6"
+        "satooshi/php-coveralls": "~0.6",
+        "doctrine/common": "~2.4",
+        "doctrine/doctrine-module": "~0.8",
+        "doctrine/doctrine-orm-module": "~0.8"
     },
     "autoload": {
         "psr-0": {
