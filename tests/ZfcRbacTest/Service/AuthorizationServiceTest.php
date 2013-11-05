@@ -128,14 +128,38 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($authorizationService->isGranted('read'));
     }
 
-    public function testLazyLoadRolesAndPermissions()
+    /**
+     * Assert that event to load roles and permissions is not triggered if no role can be found in an
+     * identity, because it will be refused anyway
+     */
+    public function testDoesNotLoadIfNoIdentityIsFound()
+    {
+        $rbac = new Rbac();
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->once())
+                         ->method('getIdentityRoles')
+                         ->will($this->returnValue(array()));
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $authorizationService->setEventManager($eventManager);
+
+        $eventManager->expects($this->never())
+                     ->method('trigger');
+
+        $authorizationService->isGranted('foo');
+    }
+
+    public function testLoadRolesAndPermissions()
     {
         $rbac = new Rbac();
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->exactly(2))
                          ->method('getIdentityRoles')
-                         ->will($this->returnValue(array()));
+                         ->will($this->returnValue(array('role1')));
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 

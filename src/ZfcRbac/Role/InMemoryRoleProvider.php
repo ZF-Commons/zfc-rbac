@@ -20,36 +20,21 @@ namespace ZfcRbac\Role;
 use ZfcRbac\Service\RbacEvent;
 
 /**
- * Simple implementation for a role provider chain
+ * Simple role providers that store them in memory (ideal for small websites)
  */
-class RoleProviderChain implements RoleProviderInterface
+class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
-     * List of role providers
-     *
-     * @var RoleProviderInterface[]
+     * @var array
      */
-    protected $roleProviders;
+    protected $roles = array();
 
     /**
-     * Constructor
-     *
-     * @param RoleProviderInterface[]|array $roleProviders
+     * @param array $roles
      */
-    public function __construct(array $roleProviders = array())
+    public function __construct(array $roles)
     {
-        $this->roleProviders = $roleProviders;
-    }
-
-    /**
-     * Add a role provider in the chain
-     *
-     * @param  RoleProviderInterface $roleProvider
-     * @return void
-     */
-    public function addRoleProvider(RoleProviderInterface $roleProvider)
-    {
-        $this->roleProviders[] = $roleProvider;
+        $this->roles = $roles;
     }
 
     /**
@@ -57,12 +42,6 @@ class RoleProviderChain implements RoleProviderInterface
      */
     public function getRoles(RbacEvent $event)
     {
-        $roles = array();
-
-        foreach ($this->roleProviders as $roleProvider) {
-            $roles = array_merge($roles, $roleProvider->getRoles($event));
-        }
-
-        return $roles;
+        return $this->roles;
     }
 }

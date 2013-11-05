@@ -40,13 +40,27 @@ class RbacEvent extends Event
     protected $rbac;
 
     /**
+     * @var array
+     */
+    protected $roles;
+
+    /**
+     * @var string
+     */
+    protected $permission;
+
+    /**
      * Constructor
      *
-     * @param Rbac $rbac
+     * @param Rbac   $rbac
+     * @param array  $roles
+     * @param string $permission
      */
-    public function __construct(Rbac $rbac)
+    public function __construct(Rbac $rbac, array $roles = array(), $permission = '')
     {
-        $this->rbac = $rbac;
+        $this->rbac       = $rbac;
+        $this->roles      = $roles;
+        $this->permission = $permission;
     }
 
     /**
@@ -57,5 +71,25 @@ class RbacEvent extends Event
     public function getRbac()
     {
         return $this->rbac;
+    }
+
+    /**
+     * Get the roles of the identity (can be used to lazy-load complex permissions graph)
+     *
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Get the current permission (can be used to lazy-load complex permissions graph)
+     *
+     * @return string
+     */
+    public function getPermission()
+    {
+        return $this->permission;
     }
 } 

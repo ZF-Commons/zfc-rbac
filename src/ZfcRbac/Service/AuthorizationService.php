@@ -95,15 +95,17 @@ class AuthorizationService implements EventManagerAwareInterface
      */
     public function isGranted($permission, $assertion = null)
     {
-        // First load everything inside the container
-        if (!$this->isLoaded) {
-            $this->load();
-        }
-
         $roles = (array) $this->identityProvider->getIdentityRoles();
 
         if (empty($roles)) {
             return false;
+        }
+
+        // First load everything inside the container
+        // @TODO: add an option to the authorization service to force loading everytime, as it is useful
+        // for more complex providers that do lazy-loading
+        if (!$this->isLoaded) {
+            $this->load($roles, $permission);
         }
 
         foreach ($roles as $role) {
@@ -126,12 +128,14 @@ class AuthorizationService implements EventManagerAwareInterface
      * @see \ZfcRbac\Role\RoleLoaderListener
      * @see \ZfcRbac\Provider\ProviderLoaderListener
      *
+     * @param  array  $roles
+     * @param  string $permission
      * @return void
      */
-    protected function load()
+    protected function load(array $roles, $permission)
     {
         $eventManager = $this->getEventManager();
-        $rbacEvent    = new RbacEvent($this->rbac);
+        $rbacEvent    = new RbacEvent($this->rbac, $roles, $permission);
 
         $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
         $eventManager->trigger(RbacEvent::EVENT_LOAD_PERMISSIONS, $rbacEvent);

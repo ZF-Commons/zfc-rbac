@@ -16,21 +16,21 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
+namespace ZfcRbacTest\Role;
 
-use Zend\Permissions\Rbac\RoleInterface;
+use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RbacEvent;
 
 /**
- * A role provider is an object that returns a list of roles
+ * @covers \ZfcRbac\Role\InMemoryRoleProvider
  */
-interface RoleProviderInterface 
+class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Get the roles from the provider
-     *
-     * @param  RbacEvent $event
-     * @return string|string[]|RoleInterface|RoleInterface[]
-     */
-    public function getRoles(RbacEvent $event);
-} 
+    public function testInMemoryProvider()
+    {
+        $inMemoryProvider = new InMemoryRoleProvider(array('role'));
+        $this->assertEquals(array('role'), $inMemoryProvider->getRoles(new RbacEvent(new Rbac())));
+    }
+}
+ 

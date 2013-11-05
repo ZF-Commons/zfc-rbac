@@ -29,9 +29,11 @@ class RbacEventTest extends \PHPUnit_Framework_TestCase
     public function testEvent()
     {
         $rbac      = new Rbac();
-        $rbacEvent = new RbacEvent($rbac);
+        $rbacEvent = new RbacEvent($rbac, array('role'), 'permission');
 
         $this->assertSame($rbac, $rbacEvent->getRbac());
+        $this->assertEquals(array('role'), $rbacEvent->getRoles());
+        $this->assertEquals('permission', $rbacEvent->getPermission());
     }
 }
  

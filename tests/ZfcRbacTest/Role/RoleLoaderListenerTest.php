@@ -44,5 +44,26 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($rbac->hasRole('role1'));
         $this->assertTrue($rbac->hasRole('role2'));
     }
+
+    public function testCanAddParentRolesToRbacContainer()
+    {
+        $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
+        $roleProvider->expects($this->once())
+                     ->method('getRoles')
+                     ->will($this->returnValue(array('role1', 'role2' => 'parent1')));
+
+        $rbac      = new Rbac();
+        $rbac->setCreateMissingRoles(true);
+        $rbacEvent = new RbacEvent($rbac);
+
+        $roleLoaderListener = new RoleLoaderListener($roleProvider);
+
+        $roleLoaderListener->onLoadRoles($rbacEvent);
+
+        $this->assertTrue($rbac->hasRole('role1'));
+        $this->assertTrue($rbac->hasRole('role2'));
+
+        $this->assertEquals('parent1', $rbac->getRole('role2')->getParent()->getName());
+    }
 }
  

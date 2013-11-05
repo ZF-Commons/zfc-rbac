@@ -53,8 +53,8 @@ return array(
         // Identity provider service key
         'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
 
-        // Don't create missing roles in the Rbac container by default
-        'create_missing_roles' => false,
+        // Create missing roles in the Rbac container by default
+        'create_missing_roles' => true,
 
         // Guest role
         'guest_role' => 'guest',

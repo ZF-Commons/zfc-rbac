@@ -65,10 +65,14 @@ class RoleLoaderListener extends AbstractListenerAggregate
     public function onLoadRoles(RbacEvent $event)
     {
         $rbac  = $event->getRbac();
-        $roles = $this->roleProvider->getRoles();
+        $roles = $this->roleProvider->getRoles($event);
 
-        foreach ($roles as $role) {
-            $rbac->addRole($role);
+        foreach ($roles as $role => $parents) {
+            if (is_int($role)) {
+                $rbac->addRole($parents);
+            } else {
+                $rbac->addRole($role, $parents);
+            }
         }
     }
 }

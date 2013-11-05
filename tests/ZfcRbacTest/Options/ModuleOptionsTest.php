@@ -31,7 +31,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $moduleOptions = ServiceManagerFactory::getServiceManager()->get('ZfcRbac\Options\ModuleOptions');
 
         $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
-        $this->assertFalse($moduleOptions->getCreateMissingRoles());
+        $this->assertTrue($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
         $this->assertEquals('member', $moduleOptions->getDefaultRole());
         $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());

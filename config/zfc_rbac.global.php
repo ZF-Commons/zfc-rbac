@@ -33,7 +33,7 @@ return array(
          * For instance, if you have a role that has a parent role that has not been added yet, if you set this
          * option to true, then the parent role will be created
          */
-        // 'create_missing_roles' => false,
+        // 'create_missing_roles' => true,
 
         /**
          * Set the guest role

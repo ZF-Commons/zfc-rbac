@@ -18,7 +18,9 @@
 
 namespace ZfcRbacTest\Role;
 
+use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Role\RoleProviderChain;
+use ZfcRbac\Service\RbacEvent;
 
 /**
  * @covers \ZfcRbac\Role\RoleProviderChain
@@ -28,7 +30,7 @@ class RoleProviderChainTest extends \PHPUnit_Framework_TestCase
     public function testCanAddRoleProvidersUsingConstructor()
     {
         $roleProviderChain = new RoleProviderChain($this->getRoleProviders());
-        $result            = $roleProviderChain->getRoles();
+        $result            = $roleProviderChain->getRoles(new RbacEvent(new Rbac()));
 
         $this->assertEquals(array('role1', 'role2', 'role3'), $result);
     }
@@ -41,7 +43,7 @@ class RoleProviderChainTest extends \PHPUnit_Framework_TestCase
             $roleProviderChain->addRoleProvider($roleProvider);
         }
 
-        $result = $roleProviderChain->getRoles();
+        $result = $roleProviderChain->getRoles(new RbacEvent(new Rbac()));
 
         $this->assertEquals(array('role1', 'role2', 'role3'), $result);
     }
