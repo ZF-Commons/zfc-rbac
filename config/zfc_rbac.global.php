@@ -90,6 +90,44 @@ return array(
              * DENY is the most secure way, but it is more work for the developer
              */
             // protection_policy = GuardInterface::DENY,
+        ),
+
+        /**
+         * Configure the unauthorized strategy. It is used to render a template whenever a user is unauthorized
+         */
+        'unauthorized_strategy' => array(
+            /**
+             * Set the template name to render
+             */
+            // 'template' => 'error/403',
+
+            /**
+             * Set the status code (you will likely don't change the default, but who knows...)
+             */
+            // 'status_code' => 403
+        ),
+
+        /**
+         * Configure the redirect strategy. It is used to redirect the user to another route when a user is
+         * unauthorized
+         */
+        'redirect_strategy' => array(
+            /**
+             * Set the route to redirect (of course, it must exist!)
+             */
+            // 'redirect_to_route' => 'login',
+
+            /**
+             * If a user is unauthorized and redirected to another route (login, for instance), should we
+             * append the previous URI (the one that was unauthorized) in the query params?
+             */
+            // 'append_previous_uri' => true,
+
+            /**
+             * If append_previous_uri option is set to true, this option set the query key to use when
+             * the previous uri is appended
+             */
+            // 'previous_uri_query_key' => 'redirectTo'
         )
     )
 );

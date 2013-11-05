@@ -30,35 +30,49 @@ class ModuleOptions extends AbstractOptions
      *
      * @var string
      */
-    protected $identityProvider;
+    protected $identityProvider = 'ZfcRbac\Identity\AuthenticationIdentityProvider';
 
     /**
      * Should the RBAC container automatically create roles for missing roles?
      *
      * @var bool
      */
-    protected $createMissingRoles;
+    protected $createMissingRoles = true;
 
     /**
      * Guest role (used when no identity is found)
      *
      * @var string
      */
-    protected $guestRole;
+    protected $guestRole = 'guest';
 
     /**
      * Default role (used when identity is found, but has no role attached)
      *
      * @var string
      */
-    protected $defaultRole;
+    protected $defaultRole = 'member';
 
     /**
      * Guards options
      *
-     * @var GuardsOptions
+     * @var GuardsOptions|null
      */
     protected $guards;
+
+    /**
+     * Options for the unauthorized strategy
+     *
+     * @var UnauthorizedStrategyOptions|null
+     */
+    protected $unauthorizedStrategy;
+
+    /**
+     * Options for the redirect strategy
+     *
+     * @var RedirectStrategyOptions|null
+     */
+    protected $redirectStrategy;
 
     /**
      * Set the key of the identity provider used to retrieve the identity
@@ -160,5 +174,45 @@ class ModuleOptions extends AbstractOptions
     public function getGuards()
     {
         return $this->guards;
+    }
+
+    /**
+     * Set the unauthorized strategy options
+     *
+     * @param array $unauthorizedStrategy
+     */
+    public function setUnauthorizedStrategy(array $unauthorizedStrategy)
+    {
+        $this->unauthorizedStrategy = new UnauthorizedStrategyOptions($unauthorizedStrategy);
+    }
+
+    /**
+     * Get the unauthorized strategy options
+     *
+     * @return UnauthorizedStrategyOptions
+     */
+    public function getUnauthorizedStrategy()
+    {
+        return $this->unauthorizedStrategy;
+    }
+
+    /**
+     * Set the redirect strategy options
+     *
+     * @param array $redirectStrategy
+     */
+    public function setRedirectStrategy(array $redirectStrategy)
+    {
+        $this->redirectStrategy = new RedirectStrategyOptions($redirectStrategy);
+    }
+
+    /**
+     * Get the redirect strategy options
+     *
+     * @return RedirectStrategyOptions
+     */
+    public function getRedirectStrategy()
+    {
+        return $this->redirectStrategy;
     }
 } 

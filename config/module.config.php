@@ -16,8 +16,6 @@
  * and is licensed under the MIT license.
  */
 
-use ZfcRbac\Guard\GuardInterface;
-
 return array(
     'service_manager' => array(
         'factories' => array(
@@ -50,21 +48,8 @@ return array(
     ),
 
     'zfc_rbac' => array(
-        // Identity provider service key
-        'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
-
-        // Create missing roles in the Rbac container by default
-        'create_missing_roles' => true,
-
-        // Guest role
-        'guest_role' => 'guest',
-
-        // Default role
-        'default_role' => 'member',
-
-        // Guards options
-        'guards' => array(
-            'protection_policy' => GuardInterface::POLICY_DENY
-        )
+        'guards'                => array(),
+        'unauthorized_strategy' => array(),
+        'redirect_strategy'     => array()
     )
 );

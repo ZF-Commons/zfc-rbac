@@ -64,6 +64,10 @@ class RoleLoaderListener extends AbstractListenerAggregate
      */
     public function onLoadRoles(RbacEvent $event)
     {
+        // @TODO: add a cache for roles. However, we must have a way to easily disable it, because some
+        // complex providers that lazy-load roles may play badly with this caching feature. It's something
+        // we must carefully think about
+
         $rbac  = $event->getRbac();
         $roles = $this->roleProvider->getRoles($event);
 

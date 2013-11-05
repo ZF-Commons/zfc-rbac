@@ -32,7 +32,7 @@ class GuardsOptions extends AbstractOptions
      *
      * @var string
      */
-    protected $protectionPolicy;
+    protected $protectionPolicy = GuardInterface::POLICY_DENY;
 
     /**
      * Route rules
