@@ -18,39 +18,26 @@
 
 namespace ZfcRbac\Factory;
 
-use Zend\Permissions\Rbac\Rbac;
+use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
- * Factory to create the authorization service
+ * Factory to create the assertion plugin manager
  */
-class AuthorizationServiceFactory implements FactoryInterface
+class AssertionPluginManagerFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions    = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-        $assertionManager = $serviceLocator->get('ZfcRbac\Assertion\AssertionPluginManager');
-        $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
+        $config = $serviceLocator->get('Config')['zfc_rbac']['assertion_manager'];
 
-        $rbac = new Rbac();
-        $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
+        $assertionPluginManager = new AssertionPluginManager(new Config($config));
+        $assertionPluginManager->setServiceLocator($serviceLocator);
 
-        // We need to register the guest and default role inside the container
-        // @TODO: should we just add a role provider into the role provider chain? It may be cleaner
-        if ($guestRole = $moduleOptions->getGuestRole()) {
-            $rbac->addRole($guestRole);
-        }
-
-        if ($defaultRole = $moduleOptions->getDefaultRole()) {
-            $rbac->addRole($defaultRole);
-        }
-
-        return new AuthorizationService($rbac, $identityProvider, $assertionManager);
+        return $assertionPluginManager;
     }
 }

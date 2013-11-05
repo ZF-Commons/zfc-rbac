@@ -18,8 +18,11 @@
 
 namespace ZfcRbacTest\Service;
 use Zend\Permissions\Rbac\Rbac;
+use Zend\ServiceManager\Config;
+use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RbacEvent;
+use ZfcRbacTest\Asset\InvokableAssertion;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -100,8 +103,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentityRoles')
                          ->will($this->returnValue($role));
 
+        $pluginManager = new AssertionPluginManager();
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
 
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
     }
@@ -123,7 +127,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentityRoles')
                          ->will($this->returnValue(array('reader', 'writer')));
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $pluginManager = new AssertionPluginManager();
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
 
         $this->assertFalse($authorizationService->isGranted('read'));
     }
@@ -141,7 +147,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentityRoles')
                          ->will($this->returnValue(array()));
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $pluginManager = new AssertionPluginManager();
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
 
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $authorizationService->setEventManager($eventManager);
@@ -161,7 +169,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentityRoles')
                          ->will($this->returnValue(array('role1')));
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $pluginManager = new AssertionPluginManager();
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
 
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $authorizationService->setEventManager($eventManager);
@@ -176,5 +186,40 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         // Call twice to assert initialization is not done twice
         $authorizationService->isGranted('foo');
         $authorizationService->isGranted('foo');
+    }
+
+    public function testCanRegisterAssertions()
+    {
+        $rbac             = new Rbac();
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+
+        $assertionPluginManager = new AssertionPluginManager(new Config(array(
+            'invokables' => array(
+                'ZfcRbacTest\Asset\InvokableAssertion' => 'ZfcRbacTest\Asset\InvokableAssertion'
+            )
+        )));
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, $assertionPluginManager);
+
+        $this->assertFalse($authorizationService->hasAssertion('edit'));
+
+        // Test with assertions fetched from plugin manager
+        $authorizationService->registerAssertion('edit', 'ZfcRbacTest\Asset\InvokableAssertion');
+        $this->assertTrue($authorizationService->hasAssertion('edit'));
+        $this->assertInstanceOf('ZfcRbacTest\Asset\InvokableAssertion', $authorizationService->getAssertion('edit'));
+
+        // Test with a concrete instance
+        $assertion = new InvokableAssertion();
+        $authorizationService->registerAssertion('edit', $assertion);
+        $this->assertSame($assertion, $authorizationService->getAssertion('edit'));
+
+        // Test with a callable
+        $assertion = function(Rbac $rbac) {
+            return true;
+        };
+
+        $authorizationService->registerAssertion('edit', $assertion);
+        $this->assertSame($assertion, $authorizationService->getAssertion('edit'));
+        $this->assertInternalType('callable', $authorizationService->getAssertion('edit'));
     }
 }

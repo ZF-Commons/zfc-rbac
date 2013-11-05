@@ -29,7 +29,8 @@
     },
     "suggests": {
         "zendframework/zend-view": "if you use ZendDeveloperTools",
-        "zendframework/zend-developer-tools": "zend-developer-tools if you want to show informations about the roles"
+        "zendframework/zend-developer-tools": "zend-developer-tools if you want to show informations about the roles",
+        "doctrine/common": "if you want to use Doctrine role and permission providers"
     },
     "require-dev": {
         "zendframework/zendframework": "~2.2",

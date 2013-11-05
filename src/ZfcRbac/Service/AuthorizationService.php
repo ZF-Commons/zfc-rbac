@@ -20,7 +20,9 @@ namespace ZfcRbac\Service;
 
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
+use Zend\Permissions\Rbac\AssertionInterface;
 use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityProviderInterface;
 
@@ -45,6 +47,18 @@ class AuthorizationService implements EventManagerAwareInterface
     protected $identityProvider;
 
     /**
+     * @var AssertionPluginManager
+     */
+    protected $assertionPluginManager;
+
+    /**
+     * A list of registered assertions
+     *
+     * @var array
+     */
+    protected $assertions = array();
+
+    /**
      * Is the container correctly loaded?
      *
      * @var bool
@@ -56,11 +70,16 @@ class AuthorizationService implements EventManagerAwareInterface
      *
      * @param Rbac                      $rbac
      * @param IdentityProviderInterface $identityProvider
+     * @param AssertionPluginManager    $assertionPluginManager
      */
-    public function __construct(Rbac $rbac, IdentityProviderInterface $identityProvider)
-    {
-        $this->rbac             = $rbac;
-        $this->identityProvider = $identityProvider;
+    public function __construct(
+        Rbac $rbac,
+        IdentityProviderInterface $identityProvider,
+        AssertionPluginManager $assertionPluginManager
+    ) {
+        $this->rbac                   = $rbac;
+        $this->identityProvider       = $identityProvider;
+        $this->assertionPluginManager = $assertionPluginManager;
     }
 
     /**
@@ -81,6 +100,50 @@ class AuthorizationService implements EventManagerAwareInterface
     public function getIdentityProvider()
     {
         return $this->identityProvider;
+    }
+
+    /**
+     * Register an assertion for a permission
+     *
+     * Assertions are only created when necessary, optionally through a plugin manager if they are class
+     * names. A permission can only have one registered assertion for now
+     *
+     * @param  string                             $permission
+     * @param  callable|string|AssertionInterface $assertion
+     * @return void
+     */
+    public function registerAssertion($permission, $assertion)
+    {
+        // We do not check type here for performance reason. It will be checked only when needed
+        $this->assertions[$permission] = $assertion;
+    }
+
+    /**
+     * Check if a permission has a registered assertion
+     *
+     * @param  string $permission
+     * @return bool
+     */
+    public function hasAssertion($permission)
+    {
+        return isset($this->assertions[$permission]);
+    }
+
+    /**
+     * Get the assertion (if any) and load it from plugin manager if necessary
+     *
+     * @param  string $permission
+     * @return null|callable|AssertionInterface
+     */
+    public function getAssertion($permission)
+    {
+        if (!$this->hasAssertion($permission)) {
+            return null;
+        }
+
+        $assertion = $this->assertions[$permission];
+
+        return is_string($assertion) ? $this->assertionPluginManager->get($assertion) : $assertion;
     }
 
     /**
@@ -107,6 +170,9 @@ class AuthorizationService implements EventManagerAwareInterface
         if (!$this->isLoaded) {
             $this->load($roles, $permission);
         }
+
+        // If an assertion is directly given as a parameter, it overrides the registered one (if any)
+        $assertion = $assertion ?: $this->getAssertion($permission);
 
         foreach ($roles as $role) {
             // If role does not exist, we consider this as not valid
