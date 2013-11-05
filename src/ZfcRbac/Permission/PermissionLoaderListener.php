@@ -80,5 +80,30 @@ class PermissionLoaderListener extends AbstractListenerAggregate
                 $role->addPermission($permission);
             }
         }
+
+
+
+        // @TODO: another solution that may seem more logical as it allows to specify assertion without having
+        // to deal with another config key, and it also allows to eventually store assertion keys inside a database
+        $permissions = $this->permissionProvider->getPermissions($event);
+
+        foreach ($permissions as $permission => $rolesOrArray) {
+            // We have an array that contains role and assertion
+            if (is_array($rolesOrArray)) {
+                $roles     = $rolesOrArray['roles'];
+                $assertion = isset($rolesOrArray['assertion']) ? $rolesOrArray['assertion'] : null;
+            } else {
+                $roles = $rolesOrArray;
+            }
+
+            foreach ($roles as $role) {
+                $rbac->getRole($role)->addPermission($permission);
+            }
+
+            if (!empty($assertion)) {
+                $authorizationService = $event->getTarget();
+                $authorizationService->registerAssertion($permission, $assertion);
+            }
+        }
     }
 }
