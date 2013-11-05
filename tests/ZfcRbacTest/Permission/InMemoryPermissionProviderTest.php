@@ -29,7 +29,7 @@ class InMemoryPermissionProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testInMemoryProvider()
     {
-        $inMemoryProvider = new InMemoryPermissionProvider(array('role' => 'permission'));
-        $this->assertEquals(array('role' => 'permission'), $inMemoryProvider->getPermissions(new RbacEvent(new Rbac())));
+        $inMemoryProvider = new InMemoryPermissionProvider(array('permission' => 'role'));
+        $this->assertEquals(array('permission' => 'role'), $inMemoryProvider->getPermissions(new RbacEvent(new Rbac())));
     }
 }

@@ -26,7 +26,7 @@ use ZfcRbac\Service\RbacEvent;
 class InMemoryPermissionProvider implements PermissionProviderInterface
 {
     /**
-     * List of permissions, indexed by roles
+     * List of permissions (they must follow format for permissions)
      *
      * @var array
      */
