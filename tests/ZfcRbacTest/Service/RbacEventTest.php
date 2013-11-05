@@ -22,7 +22,7 @@ use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Service\RbacEvent;
 
 /**
- * @covers \ZfcRbac\Service\RbacEventTest
+ * @covers \ZfcRbac\Service\RbacEvent
  */
 class RbacEventTest extends \PHPUnit_Framework_TestCase
 {
