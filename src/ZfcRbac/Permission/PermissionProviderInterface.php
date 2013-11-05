@@ -23,9 +23,21 @@ use ZfcRbac\Service\RbacEvent;
 /**
  * A permission provider is an object that returns a list of permissions
  *
- * A permission provider MUST return an array indexed by role name and permissions. For instance:
- *      array('role' => 'permission1')
- *      array('role' => array('permission1', 'permission2')
+ * Permission provider must return permissions under the following formats:
+ *      - an array that map permission name to a single role: array('permissionName' => 'role')
+ *      - an array that map permission name to multiple roles:
+ *          array(
+ *              'permissionName' => array(
+ *                  'roles' => array('role1', 'role2')
+ *              )
+ *          )
+ *      - an array that map permission name to multiple roles with an assertion
+ *          array(
+ *              'permissionName' => array(
+ *                  'roles'     => array('role1', 'role2'),
+ *                  'assertion' => 'MyPermission' // either a string, callable or AssertionInterface
+ *              )
+ *          )
  */
 interface PermissionProviderInterface
 {

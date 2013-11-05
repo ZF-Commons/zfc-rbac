@@ -65,43 +65,24 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      */
     public function onLoadPermissions(RbacEvent $event)
     {
-        // @TODO: add a cache for permissions. However, we must have a way to easily disable it, because some
-        // complex providers that lazy-load permissions may play badly with this caching feature. It's something
-        // we must carefully think about
-
         $rbac        = $event->getRbac();
-        $permissions = $this->permissionProvider->getPermissions($event);
-
-        foreach ($permissions as $role => $subPermissions) {
-            $role           = $rbac->getRole($role);
-            $subPermissions = (array) $subPermissions;
-
-            foreach ($subPermissions as $permission) {
-                $role->addPermission($permission);
-            }
-        }
-
-
-
-        // @TODO: another solution that may seem more logical as it allows to specify assertion without having
-        // to deal with another config key, and it also allows to eventually store assertion keys inside a database
         $permissions = $this->permissionProvider->getPermissions($event);
 
         foreach ($permissions as $permission => $rolesOrArray) {
             // We have an array that contains role and assertion
             if (is_array($rolesOrArray)) {
-                $roles     = $rolesOrArray['roles'];
+                $roles     = (array) $rolesOrArray['roles'];
                 $assertion = isset($rolesOrArray['assertion']) ? $rolesOrArray['assertion'] : null;
             } else {
-                $roles = $rolesOrArray;
+                $roles     = (array) $rolesOrArray;
+                $assertion = null;
             }
 
             foreach ($roles as $role) {
                 $rbac->getRole($role)->addPermission($permission);
             }
 
-            if (!empty($assertion)) {
-                $authorizationService = $event->getTarget();
+            if (!empty($assertion) && ($authorizationService = $event->getTarget())) {
                 $authorizationService->registerAssertion($permission, $assertion);
             }
         }

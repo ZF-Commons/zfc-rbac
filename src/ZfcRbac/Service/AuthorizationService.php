@@ -201,7 +201,9 @@ class AuthorizationService implements EventManagerAwareInterface
     protected function load(array $roles, $permission)
     {
         $eventManager = $this->getEventManager();
-        $rbacEvent    = new RbacEvent($this->rbac, $roles, $permission);
+
+        $rbacEvent = new RbacEvent($this->rbac, $roles, $permission);
+        $rbacEvent->setTarget($this);
 
         $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
         $eventManager->trigger(RbacEvent::EVENT_LOAD_PERMISSIONS, $rbacEvent);

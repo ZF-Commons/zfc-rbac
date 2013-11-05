@@ -19,7 +19,9 @@
 namespace ZfcRbacTest\Role;
 
 use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Permission\PermissionLoaderListener;
+use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RbacEvent;
 
 /**
@@ -27,21 +29,34 @@ use ZfcRbac\Service\RbacEvent;
  */
 class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAddPermissionsToRbacContainer()
+    public function testAddPermissionsAndAssertionsToRbacContainer()
     {
         $rbac      = new Rbac();
         $rbacEvent = new RbacEvent($rbac);
 
+        $identityProvider     = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, new AssertionPluginManager());
+
+        $rbacEvent->setTarget($authorizationService);
+
         // Add some roles
         $rbac->addRole('admin');
         $rbac->addRole('member', 'admin');
+        $rbac->addRole('guest');
 
         $permissionProvider = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
         $permissionProvider->expects($this->once())
                            ->method('getPermissions')
                            ->will($this->returnValue(array(
-                                'member' => array('read', 'write'),
-                                'admin'  => array('delete')
+                                'read'   => array(
+                                    'roles' => array('member', 'guest')
+                                ),
+                                'write'  => 'member',
+                                'edit'   => array(
+                                    'roles'     => 'member',
+                                    'assertion' => 'OwnArticleAssertion'
+                                ),
+                                'delete' => 'admin',
                            )));
 
         $permissionLoaderListener = new PermissionLoaderListener($permissionProvider);
@@ -51,12 +66,26 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $role = $rbac->getRole('member');
         $this->assertTrue($role->hasPermission('read'));
         $this->assertTrue($role->hasPermission('write'));
+        $this->assertTrue($role->hasPermission('edit'));
         $this->assertFalse($role->hasPermission('delete'));
 
         $role = $rbac->getRole('admin');
         $this->assertTrue($role->hasPermission('read'));
         $this->assertTrue($role->hasPermission('write'));
+        $this->assertTrue($role->hasPermission('edit'));
         $this->assertTrue($role->hasPermission('delete'));
+
+        $role = $rbac->getRole('guest');
+        $this->assertTrue($role->hasPermission('read'));
+        $this->assertFalse($role->hasPermission('write'));
+        $this->assertFalse($role->hasPermission('edit'));
+        $this->assertFalse($role->hasPermission('delete'));
+
+        // Test that the assertion has been added via the config
+        $this->assertFalse($authorizationService->hasAssertion('read'));
+        $this->assertFalse($authorizationService->hasAssertion('write'));
+        $this->assertTrue($authorizationService->hasAssertion('edit'));
+        $this->assertFalse($authorizationService->hasAssertion('delete'));
     }
 }
  

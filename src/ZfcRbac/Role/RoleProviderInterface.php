@@ -23,6 +23,10 @@ use ZfcRbac\Service\RbacEvent;
 
 /**
  * A role provider is an object that returns a list of roles
+ *
+ * Role providers must return role (string or RoleInterface) under the following formats:
+ *      - roles without parents: array('role1', 'role2')
+ *      - roles with parents (role is key, parent is value): array('role1' => 'parent1')
  */
 interface RoleProviderInterface 
 {
