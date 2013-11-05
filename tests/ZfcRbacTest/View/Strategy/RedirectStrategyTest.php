@@ -94,7 +94,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotSame($response, $mvcEvent->getResponse(), 'Assert a new response is created');
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
-        
+
         $this->assertEquals(
             '/login?redirectTo=http://www.example.com/previous',
             $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue()

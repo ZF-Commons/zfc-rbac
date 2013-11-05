@@ -16,54 +16,54 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
+namespace ZfcRbac\Permission;
 
 use ZfcRbac\Service\RbacEvent;
 
 /**
- * Simple implementation for a role provider chain
+ * Simple implementation for a permission provider chain
  */
-class RoleProviderChain implements RoleProviderInterface
+class PermissionProviderChain implements PermissionProviderInterface
 {
     /**
-     * List of role providers
+     * List of permission providers
      *
-     * @var RoleProviderInterface[]
+     * @var PermissionProviderInterface[]
      */
-    protected $roleProviders;
+    protected $permissionProviders;
 
     /**
      * Constructor
      *
-     * @param RoleProviderInterface[]|array $roleProviders
+     * @param PermissionProviderInterface[]|array $permissionProviders
      */
-    public function __construct(array $roleProviders = array())
+    public function __construct(array $permissionProviders = array())
     {
-        $this->roleProviders = $roleProviders;
+        $this->permissionProviders = $permissionProviders;
     }
 
     /**
-     * Add a role provider in the chain
+     * Add a permission provider in the chain
      *
-     * @param  RoleProviderInterface $roleProvider
+     * @param  PermissionProviderInterface $permissionProvider
      * @return void
      */
-    public function addRoleProvider(RoleProviderInterface $roleProvider)
+    public function addPermissionProvider(PermissionProviderInterface $permissionProvider)
     {
-        $this->roleProviders[] = $roleProvider;
+        $this->permissionProviders[] = $permissionProvider;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getRoles(RbacEvent $event)
+    public function getPermissions(RbacEvent $event)
     {
-        $roles = array();
+        $permissions = array();
 
-        foreach ($this->roleProviders as $roleProvider) {
-            $roles = array_merge($roles, $roleProvider->getRoles($event));
+        foreach ($this->permissionProviders as $permissionProvider) {
+            $permissions = array_merge_recursive($permissions, $permissionProvider->getPermissions($event));
         }
 
-        return $roles;
+        return $permissions;
     }
 }
