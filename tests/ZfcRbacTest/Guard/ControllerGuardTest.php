@@ -51,9 +51,9 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     ))
                 ),
                 'expected' => array(
-                    'mycontroller'  => array('role1'),
-                    'mycontroller2' => array('role2', 'role3'),
-                    'mycontroller3' => array('role4')
+                    'mycontroller'  => array(0 => array('role1')),
+                    'mycontroller2' => array(0 => array('role2', 'role3')),
+                    'mycontroller3' => array(0 => array('role4'))
                 )
             ),
 
@@ -114,6 +114,28 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
+
+            // Test that that if a rule is set globally to the controller, it does not override any
+            // action specific rule that may have been specified before
+            array(
+                'rules' => array(
+                    array(
+                        'controller' => 'MyController',
+                        'actions'    => array('edit'),
+                        'roles'      => 'role1'
+                    ),
+                    array(
+                        'controller' => 'MyController',
+                        'roles'      => 'role2'
+                    )
+                ),
+                'expected' => array(
+                    'mycontroller'  => array(
+                        'edit' => array('role1'),
+                        0      => array('role2')
+                    )
+                )
+            )
         );
     }
 
@@ -241,7 +263,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'rules' => array(
                     array(
                         'controller' => 'BlogController',
-                        'action'     => 'edit',
+                        'actions'    => 'edit',
                         'roles'      => 'member'
                     ),
                 ),
@@ -256,7 +278,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'rules' => array(
                     array(
                         'controller' => 'BlogController',
-                        'action'     => 'edit',
+                        'actions'    => 'edit',
                         'roles'      => 'member'
                     ),
                 ),

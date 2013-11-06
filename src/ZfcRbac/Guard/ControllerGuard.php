@@ -90,7 +90,7 @@ class ControllerGuard extends AbstractGuard
             $roles      = (array) $rule['roles'];
 
             if (empty($actions)) {
-                $this->rules[$controller] = $roles;
+                $this->rules[$controller][0] = $roles;
                 continue;
             }
 
@@ -114,12 +114,18 @@ class ControllerGuard extends AbstractGuard
             return $this->protectionPolicy === self::POLICY_DENY ? false : true;
         }
 
+        // Algorithm is as follow: we first check if there is an exact match (controller + action), if not
+        // we check if there are rules set globally for the whole controllers (see the index "0"), and finally
+        // if nothing is matched, we fallback to the protection policy logic
+
         if (isset($this->rules[$controller][$action])) {
             $allowedRoles = $this->rules[$controller][$action];
             $permission   = self::RULE_PREFIX . '.' . $controller . '.' . $action;
-        } else {
-            $allowedRoles = $this->rules[$controller];
+        } elseif (isset($this->rules[$controller][0])) {
+            $allowedRoles = $this->rules[$controller][0];
             $permission   = self::RULE_PREFIX . '.' . $controller;
+        } else {
+            return $this->protectionPolicy === self::POLICY_DENY ? false : true;
         }
 
         // Lazy-load the permission inside the container
