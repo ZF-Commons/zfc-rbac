@@ -26,13 +26,6 @@ use Zend\Stdlib\AbstractOptions;
 class ModuleOptions extends AbstractOptions
 {
     /**
-     * DO NOT CHANGE THIS
-     *
-     * @var bool
-     */
-    protected $__strictMode__ = false;
-
-    /**
      * Key of the identity provider used to retrieve the identity
      *
      * @var string

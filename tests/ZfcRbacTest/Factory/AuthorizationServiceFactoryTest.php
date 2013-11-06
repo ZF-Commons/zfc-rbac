@@ -39,7 +39,6 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
-        $serviceManager->setService('ZfcRbac\Assertion\AssertionPluginManager', new AssertionPluginManager());
         $serviceManager->setService(
             'ZfcRbac\Identity\AuthenticationProvider',
             $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')

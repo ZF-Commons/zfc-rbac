@@ -129,21 +129,5 @@ return array(
              */
             // 'previous_uri_query_key' => 'redirectTo'
         ),
-
-        /**
-         * Valid configuration for the assertion plugin manager
-         *
-         * Configuration works as any service manager configuration, for instance:
-         *
-         *      'assertion_manager' => array(
-         *          'factories' => array(
-         *              // Factories
-         *          ),
-         *          'invokables' => array(
-         *              // Invokables
-         *          )
-         *      )
-         */
-        // 'assertion_manager' => array()
     )
 );

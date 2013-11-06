@@ -21,7 +21,6 @@ namespace ZfcRbacTest\Guard;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Permissions\Rbac\Rbac;
-use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -358,9 +357,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $pluginManager = new AssertionPluginManager();
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
         $controllerGuard = new ControllerGuard($authorizationService, $rules);
         $controllerGuard->setProtectionPolicy($protectionPolicy);
@@ -393,9 +390,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $rbac = new Rbac();
         $rbac->addRole('member');
 
-        $pluginManager = new AssertionPluginManager();
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
         $routeGuard = new ControllerGuard($authorizationService, array(
             array(
@@ -441,9 +436,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $rbac = new Rbac();
         $rbac->addRole('member');
 
-        $pluginManager = new AssertionPluginManager();
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, $pluginManager);
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
         $routeGuard = new ControllerGuard($authorizationService, array(
             array(

@@ -35,7 +35,6 @@ class AuthorizationServiceFactory implements FactoryInterface
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions    = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-        $assertionManager = $serviceLocator->get('ZfcRbac\Assertion\AssertionPluginManager');
         $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
 
         $rbac = new Rbac();
@@ -51,6 +50,6 @@ class AuthorizationServiceFactory implements FactoryInterface
             $rbac->addRole($defaultRole);
         }
 
-        return new AuthorizationService($rbac, $identityProvider, $assertionManager);
+        return new AuthorizationService($rbac, $identityProvider);
     }
 }

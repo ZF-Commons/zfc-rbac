@@ -19,7 +19,6 @@
 return array(
     'service_manager' => array(
         'factories' => array(
-            'ZfcRbac\Assertion\AssertionPluginManager'        => 'ZfcRbac\Factory\AssertionPluginManagerFactory',
             'ZfcRbac\Guard\ControllerGuard'                   => 'ZfcRbac\Factory\ControllerGuardFactory',
             'ZfcRbac\Guard\RouteGuard'                        => 'ZfcRbac\Factory\RouteGuardFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
@@ -52,10 +51,7 @@ return array(
 
     'zfc_rbac' => array(
         'guards'                => array(),
-
         'unauthorized_strategy' => array(),
         'redirect_strategy'     => array(),
-
-        'assertion_manager'     => array()
     )
 );
