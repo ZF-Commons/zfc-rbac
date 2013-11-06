@@ -16,8 +16,10 @@
  * and is licensed under the MIT license.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Permissions\Rbac\AbstractRole;
+use Zend\Permissions\Rbac\RoleInterface;
 
 /**
  * @ORM\Entity
@@ -47,6 +49,21 @@ class Role extends AbstractRole
      * @ORM\ManyToOne(targetEntity="Role")
      */
     protected $parent;
+
+    /**
+     * @var Permission[]
+     *
+     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", inversedBy="permissions")
+     */
+    protected $permissions;
+
+    /**
+     * Init the Doctrine collection
+     */
+    public function __construct()
+    {
+        $this->permissions = new ArrayCollection();
+    }
 
     /**
      * Get the role identifier
@@ -98,5 +115,17 @@ class Role extends AbstractRole
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Add a permission
+     *
+     * @param  Permission $permission
+     * @return void
+     */
+    public function addPermission($permission)
+    {
+        $permission->addRole($this);
+        $this->permissions[$permission->getName()] = $permission;
     }
 }

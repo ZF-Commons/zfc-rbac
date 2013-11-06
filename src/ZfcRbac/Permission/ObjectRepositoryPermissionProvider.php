@@ -16,20 +16,18 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
+namespace ZfcRbac\Permission;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use RecursiveIteratorIterator;
 use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Service\RbacEvent;
 
 /**
- * Role provider that uses Doctrine object repository to fetch roles
+ * Permission provider that uses Doctrine repository to fetch permissions
  *
- * This provider can be used for small applications that do not have a lot of roles, as everything
- * is loaded in memory. The loaded entity must implement Zend\Permissions\Rbac\RoleInterface
+ * This is ideal for small websites with few permissions
  */
-class ObjectRepositoryRoleProvider implements RoleProviderInterface
+class ObjectRepositoryPermissionProvider implements PermissionProviderInterface
 {
     /**
      * @var ObjectRepository
@@ -49,24 +47,25 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles(RbacEvent $event)
+    public function getPermissions(RbacEvent $event)
     {
-        $loadedRoles  = $this->objectRepository->findAll();
-        $cleanedRoles = array();
+        $permissions        = $this->objectRepository->findAll();
+        $cleanedPermissions = array();
 
-        // @TODO: if we have more provider, we likely should move this code to a trait or an abstract class
-        foreach ($loadedRoles as $role) {
-            if (!$role instanceof RoleInterface) {
-                continue;
-            }
+        foreach ($permissions as $permission) {
+            // @TODO: enforce permission type once ZF2 has a PermissionInterface
+            $permissionName = $permission->getName();
+            $roles          = $permission->getRoles();
 
-            if ($parent = $role->getParent()) {
-                $cleanedRoles[$role->getName()][] = $parent->getName();
-            } else {
-                $cleanedRoles[$role->getName()] = array();
+            foreach ($roles as $role) {
+                if ($role instanceof RoleInterface) {
+                    $cleanedPermissions[$permissionName][] = $role->getName();
+                } else {
+                    $cleanedPermissions[$permissionName][] = $role;
+                }
             }
         }
 
-        return $cleanedRoles;
+        return $cleanedPermissions;
     }
 }

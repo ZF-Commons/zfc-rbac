@@ -21,13 +21,12 @@ namespace ZfcRbacTest\Asset;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Permissions\Rbac\AbstractRole;
-use Zend\Permissions\Rbac\RoleInterface;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="roles")
+ * @ORM\Table(name="permissions")
  */
-class Role extends AbstractRole
+class Permission
 {
     /**
      * @var int
@@ -46,29 +45,22 @@ class Role extends AbstractRole
     protected $name;
 
     /**
-     * @var Role
+     * @var Role[]
      *
-     * @ORM\ManyToOne(targetEntity="Role")
+     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions")
      */
-    protected $parent;
+    protected $roles;
 
     /**
-     * @var Permission[]
-     *
-     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", inversedBy="permissions")
-     */
-    protected $permissions;
-
-    /**
-     * Init the Doctrine collection
+     * Constructor
      */
     public function __construct()
     {
-        $this->permissions = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
-     * Get the role identifier
+     * Get the permission identifier
      *
      * @return int
      */
@@ -78,7 +70,7 @@ class Role extends AbstractRole
     }
 
     /**
-     * Set the role name
+     * Set the permission name
      *
      * @param  string $name
      * @return void
@@ -89,7 +81,7 @@ class Role extends AbstractRole
     }
 
     /**
-     * Get the role name
+     * Get the permission name
      *
      * @return string
      */
@@ -99,35 +91,22 @@ class Role extends AbstractRole
     }
 
     /**
-     * Set the parent role
-     *
-     * @param  string|Role $parent
+     * Add a role
+     * @param  $role
      * @return void
      */
-    public function setParent($parent)
+    public function addRole($role)
     {
-        $this->parent = $parent;
+        $this->roles[] = $role;
     }
 
     /**
-     * Get the parent role
+     * Get the roles
      *
-     * @return Role
+     * @return Role[]
      */
-    public function getParent()
+    public function getRoles()
     {
-        return $this->parent;
-    }
-
-    /**
-     * Add a permission
-     *
-     * @param  Permission $permission
-     * @return void
-     */
-    public function addPermission($permission)
-    {
-        $permission->addRole($this);
-        $this->permissions[$permission->getName()] = $permission;
+        return $this->roles;
     }
 }
