@@ -23,21 +23,21 @@ use ZfcRbac\Exception;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
- * A route guard can protect a route or a hierarchy of routes (using regexes)
+ * A route guard can protect a route or a hierarchy of routes (using simple wildcard pattern)
  */
 class RouteGuard extends AbstractGuard
 {
     /**
      * Rule prefix that is used to avoid conflicts in the Rbac container
      *
-     * Rules will be added to the Rbac container using the following syntax: __route__.$routeRegex
+     * Rules will be added to the Rbac container using the following syntax: __route__.$routeRule
      */
     const RULE_PREFIX = '__route__';
 
     /**
      * Route guard rules
      *
-     * Those rules are an associative array that map a regex rule with one or multiple roles
+     * Those rules are an associative array that map a rule with one or multiple roles
      *
      * @var array
      */
@@ -96,17 +96,10 @@ class RouteGuard extends AbstractGuard
         $allowedRoles = array();
         $permission   = null;
 
-        foreach (array_keys($this->rules) as $routeRegex) {
-            $result = preg_match('`' . $routeRegex . '`', $matchedRouteName);
-
-            if (false === $result) {
-                throw new Exception\RuntimeException(sprintf(
-                    'Unable to test regex: "%s"',
-                    $routeRegex
-                ));
-            } elseif ($result) {
-                $allowedRoles = $this->rules[$routeRegex];
-                $permission   = self::RULE_PREFIX . '.' . $routeRegex;
+        foreach (array_keys($this->rules) as $routeRule) {
+            if (fnmatch($routeRule, $matchedRouteName, FNM_CASEFOLD)) {
+                $allowedRoles = $this->rules[$routeRule];
+                $permission   = self::RULE_PREFIX . '.' . $routeRule;
 
                 break;
             }

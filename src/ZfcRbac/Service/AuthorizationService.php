@@ -180,12 +180,12 @@ class AuthorizationService implements EventManagerAwareInterface
                 return false;
             }
 
-            if (!$this->rbac->isGranted($role, $permission, $assertion)) {
-                return false;
+            if ($this->rbac->isGranted($role, $permission, $assertion)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**

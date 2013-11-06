@@ -55,10 +55,10 @@ return array(
          */
         'guards' => array(
             /**
-             * Specify your route rules. You can use regex as route names.
+             * Specify your route rules. You can use wildcard as route names.
              *
              * Route rules have the following format:
-             *      array('routeRegex' => array('role1', 'role2')
+             *      array('admin/*' => array('role1', 'role2')
              *
              * Please note that the relationship between roles are taken into account here. For more information,
              * pleaser refer to the documentation about guards

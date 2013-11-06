@@ -129,9 +129,9 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                 'policy'           => GuardInterface::POLICY_DENY
             ),
 
-            // Assert that regexes work for both policies
+            // Assert that composed route work for both policies
             array(
-                'rules'            => array('admin/[dashboard|settings]' => 'admin'),
+                'rules'            => array('admin/dashboard' => 'admin'),
                 'matchedRouteName' => 'admin/dashboard',
                 'rolesToCreate'    => array('admin'),
                 'identityRole'     => 'admin',
@@ -139,11 +139,47 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                 'policy'           => GuardInterface::POLICY_ALLOW
             ),
             array(
-                'rules'            => array('admin/[dashboard|settings]' => 'admin'),
+                'rules'            => array('admin/dashboard' => 'admin'),
                 'matchedRouteName' => 'admin/dashboard',
                 'rolesToCreate'    => array('admin'),
                 'identityRole'     => 'admin',
                 'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert that wildcard route work for both policies
+            array(
+                'rules'            => array('admin/*' => 'admin'),
+                'matchedRouteName' => 'admin/dashboard',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules'            => array('admin/*' => 'admin'),
+                'matchedRouteName' => 'admin/dashboard',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
+
+            // Assert that wildcard route does match (or not depending on the policy) if rules is after matched route name
+            array(
+                'rules'            => array('fooBar/*' => 'admin'),
+                'matchedRouteName' => 'admin/fooBar/baz',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules'            => array('fooBar/*' => 'admin'),
+                'matchedRouteName' => 'admin/fooBar/baz',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => false,
                 'policy'           => GuardInterface::POLICY_DENY
             ),
 
