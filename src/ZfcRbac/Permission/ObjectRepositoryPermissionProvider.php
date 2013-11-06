@@ -19,7 +19,6 @@
 namespace ZfcRbac\Permission;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Service\RbacEvent;
 
 /**
@@ -49,23 +48,6 @@ class ObjectRepositoryPermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions(RbacEvent $event)
     {
-        $permissions        = $this->objectRepository->findAll();
-        $cleanedPermissions = array();
-
-        foreach ($permissions as $permission) {
-            // @TODO: enforce permission type once ZF2 has a PermissionInterface
-            $permissionName = $permission->getName();
-            $roles          = $permission->getRoles();
-
-            foreach ($roles as $role) {
-                if ($role instanceof RoleInterface) {
-                    $cleanedPermissions[$permissionName][] = $role->getName();
-                } else {
-                    $cleanedPermissions[$permissionName][] = $role;
-                }
-            }
-        }
-
-        return $cleanedPermissions;
+        return $this->objectRepository->findAll();
     }
 }

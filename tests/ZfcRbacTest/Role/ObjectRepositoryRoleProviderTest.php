@@ -70,10 +70,11 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $roles = $objectRepositoryRoleProvider->getRoles($rbacEvent);
 
         $this->assertCount(4, $roles);
-        $this->assertEmpty($roles['admin']);
-        $this->assertEquals(array('admin'), $roles['member']);
-        $this->assertEquals(array('admin'), $roles['coAdmin']);
-        $this->assertEquals(array('member'), $roles['guest']);
+        $this->assertInternalType('array', $roles);
+
+        foreach ($roles as $role) {
+            $this->assertInstanceOf('Zend\Permissions\Rbac\RoleInterface', $role);
+        }
     }
 
     /**

@@ -28,7 +28,7 @@ use ZfcRbac\Service\RbacEvent;
  */
 class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAddPermissionsAndAssertionsToRbacContainer()
+    public function testAddPermissionsToRbacContainer()
     {
         $rbac      = new Rbac();
         $rbacEvent = new RbacEvent($rbac);
@@ -47,13 +47,9 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $permissionProvider->expects($this->once())
                            ->method('getPermissions')
                            ->will($this->returnValue(array(
-                                'read'   => array(
-                                    'roles' => array('member', 'guest')
-                                ),
+                                'read'   => array('member', 'guest'),
                                 'write'  => 'member',
-                                'edit'   => array(
-                                    'roles'     => 'member'
-                                ),
+                                'edit'   => array('roles' => 'member'),
                                 'delete' => 'admin',
                            )));
 

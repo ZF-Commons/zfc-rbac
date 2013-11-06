@@ -19,7 +19,6 @@
 namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Factory\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 

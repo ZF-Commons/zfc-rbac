@@ -51,22 +51,6 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     public function getRoles(RbacEvent $event)
     {
-        $loadedRoles  = $this->objectRepository->findAll();
-        $cleanedRoles = array();
-
-        // @TODO: if we have more provider, we likely should move this code to a trait or an abstract class
-        foreach ($loadedRoles as $role) {
-            if (!$role instanceof RoleInterface) {
-                continue;
-            }
-
-            if ($parent = $role->getParent()) {
-                $cleanedRoles[$role->getName()][] = $parent->getName();
-            } else {
-                $cleanedRoles[$role->getName()] = array();
-            }
-        }
-
-        return $cleanedRoles;
+        return $this->objectRepository->findAll();
     }
 }

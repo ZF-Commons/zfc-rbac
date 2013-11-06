@@ -21,7 +21,6 @@ namespace ZfcRbacTest\Permission;
 use Doctrine\ORM\Tools\SchemaTool;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Permission\ObjectRepositoryPermissionProvider;
-use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbacTest\Asset\Permission;
 use ZfcRbacTest\Asset\Role;
 use ZfcRbacTest\Util\ServiceManagerFactory;
@@ -77,9 +76,11 @@ class ObjectRepositoryPermissionProviderTest extends \PHPUnit_Framework_TestCase
 
         $permissions = $objectRepositoryPermissionProvider->getPermissions($rbacEvent);
 
-        $this->assertCount(2, $permissions);
-        $this->assertEquals(array('admin'), $permissions['delete']);
-        $this->assertEquals(array('member'), $permissions['read']);
+        $this->assertCount(3, $permissions);
+
+        foreach ($permissions as $permission) {
+            $this->assertInstanceOf('ZfcRbacTest\Asset\Permission', $permission);
+        }
     }
 
     /**

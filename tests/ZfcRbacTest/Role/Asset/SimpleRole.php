@@ -16,28 +16,18 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Permission;
+namespace ZfcRbacTest\Role\Asset;
 
-use Zend\Permissions\Rbac\PermissionInterface;
-use ZfcRbac\Service\RbacEvent;
+use Zend\Permissions\Rbac\AbstractRole;
 
-/**
- * A permission provider is an object that returns a list of permissions
- *
- * Permission providers must follow a specific format when returning roles. Supported formats are as below:
- *
- *      - an instance of PermissionInterface (starting from ZF 2.3)
- *      - an array of PermissionInterface instances (starting from ZF 2.3)
- *      - an array that map a permission to a single role (eg.: array("permissionName" => "role"))
- *      - an array that map a permission to multiple roles (eg.: array("permissionName" => array("role1", "role2"))
- */
-interface PermissionProviderInterface
+class SimpleRole extends AbstractRole
 {
-    /**
-     * Get the permissions from the provider
-     *
-     * @param  RbacEvent $event
-     * @return array|PermissionInterface|PermissionInterface[]
-     */
-    public function getPermissions(RbacEvent $event);
+    public function __construct($name, $parent = null)
+    {
+        $this->name = $name;
+
+        if ($parent) {
+            $this->parent = new SimpleRole($parent);
+        }
+    }
 } 

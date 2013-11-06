@@ -20,6 +20,7 @@ namespace ZfcRbac\Role;
 
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Service\RbacEvent;
 
 /**
@@ -71,11 +72,17 @@ class RoleLoaderListener extends AbstractListenerAggregate
         $rbac  = $event->getRbac();
         $roles = $this->roleProvider->getRoles($event);
 
-        foreach ($roles as $role => $parents) {
-            if (is_int($role)) {
-                $rbac->addRole($parents);
+        if (!is_array($roles)) {
+            $roles = array($roles);
+        }
+
+        foreach ($roles as $key => $value) {
+            if ($value instanceof RoleInterface) {
+                $rbac->addRole($value);
+            } elseif (is_int($key)) {
+                $rbac->addRole($value);
             } else {
-                $rbac->addRole($role, $parents);
+                $rbac->addRole($key, $value);
             }
         }
     }

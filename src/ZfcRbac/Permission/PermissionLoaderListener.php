@@ -20,7 +20,6 @@ namespace ZfcRbac\Permission;
 
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
-use ZfcRbac\Permission\PermissionProviderInterface;
 use ZfcRbac\Service\RbacEvent;
 
 /**
@@ -68,22 +67,25 @@ class PermissionLoaderListener extends AbstractListenerAggregate
         $rbac        = $event->getRbac();
         $permissions = $this->permissionProvider->getPermissions($event);
 
-        foreach ($permissions as $permission => $rolesOrArray) {
-            // We have an array that contains role and assertion
-            if (is_array($rolesOrArray)) {
-                $roles     = (array) $rolesOrArray['roles'];
-                $assertion = isset($rolesOrArray['assertion']) ? $rolesOrArray['assertion'] : null;
+        if (!is_array($permissions)) {
+            $permissions = (array) $permissions;
+        }
+
+        foreach ($permissions as $key => $value) {
+            if ($value instanceof PermissionInterface) {
+                $permission = $value->getName();
+                $roles      = $value->getRoles();
             } else {
-                $roles     = (array) $rolesOrArray;
-                $assertion = null;
+                $permission = $key;
+                $roles      = (array) $value;
             }
 
             foreach ($roles as $role) {
-                $rbac->getRole($role)->addPermission($permission);
-            }
+                if (is_string($role)) {
+                    $role = $rbac->getRole($role);
+                }
 
-            if (!empty($assertion) && ($authorizationService = $event->getTarget())) {
-                $authorizationService->registerAssertion($permission, $assertion);
+                $role->addPermission($permission);
             }
         }
     }

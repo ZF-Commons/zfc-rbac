@@ -20,7 +20,6 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Permissions\Rbac\AbstractRole;
 
 /**
  * @ORM\Entity
