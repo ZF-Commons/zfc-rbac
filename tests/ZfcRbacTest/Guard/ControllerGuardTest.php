@@ -320,6 +320,36 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_DENY
             ),
+
+            // Assert wildcard in roles
+            array(
+                'rules'            => array(
+                    array(
+                        'controller' => 'IndexController',
+                        'roles'      => '*'
+                    )
+                ),
+                'controller'    => 'IndexController',
+                'action'        => 'index',
+                'rolesToCreate' => array('admin'),
+                'identityRole'  => 'admin',
+                'isGranted'     => true,
+                'policy'        => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules'            => array(
+                    array(
+                        'controller' => 'IndexController',
+                        'roles'      => '*'
+                    )
+                ),
+                'controller'    => 'IndexController',
+                'action'        => 'index',
+                'rolesToCreate' => array('admin'),
+                'identityRole'  => 'admin',
+                'isGranted'     => true,
+                'policy'        => GuardInterface::POLICY_DENY
+            ),
         );
     }
 

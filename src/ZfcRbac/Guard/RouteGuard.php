@@ -105,6 +105,10 @@ class RouteGuard extends AbstractGuard
             }
         }
 
+        if (in_array('*', $allowedRoles)) {
+            return true;
+        }
+
         // If no rules apply, it is considered as granted or not based on the protection policy
         if (empty($permission)) {
             return $this->protectionPolicy === self::POLICY_DENY ? false : true;

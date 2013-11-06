@@ -128,6 +128,10 @@ class ControllerGuard extends AbstractGuard
             return $this->protectionPolicy === self::POLICY_DENY ? false : true;
         }
 
+        if (in_array('*', $allowedRoles)) {
+            return true;
+        }
+
         // Lazy-load the permission inside the container
         $this->loadRule($allowedRoles, $permission);
 

@@ -265,6 +265,24 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                 'isGranted'        => true,
                 'policy'           => GuardInterface::POLICY_DENY
             ),
+
+            // Assert wildcard in role
+            array(
+                'rules'            => array('home' => '*'),
+                'matchedRouteName' => 'home',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_ALLOW
+            ),
+            array(
+                'rules'            => array('home' => '*'),
+                'matchedRouteName' => 'home',
+                'rolesToCreate'    => array('admin'),
+                'identityRole'     => 'admin',
+                'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ),
         );
     }
 
