@@ -2,7 +2,7 @@
 
 ## 1.0.0
 
-* ZfcRbac has been completely rewrite, with unit-testing in mind. A LOT of documentation has been written
+* ZfcRbac has been completely rewritten, with unit-testing in mind. A LOT of documentation has been written
 to cover most use cases, from simple to more advanced use cases. It would be too long to describe all the
 changes, so please refer to the official documentation.
 * [BC] PHP dependency has been raised to PHP 5.4 (because we need to go forward). People that need compatibility

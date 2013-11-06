@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Permission;
 
+use Zend\Cache\Storage\StorageInterface as CacheInterface;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use ZfcRbac\Service\RbacEvent;
@@ -33,13 +34,56 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     protected $permissionProvider;
 
     /**
+     * @var CacheInterface|null
+     */
+    protected $cache;
+
+    /**
+     * @var string
+     */
+    protected $cacheKey = 'zfc_rbac_permissions';
+
+    /**
      * Constructor
      *
      * @param PermissionProviderInterface $permissionProvider
+     * @param CacheInterface|null         $cache
      */
-    public function __construct(PermissionProviderInterface $permissionProvider)
+    public function __construct(PermissionProviderInterface $permissionProvider, CacheInterface $cache = null)
     {
         $this->permissionProvider = $permissionProvider;
+        $this->cache              = $cache;
+    }
+
+    /**
+     * Get the cache storage
+     *
+     * @return CacheInterface|null
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
+     * Set the cache key
+     *
+     * @param  string $cacheKey
+     * @return void
+     */
+    public function setCacheKey($cacheKey)
+    {
+        $this->cacheKey = (string) $cacheKey;
+    }
+
+    /**
+     * Get the cache key
+     *
+     * @return string
+     */
+    public function getCacheKey()
+    {
+        return $this->cacheKey;
     }
 
     /**
@@ -65,7 +109,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     public function onLoadPermissions(RbacEvent $event)
     {
         $rbac        = $event->getRbac();
-        $permissions = $this->permissionProvider->getPermissions($event);
+        $permissions = $this->getPermissions($event);
 
         if (!is_array($permissions)) {
             $permissions = (array) $permissions;
@@ -88,5 +132,27 @@ class PermissionLoaderListener extends AbstractListenerAggregate
                 $role->addPermission($permission);
             }
         }
+    }
+
+    /**
+     * Get the permissions, optionally fetched from cache
+     *
+     * @param  RbacEvent $event
+     * @return mixed
+     */
+    protected function getPermissions(RbacEvent $event)
+    {
+        if (null === $this->cache) {
+            return $this->permissionProvider->getPermissions($event);
+        }
+
+        if ($this->cache->hasItem($this->cacheKey)) {
+            return $this->cache->getItem($this->cacheKey);
+        }
+
+        $result = $this->permissionProvider->getPermissions($event);
+        $this->cache->setItem($this->cacheKey, $result);
+
+        return $result;
     }
 }

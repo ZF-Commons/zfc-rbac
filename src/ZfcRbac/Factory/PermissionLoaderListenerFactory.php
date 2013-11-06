@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Factory;
 
+use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Permission\PermissionLoaderListener;
@@ -32,6 +33,21 @@ class PermissionLoaderListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new PermissionLoaderListener($serviceLocator->get('ZfcRbac\Permission\PermissionProviderChain'));
+        /** @var \ZfcRbac\Options\ModuleOptions $options */
+        $options      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $cacheStorage = null;
+
+        if ($cache = $options->getCache()) {
+            if (is_string($cache)) {
+                $cacheStorage = $serviceLocator->get($cache);
+            } else {
+                $cacheStorage = StorageFactory::factory($cache);
+            }
+        }
+
+        return new PermissionLoaderListener(
+            $serviceLocator->get('ZfcRbac\Permission\PermissionProviderChain'),
+            $cacheStorage
+        );
     }
 }

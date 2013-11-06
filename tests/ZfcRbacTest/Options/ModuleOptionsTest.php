@@ -37,6 +37,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
+        $this->assertNull($moduleOptions->getCache());
     }
 }
  

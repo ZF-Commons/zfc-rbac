@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\RoleLoaderListenerFactory;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Factory\RoleLoaderListenerFactory
@@ -29,12 +30,32 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
         $serviceManager->setService('ZfcRbac\Role\RoleProviderChain', $this->getMock('ZfcRbac\Role\RoleProviderInterface'));
 
         $factory  = new RoleLoaderListenerFactory();
         $listener = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Role\RoleLoaderListener', $listener);
+        $this->assertNull($listener->getCache());
+    }
+
+    public function testFactoryWithCache()
+    {
+        $moduleOptions = new ModuleOptions(array(
+            'cache' => 'my_cache'
+        ));
+
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
+        $serviceManager->setService('my_cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderChain', $this->getMock('ZfcRbac\Role\RoleProviderInterface'));
+
+        $factory  = new RoleLoaderListenerFactory();
+        $listener = $factory->createService($serviceManager);
+
+        $this->assertInstanceOf('ZfcRbac\Role\RoleLoaderListener', $listener);
+        $this->assertInstanceOf('Zend\Cache\Storage\StorageInterface', $listener->getCache());
     }
 }
  

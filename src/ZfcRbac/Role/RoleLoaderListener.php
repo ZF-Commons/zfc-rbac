@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Role;
 
+use Zend\Cache\Storage\StorageInterface as CacheInterface;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Permissions\Rbac\RoleInterface;
@@ -34,13 +35,56 @@ class RoleLoaderListener extends AbstractListenerAggregate
     protected $roleProvider;
 
     /**
+     * @var CacheInterface|null
+     */
+    protected $cache;
+
+    /**
+     * @var string
+     */
+    protected $cacheKey = 'zfc_rbac_roles';
+
+    /**
      * Constructor
      *
      * @param RoleProviderInterface $roleProvider
+     * @param CacheInterface        $cache
      */
-    public function __construct(RoleProviderInterface $roleProvider)
+    public function __construct(RoleProviderInterface $roleProvider, CacheInterface $cache = null)
     {
         $this->roleProvider = $roleProvider;
+        $this->cache        = $cache;
+    }
+
+    /**
+     * Get the cache storage
+     *
+     * @return CacheInterface|null
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
+     * Set the cache key
+     *
+     * @param  string $cacheKey
+     * @return void
+     */
+    public function setCacheKey($cacheKey)
+    {
+        $this->cacheKey = (string) $cacheKey;
+    }
+
+    /**
+     * Get the cache key
+     *
+     * @return string
+     */
+    public function getCacheKey()
+    {
+        return $this->cacheKey;
     }
 
     /**
@@ -65,12 +109,8 @@ class RoleLoaderListener extends AbstractListenerAggregate
      */
     public function onLoadRoles(RbacEvent $event)
     {
-        // @TODO: add a cache for roles. However, we must have a way to easily disable it, because some
-        // complex providers that lazy-load roles may play badly with this caching feature. It's something
-        // we must carefully think about
-
         $rbac  = $event->getRbac();
-        $roles = $this->roleProvider->getRoles($event);
+        $roles = $this->getRoles($event);
 
         if (!is_array($roles)) {
             $roles = array($roles);
@@ -85,5 +125,27 @@ class RoleLoaderListener extends AbstractListenerAggregate
                 $rbac->addRole($key, $value);
             }
         }
+    }
+
+    /**
+     * Get the roles, optionally fetched from cache
+     *
+     * @param  RbacEvent $event
+     * @return mixed
+     */
+    protected function getRoles(RbacEvent $event)
+    {
+        if (null === $this->cache) {
+            return $this->roleProvider->getRoles($event);
+        }
+
+        if ($this->cache->hasItem($this->cacheKey)) {
+            return $this->cache->getItem($this->cacheKey);
+        }
+
+        $result = $this->roleProvider->getRoles($event);
+        $this->cache->setItem($this->cacheKey, $result);
+
+        return $result;
     }
 }

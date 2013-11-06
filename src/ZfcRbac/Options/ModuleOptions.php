@@ -75,6 +75,13 @@ class ModuleOptions extends AbstractOptions
     protected $redirectStrategy;
 
     /**
+     * Either a string fetched from service locator, or a StorageFactory compliant config
+     *
+     * @var string|array
+     */
+    protected $cache;
+
+    /**
      * Set the key of the identity provider used to retrieve the identity
      *
      * @param  string $identityProvider
@@ -214,5 +221,26 @@ class ModuleOptions extends AbstractOptions
     public function getRedirectStrategy()
     {
         return $this->redirectStrategy;
+    }
+
+    /**
+     * Set the cache config of key
+     *
+     * @param  array|string $cache
+     * @return void
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Get the cache config or key
+     *
+     * @return array|string
+     */
+    public function getCache()
+    {
+        return $this->cache;
     }
 } 

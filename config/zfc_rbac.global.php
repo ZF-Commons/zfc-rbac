@@ -129,5 +129,15 @@ return array(
              */
             // 'previous_uri_query_key' => 'redirectTo'
         ),
+
+        /**
+         * Cache options used by role and permission providers
+         *
+         * You can either specify a string key (the cache will then be fetched from service locator) or use
+         * a StorageFactory compliant config array
+         *
+         * @see http://framework.zend.com/manual/2.2/en/modules/zend.cache.storage.adapter.html#quick-start
+         */
+        // 'cache' => array()|string
     )
 );
