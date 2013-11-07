@@ -40,15 +40,36 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($listener->getCache());
     }
 
-    public function testFactoryWithCache()
+    public function cacheProvider()
+    {
+        return array(
+            array('my_cache'),
+            array(
+                array(
+                    'adapter' => array(
+                        'name' => 'memory'
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * @dataProvider cacheProvider
+     */
+    public function testFactoryWithCache($cacheConfig)
     {
         $moduleOptions = new ModuleOptions(array(
-            'cache' => 'my_cache'
+            'cache' => $cacheConfig
         ));
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
-        $serviceManager->setService('my_cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
+
+        if (is_string($cacheConfig)) {
+            $serviceManager->setService($cacheConfig, $this->getMock('Zend\Cache\Storage\StorageInterface'));
+        }
+
         $serviceManager->setService('ZfcRbac\Role\RoleProviderChain', $this->getMock('ZfcRbac\Role\RoleProviderInterface'));
 
         $factory  = new RoleLoaderListenerFactory();
@@ -58,4 +79,3 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Zend\Cache\Storage\StorageInterface', $listener->getCache());
     }
 }
- 

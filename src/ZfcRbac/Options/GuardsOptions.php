@@ -24,6 +24,8 @@ use ZfcRbac\Guard\GuardInterface;
 
 /**
  * Options for guards
+ *
+ * @codeCoverageIgnore
  */
 class GuardsOptions extends AbstractOptions
 {

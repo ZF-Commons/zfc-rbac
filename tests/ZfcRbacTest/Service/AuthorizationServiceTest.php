@@ -27,6 +27,18 @@ use ZfcRbac\Service\RbacEvent;
  */
 class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 {
+    public function testBasicGetterAndSetters()
+    {
+        // Let's fill the RBAC container with some values
+        $rbac = new Rbac();
+
+        $identityProvider     = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $this->assertSame($rbac, $authorizationService->getRbac());
+        $this->assertSame($identityProvider, $authorizationService->getIdentityProvider());
+    }
+
     public function grantedProvider()
     {
         return array(

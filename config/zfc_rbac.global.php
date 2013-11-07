@@ -93,6 +93,44 @@ return array(
         ),
 
         /**
+         * Configuration for role providers
+         *
+         * It must be an array of array that contains configuration for each role provider. Each provider config
+         * must follow the following format:
+         *
+         *      array(
+         *          'type'    => 'ZfcRbac\Role\InMemoryRoleProvider', // for instance
+         *          'options' => array(
+         *              'roles' => array(
+         *                  'role1', 'role2')
+         *              )
+         *          )
+         *      )
+         *
+         * Supported options depend of the role provider, so please refer to the official documentation
+         */
+        'role_providers' => array(),
+
+        /**
+         * Configuration for permission providers
+         *
+         * It must be an array of array that contains configuration for each permission provider. Each provider
+         * config must follow the following format:
+         *
+         *      array(
+         *          'type'    => 'ZfcRbac\Permission\InMemoryRoleProvider', // for instance
+         *          'options' => array(
+         *              'permissions' => array(
+         *                  'permission1' => array('role1', 'role2')
+         *              )
+         *          )
+         *      )
+         *
+         * Supported options depend of the permission provider, so please refer to the official documentation
+         */
+        'permission_providers' => array(),
+
+        /**
          * Configure the unauthorized strategy. It is used to render a template whenever a user is unauthorized
          */
         'unauthorized_strategy' => array(
