@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest;
 
+use ZfcRbac\Options\ModuleOptions;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
@@ -40,5 +41,40 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
         $this->assertNull($moduleOptions->getCache());
+    }
+
+    public function testSettersAndGetters()
+    {
+        $moduleOptions = new ModuleOptions(array(
+            'identity_provider'    => 'IdentityProvider',
+            'create_missing_roles' => false,
+            'guest_role'           => 'unknown',
+            'default_role'         => 'default',
+            'guards'               => array(
+                'route_rules' => array(
+                    'admin/*' => 'admin'
+                )
+            ),
+            'role_providers'        => array(),
+            'permission_providers'  => array(),
+            'unauthorized_strategy' => array(
+                'template' => 'error/unauthorized'
+            ),
+            'redirect_strategy' => array(
+                'redirect_to_route' => 'login'
+            ),
+            'cache' => 'my_cache'
+        ));
+
+        $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
+        $this->assertFalse($moduleOptions->getCreateMissingRoles());
+        $this->assertEquals('unknown', $moduleOptions->getGuestRole());
+        $this->assertEquals('default', $moduleOptions->getDefaultRole());
+        $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
+        $this->assertEquals(array(), $moduleOptions->getRoleProviders());
+        $this->assertEquals(array(), $moduleOptions->getPermissionProviders());
+        $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
+        $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
+        $this->assertEquals('my_cache', $moduleOptions->getCache());
     }
 }

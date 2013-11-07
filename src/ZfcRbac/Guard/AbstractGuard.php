@@ -87,22 +87,18 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
      */
     public function onRoute(MvcEvent $event)
     {
-        try {
-            if ($this->isGranted($event)) {
-                $event->setParam('guard-result', self::GUARD_AUTHORIZED);
-                return;
-            } else {
-                $event->setParam('guard-result', self::GUARD_UNAUTHORIZED);
-                $event->setParam('exception', new Exception\UnauthorizedException(
-                    'You are not authorized to access this resource'
-                ));
-            }
-        } catch (Exception\RuntimeException $exception) {
-            $event->setParam('guard-result', self::GUARD_RUNTIME_ERROR);
-            $event->setParam('exception', $exception);
+        if ($this->isGranted($event)) {
+            $event->setParam('guard-result', self::GUARD_AUTHORIZED);
+            return;
         }
 
-        $event->setError($event->getParam('guard-result'));
+        $event->setError(self::GUARD_UNAUTHORIZED);
+        
+        $event->setParam('guard-result', self::GUARD_UNAUTHORIZED);
+        $event->setParam('exception', new Exception\UnauthorizedException(
+            'You are not authorized to access this resource'
+        ));
+
         $event->stopPropagation(true);
 
         $application  = $event->getApplication();

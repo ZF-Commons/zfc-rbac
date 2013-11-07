@@ -37,7 +37,8 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
                         'name' => 'memory'
                     )
                 )
-            )
+            ),
+            array(new \stdClass())
         );
     }
 

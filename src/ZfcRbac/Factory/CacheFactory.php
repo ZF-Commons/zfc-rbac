@@ -43,11 +43,14 @@ class CacheFactory implements FactoryInterface
                 $cacheStorage = $serviceLocator->get($cache);
             } elseif (is_array($cache)) {
                 $cacheStorage = StorageFactory::factory($cache);
-            } else {
-                $cacheStorage = StorageFactory::factory(array(
-                    'adapter' => 'memory'
-                ));
             }
+        }
+
+        // Fallback to a simple memory cache if none was found
+        if (!$cacheStorage) {
+            $cacheStorage = StorageFactory::factory(array(
+                'adapter' => 'memory'
+            ));
         }
 
         return $cacheStorage;

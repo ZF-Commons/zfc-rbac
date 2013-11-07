@@ -37,7 +37,6 @@ interface GuardInterface
      */
     const GUARD_AUTHORIZED    = 'guard-authorized';
     const GUARD_UNAUTHORIZED  = 'guard-unauthorized';
-    const GUARD_RUNTIME_ERROR = 'guard-runtime-error';
 
     /**
      * Protection policy constants
