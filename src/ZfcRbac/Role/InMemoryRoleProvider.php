@@ -17,6 +17,7 @@
  */
 
 namespace ZfcRbac\Role;
+
 use ZfcRbac\Service\RbacEvent;
 
 /**
