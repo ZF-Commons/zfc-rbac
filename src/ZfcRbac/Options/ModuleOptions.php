@@ -61,6 +61,20 @@ class ModuleOptions extends AbstractOptions
     protected $guards;
 
     /**
+     * A configuration for role providers
+     *
+     * @var array
+     */
+    protected $roleProviders = array();
+
+    /**
+     * A configuration for permission providers
+     *
+     * @var array
+     */
+    protected $permissionProviders = array();
+
+    /**
      * Options for the unauthorized strategy
      *
      * @var UnauthorizedStrategyOptions|null
@@ -181,6 +195,46 @@ class ModuleOptions extends AbstractOptions
     public function getGuards()
     {
         return $this->guards;
+    }
+
+    /**
+     * Set the configuration for role providers
+     *
+     * @param array $roleProviders
+     */
+    public function setRoleProviders(array $roleProviders)
+    {
+        $this->roleProviders = $roleProviders;
+    }
+
+    /**
+     * Get the configuration for role providers
+     *
+     * @return array
+     */
+    public function getRoleProviders()
+    {
+        return $this->roleProviders;
+    }
+
+    /**
+     * Set the configuration for permission providers
+     *
+     * @param array $permissionProviders
+     */
+    public function setPermissionProviders(array $permissionProviders)
+    {
+        $this->permissionProviders = $permissionProviders;
+    }
+
+    /**
+     * Get the configuration for permission providers
+     *
+     * @return array
+     */
+    public function getPermissionProviders()
+    {
+        return $this->permissionProviders;
     }
 
     /**

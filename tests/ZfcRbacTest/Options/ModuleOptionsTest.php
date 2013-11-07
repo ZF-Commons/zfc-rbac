@@ -35,9 +35,10 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
         $this->assertEquals('member', $moduleOptions->getDefaultRole());
         $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
+        $this->assertInternalType('array', $moduleOptions->getRoleProviders());
+        $this->assertInternalType('array', $moduleOptions->getPermissionProviders());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
         $this->assertNull($moduleOptions->getCache());
     }
 }
- 
