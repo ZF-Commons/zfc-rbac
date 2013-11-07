@@ -48,7 +48,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
      * Constructor
      *
      * @param RoleProviderInterface $roleProvider
-     * @param CacheInterface        $cache
+     * @param CacheInterface|null   $cache
      */
     public function __construct(RoleProviderInterface $roleProvider, CacheInterface $cache = null)
     {

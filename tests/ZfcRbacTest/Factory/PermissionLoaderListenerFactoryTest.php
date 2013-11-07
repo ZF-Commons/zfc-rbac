@@ -30,53 +30,12 @@ class PermissionLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
         $serviceManager->setService(
             'ZfcRbac\Permission\PermissionProviderChain',
             $this->getMock('ZfcRbac\Permission\PermissionProviderInterface')
         );
 
-        $factory  = new PermissionLoaderListenerFactory();
-        $listener = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Permission\PermissionLoaderListener', $listener);
-        $this->assertNull($listener->getCache());
-    }
-
-    public function cacheProvider()
-    {
-        return array(
-            array('my_cache'),
-            array(
-                array(
-                    'adapter' => array(
-                        'name' => 'memory'
-                    )
-                )
-            )
-        );
-    }
-
-    /**
-     * @dataProvider cacheProvider
-     */
-    public function testFactoryWithCache($cacheConfig)
-    {
-        $moduleOptions = new ModuleOptions(array(
-            'cache' => $cacheConfig
-        ));
-
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
-
-        if (is_string($cacheConfig)) {
-            $serviceManager->setService($cacheConfig, $this->getMock('Zend\Cache\Storage\StorageInterface'));
-        }
-
-        $serviceManager->setService(
-            'ZfcRbac\Permission\PermissionProviderChain',
-            $this->getMock('ZfcRbac\Permission\PermissionProviderInterface')
-        );
+        $serviceManager->setService('ZfcRbac\Cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
         $factory  = new PermissionLoaderListenerFactory();
         $listener = $factory->createService($serviceManager);

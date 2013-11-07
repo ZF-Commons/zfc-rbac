@@ -18,7 +18,6 @@
 
 namespace ZfcRbac\Factory;
 
-use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Role\RoleLoaderListener;
@@ -33,18 +32,12 @@ class RoleLoaderListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \ZfcRbac\Options\ModuleOptions $options */
-        $options      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-        $cacheStorage = null;
+        /** @var \Zend\Cache\Storage\StorageInterface $cacheStorage */
+        $cacheStorage = $serviceLocator->get('ZfcRbac\Cache');
 
-        if ($cache = $options->getCache()) {
-            if (is_string($cache)) {
-                $cacheStorage = $serviceLocator->get($cache);
-            } elseif (is_array($cache)) {
-                $cacheStorage = StorageFactory::factory($cache);
-            }
-        }
+        /** @var \ZfcRbac\Role\RoleProviderChain $roleProviderChain */
+        $roleProviderChain = $serviceLocator->get('ZfcRbac\Role\RoleProviderChain');
 
-        return new RoleLoaderListener($serviceLocator->get('ZfcRbac\Role\RoleProviderChain'), $cacheStorage);
+        return new RoleLoaderListener($roleProviderChain, $cacheStorage);
     }
 }
