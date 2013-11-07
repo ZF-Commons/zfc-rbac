@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Role;
 
+use Zend\Cache\Storage\Adapter\Memory;
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Role\RoleLoaderListener;
 use ZfcRbac\Service\RbacEvent;
@@ -142,6 +143,23 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($rbac->hasRole('role2'));
 
         $this->assertEquals('parent1', $rbac->getRole('role2')->getParent()->getName());
+    }
+
+    public function testCanLoadRolesFromCache()
+    {
+        $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
+        $roleProvider->expects($this->never())
+                     ->method('getRoles');
+
+        $rbac      = new Rbac();
+        $rbacEvent = new RbacEvent($rbac);
+
+        $cacheStorage       = new Memory();
+        $roleLoaderListener = new RoleLoaderListener($roleProvider, $cacheStorage);
+
+        $cacheStorage->setItem($roleLoaderListener->getCacheKey(), array('role1', 'role2'));
+
+        $roleLoaderListener->onLoadRoles($rbacEvent);
     }
 }
  

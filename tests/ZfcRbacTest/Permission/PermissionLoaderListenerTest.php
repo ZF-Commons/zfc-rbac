@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Role;
 
+use Zend\Cache\Storage\Adapter\Memory;
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Permission\PermissionLoaderListener;
 use ZfcRbac\Service\AuthorizationService;
@@ -74,6 +75,25 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($role->hasPermission('write'));
         $this->assertFalse($role->hasPermission('edit'));
         $this->assertFalse($role->hasPermission('delete'));
+    }
+
+    public function testCanLoadPermissionsFromCache()
+    {
+        $permissionProvider = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
+        $permissionProvider->expects($this->never())
+                           ->method('getPermissions');
+
+        $rbac = new Rbac();
+        $rbac->addRole('role1');
+        
+        $rbacEvent = new RbacEvent($rbac);
+
+        $cacheStorage             = new Memory();
+        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $cacheStorage);
+
+        $cacheStorage->setItem($permissionLoaderListener->getCacheKey(), array('permission1' => 'role1'));
+
+        $permissionLoaderListener->onLoadPermissions($rbacEvent);
     }
 }
  
