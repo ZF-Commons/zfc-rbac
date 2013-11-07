@@ -23,7 +23,7 @@ use Zend\Permissions\Rbac\RoleInterface;
 /**
  * Interface for an identity
  */
-interface IdentityInterface 
+interface IdentityInterface
 {
     /**
      * Get the list of roles of this identity
