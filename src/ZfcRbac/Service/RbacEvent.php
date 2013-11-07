@@ -92,4 +92,4 @@ class RbacEvent extends Event
     {
         return $this->permission;
     }
-} 
+}

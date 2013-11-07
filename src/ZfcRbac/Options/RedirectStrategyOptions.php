@@ -93,4 +93,4 @@ class RedirectStrategyOptions extends AbstractOptions
     {
         return $this->previousUriQueryKey;
     }
-} 
+}

@@ -9,8 +9,7 @@ before_script:
   - composer update --prefer-source
 
 script:
-  - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml --group Coverage
-  - ./vendor/bin/phpunit --group=Functional
+  - ./vendor/bin/phpunit
   - ./vendor/bin/phpcs --standard=PSR2 ./src/
 
 after_script:

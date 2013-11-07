@@ -52,4 +52,4 @@ class IsGranted extends AbstractPlugin
     {
         return $this->authorizationService->isGranted($permission, $assert);
     }
-} 
+}

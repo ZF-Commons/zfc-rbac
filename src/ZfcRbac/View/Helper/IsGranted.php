@@ -52,4 +52,4 @@ class IsGranted extends AbstractHelper
     {
         return $this->authorizationService->isGranted($permission, $assert);
     }
-} 
+}

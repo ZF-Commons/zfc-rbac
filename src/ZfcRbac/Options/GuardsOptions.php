@@ -110,4 +110,4 @@ class GuardsOptions extends AbstractOptions
     {
         return $this->controllerRules;
     }
-} 
+}

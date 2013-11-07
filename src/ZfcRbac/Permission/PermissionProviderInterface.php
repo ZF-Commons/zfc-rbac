@@ -40,4 +40,4 @@ interface PermissionProviderInterface
      * @return array|PermissionInterface|PermissionInterface[]
      */
     public function getPermissions(RbacEvent $event);
-} 
+}

@@ -85,7 +85,7 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
 
         $rbac = new Rbac();
         $rbac->addRole('role1');
-        
+
         $rbacEvent = new RbacEvent($rbac);
 
         $cacheStorage             = new Memory();

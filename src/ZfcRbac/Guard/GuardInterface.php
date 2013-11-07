@@ -50,4 +50,4 @@ interface GuardInterface
      * @return bool
      */
     public function isGranted(MvcEvent $event);
-} 
+}

@@ -32,7 +32,7 @@ use ZfcRbac\Service\RbacEvent;
  *      - an array of strings (role names) (eg.: array("role1", "role2")
  *      - an array that map a string with its parent (eg.: array("role' => "parent")
  */
-interface RoleProviderInterface 
+interface RoleProviderInterface
 {
     /**
      * Get the roles from the provider
@@ -41,4 +41,4 @@ interface RoleProviderInterface
      * @return string|string[]|RoleInterface|RoleInterface[]
      */
     public function getRoles(RbacEvent $event);
-} 
+}

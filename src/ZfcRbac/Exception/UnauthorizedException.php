@@ -25,4 +25,4 @@ use RuntimeException;
  */
 class UnauthorizedException extends RuntimeException implements ExceptionInterface
 {
-} 
+}
