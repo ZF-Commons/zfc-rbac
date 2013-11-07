@@ -33,4 +33,17 @@ class RedirectStrategyOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($redirectStrategyOptions->getAppendPreviousUri());
         $this->assertEquals('redirectTo', $redirectStrategyOptions->getPreviousUriQueryKey());
     }
+
+    public function testSettersAndGetters()
+    {
+        $redirectStrategyOptions = new RedirectStrategyOptions(array(
+            'redirect_to_route'      => 'foo',
+            'append_previous_uri'    => false,
+            'previous_uri_query_key' => 'redirect-to'
+        ));
+
+        $this->assertEquals('foo', $redirectStrategyOptions->getRedirectToRoute());
+        $this->assertFalse($redirectStrategyOptions->getAppendPreviousUri());
+        $this->assertEquals('redirect-to', $redirectStrategyOptions->getPreviousUriQueryKey());
+    }
 }

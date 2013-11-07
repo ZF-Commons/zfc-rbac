@@ -29,6 +29,7 @@ class IsGrantedPluginFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return IsGranted
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

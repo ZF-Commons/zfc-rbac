@@ -28,7 +28,7 @@ use Zend\Permissions\Rbac\RoleInterface;
 class Role extends AbstractRole
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -37,7 +37,7 @@ class Role extends AbstractRole
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=32)
      */
@@ -51,7 +51,7 @@ class Role extends AbstractRole
     protected $parent;
 
     /**
-     * @var Permission[]
+     * @var Permission[]|\Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", inversedBy="permissions")
      */

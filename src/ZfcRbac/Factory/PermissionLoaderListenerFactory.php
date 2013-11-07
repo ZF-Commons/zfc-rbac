@@ -30,6 +30,7 @@ class PermissionLoaderListenerFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return PermissionLoaderListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -40,7 +41,7 @@ class PermissionLoaderListenerFactory implements FactoryInterface
         if ($cache = $options->getCache()) {
             if (is_string($cache)) {
                 $cacheStorage = $serviceLocator->get($cache);
-            } else {
+            } elseif (is_array($cache)) {
                 $cacheStorage = StorageFactory::factory($cache);
             }
         }

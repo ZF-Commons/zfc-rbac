@@ -30,9 +30,6 @@ use ZfcRbac\Service\AuthorizationService;
  */
 abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterface
 {
-    /**
-     * Traits used
-     */
     use ListenerAggregateTrait;
 
     /**
@@ -71,7 +68,7 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
      */
     public function setProtectionPolicy($protectionPolicy)
     {
-        $this->protectionPolicy = $protectionPolicy;
+        $this->protectionPolicy = (string) $protectionPolicy;
     }
 
     /**

@@ -18,21 +18,34 @@
 
 namespace ZfcRbac\Factory;
 
+use Zend\Cache\Storage\StorageInterface as CacheInterface;
+use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Options\ModuleOptions;
 
 /**
- * Factory for the module options
+ * Factory to create a cache storage
  */
-class ModuleOptionsFactory implements FactoryInterface
+class CacheFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @return ModuleOptions
+     * @return CacheInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new ModuleOptions($serviceLocator->get('Config')['zfc_rbac']);
+        /** @var \ZfcRbac\Options\ModuleOptions $options */
+        $options      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $cacheStorage = null;
+
+        if ($cache = $options->getCache()) {
+            if (is_string($cache)) {
+                $cacheStorage = $serviceLocator->get($cache);
+            } elseif (is_array($cache)) {
+                $cacheStorage = StorageFactory::factory($cache);
+            }
+        }
+
+        return $cacheStorage;
     }
 }

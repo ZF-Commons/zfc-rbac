@@ -30,6 +30,7 @@ class RoleProviderChainFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return RoleProviderChain
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

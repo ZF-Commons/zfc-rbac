@@ -33,13 +33,6 @@ class UnauthorizedStrategyOptions extends AbstractOptions
     protected $template = 'error/403';
 
     /**
-     * Status code to use
-     *
-     * @var int
-     */
-    protected $statusCode = 403;
-
-    /**
      * @param string $template
      */
     public function setTemplate($template)
@@ -53,21 +46,5 @@ class UnauthorizedStrategyOptions extends AbstractOptions
     public function getTemplate()
     {
         return $this->template;
-    }
-
-    /**
-     * @param int $statusCode
-     */
-    public function setStatusCode($statusCode)
-    {
-        $this->statusCode = (int) $statusCode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
     }
 }

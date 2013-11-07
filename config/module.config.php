@@ -19,6 +19,10 @@
 return array(
     'service_manager' => array(
         'factories' => array(
+            /* Factories that does not map to a class */
+            'ZfcRbac\Cache'                                   => 'ZfcRbac\Factory\CacheFactory',
+
+            /* Factories that map to a class */
             'ZfcRbac\Guard\ControllerGuard'                   => 'ZfcRbac\Factory\ControllerGuardFactory',
             'ZfcRbac\Guard\RouteGuard'                        => 'ZfcRbac\Factory\RouteGuardFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
@@ -36,7 +40,7 @@ return array(
             'ZfcRbac\View\Helper\IsGranted' => 'ZfcRbac\Factory\IsGrantedViewHelperFactory'
         ),
         'aliases' => array(
-            'IsGranted' => 'ZfcRbac\View\Helper\IsGranted'
+            'isGranted' => 'ZfcRbac\View\Helper\IsGranted'
         )
     ),
 
@@ -45,7 +49,7 @@ return array(
             'ZfcRbac\Mvc\Controller\Plugin\IsGranted' => 'ZfcRbac\Factory\IsGrantedPluginFactory'
         ),
         'aliases' => array(
-            'IsGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted'
+            'isGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted'
         )
     ),
 

@@ -29,6 +29,7 @@ class PermissionProviderChainFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return PermissionProviderChain
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

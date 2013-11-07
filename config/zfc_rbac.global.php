@@ -137,12 +137,7 @@ return array(
             /**
              * Set the template name to render
              */
-            // 'template' => 'error/403',
-
-            /**
-             * Set the status code (you will likely don't change the default, but who knows...)
-             */
-            // 'status_code' => 403
+            // 'template' => 'error/403'
         ),
 
         /**

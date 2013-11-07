@@ -37,8 +37,7 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
         $mvcEvent->setError('error');
 
         $options = new UnauthorizedStrategyOptions(array(
-            'template'    => 'error/403',
-            'status_code' => 403
+            'template' => 'error/403'
         ));
 
         $unauthorizedStrategy = new UnauthorizedStrategy($options);
@@ -46,9 +45,8 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
         $unauthorizedStrategy->onError($mvcEvent);
 
         $this->assertNotSame($response, $mvcEvent->getResponse(), 'Assert a new response is created');
-        $this->assertEquals($options->getStatusCode(), $mvcEvent->getResponse()->getStatusCode());
+        $this->assertEquals(403, $mvcEvent->getResponse()->getStatusCode());
         $this->assertInstanceOf('Zend\View\Model\ViewModel', $mvcEvent->getResult());
         $this->assertEquals($options->getTemplate(), $mvcEvent->getResult()->getTemplate());
     }
 }
- 

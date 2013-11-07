@@ -30,18 +30,21 @@ class AuthorizationServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return AuthorizationService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions    = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+
+        /** @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
         $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
 
         $rbac = new Rbac();
         $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
 
         // We need to register the guest and default role inside the container
-        // @TODO: should we just add a role provider into the role provider chain? It may be cleaner
+
         if ($guestRole = $moduleOptions->getGuestRole()) {
             $rbac->addRole($guestRole);
         }

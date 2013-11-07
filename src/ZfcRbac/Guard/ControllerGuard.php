@@ -106,8 +106,9 @@ class ControllerGuard extends AbstractGuard
      */
     public function isGranted(MvcEvent $event)
     {
-        $controller = strtolower($event->getRouteMatch()->getParam('controller'));
-        $action     = strtolower($event->getRouteMatch()->getParam('action'));
+        $routeMatch = $event->getRouteMatch();
+        $controller = strtolower($routeMatch->getParam('controller'));
+        $action     = strtolower($routeMatch->getParam('action'));
 
         // If no rules apply, it is considered as granted or not based on the protection policy
         if (!isset($this->rules[$controller])) {

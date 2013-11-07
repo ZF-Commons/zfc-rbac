@@ -29,6 +29,7 @@ class IsGrantedViewHelperFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return IsGranted
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
