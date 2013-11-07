@@ -112,7 +112,7 @@ class ControllerGuard extends AbstractGuard
 
         // If no rules apply, it is considered as granted or not based on the protection policy
         if (!isset($this->rules[$controller])) {
-            return $this->protectionPolicy === self::POLICY_DENY ? false : true;
+            return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
         // Algorithm is as follow: we first check if there is an exact match (controller + action), if not
@@ -126,7 +126,7 @@ class ControllerGuard extends AbstractGuard
             $allowedRoles = $this->rules[$controller][0];
             $permission   = self::RULE_PREFIX . '.' . $controller;
         } else {
-            return $this->protectionPolicy === self::POLICY_DENY ? false : true;
+            return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
         if (in_array('*', $allowedRoles)) {
