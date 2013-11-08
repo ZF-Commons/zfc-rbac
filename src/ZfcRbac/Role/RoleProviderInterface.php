@@ -28,7 +28,7 @@ use ZfcRbac\Service\RbacEvent;
  *
  *      - an array of RoleInterface instances
  *      - an array of strings (role names) (eg.: array("role1", "role2")
- *      - an array that map a string with its parent (eg.: array("role' => "parent")
+ *      - an array that map a string with its parent (eg.: array("role" => "parent")
  */
 interface RoleProviderInterface
 {

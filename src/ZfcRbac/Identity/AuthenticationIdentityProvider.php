@@ -61,7 +61,7 @@ class AuthenticationIdentityProvider implements IdentityProviderInterface
         $identity = $this->authenticationService->getIdentity();
 
         if (!$identity instanceof IdentityInterface) {
-            return $this->guestRole;
+            return array();
         }
 
         return (array) $identity->getRoles();
