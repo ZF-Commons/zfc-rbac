@@ -21,7 +21,7 @@ namespace ZfcRbacTest\View\Helper;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\SimpleRouteStack;
+use Zend\Mvc\Router\Http\TreeRouteStack;
 use ZfcRbac\Options\RedirectStrategyOptions;
 use ZfcRbac\View\Strategy\RedirectStrategy;
 
@@ -34,7 +34,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $response = new HttpResponse();
 
-        $router = new SimpleRouteStack();
+        $router = new TreeRouteStack();
         $router->addRoute('login', array(
             'type'    => 'Zend\Mvc\Router\Http\Literal',
             'options' => array(
@@ -65,7 +65,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $response = new HttpResponse();
 
-        $router = new SimpleRouteStack();
+        $router = new TreeRouteStack();
         $router->addRoute('login', array(
             'type'    => 'Zend\Mvc\Router\Http\Literal',
             'options' => array(
@@ -101,4 +101,3 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         );
     }
 }
- 

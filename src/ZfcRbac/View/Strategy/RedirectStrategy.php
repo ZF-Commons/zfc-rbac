@@ -77,7 +77,10 @@ class RedirectStrategy extends AbstractListenerAggregate
             $redirectKey = $this->options->getPreviousUriQueryKey();
             $previousUri = $event->getRequest()->getUriString();
 
-            $uri .= '?' . $redirectKey . '=' . $previousUri;
+            $uri = $router->assemble(
+                array(),
+                array('name' => $redirectRoute, 'query' => array($redirectKey => $previousUri))
+            );
         }
 
         $response = new HttpResponse();
