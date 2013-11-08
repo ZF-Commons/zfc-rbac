@@ -128,7 +128,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      * Get the permissions, optionally fetched from cache
      *
      * @param  RbacEvent $event
-     * @return mixed
+     * @return array|PermissionInterface[]
      */
     protected function getPermissions(RbacEvent $event)
     {
