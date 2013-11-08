@@ -29,7 +29,7 @@ class IsGranted extends AbstractHelper
     /**
      * @var AuthorizationService
      */
-    protected $authorizationService;
+    private $authorizationService;
 
     /**
      * Constructor

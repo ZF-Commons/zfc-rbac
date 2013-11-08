@@ -38,22 +38,15 @@ class AuthenticationIdentityProvider implements IdentityProviderInterface
     protected $guestRole;
 
     /**
-     * @var string
-     */
-    protected $defaultRole;
-
-    /**
      * Constructor
      *
      * @param AuthenticationService $authenticationService
      * @param string                $guestRole
-     * @param string                $defaultRole
      */
-    public function __construct(AuthenticationService $authenticationService, $guestRole = '', $defaultRole = '')
+    public function __construct(AuthenticationService $authenticationService, $guestRole = '')
     {
         $this->authenticationService = $authenticationService;
         $this->guestRole             = (string) $guestRole;
-        $this->defaultRole           = (string) $defaultRole;
     }
 
     /**
@@ -62,24 +55,15 @@ class AuthenticationIdentityProvider implements IdentityProviderInterface
     public function getIdentityRoles()
     {
         if (!$this->authenticationService->hasIdentity()) {
-            return $this->guestRole;
+            return array($this->guestRole);
         }
 
         $identity = $this->authenticationService->getIdentity();
 
         if (!$identity instanceof IdentityInterface) {
-            throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac identities must implement ZfcRbac\Identity\IdentityInterface, "%s" given',
-                is_object($identity) ? get_class($identity) : gettype($identity)
-            ));
+            return $this->guestRole;
         }
 
-        $roles = $identity->getRoles();
-
-        if (empty($roles)) {
-            return $this->defaultRole;
-        }
-
-        return $roles;
+        return (array) $identity->getRoles();
     }
 }

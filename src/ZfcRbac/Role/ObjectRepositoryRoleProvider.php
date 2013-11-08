@@ -34,7 +34,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     /**
      * @var ObjectRepository
      */
-    protected $objectRepository;
+    private $objectRepository;
 
     /**
      * Constructor

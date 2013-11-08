@@ -36,23 +36,16 @@ class CacheFactory implements FactoryInterface
     {
         /* @var \ZfcRbac\Options\ModuleOptions $options */
         $options      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-        $cacheStorage = null;
+        $cacheOptions = $options->getCache();
 
-        if ($cache = $options->getCache()) {
-            if (is_string($cache)) {
-                $cacheStorage = $serviceLocator->get($cache);
-            } elseif (is_array($cache)) {
-                $cacheStorage = StorageFactory::factory($cache);
-            }
+        if (is_string($cacheOptions)) {
+            return $serviceLocator->get($cacheOptions);
         }
 
-        // Fallback to a simple memory cache if none was found
-        if (!$cacheStorage) {
-            $cacheStorage = StorageFactory::factory(array(
-                'adapter' => 'memory'
-            ));
+        if (is_array($cacheOptions)) {
+            return StorageFactory::factory($cacheOptions);
         }
 
-        return $cacheStorage;
+        return StorageFactory::factory(array('adapter' => 'memory'));
     }
 }

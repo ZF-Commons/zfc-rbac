@@ -38,7 +38,7 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
-        $this->identityProvider = new AuthenticationIdentityProvider($this->authenticationService, 'guest', 'default');
+        $this->identityProvider = new AuthenticationIdentityProvider($this->authenticationService, 'guest');
     }
 
     public function testReturnGuestRoleIfNoIdentityIsFound()
@@ -47,22 +47,7 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
                                     ->method('hasIdentity')
                                     ->will($this->returnValue(false));
 
-        $this->assertEquals('guest', $this->identityProvider->getIdentityRoles());
-    }
-
-    public function testThrowExceptionIfWrongIdentityTypeIsReturned()
-    {
-        $this->authenticationService->expects($this->once())
-                                    ->method('hasIdentity')
-                                    ->will($this->returnValue(true));
-
-        $this->authenticationService->expects($this->once())
-                                    ->method('getIdentity')
-                                    ->will($this->returnValue(new \stdClass));
-
-        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
-
-        $this->identityProvider->getIdentityRoles();
+        $this->assertEquals(array('guest'), $this->identityProvider->getIdentityRoles());
     }
 
     public function testCanReturnRolesFromIdentity()
@@ -80,37 +65,6 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
                                     ->method('getIdentity')
                                     ->will($this->returnValue($identity));
 
-        $this->assertEquals('myRole', $this->identityProvider->getIdentityRoles());
-    }
-
-    public function defaultRoleProvider()
-    {
-        return array(
-            array(null),
-            array(''),
-            array(array())
-        );
-    }
-
-    /**
-     * @dataProvider defaultRoleProvider
-     */
-    public function testReturnDefaultRolesIfIdentityRolesAreEmpty($role)
-    {
-        $this->authenticationService->expects($this->once())
-                                    ->method('hasIdentity')
-                                    ->will($this->returnValue(true));
-
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->once())
-                 ->method('getRoles')
-                 ->will($this->returnValue($role));
-
-        $this->authenticationService->expects($this->once())
-                                    ->method('getIdentity')
-                                    ->will($this->returnValue($identity));
-
-        $this->assertEquals('default', $this->identityProvider->getIdentityRoles());
+        $this->assertEquals(array('myRole'), $this->identityProvider->getIdentityRoles());
     }
 }
- 

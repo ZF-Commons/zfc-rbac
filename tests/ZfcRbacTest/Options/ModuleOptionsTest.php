@@ -34,7 +34,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertTrue($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
-        $this->assertEquals('member', $moduleOptions->getDefaultRole());
         $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
         $this->assertInternalType('array', $moduleOptions->getRoleProviders());
         $this->assertInternalType('array', $moduleOptions->getPermissionProviders());
@@ -49,7 +48,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'identity_provider'    => 'IdentityProvider',
             'create_missing_roles' => false,
             'guest_role'           => 'unknown',
-            'default_role'         => 'default',
             'guards'               => array(
                 'route_rules' => array(
                     'admin/*' => 'admin'
@@ -69,7 +67,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertFalse($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
-        $this->assertEquals('default', $moduleOptions->getDefaultRole());
         $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
         $this->assertEquals(array(), $moduleOptions->getRoleProviders());
         $this->assertEquals(array(), $moduleOptions->getPermissionProviders());

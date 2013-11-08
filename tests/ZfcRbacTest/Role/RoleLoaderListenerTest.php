@@ -37,7 +37,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         return array(
             // With an RoleInterface instance
             array(
-                'roleConfig' => new SimpleRole('role', 'parent'),
+                'roleConfig' => array(new SimpleRole('role', 'parent')),
                 'role'       => 'role',
                 'parent'     => array('role' => 'parent')
             ),
@@ -54,7 +54,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
 
             // With a single string name
             array(
-                'roleConfig' => 'role',
+                'roleConfig' => array('role'),
                 'role'       => 'role',
                 'parent'     => array('role' => null)
             ),
@@ -89,7 +89,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $rbac->setCreateMissingRoles(true);
         $rbacEvent = new RbacEvent($rbac);
 
-        $roleLoaderListener = new RoleLoaderListener($roleProvider);
+        $roleLoaderListener = new RoleLoaderListener($roleProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
         $roleLoaderListener->onLoadRoles($rbacEvent);
 
         $roles = (array) $role;
@@ -116,7 +116,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $rbac      = new Rbac();
         $rbacEvent = new RbacEvent($rbac);
 
-        $roleLoaderListener = new RoleLoaderListener($roleProvider);
+        $roleLoaderListener = new RoleLoaderListener($roleProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
         $roleLoaderListener->onLoadRoles($rbacEvent);
 
@@ -135,7 +135,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $rbac->setCreateMissingRoles(true);
         $rbacEvent = new RbacEvent($rbac);
 
-        $roleLoaderListener = new RoleLoaderListener($roleProvider);
+        $roleLoaderListener = new RoleLoaderListener($roleProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
         $roleLoaderListener->onLoadRoles($rbacEvent);
 
@@ -162,4 +162,3 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $roleLoaderListener->onLoadRoles($rbacEvent);
     }
 }
- 

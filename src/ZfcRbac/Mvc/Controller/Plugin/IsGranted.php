@@ -29,7 +29,7 @@ class IsGranted extends AbstractPlugin
     /**
      * @var AuthorizationService
      */
-    protected $authorizationService;
+    private $authorizationService;
 
     /**
      * Constructor

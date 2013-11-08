@@ -41,8 +41,7 @@ class AuthenticationIdentityProviderFactory implements FactoryInterface
 
         return new AuthenticationIdentityProvider(
             $authenticationProvider,
-            $moduleOptions->getGuestRole(),
-            $moduleOptions->getDefaultRole()
+            $moduleOptions->getGuestRole()
         );
     }
 }

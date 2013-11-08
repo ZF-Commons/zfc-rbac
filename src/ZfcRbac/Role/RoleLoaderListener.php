@@ -35,7 +35,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
     protected $roleProvider;
 
     /**
-     * @var CacheInterface|null
+     * @var CacheInterface
      */
     protected $cache;
 
@@ -48,9 +48,9 @@ class RoleLoaderListener extends AbstractListenerAggregate
      * Constructor
      *
      * @param RoleProviderInterface $roleProvider
-     * @param CacheInterface|null   $cache
+     * @param CacheInterface        $cache
      */
-    public function __construct(RoleProviderInterface $roleProvider, CacheInterface $cache = null)
+    public function __construct(RoleProviderInterface $roleProvider, CacheInterface $cache)
     {
         $this->roleProvider = $roleProvider;
         $this->cache        = $cache;
@@ -92,18 +92,13 @@ class RoleLoaderListener extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events)
     {
-        $sharedEventManager = $events->getSharedManager();
-
-        $sharedEventManager->attach(
-            'ZfcRbac\Service\AuthorizationService',
-            RbacEvent::EVENT_LOAD_ROLES,
-            array($this, 'onLoadRoles')
-        );
+        $this->listeners[] = $events->attach(RbacEvent::EVENT_LOAD_ROLES, array($this, 'onLoadRoles'));
     }
 
     /**
      * Inject the loaded roles inside the Rbac container
      *
+     * @private
      * @param  RbacEvent $event
      * @return void
      */
@@ -111,10 +106,6 @@ class RoleLoaderListener extends AbstractListenerAggregate
     {
         $rbac  = $event->getRbac();
         $roles = $this->getRoles($event);
-
-        if (!is_array($roles)) {
-            $roles = array($roles);
-        }
 
         foreach ($roles as $key => $value) {
             if ($value instanceof RoleInterface) {
@@ -131,20 +122,17 @@ class RoleLoaderListener extends AbstractListenerAggregate
      * Get the roles, optionally fetched from cache
      *
      * @param  RbacEvent $event
-     * @return mixed
+     * @return string[]|array|RoleInterface[]
      */
     protected function getRoles(RbacEvent $event)
     {
-        if (null === $this->cache) {
-            return $this->roleProvider->getRoles($event);
-        }
+        $success = false;
+        $result  = $this->cache->getItem($this->cacheKey, $success);
 
-        if ($this->cache->hasItem($this->cacheKey)) {
-            return $this->cache->getItem($this->cacheKey);
+        if (!$success) {
+            $result = $this->roleProvider->getRoles($event);
+            $this->cache->setItem($this->cacheKey, $result);
         }
-
-        $result = $this->roleProvider->getRoles($event);
-        $this->cache->setItem($this->cacheKey, $result);
 
         return $result;
     }

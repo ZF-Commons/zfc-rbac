@@ -19,7 +19,7 @@
 return array(
     'service_manager' => array(
         'factories' => array(
-            /* Factories that does not map to a class */
+            /* Factories that do not map to a class */
             'ZfcRbac\Cache'                                   => 'ZfcRbac\Factory\CacheFactory',
 
             /* Factories that map to a class */

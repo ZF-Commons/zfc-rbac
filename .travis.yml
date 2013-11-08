@@ -17,4 +17,4 @@ after_script:
 
 notifications:
   irc: "irc.freenode.org#zftalk.modules"
-  email: false
+  email: true

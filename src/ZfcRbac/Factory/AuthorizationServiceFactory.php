@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Factory;
 
+use Zend\EventManager\EventManager;
 use Zend\Permissions\Rbac\Rbac;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -43,16 +44,19 @@ class AuthorizationServiceFactory implements FactoryInterface
         $rbac = new Rbac();
         $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
 
-        // We need to register the guest and default role inside the container
-
+        // We need to register the guest role inside the container
         if ($guestRole = $moduleOptions->getGuestRole()) {
             $rbac->addRole($guestRole);
         }
 
-        if ($defaultRole = $moduleOptions->getDefaultRole()) {
-            $rbac->addRole($defaultRole);
-        }
+        // Create the event manager and add some events
+        $eventManager = new EventManager();
+        $eventManager->attach($serviceLocator->get('ZfcRbac\Role\RoleLoaderListener'));
+        $eventManager->attach($serviceLocator->get('ZfcRbac\Permission\PermissionLoaderListener'));
 
-        return new AuthorizationService($rbac, $identityProvider);
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $authorizationService->setEventManager($eventManager);
+
+        return $authorizationService;
     }
 }

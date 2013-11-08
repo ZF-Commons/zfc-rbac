@@ -26,7 +26,6 @@ use ZfcRbac\Service\RbacEvent;
  *
  * Permission providers must follow a specific format when returning roles. Supported formats are as below:
  *
- *      - an instance of PermissionInterface (starting from ZF 2.3)
  *      - an array of PermissionInterface instances (starting from ZF 2.3)
  *      - an array that map a permission to a single role (eg.: array("permissionName" => "role"))
  *      - an array that map a permission to multiple roles (eg.: array("permissionName" => array("role1", "role2"))
@@ -37,7 +36,7 @@ interface PermissionProviderInterface
      * Get the permissions from the provider
      *
      * @param  RbacEvent $event
-     * @return array|PermissionInterface|PermissionInterface[]
+     * @return array|PermissionInterface[]
      */
     public function getPermissions(RbacEvent $event);
 }

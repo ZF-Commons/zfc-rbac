@@ -52,10 +52,7 @@ class RouteGuard extends AbstractGuard
     public function __construct(AuthorizationService $authorizationService, array $rules = array())
     {
         parent::__construct($authorizationService);
-
-        if (!empty($rules)) {
-            $this->setRules($rules);
-        }
+        $this->setRules($rules);
     }
 
     /**
@@ -79,8 +76,13 @@ class RouteGuard extends AbstractGuard
     public function addRules(array $rules)
     {
         foreach ($rules as $key => $value) {
-            $routeRegex = is_int($key) ? $value : $key;
-            $roles      = is_int($key) ? array() : (array) $value;
+            if (is_int($key)) {
+                $routeRegex = $value;
+                $roles      = array();
+            } else {
+                $routeRegex = $key;
+                $roles      = (array) $value;
+            }
 
             $this->rules[$routeRegex] = $roles;
         }
@@ -114,7 +116,7 @@ class RouteGuard extends AbstractGuard
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
-        // Lazy load the permission inside the container
+        // Load the needed permission inside the container
         $this->loadRule($allowedRoles, $permission);
 
         return $this->authorizationService->isGranted($permission);

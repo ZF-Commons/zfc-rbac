@@ -26,9 +26,7 @@ use ZfcRbac\Service\RbacEvent;
  *
  * Role providers must follow a specific format when returning roles. Supported formats are as below:
  *
- *      - a instance of RoleInterface
  *      - an array of RoleInterface instances
- *      - a string (role name) (eg.: "role")
  *      - an array of strings (role names) (eg.: array("role1", "role2")
  *      - an array that map a string with its parent (eg.: array("role' => "parent")
  */
@@ -38,7 +36,7 @@ interface RoleProviderInterface
      * Get the roles from the provider
      *
      * @param  RbacEvent $event
-     * @return string|string[]|RoleInterface|RoleInterface[]
+     * @return string[]|array|RoleInterface[]
      */
     public function getRoles(RbacEvent $event);
 }

@@ -57,7 +57,7 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -100);
     }
 
     /**
@@ -82,6 +82,7 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
     }
 
     /**
+     * @private
      * @param  MvcEvent $event
      * @return void
      */
@@ -91,8 +92,6 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
             $event->setParam('guard-result', self::GUARD_AUTHORIZED);
             return;
         }
-
-        $event->setError(self::GUARD_UNAUTHORIZED);
 
         $event->setParam('guard-result', self::GUARD_UNAUTHORIZED);
         $event->setParam('exception', new Exception\UnauthorizedException(

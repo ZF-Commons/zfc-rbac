@@ -30,7 +30,7 @@ class RoleProviderChain implements RoleProviderInterface
      *
      * @var RoleProviderInterface[]
      */
-    protected $roleProviders;
+    private $roleProviders;
 
     /**
      * Constructor

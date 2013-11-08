@@ -30,12 +30,12 @@ class PermissionProviderChain implements PermissionProviderInterface
      *
      * @var PermissionProviderInterface[]
      */
-    protected $permissionProviders;
+    private $permissionProviders;
 
     /**
      * Constructor
      *
-     * @param PermissionProviderInterface[]|array $permissionProviders
+     * @param PermissionProviderInterface[] $permissionProviders
      */
     public function __construct(array $permissionProviders = array())
     {

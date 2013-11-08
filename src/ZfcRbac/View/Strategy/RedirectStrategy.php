@@ -59,8 +59,6 @@ class RedirectStrategy extends AbstractListenerAggregate
      */
     public function onError(MvcEvent $event)
     {
-        // @TODO: is checking for UnauthorizedException is a good idea?
-
         // Do nothing if no error or if response is not HTTP response
         if (!$error = $event->getError()
             || !($exception = $event->getParam('exception') instanceof UnauthorizedException)

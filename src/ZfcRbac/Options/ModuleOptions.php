@@ -47,13 +47,6 @@ class ModuleOptions extends AbstractOptions
     protected $guestRole = 'guest';
 
     /**
-     * Default role (used when identity is found, but has no role attached)
-     *
-     * @var string
-     */
-    protected $defaultRole = 'member';
-
-    /**
      * Guards options
      *
      * @var GuardsOptions|null
@@ -154,26 +147,6 @@ class ModuleOptions extends AbstractOptions
     public function getGuestRole()
     {
         return $this->guestRole;
-    }
-
-    /**
-     * Set the default role (used when identity is found, but has no role attached)
-     *
-     * @param string $defaultRole
-     */
-    public function setDefaultRole($defaultRole)
-    {
-        $this->defaultRole = (string) $defaultRole;
-    }
-
-    /**
-     * Get the default role (used when identity is found, but has no role attached)
-     *
-     * @return string
-     */
-    public function getDefaultRole()
-    {
-        return $this->defaultRole;
     }
 
     /**

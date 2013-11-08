@@ -32,8 +32,7 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $options = new ModuleOptions(array(
             'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
             'create_missing_roles' => true,
-            'guest_role'           => 'guest',
-            'default_role'         => 'default'
+            'guest_role'           => 'guest'
         ));
 
         $serviceManager = new ServiceManager();
@@ -41,6 +40,14 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(
             'ZfcRbac\Identity\AuthenticationProvider',
             $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
+        );
+        $serviceManager->setService(
+            'ZfcRbac\Role\RoleLoaderListener',
+            $this->getMock('Zend\EventManager\ListenerAggregateInterface')
+        );
+        $serviceManager->setService(
+            'ZfcRbac\Permission\PermissionLoaderListener',
+            $this->getMock('Zend\EventManager\ListenerAggregateInterface')
         );
 
         $factory              = new AuthorizationServiceFactory();
@@ -52,7 +59,5 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         // We need to check that the factory properly added guest and default role inside the Rbac container
         $rbac = $authorizationService->getRbac();
         $this->assertTrue($rbac->hasRole('guest'));
-        $this->assertTrue($rbac->hasRole('default'));
     }
 }
- 

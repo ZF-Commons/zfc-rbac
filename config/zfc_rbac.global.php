@@ -43,14 +43,6 @@ return array(
         // 'guest_role' => 'guest',
 
         /**
-         * Set the default role
-         *
-         * This role is used by the authorization service when the authentication service returns an identity,
-         * but that no role is set
-         */
-        // 'default_role' => 'member',
-
-        /**
          * Set the guards options
          */
         'guards' => array(
@@ -102,7 +94,7 @@ return array(
          *          'type'    => 'ZfcRbac\Role\InMemoryRoleProvider', // for instance
          *          'options' => array(
          *              'roles' => array(
-         *                  'role1', 'role2')
+         *                  'role1', 'role2'
          *              )
          *          )
          *      )

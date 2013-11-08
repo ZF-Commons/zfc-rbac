@@ -34,7 +34,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     protected $permissionProvider;
 
     /**
-     * @var CacheInterface|null
+     * @var CacheInterface
      */
     protected $cache;
 
@@ -47,9 +47,9 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      * Constructor
      *
      * @param PermissionProviderInterface $permissionProvider
-     * @param CacheInterface|null         $cache
+     * @param CacheInterface              $cache
      */
-    public function __construct(PermissionProviderInterface $permissionProvider, CacheInterface $cache = null)
+    public function __construct(PermissionProviderInterface $permissionProvider, CacheInterface $cache)
     {
         $this->permissionProvider = $permissionProvider;
         $this->cache              = $cache;
@@ -91,13 +91,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events)
     {
-        $sharedEventManager = $events->getSharedManager();
-
-        $sharedEventManager->attach(
-            'ZfcRbac\Service\AuthorizationService',
-            RbacEvent::EVENT_LOAD_PERMISSIONS,
-            array($this, 'onLoadPermissions')
-        );
+        $this->listeners[] = $events->attach(RbacEvent::EVENT_LOAD_PERMISSIONS, array($this, 'onLoadPermissions'));
     }
 
     /**
@@ -110,10 +104,6 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     {
         $rbac        = $event->getRbac();
         $permissions = $this->getPermissions($event);
-
-        if (!is_array($permissions)) {
-            $permissions = (array) $permissions;
-        }
 
         foreach ($permissions as $key => $value) {
             if ($value instanceof PermissionInterface) {
@@ -142,16 +132,13 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      */
     protected function getPermissions(RbacEvent $event)
     {
-        if (null === $this->cache) {
-            return $this->permissionProvider->getPermissions($event);
-        }
+        $success = false;
+        $result  = $this->cache->getItem($this->cacheKey, $success);
 
-        if ($this->cache->hasItem($this->cacheKey)) {
-            return $this->cache->getItem($this->cacheKey);
+        if (!$success) {
+            $result = $this->permissionProvider->getPermissions($event);
+            $this->cache->setItem($this->cacheKey, $result);
         }
-
-        $result = $this->permissionProvider->getPermissions($event);
-        $this->cache->setItem($this->cacheKey, $result);
 
         return $result;
     }

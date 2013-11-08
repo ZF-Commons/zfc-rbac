@@ -59,7 +59,7 @@ class GuardsOptions extends AbstractOptions
      */
     public function setProtectionPolicy($protectionPolicy)
     {
-        if (!in_array($protectionPolicy, array(GuardInterface::POLICY_ALLOW, GuardInterface::POLICY_DENY))) {
+        if ($protectionPolicy !== GuardInterface::POLICY_ALLOW && $protectionPolicy !== GuardInterface::POLICY_DENY) {
             throw new Exception\RuntimeException(sprintf(
                 'An invalid protection policy was set. Can only be "deny" or "allow", "%s" given',
                 $protectionPolicy

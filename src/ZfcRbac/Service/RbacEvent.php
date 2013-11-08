@@ -60,7 +60,7 @@ class RbacEvent extends Event
     {
         $this->rbac       = $rbac;
         $this->roles      = $roles;
-        $this->permission = $permission;
+        $this->permission = (string) $permission;
     }
 
     /**

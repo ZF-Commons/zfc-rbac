@@ -50,10 +50,7 @@ class ControllerGuard extends AbstractGuard
     public function __construct(AuthorizationService $authorizationService, array $rules = array())
     {
         parent::__construct($authorizationService);
-
-        if (!empty($rules)) {
-            $this->setRules($rules);
-        }
+        $this->setRules($rules);
     }
 
     /**
@@ -95,8 +92,7 @@ class ControllerGuard extends AbstractGuard
             }
 
             foreach ($actions as $action) {
-                $action                            = strtolower($action);
-                $this->rules[$controller][$action] = $roles;
+                $this->rules[$controller][strtolower($action)] = $roles;
             }
         }
     }
@@ -133,7 +129,7 @@ class ControllerGuard extends AbstractGuard
             return true;
         }
 
-        // Lazy-load the permission inside the container
+        // Load the needed permission inside the container
         $this->loadRule($allowedRoles, $permission);
 
         return $this->authorizationService->isGranted($permission);

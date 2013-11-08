@@ -30,9 +30,6 @@ use ZfcRbac\Identity\IdentityProviderInterface;
  */
 class AuthorizationService implements EventManagerAwareInterface
 {
-    /**
-     * Traits used
-     */
     use EventManagerAwareTrait;
 
     /**

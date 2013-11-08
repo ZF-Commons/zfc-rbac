@@ -48,9 +48,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $eventManager   = $this->getMock('Zend\EventManager\EventManagerInterface');
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
 
-        $roleLoaderListener       = $this->getMock('Zend\EventManager\ListenerAggregateInterface');
-        $permissionLoaderListener = $this->getMock('Zend\EventManager\ListenerAggregateInterface');
-        $routeGuard               = $this->getMock('ZfcRbac\Guard\RouteGuard', array(), array(), '', false);
+        $routeGuard = $this->getMock('ZfcRbac\Guard\RouteGuard', array(), array(), '', false);
 
         $mvcEvent->expects($this->once())->method('getTarget')->will($this->returnValue($application));
         $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
@@ -63,22 +61,10 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->expects($this->at(1))
                        ->method('get')
-                       ->with('ZfcRbac\Role\RoleLoaderListener')
-                       ->will($this->returnValue($roleLoaderListener));
-
-        $serviceManager->expects($this->at(2))
-                       ->method('get')
-                       ->with('ZfcRbac\Permission\PermissionLoaderListener')
-                       ->will($this->returnValue($permissionLoaderListener));
-
-        $serviceManager->expects($this->at(3))
-                       ->method('get')
                        ->with('ZfcRbac\Guard\RouteGuard')
                        ->will($this->returnValue($routeGuard));
 
-        $eventManager->expects($this->at(0))->method('attachAggregate')->with($roleLoaderListener);
-        $eventManager->expects($this->at(1))->method('attachAggregate')->with($permissionLoaderListener);
-        $eventManager->expects($this->at(2))->method('attachAggregate')->with($routeGuard);
+        $eventManager->expects($this->at(0))->method('attachAggregate')->with($routeGuard);
 
         $module->onBootstrap($mvcEvent);
     }
@@ -102,9 +88,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $eventManager    = $this->getMock('Zend\EventManager\EventManagerInterface');
         $serviceManager  = $this->getMock('Zend\ServiceManager\ServiceManager');
 
-        $roleLoaderListener       = $this->getMock('Zend\EventManager\ListenerAggregateInterface');
-        $permissionLoaderListener = $this->getMock('Zend\EventManager\ListenerAggregateInterface');
-        $controllerGuard          = $this->getMock('ZfcRbac\Guard\ControllerGuard', array(), array(), '', false);
+        $controllerGuard = $this->getMock('ZfcRbac\Guard\ControllerGuard', array(), array(), '', false);
 
         $mvcEvent->expects($this->once())->method('getTarget')->will($this->returnValue($application));
         $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
@@ -117,24 +101,11 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->expects($this->at(1))
                        ->method('get')
-                       ->with('ZfcRbac\Role\RoleLoaderListener')
-                       ->will($this->returnValue($roleLoaderListener));
-
-        $serviceManager->expects($this->at(2))
-                       ->method('get')
-                       ->with('ZfcRbac\Permission\PermissionLoaderListener')
-                       ->will($this->returnValue($permissionLoaderListener));
-
-        $serviceManager->expects($this->at(3))
-                       ->method('get')
                        ->with('ZfcRbac\Guard\ControllerGuard')
                        ->will($this->returnValue($controllerGuard));
 
-        $eventManager->expects($this->at(0))->method('attachAggregate')->with($roleLoaderListener);
-        $eventManager->expects($this->at(1))->method('attachAggregate')->with($permissionLoaderListener);
-        $eventManager->expects($this->at(2))->method('attachAggregate')->with($controllerGuard);
+        $eventManager->expects($this->at(0))->method('attachAggregate')->with($controllerGuard);
 
         $module->onBootstrap($mvcEvent);
     }
 }
- 

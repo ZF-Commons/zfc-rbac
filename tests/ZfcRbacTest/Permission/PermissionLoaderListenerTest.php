@@ -54,7 +54,7 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
                                 'delete' => 'admin',
                            )));
 
-        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider);
+        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
         $permissionLoaderListener->onLoadPermissions($rbacEvent);
 
@@ -96,4 +96,3 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $permissionLoaderListener->onLoadPermissions($rbacEvent);
     }
 }
- 
