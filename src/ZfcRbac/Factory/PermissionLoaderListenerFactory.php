@@ -33,10 +33,10 @@ class PermissionLoaderListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Zend\Cache\Storage\StorageInterface $cacheStorage */
+        /* @var \Zend\Cache\Storage\StorageInterface $cacheStorage */
         $cacheStorage = $serviceLocator->get('ZfcRbac\Cache');
 
-        /** @var \ZfcRbac\Permission\PermissionProviderChain $permissionProviderChain */
+        /* @var \ZfcRbac\Permission\PermissionProviderChain $permissionProviderChain */
         $permissionProviderChain = $serviceLocator->get('ZfcRbac\Permission\PermissionProviderChain');
 
         return new PermissionLoaderListener($permissionProviderChain, $cacheStorage);

@@ -34,10 +34,10 @@ class AuthorizationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions    = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
 
-        /** @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
+        /* @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
         $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
 
         $rbac = new Rbac();

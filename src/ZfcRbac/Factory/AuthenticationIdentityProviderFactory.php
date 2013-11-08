@@ -33,10 +33,10 @@ class AuthenticationIdentityProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions          = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
 
-        /** @var \Zend\Authentication\AuthenticationService $authenticationProvider */
+        /* @var \Zend\Authentication\AuthenticationService $authenticationProvider */
         $authenticationProvider = $serviceLocator->get('Zend\Authentication\AuthenticationService');
 
         return new AuthenticationIdentityProvider(

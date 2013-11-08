@@ -34,7 +34,7 @@ class CacheFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \ZfcRbac\Options\ModuleOptions $options */
+        /* @var \ZfcRbac\Options\ModuleOptions $options */
         $options      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
         $cacheStorage = null;
 

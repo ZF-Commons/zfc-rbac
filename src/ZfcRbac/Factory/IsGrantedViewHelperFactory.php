@@ -33,7 +33,7 @@ class IsGrantedViewHelperFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $serviceLocator->getServiceLocator()->get('ZfcRbac\Service\AuthorizationService');
 
         return new IsGranted($authorizationService);
