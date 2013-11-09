@@ -21,7 +21,6 @@ namespace ZfcRbac\Collector;
 use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * RbacCollector
@@ -32,11 +31,6 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collector priority
      */
     const PRIORITY = 10;
-
-    /**
-     * @var AuthorizationService
-     */
-    protected $authorizationService;
 
     /**
      * @var array
@@ -57,16 +51,6 @@ class RbacCollector implements CollectorInterface, Serializable
      * @var array
      */
     protected $collectedOptions = array();
-
-    /**
-     * Constructor
-     *
-     * @param AuthorizationService $authorizationService
-     */
-    public function __construct(AuthorizationService $authorizationService)
-    {
-        $this->authorizationService = $authorizationService;
-    }
 
     /**
      * Collector Name.
@@ -104,9 +88,12 @@ class RbacCollector implements CollectorInterface, Serializable
         /* @var \ZfcRbac\Options\ModuleOptions $options */
         $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
 
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        $authorizationService = $serviceManager->get('ZfcRbac\Service\AuthorizationService');
+
         // Let's collect interesting options...
         $this->collectedOptions = array(
-            'current_roles'     => $this->identityProvider->getIdentityRoles(),
+            'current_roles'     => $authorizationService->getIdentityProvider()->getIdentityRoles(),
             'guest_role'        => $options->getGuestRole(),
             'protection_policy' => $options->getProtectionPolicy()
         );

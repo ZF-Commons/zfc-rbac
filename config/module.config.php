@@ -18,13 +18,16 @@
 
 return array(
     'service_manager' => array(
+        'invokables' => array(
+            'ZfcRbac\Collector\RbacCollector' => 'ZfcRbac\Collector\RbacCollector',
+        ),
+
         'factories' => array(
             /* Factories that do not map to a class */
             'ZfcRbac\Cache'  => 'ZfcRbac\Factory\CacheFactory',
             'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
-            'ZfcRbac\Collector\RbacCollector'                    => 'ZfcRbac\Factory\RbacCollectorFactory',
             'ZfcRbac\Guard\GuardPluginManager'                   => 'ZfcRbac\Factory\GuardPluginManagerFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider'    => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                      => 'ZfcRbac\Factory\ModuleOptionsFactory',
