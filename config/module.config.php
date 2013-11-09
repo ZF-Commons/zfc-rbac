@@ -53,6 +53,23 @@ return array(
         )
     ),
 
+    'view_manager' => array(
+        'template_path_stack' => array(__DIR__ . '/../view'),
+    ),
+
+    'zenddevelopertools' => array(
+        'profiler' => array(
+            'collectors' => array(
+                'zfc_rbac' => 'ZfcRbac\Collector\RbacCollector',
+            ),
+        ),
+        'toolbar' => array(
+            'entries' => array(
+                'zfc_rbac' => 'zend-developer-tools/toolbar/zfc-rbac',
+            ),
+        ),
+    ),
+
     'zfc_rbac' => array(
         'unauthorized_strategy' => array(),
         'redirect_strategy'     => array(),
