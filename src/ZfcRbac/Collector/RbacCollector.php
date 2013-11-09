@@ -21,6 +21,7 @@ namespace ZfcRbac\Collector;
 use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
+use ZfcRbac\Identity\IdentityProviderInterface;
 
 /**
  * RbacCollector
@@ -31,6 +32,11 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collector priority
      */
     const PRIORITY = 10;
+
+    /**
+     * @var IdentityProviderInterface
+     */
+    protected $identityProvider;
 
     /**
      * @var array
@@ -51,6 +57,16 @@ class RbacCollector implements CollectorInterface, Serializable
      * @var array
      */
     protected $collectedOptions = array();
+
+    /**
+     * Constructor
+     *
+     * @param IdentityProviderInterface $identityProvider
+     */
+    public function __construct(IdentityProviderInterface $identityProvider)
+    {
+        $this->identityProvider = $identityProvider;
+    }
 
     /**
      * Collector Name.
@@ -90,6 +106,7 @@ class RbacCollector implements CollectorInterface, Serializable
 
         // Let's collect interesting options...
         $this->collectedOptions = array(
+            'current_roles'     => $this->identityProvider->getIdentityRoles(),
             'guest_role'        => $options->getGuestRole(),
             'protection_policy' => $options->getProtectionPolicy()
         );
