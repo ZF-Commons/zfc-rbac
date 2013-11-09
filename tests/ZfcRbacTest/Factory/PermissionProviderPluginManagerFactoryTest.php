@@ -19,28 +19,26 @@
 namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\PermissionProviderChainFactory;
-use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Permission\PermissionProviderPluginManager;
+use ZfcRbac\Factory\PermissionProviderPluginManagerFactory;
 
 /**
- * @covers \ZfcRbac\Factory\PermissionProviderChainFactory
+ * @covers \ZfcRbac\Factory\PermissionProviderPluginManagerFactory
  */
-class PermissionProviderChainFactoryTest extends \PHPUnit_Framework_TestCase
+class PermissionProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $pluginManager = new PermissionProviderPluginManager();
-
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
-        $serviceManager->setService('ZfcRbac\Permission\PermissionProviderPluginManager', $pluginManager);
+        $serviceManager->setService('Config', array(
+            'zfc_rbac' => array(
+                'permission_provider_manager' => array()
+            )
+        ));
 
-        $pluginManager->setServiceLocator($serviceManager);
+        $factory       = new PermissionProviderPluginManagerFactory();
+        $pluginManager = $factory->createService($serviceManager);
 
-        $factory            = new PermissionProviderChainFactory();
-        $permissionProvider = $factory->createService($pluginManager);
-
-        $this->assertInstanceOf('ZfcRbac\Permission\PermissionProviderChain', $permissionProvider);
+        $this->assertInstanceOf('ZfcRbac\Permission\PermissionProviderPluginManager', $pluginManager);
+        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }

@@ -33,7 +33,21 @@ class PermissionProviderChainFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        // @TODO: this will load all the specified permission providers in the config
-        return new PermissionProviderChain();
+        $parentLocator = $serviceLocator->getServiceLocator();
+
+        /* @var \ZfcRbac\Options\ModuleOptions $options */
+        $options = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
+        $options = $options->getPermissionProviders();
+
+        /* @var \ZfcRbac\Permission\PermissionProviderPluginManager $pluginManager */
+        $pluginManager = $parentLocator->get('ZfcRbac\Permission\PermissionProviderPluginManager');
+
+        $permissionProviders = array();
+
+        foreach ($options as $type => $permissionProviderOptions) {
+            $permissionProviders[] = $pluginManager->get($type, $permissionProviderOptions);
+        }
+
+        return new PermissionProviderChain($permissionProviders);
     }
 }

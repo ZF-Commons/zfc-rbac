@@ -20,17 +20,18 @@ return array(
     'service_manager' => array(
         'factories' => array(
             /* Factories that do not map to a class */
-            'ZfcRbac\Cache'                                   => 'ZfcRbac\Factory\CacheFactory',
-            'ZfcRbac\Guards'                                  => 'ZfcRbac\Factory\GuardsFactory',
+            'ZfcRbac\Cache'  => 'ZfcRbac\Factory\CacheFactory',
+            'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
-            'ZfcRbac\Guard\GuardPluginManager'                => 'ZfcRbac\Factory\GuardPluginManagerFactory',
-            'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
-            'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
-            'ZfcRbac\Permission\PermissionLoaderListener'     => 'ZfcRbac\Factory\PermissionLoaderListenerFactory',
-            'ZfcRbac\Role\RoleLoaderListener'                 => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
-            'ZfcRbac\Role\RoleProviderPluginManager'          => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
-            'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory'
+            'ZfcRbac\Guard\GuardPluginManager'                   => 'ZfcRbac\Factory\GuardPluginManagerFactory',
+            'ZfcRbac\Identity\AuthenticationIdentityProvider'    => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
+            'ZfcRbac\Options\ModuleOptions'                      => 'ZfcRbac\Factory\ModuleOptionsFactory',
+            'ZfcRbac\Permission\PermissionLoaderListener'        => 'ZfcRbac\Factory\PermissionLoaderListenerFactory',
+            'ZfcRbac\Permission\PermissionProviderPluginManager' => 'ZfcRbac\Factory\PermissionProviderPluginManagerFactory',
+            'ZfcRbac\Role\RoleLoaderListener'                    => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
+            'ZfcRbac\Role\RoleProviderPluginManager'             => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
+            'ZfcRbac\Service\AuthorizationService'               => 'ZfcRbac\Factory\AuthorizationServiceFactory'
         )
     ),
 

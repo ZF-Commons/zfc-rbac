@@ -16,31 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbac\Factory;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\PermissionProviderChainFactory;
-use ZfcRbac\Options\ModuleOptions;
+use Zend\ServiceManager\Config;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Permission\PermissionProviderPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\PermissionProviderChainFactory
+ * Factory to create a permission provider plugin manager
  */
-class PermissionProviderChainFactoryTest extends \PHPUnit_Framework_TestCase
+class PermissionProviderPluginManagerFactory implements FactoryInterface
 {
-    public function testFactory()
+    /**
+     * {@inheritDoc}
+     * @return PermissionProviderPluginManager
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $pluginManager = new PermissionProviderPluginManager();
+        $config = $serviceLocator->get('Config')['zfc_rbac']['permission_provider_manager'];
 
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
-        $serviceManager->setService('ZfcRbac\Permission\PermissionProviderPluginManager', $pluginManager);
+        $pluginManager = new PermissionProviderPluginManager(new Config($config));
+        $pluginManager->setServiceLocator($serviceLocator);
 
-        $pluginManager->setServiceLocator($serviceManager);
-
-        $factory            = new PermissionProviderChainFactory();
-        $permissionProvider = $factory->createService($pluginManager);
-
-        $this->assertInstanceOf('ZfcRbac\Permission\PermissionProviderChain', $permissionProvider);
+        return $pluginManager;
     }
 }
