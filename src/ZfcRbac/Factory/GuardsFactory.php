@@ -19,45 +19,35 @@
 namespace ZfcRbac\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Guard\ControllerGuard;
 
 /**
- * Create a controller guard
+ * Create a list of guards
  */
-class ControllerGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
+class GuardsFactory implements FactoryInterface
 {
     /**
-     * @var array
-     */
-    protected $options = array();
-
-    /**
      * {@inheritDoc}
-     */
-    public function setCreationOptions(array $options)
-    {
-        $this->options = $options;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return ControllerGuard
+     * @return \ZfcRbac\Guard\GuardInterface[]|array
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $parentLocator = $serviceLocator->getServiceLocator();
+        /* @var \ZfcRbac\Options\ModuleOptions $options */
+        $options       = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $guardsOptions = $options->getGuards();
 
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
+        if (empty($guardsOptions)) {
+            return array();
+        }
 
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
+        /* @var \ZfcRbac\Guard\GuardPluginManager $pluginManager */
+        $pluginManager = $serviceLocator->get('ZfcRbac\Guard\GuardPluginManager');
+        $guards        = array();
 
-        $controllerGuard = new ControllerGuard($authorizationService, $this->options);
-        $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
+        foreach ($guardsOptions as $type => $options) {
+            $guards[] = $pluginManager->get($type, $options);
+        }
 
-        return $controllerGuard;
+        return $guards;
     }
 }

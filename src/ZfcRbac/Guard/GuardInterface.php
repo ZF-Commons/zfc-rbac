@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Guard;
 
+use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -30,7 +31,7 @@ use Zend\Mvc\MvcEvent;
  * using guards is not sufficient and rather limited, and you should protected your services using the
  * proper authorization service (see the doc for more details)
  */
-interface GuardInterface
+interface GuardInterface extends ListenerAggregateInterface
 {
     /**
      * Various constants for guard that can be added to the MVC event result

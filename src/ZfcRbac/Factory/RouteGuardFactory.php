@@ -19,30 +19,44 @@
 namespace ZfcRbac\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 
 /**
  * Create a route guard
  */
-class RouteGuardFactory implements FactoryInterface
+class RouteGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
 {
+    /**
+     * @var array
+     */
+    protected $options = array();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
+        $this->options = $options;
+    }
+
     /**
      * {@inheritDoc}
      * @return RouteGuard
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $parentLocator = $serviceLocator->getServiceLocator();
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
+        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
 
-        $guardsOptions = $moduleOptions->getGuards();
-
-        $routeGuard = new RouteGuard($authorizationService, $guardsOptions->getRouteRules());
-        $routeGuard->setProtectionPolicy($guardsOptions->getProtectionPolicy());
+        $routeGuard = new RouteGuard($authorizationService, $this->options);
+        $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;
     }

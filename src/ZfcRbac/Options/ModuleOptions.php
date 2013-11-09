@@ -19,12 +19,21 @@
 namespace ZfcRbac\Options;
 
 use Zend\Stdlib\AbstractOptions;
+use ZfcRbac\Exception;
+use ZfcRbac\Guard\GuardInterface;
 
 /**
  * Options for ZfcRbac module
  */
 class ModuleOptions extends AbstractOptions
 {
+    /**
+     * DO NOT CHANGE THIS
+     *
+     * @var bool
+     */
+    protected $__strictMode__ = false;
+
     /**
      * Key of the identity provider used to retrieve the identity
      *
@@ -47,11 +56,18 @@ class ModuleOptions extends AbstractOptions
     protected $guestRole = 'guest';
 
     /**
-     * Guards options
+     * Guards
      *
-     * @var GuardsOptions|null
+     * @var array
      */
-    protected $guards;
+    protected $guards = array();
+
+    /**
+     * Protection policy for guards (can be "deny" or "allow")
+     *
+     * @var string
+     */
+    protected $protectionPolicy = GuardInterface::POLICY_DENY;
 
     /**
      * A configuration for role providers
@@ -157,17 +173,46 @@ class ModuleOptions extends AbstractOptions
      */
     public function setGuards(array $guards)
     {
-        $this->guards = new GuardsOptions($guards);
+        $this->guards = $guards;
     }
 
     /**
      * Get the guards options
      *
-     * @return GuardsOptions
+     * @return array
      */
     public function getGuards()
     {
         return $this->guards;
+    }
+
+    /**
+     * Set the protection policy for guards
+     *
+     * @param  string $protectionPolicy
+     * @throws Exception\RuntimeException
+     * @return void
+     */
+    public function setProtectionPolicy($protectionPolicy)
+    {
+        if ($protectionPolicy !== GuardInterface::POLICY_ALLOW && $protectionPolicy !== GuardInterface::POLICY_DENY) {
+            throw new Exception\RuntimeException(sprintf(
+                'An invalid protection policy was set. Can only be "deny" or "allow", "%s" given',
+                $protectionPolicy
+            ));
+        }
+
+        $this->protectionPolicy = (string) $protectionPolicy;
+    }
+
+    /**
+     * Get the protection policy for guards
+     *
+     * @return string
+     */
+    public function getProtectionPolicy()
+    {
+        return $this->protectionPolicy;
     }
 
     /**

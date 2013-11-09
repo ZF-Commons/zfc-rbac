@@ -34,7 +34,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertTrue($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
-        $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
+        $this->assertInternalType('array', $moduleOptions->getGuards());
         $this->assertInternalType('array', $moduleOptions->getRoleProviders());
         $this->assertInternalType('array', $moduleOptions->getPermissionProviders());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
@@ -45,14 +45,10 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
     public function testSettersAndGetters()
     {
         $moduleOptions = new ModuleOptions(array(
-            'identity_provider'    => 'IdentityProvider',
-            'create_missing_roles' => false,
-            'guest_role'           => 'unknown',
-            'guards'               => array(
-                'route_rules' => array(
-                    'admin/*' => 'admin'
-                )
-            ),
+            'identity_provider'     => 'IdentityProvider',
+            'create_missing_roles'  => false,
+            'guest_role'            => 'unknown',
+            'guards'                => array(),
             'role_providers'        => array(),
             'permission_providers'  => array(),
             'unauthorized_strategy' => array(
@@ -67,11 +63,19 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertFalse($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
-        $this->assertInstanceOf('ZfcRbac\Options\GuardsOptions', $moduleOptions->getGuards());
+        $this->assertEquals(array(), $moduleOptions->getGuards());
         $this->assertEquals(array(), $moduleOptions->getRoleProviders());
         $this->assertEquals(array(), $moduleOptions->getPermissionProviders());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
         $this->assertEquals('my_cache', $moduleOptions->getCache());
+    }
+
+    public function testThrowExceptionForInvalidProtectionPolicy()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+
+        $moduleOptions = new ModuleOptions();
+        $moduleOptions->setProtectionPolicy('invalid');
     }
 }

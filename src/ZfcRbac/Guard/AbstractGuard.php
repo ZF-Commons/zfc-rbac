@@ -28,9 +28,14 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * Abstract guard that registers on the "onRoute" event
  */
-abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterface
+abstract class AbstractGuard implements GuardInterface
 {
     use ListenerAggregateTrait;
+
+    /**
+     * Event priority for the onRoute event
+     */
+    const EVENT_PRIORITY = -100;
 
     /**
      * @var AuthorizationService
@@ -57,7 +62,7 @@ abstract class AbstractGuard implements GuardInterface, ListenerAggregateInterfa
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -100);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), static::EVENT_PRIORITY);
     }
 
     /**

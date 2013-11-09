@@ -21,9 +21,11 @@ return array(
         'factories' => array(
             /* Factories that do not map to a class */
             'ZfcRbac\Cache'                                   => 'ZfcRbac\Factory\CacheFactory',
+            'ZfcRbac\Guards'                                  => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
             'ZfcRbac\Guard\ControllerGuard'                   => 'ZfcRbac\Factory\ControllerGuardFactory',
+            'ZfcRbac\Guard\GuardPluginManager'                => 'ZfcRbac\Factory\GuardPluginManagerFactory',
             'ZfcRbac\Guard\RouteGuard'                        => 'ZfcRbac\Factory\RouteGuardFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
@@ -54,8 +56,10 @@ return array(
     ),
 
     'zfc_rbac' => array(
-        'guards'                => array(),
         'unauthorized_strategy' => array(),
         'redirect_strategy'     => array(),
+
+        // Plugin managers
+        'guard_manager' => array()
     )
 );

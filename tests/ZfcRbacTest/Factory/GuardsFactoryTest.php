@@ -19,44 +19,51 @@
 namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\RouteGuardFactory;
-use ZfcRbac\Guard\GuardInterface;
+use ZfcRbac\Factory\GuardsFactory;
 use ZfcRbac\Guard\GuardPluginManager;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
- * @covers \ZfcRbac\Factory\RouteGuardFactory
+ * @covers \ZfcRbac\Factory\GuardsFactory
  */
-class RouteGuardFactoryTest extends \PHPUnit_Framework_TestCase
+class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $creationOptions = array(
-            'route' => 'role'
-        );
-
-        $options = new ModuleOptions(array(
-            'identity_provider' => 'ZfcRbac\Identity\AuthenticationProvider',
-            'guards'            => array(
-                'ZfcRbac\Guard\RouteGuard' => $creationOptions
-            ),
-            'protection_policy' => GuardInterface::POLICY_ALLOW,
+        $moduleOptions = new ModuleOptions(array(
+            'guards' => array(
+                'ZfcRbac\Guard\RouteGuard' => array(
+                    'admin/*' => 'role1'
+                ),
+                'ZfcRbac\Guard\ControllerGuard' => array(
+                    array(
+                        'controller' => 'MyController',
+                        'actions'    => array('index', 'edit'),
+                        'roles'      => array('role')
+                    )
+                )
+            )
         ));
 
+        $pluginManager = new GuardPluginManager();
+
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
+        $serviceManager->setService('ZfcRbac\Guard\GuardPluginManager', $pluginManager);
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
             $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
         );
 
-        $pluginManager = new GuardPluginManager();
         $pluginManager->setServiceLocator($serviceManager);
 
-        $factory    = new RouteGuardFactory();
-        $routeGuard = $factory->createService($pluginManager);
+        $factory = new GuardsFactory();
+        $guards  = $factory->createService($serviceManager);
 
-        $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $routeGuard);
-        $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());
+        $this->assertInternalType('array', $guards);
+
+        $this->assertCount(2, $guards);
+        $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $guards[0]);
+        $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $guards[1]);
     }
 }

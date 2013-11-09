@@ -18,46 +18,27 @@
 
 namespace ZfcRbac\Factory;
 
+use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Guard\ControllerGuard;
+use ZfcRbac\Guard\GuardPluginManager;
 
 /**
- * Create a controller guard
+ * Factory to create a guard plugin manager
  */
-class ControllerGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
+class GuardPluginManagerFactory implements FactoryInterface
 {
     /**
-     * @var array
-     */
-    protected $options = array();
-
-    /**
      * {@inheritDoc}
-     */
-    public function setCreationOptions(array $options)
-    {
-        $this->options = $options;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return ControllerGuard
+     * @return GuardPluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $parentLocator = $serviceLocator->getServiceLocator();
+        $config = $serviceLocator->get('Config')['zfc_rbac']['guard_manager'];
 
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
+        $pluginManager = new GuardPluginManager(new Config($config));
+        $pluginManager->setServiceLocator($serviceLocator);
 
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
-
-        $controllerGuard = new ControllerGuard($authorizationService, $this->options);
-        $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
-
-        return $controllerGuard;
+        return $pluginManager;
     }
 }

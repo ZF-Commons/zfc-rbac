@@ -32,79 +32,24 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $module->getConfig());
     }
 
-    public function testAssertRouteGuardListenerIsAddedIfConfigIsNotEmpty()
+    public function testCanRegisterGuards()
     {
-        $moduleOptions = new ModuleOptions(array(
-            'guards' => array(
-                'route_rules' => array(
-                    'route' => array('role1', 'role2')
-                )
-            )
-        ));
-
         $module         = new Module();
         $mvcEvent       = $this->getMock('Zend\Mvc\MvcEvent');
         $application    = $this->getMock('Zend\Mvc\Application', array(), array(), '', false);
         $eventManager   = $this->getMock('Zend\EventManager\EventManagerInterface');
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
 
-        $routeGuard = $this->getMock('ZfcRbac\Guard\RouteGuard', array(), array(), '', false);
-
         $mvcEvent->expects($this->once())->method('getTarget')->will($this->returnValue($application));
         $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
         $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
 
-        $serviceManager->expects($this->at(0))
+        $guards = array($this->getMock('ZfcRbac\Guard\GuardInterface'));
+
+        $serviceManager->expects($this->once())
                        ->method('get')
-                       ->with('ZfcRbac\Options\ModuleOptions')
-                       ->will($this->returnValue($moduleOptions));
-
-        $serviceManager->expects($this->at(1))
-                       ->method('get')
-                       ->with('ZfcRbac\Guard\RouteGuard')
-                       ->will($this->returnValue($routeGuard));
-
-        $eventManager->expects($this->at(0))->method('attachAggregate')->with($routeGuard);
-
-        $module->onBootstrap($mvcEvent);
-    }
-
-    public function testAssertControllerGuardListenerIsAddedIfConfigIsNotEmpty()
-    {
-        $moduleOptions = new ModuleOptions(array(
-            'guards' => array(
-                'controller_rules' => array(
-                    array(
-                        'controller' => 'MyController',
-                        'roles'      => array('role1', 'role2')
-                    )
-                )
-            )
-        ));
-
-        $module          = new Module();
-        $mvcEvent        = $this->getMock('Zend\Mvc\MvcEvent');
-        $application     = $this->getMock('Zend\Mvc\Application', array(), array(), '', false);
-        $eventManager    = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $serviceManager  = $this->getMock('Zend\ServiceManager\ServiceManager');
-
-        $controllerGuard = $this->getMock('ZfcRbac\Guard\ControllerGuard', array(), array(), '', false);
-
-        $mvcEvent->expects($this->once())->method('getTarget')->will($this->returnValue($application));
-        $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
-        $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
-
-        $serviceManager->expects($this->at(0))
-                       ->method('get')
-                       ->with('ZfcRbac\Options\ModuleOptions')
-                       ->will($this->returnValue($moduleOptions));
-
-        $serviceManager->expects($this->at(1))
-                       ->method('get')
-                       ->with('ZfcRbac\Guard\ControllerGuard')
-                       ->will($this->returnValue($controllerGuard));
-
-        $eventManager->expects($this->at(0))->method('attachAggregate')->with($controllerGuard);
+                       ->with('ZfcRbac\Guards')
+                       ->will($this->returnValue($guards));
 
         $module->onBootstrap($mvcEvent);
     }

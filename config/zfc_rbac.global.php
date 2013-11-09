@@ -43,46 +43,29 @@ return array(
         // 'guest_role' => 'guest',
 
         /**
-         * Set the guards options
+         * Set the guards
+         *
+         * You must comply with the various options of guards. The format must be of the following format:
+         *
+         *      'guards' => array(
+         *          'ZfcRbac\Guard\RouteGuard' => array(
+         *              // options
+         *          )
+         *      )
          */
-        'guards' => array(
-            /**
-             * Specify your route rules. You can use wildcard as route names.
-             *
-             * Route rules have the following format:
-             *      array('admin/*' => array('role1', 'role2')
-             *
-             * Please note that the relationship between roles are taken into account here. For more information,
-             * pleaser refer to the documentation about guards
-             */
-            // 'route_rules' => array(),
+        // 'guards' => array(),
 
-            /**
-             * Specify your controller rules.
-             *
-             * Controller rules have the following format:
-             *      array(
-             *          array(
-             *              'controller' => 'MyController',
-             *              'actions'    => array() // optional
-             *              'roles'      => array('role1', 'role2')
-             *          )
-             *      )
-             */
-            // 'controller_rules' => array(),
-
-            /**
-             * As soon as one rule for either route or controller is specified, a guard will be automatically
-             * created and will start to hook into the MVC loop.
-             *
-             * If the protection policy is set to DENY (default), then any route/controller will be denied by
-             * default UNLESS it is explicitly added as a rule. On the other hand, if it is set to ALLOW, then
-             * not specified route/controller will be implicitly approved.
-             *
-             * DENY is the most secure way, but it is more work for the developer
-             */
-            // protection_policy = GuardInterface::DENY,
-        ),
+        /**
+         * As soon as one rule for either route or controller is specified, a guard will be automatically
+         * created and will start to hook into the MVC loop.
+         *
+         * If the protection policy is set to DENY (default), then any route/controller will be denied by
+         * default UNLESS it is explicitly added as a rule. On the other hand, if it is set to ALLOW, then
+         * not specified route/controller will be implicitly approved.
+         *
+         * DENY is the most secure way, but it is more work for the developer
+         */
+        // 'protection_policy' => GuardInterface::DENY,
 
         /**
          * Configuration for role providers
@@ -163,6 +146,12 @@ return array(
          *
          * @see http://framework.zend.com/manual/2.2/en/modules/zend.cache.storage.adapter.html#quick-start
          */
-        // 'cache' => array()|string
+        // 'cache' => array()|string,
+
+        /**
+         * Various plugin managers for guards, role providers and permission providers. Each of them must
+         * follow a common plugin manager config format, and can be used to create your custom objects
+         */
+        // 'guard_manager' => array(),
     )
 );
