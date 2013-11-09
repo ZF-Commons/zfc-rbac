@@ -73,13 +73,9 @@ return array(
          * It must be an array of array that contains configuration for each role provider. Each provider config
          * must follow the following format:
          *
-         *      array(
-         *          'type'    => 'ZfcRbac\Role\InMemoryRoleProvider', // for instance
-         *          'options' => array(
-         *              'roles' => array(
-         *                  'role1', 'role2'
-         *              )
-         *          )
+         *      'ZfcRbac\Role\InMemoryRoleProvider' => array(
+         *          'role1',
+         *          'children' => 'parent'
          *      )
          *
          * Supported options depend of the role provider, so please refer to the official documentation
@@ -92,13 +88,8 @@ return array(
          * It must be an array of array that contains configuration for each permission provider. Each provider
          * config must follow the following format:
          *
-         *      array(
-         *          'type'    => 'ZfcRbac\Permission\InMemoryRoleProvider', // for instance
-         *          'options' => array(
-         *              'permissions' => array(
-         *                  'permission1' => array('role1', 'role2')
-         *              )
-         *          )
+         *      'ZfcRbac\Permission\InMemoryRoleProvider' => array(
+         *          'permission1' => array('role1', 'role2')
          *      )
          *
          * Supported options depend of the permission provider, so please refer to the official documentation

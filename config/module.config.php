@@ -31,8 +31,10 @@ return array(
             'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
             'ZfcRbac\Permission\PermissionLoaderListener'     => 'ZfcRbac\Factory\PermissionLoaderListenerFactory',
             'ZfcRbac\Permission\PermissionProviderChain'      => 'ZfcRbac\Factory\PermissionProviderChainFactory',
+            'ZfcRbac\Role\ObjectRepositoryRoleProvider'       => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
             'ZfcRbac\Role\RoleLoaderListener'                 => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
             'ZfcRbac\Role\RoleProviderChain'                  => 'ZfcRbac\Factory\RoleProviderChainFactory',
+            'zfcRbac\Role\RoleProviderPluginManager'          => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
             'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory'
         )
     ),
@@ -60,6 +62,8 @@ return array(
         'redirect_strategy'     => array(),
 
         // Plugin managers
-        'guard_manager' => array()
+        'guard_manager'               => array(),
+        'role_provider_manager'       => array(),
+        'permission_provider_manager' => array()
     )
 );
