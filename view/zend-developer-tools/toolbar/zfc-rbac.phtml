@@ -15,9 +15,17 @@ $collection = $this->collector->getCollection();
         <span class="zdt-toolbar-info">
             <span class="zdt-toolbar-info-heading">Guards</span>
             <?php if (count($collection['guards']) > 0): ?>
-                <?php foreach ($collection['guards'] as $guard): ?>
+                <?php foreach ($collection['guards'] as $type => $rules): ?>
                     <span class="zdt-toolbar-info">
-                        <span class="zdt-detail-value"><?php echo $guard; ?></span>
+                        <span class="zdt-detail-label">Type</span>
+                        <span class="zdt-detail-value">&nbsp;</span>
+                        <span class="zdt-detail-value-right"><?php echo $type; ?></span>
+                    </span>
+
+                    <span class="zdt-toolbar-info">
+                        <span class="zdt-detail-label">Rules</span>
+                        <span class="zdt-detail-value">&nbsp;</span>
+                        <span class="zdt-detail-value-right"><?php echo $rules; ?></span>
                     </span>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -27,7 +35,10 @@ $collection = $this->collector->getCollection();
             <?php endif; ?>
         </span>
 
+        <br>
+
         <span class="zdt-toolbar-info-heading">Module Settings Details</span>
+
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Guest role</span>
             <span class="zdt-detail-value">&nbsp;</span>

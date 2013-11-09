@@ -88,29 +88,40 @@ class RbacCollector implements CollectorInterface, Serializable
         /* @var \ZfcRbac\Options\ModuleOptions $options */
         $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
 
+        // Let's collect interesting options...
+        $this->collectedOptions = array(
+            'guest_role'        => $options->getGuestRole(),
+            'protection_policy' => $options->getProtectionPolicy()
+        );
 
-
-
-
-        $rbacConfig = $config['zfcrbac'];
-        $this->collectedOptions = $rbacConfig;
-        $identityProvider = $sm->get($rbacConfig['identity_provider']);
-        $rbacService = $sm->get('ZfcRbac\Service\Rbac');
-        if (method_exists($identityProvider, 'getIdentity') && method_exists($identityProvider, 'hasIdentity')) {
-            if ($identityProvider->hasIdentity()) {
-                $identity = $identityProvider->getIdentity();
-                $this->collectedRoles = $identity->getRoles();
-            }
-        } else {
-            $rbac = $rbacService->getRbac();
-            $roles = array();
-            foreach ($rbac as $role) {
-                $roles[] = $role->getName();
-            }
-            $this->collectedRoles = $roles;
+        // Now for guards
+        $this->collectedGuards = array();
+        foreach ($options->getGuards() as $type => $rules) {
+            $this->collectedGuards[$type] = $rules;
         }
-        $rbacOptions = $rbacService->getOptions();
-        $this->collectedFirewalls = $rbacOptions->firewalls;
+
+        /*
+
+
+                $rbacConfig = $config['zfcrbac'];
+                $this->collectedOptions = $rbacConfig;
+                $identityProvider = $sm->get($rbacConfig['identity_provider']);
+                $rbacService = $sm->get('ZfcRbac\Service\Rbac');
+                if (method_exists($identityProvider, 'getIdentity') && method_exists($identityProvider, 'hasIdentity')) {
+                    if ($identityProvider->hasIdentity()) {
+                        $identity = $identityProvider->getIdentity();
+                        $this->collectedRoles = $identity->getRoles();
+                    }
+                } else {
+                    $rbac = $rbacService->getRbac();
+                    $roles = array();
+                    foreach ($rbac as $role) {
+                        $roles[] = $role->getName();
+                    }
+                    $this->collectedRoles = $roles;
+                }
+                $rbacOptions = $rbacService->getOptions();
+                $this->collectedFirewalls = $rbacOptions->firewalls;*/
     }
 
     /**
