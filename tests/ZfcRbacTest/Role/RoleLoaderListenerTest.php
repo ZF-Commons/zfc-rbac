@@ -106,6 +106,19 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testAttachToRightEvent()
+    {
+        $roleProvider       = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
+        $roleLoaderListener = new RoleLoaderListener($roleProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager->expects($this->once())
+                     ->method('attach')
+                     ->with(RbacEvent::EVENT_LOAD_ROLES);
+
+        $roleLoaderListener->attach($eventManager);
+    }
+
     public function testAddRolesToRbacContainer()
     {
         $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
@@ -160,5 +173,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $cacheStorage->setItem($roleLoaderListener->getCacheKey(), array('role1', 'role2'));
 
         $roleLoaderListener->onLoadRoles($rbacEvent);
+
+        $this->assertSame($cacheStorage, $roleLoaderListener->getCache());
     }
 }

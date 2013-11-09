@@ -77,6 +77,22 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($role->hasPermission('delete'));
     }
 
+    public function testAttachToRightEvent()
+    {
+        $permissionProvider       = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
+        $permissionLoaderListener = new PermissionLoaderListener(
+            $permissionProvider,
+            $this->getMock('Zend\Cache\Storage\StorageInterface')
+        );
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager->expects($this->once())
+                     ->method('attach')
+                     ->with(RbacEvent::EVENT_LOAD_PERMISSIONS);
+
+        $permissionLoaderListener->attach($eventManager);
+    }
+
     public function testCanLoadPermissionsFromCache()
     {
         $permissionProvider = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
@@ -94,5 +110,6 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $cacheStorage->setItem($permissionLoaderListener->getCacheKey(), array('permission1' => 'role1'));
 
         $permissionLoaderListener->onLoadPermissions($rbacEvent);
+        $this->assertSame($cacheStorage, $permissionLoaderListener->getCache());
     }
 }

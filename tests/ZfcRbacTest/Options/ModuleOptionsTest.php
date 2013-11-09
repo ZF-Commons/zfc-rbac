@@ -49,6 +49,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'create_missing_roles'  => false,
             'guest_role'            => 'unknown',
             'guards'                => array(),
+            'protection_policy'     => 'deny',
             'role_providers'        => array(),
             'permission_providers'  => array(),
             'unauthorized_strategy' => array(
@@ -57,13 +58,14 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'redirect_strategy' => array(
                 'redirect_to_route' => 'login'
             ),
-            'cache' => 'my_cache'
+            'cache' => 'my_cache',
         ));
 
         $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertFalse($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
         $this->assertEquals(array(), $moduleOptions->getGuards());
+        $this->assertEquals('deny', $moduleOptions->getProtectionPolicy());
         $this->assertEquals(array(), $moduleOptions->getRoleProviders());
         $this->assertEquals(array(), $moduleOptions->getPermissionProviders());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());

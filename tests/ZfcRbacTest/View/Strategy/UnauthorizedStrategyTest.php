@@ -28,6 +28,18 @@ use ZfcRbac\View\Strategy\UnauthorizedStrategy;
  */
 class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
 {
+    public function testAttachToRightEvent()
+    {
+        $strategyListener = new UnauthorizedStrategy(new UnauthorizedStrategyOptions());
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager->expects($this->once())
+                     ->method('attach')
+                     ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+
+        $strategyListener->attach($eventManager);
+    }
+
     public function testFillEvent()
     {
         $response = new HttpResponse();

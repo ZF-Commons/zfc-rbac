@@ -19,8 +19,6 @@
 namespace ZfcRbacTest\Guard;
 
 /**
- * @covers \ZfcRbac\Guard\ControllerGuard
- * @covers \ZfcRbac\Guard\RouteGuard
  * @group Functional
  */
 class GuardsFunctionalTest extends \PHPUnit_Framework_TestCase

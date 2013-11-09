@@ -67,4 +67,20 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('myRole'), $this->identityProvider->getIdentityRoles());
     }
+
+    public function testReturnEmptyRolesIfIdentityIsWrongType()
+    {
+        $this->authenticationService->expects($this->once())
+                                    ->method('hasIdentity')
+                                    ->will($this->returnValue(true));
+
+        $this->authenticationService->expects($this->once())
+                                    ->method('getIdentity')
+                                    ->will($this->returnValue(new \stdClass));
+
+        $result = $this->identityProvider->getIdentityRoles();
+
+        $this->assertInternalType('array', $result);
+        $this->assertEmpty($result);
+    }
 }

@@ -66,4 +66,24 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $guards[0]);
         $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $guards[1]);
     }
+
+    public function testReturnArrayIfNoConfig()
+    {
+        $moduleOptions = new ModuleOptions(array(
+            'guards' => array()
+        ));
+
+        $pluginManager = new GuardPluginManager();
+
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
+        $pluginManager->setServiceLocator($serviceManager);
+
+        $factory = new GuardsFactory();
+        $guards  = $factory->createService($serviceManager);
+
+        $this->assertInternalType('array', $guards);
+
+        $this->assertEmpty($guards);
+    }
 }

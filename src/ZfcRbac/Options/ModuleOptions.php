@@ -99,7 +99,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Constructor
-     * 
+     *
      * {@inheritDoc}
      */
     public function __construct($options = null)

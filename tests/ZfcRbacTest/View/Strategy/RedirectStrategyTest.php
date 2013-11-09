@@ -30,6 +30,18 @@ use ZfcRbac\View\Strategy\RedirectStrategy;
  */
 class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 {
+    public function testAttachToRightEvent()
+    {
+        $strategyListener = new RedirectStrategy(new RedirectStrategyOptions());
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager->expects($this->once())
+                     ->method('attach')
+                     ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+
+        $strategyListener->attach($eventManager);
+    }
+
     public function testCanRedirectWithoutPreviousUri()
     {
         $response = new HttpResponse();
