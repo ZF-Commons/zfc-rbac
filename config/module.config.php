@@ -24,17 +24,12 @@ return array(
             'ZfcRbac\Guards'                                  => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
-            'ZfcRbac\Guard\ControllerGuard'                   => 'ZfcRbac\Factory\ControllerGuardFactory',
             'ZfcRbac\Guard\GuardPluginManager'                => 'ZfcRbac\Factory\GuardPluginManagerFactory',
-            'ZfcRbac\Guard\RouteGuard'                        => 'ZfcRbac\Factory\RouteGuardFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
             'ZfcRbac\Permission\PermissionLoaderListener'     => 'ZfcRbac\Factory\PermissionLoaderListenerFactory',
-            'ZfcRbac\Permission\PermissionProviderChain'      => 'ZfcRbac\Factory\PermissionProviderChainFactory',
-            'ZfcRbac\Role\ObjectRepositoryRoleProvider'       => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
             'ZfcRbac\Role\RoleLoaderListener'                 => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
-            'ZfcRbac\Role\RoleProviderChain'                  => 'ZfcRbac\Factory\RoleProviderChainFactory',
-            'zfcRbac\Role\RoleProviderPluginManager'          => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
+            'ZfcRbac\Role\RoleProviderPluginManager'          => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
             'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory'
         )
     ),

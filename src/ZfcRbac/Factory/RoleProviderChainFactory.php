@@ -34,21 +34,19 @@ class RoleProviderChainFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $parentLocator = $serviceLocator->getServiceLocator();
+
         /* @var \ZfcRbac\Options\ModuleOptions $options */
-        $options = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $options = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
         $options = $options->getRoleProviders();
+
+        /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
+        $pluginManager = $parentLocator->get('ZfcRbac\Role\RoleProviderPluginManager');
 
         $roleProviders = array();
 
-        foreach ($options as $option) {
-            if (!isset($option['type'])) {
-                throw new Exception\RuntimeException('Missing "type" option for ZfcRbac role provider');
-            }
-
-            // @TODO: ZF2 service manager does not support options, so we need to create a plugin manager
-            // to be able to do this:
-            $providerOptions = isset($options['options']) ? $options['options'] : array();
-            $roleProviders[] = $serviceLocator->get($option['type'], $providerOptions);
+        foreach ($options as $type => $roleProviderOptions) {
+            $roleProviders[] = $pluginManager->get($type, $roleProviderOptions);
         }
 
         return new RoleProviderChain($roleProviders);

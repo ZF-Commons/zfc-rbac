@@ -21,6 +21,7 @@ namespace ZfcRbacTest\Factory;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\RoleProviderChainFactory;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
  * @covers \ZfcRbac\Factory\RoleProviderChainFactory
@@ -29,11 +30,16 @@ class RoleProviderChainFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
+        $pluginManager = new RoleProviderPluginManager();
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
+
+        $pluginManager->setServiceLocator($serviceManager);
 
         $factory      = new RoleProviderChainFactory();
-        $roleProvider = $factory->createService($serviceManager);
+        $roleProvider = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\Role\RoleProviderChain', $roleProvider);
     }

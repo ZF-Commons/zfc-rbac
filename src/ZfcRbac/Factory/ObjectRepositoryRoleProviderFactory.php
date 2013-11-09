@@ -19,6 +19,7 @@
 namespace ZfcRbac\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -26,7 +27,7 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 /**
  * Factory used to create an object repository role provider
  */
-class ObjectRepositoryRoleProviderFactory implements FactoryInterface
+class ObjectRepositoryRoleProviderFactory implements FactoryInterface, MutableCreationOptionsInterface
 {
     /**
      * @var array
