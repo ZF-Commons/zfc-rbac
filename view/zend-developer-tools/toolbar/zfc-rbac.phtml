@@ -46,20 +46,20 @@ $collection = $this->collector->getCollection();
         <?php if (count($collection['guards']) > 0): ?>
             <?php foreach ($collection['guards'] as $type => $rules): ?>
                 <span class="zdt-toolbar-info">
-                        <span class="zdt-detail-label">Type</span>
-                        <span class="zdt-detail-value">&nbsp;</span>
-                        <span class="zdt-detail-value-right"><?php echo $type; ?></span>
-                    </span>
+                    <span class="zdt-detail-label">Type</span>
+                    <span class="zdt-detail-value">&nbsp;</span>
+                    <span class="zdt-detail-value-right"><?php echo $type; ?></span>
+                </span>
 
                 <span class="zdt-toolbar-info">
-                        <span class="zdt-detail-label">Rules</span>
-                        <span class="zdt-detail-value">&nbsp;</span>
-                        <span class="zdt-detail-value-right">
-                            <?php
-                            $d = new \Zend\Debug\Debug();
-                            $d->dump($rules);
-                            ?>
-                        </span>
+                    <span class="zdt-detail-label">Rules</span>
+                    <span class="zdt-detail-value">&nbsp;</span>
+                    <span class="zdt-detail-value-right">
+                        <?php
+                        $d = new \Zend\Debug\Debug();
+                        $d->dump($rules);
+                        ?>
+                    </span>
                     </span>
             <?php endforeach; ?>
         <?php else: ?>
@@ -77,24 +77,36 @@ $collection = $this->collector->getCollection();
         <span class="zdt-toolbar-info">Providers</span>
     </div>
     <div class="zdt-toolbar-detail">
-        <div class="zdt-toolbar-detail-inner">
-            <span class="zdt-toolbar-info zdt-toolbar-info-heading">ZfcRbac loaded roles</span>
-            <span class="zdt-detail-pre">
-                <?php
-                $d = new \Zend\Debug\Debug();
-                $d->dump($collection['firewalls']);
-                ?>
-            </span>
-        </div>
+        <span class="zdt-toolbar-info zdt-toolbar-info-heading">ZfcRbac loaded roles</span>
 
-        <div class="zdt-toolbar-detail-inner">
-            <span class="zdt-toolbar-info zdt-toolbar-info-heading">ZfcRbac loaded permissions</span>
-            <span class="zdt-detail-pre">
-                <?php
-                $d = new \Zend\Debug\Debug();
-                $d->dump($collection['firewalls']);
-                ?>
+        <?php if (count($collection['roles']) > 0): ?>
+            <?php foreach ($collection['roles'] as $role => $parent): ?>
+                <span class="zdt-toolbar-info">
+                    <span class="zdt-detail-label"><?php echo is_int($role) ? $parent : $role; ?></span>
+                    <span class="zdt-detail-value">&nbsp;</span>
+                    <span class="zdt-detail-value-right"><?php echo is_int($role) ? 'No parent' : $parent; ?></span>
+                </span>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-value">No roles</span>
             </span>
-        </div>
+        <?php endif; ?>
+
+        <span class="zdt-toolbar-info zdt-toolbar-info-heading">ZfcRbac loaded permissions</span>
+
+        <?php if (count($collection['permissions']) > 0): ?>
+            <?php foreach ($collection['permissions'] as $permission => $roles): ?>
+                <span class="zdt-toolbar-info">
+                    <span class="zdt-detail-label"><?php echo $permission; ?></span>
+                    <span class="zdt-detail-value">&nbsp;</span>
+                    <span class="zdt-detail-value-right"><?php echo implode(',', $roles) ?></span>
+                </span>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-value">No permissions</span>
+            </span>
+        <?php endif; ?>
     </div>
 </div>

@@ -18,9 +18,12 @@
 
 namespace ZfcRbac\Collector;
 
+use RecursiveIteratorIterator;
 use Serializable;
 use Zend\Mvc\MvcEvent;
+use Zend\Permissions\Rbac\RoleInterface;
 use ZendDeveloperTools\Collector\CollectorInterface;
+use ZfcRbac\Service\RbacEvent;
 
 /**
  * RbacCollector
@@ -91,6 +94,10 @@ class RbacCollector implements CollectorInterface, Serializable
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $serviceManager->get('ZfcRbac\Service\AuthorizationService');
 
+        // We force the loading of roles
+        // @TODO: ugly
+        $authorizationService->isGranted('foo');
+
         // Let's collect interesting options...
         $this->collectedOptions = array(
             'current_roles'     => $authorizationService->getIdentityProvider()->getIdentityRoles(),
@@ -104,28 +111,31 @@ class RbacCollector implements CollectorInterface, Serializable
             $this->collectedGuards[$type] = $rules;
         }
 
-        /*
+        $rbac = $authorizationService->getRbac();
 
+        // Roles
+        $it = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);
 
-                $rbacConfig = $config['zfcrbac'];
-                $this->collectedOptions = $rbacConfig;
-                $identityProvider = $sm->get($rbacConfig['identity_provider']);
-                $rbacService = $sm->get('ZfcRbac\Service\Rbac');
-                if (method_exists($identityProvider, 'getIdentity') && method_exists($identityProvider, 'hasIdentity')) {
-                    if ($identityProvider->hasIdentity()) {
-                        $identity = $identityProvider->getIdentity();
-                        $this->collectedRoles = $identity->getRoles();
-                    }
-                } else {
-                    $rbac = $rbacService->getRbac();
-                    $roles = array();
-                    foreach ($rbac as $role) {
-                        $roles[] = $role->getName();
-                    }
-                    $this->collectedRoles = $roles;
-                }
-                $rbacOptions = $rbacService->getOptions();
-                $this->collectedFirewalls = $rbacOptions->firewalls;*/
+        foreach ($it as $role) {
+            if (!$role instanceof RoleInterface) {
+                continue;
+            }
+
+            if (null === $role->getParent()) {
+                $this->collectedRoles[] = $role->getName();
+            } else {
+                $this->collectedRoles[$role->getName()] = $role->getParent()->getName();
+            }
+        }
+
+        // Permissions
+        $permissionPluginManager = $serviceManager->get('ZfcRbac\Permission\PermissionProviderPluginManager');
+        $permissionChainProvider = $permissionPluginManager->get('ZfcRbac\Permission\PermissionProviderChain');
+        $permissions             = $permissionChainProvider->getPermissions(new RbacEvent($rbac));
+
+        foreach ($permissions as $permissionName => $roles) {
+            $this->collectedPermissions[$permissionName] = (array) $roles;
+        }
     }
 
     /**
