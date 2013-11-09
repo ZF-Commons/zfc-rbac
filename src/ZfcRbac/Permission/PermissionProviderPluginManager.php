@@ -37,8 +37,9 @@ class PermissionProviderPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $factories = array(
-        'ZfcRbac\Permission\ObjectRepositoryPermissionProvider' => 'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory',
-        'ZfcRbac\Permission\PermissionProviderChain'            => 'ZfcRbac\Factory\PermissionProviderChainFactory'
+        'ZfcRbac\Permission\ObjectRepositoryPermissionProvider'
+            => 'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory',
+        'ZfcRbac\Permission\PermissionProviderChain' => 'ZfcRbac\Factory\PermissionProviderChainFactory'
     );
 
     /**
