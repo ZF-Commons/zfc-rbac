@@ -29,8 +29,14 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
+        $pluginManager = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $pluginManager->expects($this->once())
+                      ->method('get')
+                      ->with('ZfcRbac\Role\RoleProviderChain')
+                      ->will($this->returnValue($this->getMock('ZfcRbac\Role\RoleProviderInterface')));
+
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Role\RoleProviderChain', $this->getMock('ZfcRbac\Role\RoleProviderInterface'));
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
         $serviceManager->setService('ZfcRbac\Cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
         $factory  = new RoleLoaderListenerFactory();

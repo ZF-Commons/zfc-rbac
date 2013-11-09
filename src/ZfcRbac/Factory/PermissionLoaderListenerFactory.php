@@ -36,8 +36,11 @@ class PermissionLoaderListenerFactory implements FactoryInterface
         /* @var \Zend\Cache\Storage\StorageInterface $cacheStorage */
         $cacheStorage = $serviceLocator->get('ZfcRbac\Cache');
 
+        /* @var \ZfcRbac\Permission\PermissionProviderPluginManager $pluginManager */
+        $pluginManager = $serviceLocator->get('ZfcRbac\Permission\PermissionProviderPluginManager');
+
         /* @var \ZfcRbac\Permission\PermissionProviderChain $permissionProviderChain */
-        $permissionProviderChain = $serviceLocator->get('ZfcRbac\Permission\PermissionProviderChain');
+        $permissionProviderChain = $pluginManager->get('ZfcRbac\Permission\PermissionProviderChain');
 
         return new PermissionLoaderListener($permissionProviderChain, $cacheStorage);
     }

@@ -21,6 +21,7 @@ namespace ZfcRbacTest\Factory;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\PermissionLoaderListenerFactory;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Permission\PermissionProviderPluginManager;
 
 /**
  * @covers \ZfcRbac\Factory\PermissionLoaderListenerFactory
@@ -29,11 +30,15 @@ class PermissionLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
+        $pluginManager = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $pluginManager->expects($this->once())
+                      ->method('get')
+                      ->with('ZfcRbac\Permission\PermissionProviderChain')
+                      ->will($this->returnValue($this->getMock('ZfcRbac\Permission\PermissionProviderInterface')));
+
         $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'ZfcRbac\Permission\PermissionProviderChain',
-            $this->getMock('ZfcRbac\Permission\PermissionProviderInterface')
-        );
+
+        $serviceManager->setService('ZfcRbac\Permission\PermissionProviderPluginManager', $pluginManager);
 
         $serviceManager->setService('ZfcRbac\Cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
