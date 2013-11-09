@@ -33,12 +33,9 @@ class RbacCollectorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var \ZfcRbac\Options\ModuleOptions $options */
-        $options = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
 
-        /* @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
-        $identityProvider = $serviceLocator->get($options->getIdentityProvider());
-
-        return new RbacCollector($identityProvider);
+        return new RbacCollector($authorizationService);
     }
 }

@@ -21,7 +21,7 @@ namespace ZfcRbac\Collector;
 use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
-use ZfcRbac\Identity\IdentityProviderInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * RbacCollector
@@ -34,9 +34,9 @@ class RbacCollector implements CollectorInterface, Serializable
     const PRIORITY = 10;
 
     /**
-     * @var IdentityProviderInterface
+     * @var AuthorizationService
      */
-    protected $identityProvider;
+    protected $authorizationService;
 
     /**
      * @var array
@@ -61,11 +61,11 @@ class RbacCollector implements CollectorInterface, Serializable
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface $identityProvider
+     * @param AuthorizationService $authorizationService
      */
-    public function __construct(IdentityProviderInterface $identityProvider)
+    public function __construct(AuthorizationService $authorizationService)
     {
-        $this->identityProvider = $identityProvider;
+        $this->authorizationService = $authorizationService;
     }
 
     /**
