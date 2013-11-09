@@ -152,6 +152,8 @@ return array(
          * Various plugin managers for guards, role providers and permission providers. Each of them must
          * follow a common plugin manager config format, and can be used to create your custom objects
          */
-        // 'guard_manager' => array(),
+        // 'guard_manager'               => array(),
+        // 'role_provider_manager'       => array(),
+        // 'permission_provider_manager' => array()
     )
 );
