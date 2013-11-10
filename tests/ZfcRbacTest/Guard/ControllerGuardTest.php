@@ -396,7 +396,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($isGranted, $controllerGuard->isGranted($event));
     }
 
-    public function testProperlySetAuthorizedParamOnAuthorization()
+    public function testProperlyFillEventOnAuthorization()
     {
         $event      = new MvcEvent();
         $routeMatch = new RouteMatch(array());
@@ -433,7 +433,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $routeGuard->onRoute($event);
 
-        $this->assertEquals(ControllerGuard::GUARD_AUTHORIZED, $event->getParam('guard-result'));
+        $this->assertEmpty($event->getError());
         $this->assertNull($event->getParam('exception'));
     }
 
@@ -480,7 +480,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $routeGuard->onRoute($event);
 
         $this->assertTrue($event->propagationIsStopped());
-        $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getParam('guard-result'));
+        $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getError());
         $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
     }
 }

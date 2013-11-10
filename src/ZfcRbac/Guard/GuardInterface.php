@@ -34,10 +34,9 @@ use Zend\Mvc\MvcEvent;
 interface GuardInterface extends ListenerAggregateInterface
 {
     /**
-     * Various constants for guard that can be added to the MVC event result
+     * Constant for guard that can be added to the MVC event result
      */
-    const GUARD_AUTHORIZED    = 'guard-authorized';
-    const GUARD_UNAUTHORIZED  = 'guard-unauthorized';
+    const GUARD_UNAUTHORIZED = 'guard-unauthorized';
 
     /**
      * Protection policy constants

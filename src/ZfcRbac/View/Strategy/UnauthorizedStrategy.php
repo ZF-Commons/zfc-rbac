@@ -71,15 +71,10 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
         $model = new ViewModel();
         $model->setTemplate($this->options->getTemplate());
 
-        if ($result = $event->getParam('guard-result')) {
-            $model->setVariable('guardResult', $result);
-        }
-
         $response = new HttpResponse();
         $response->setStatusCode(403);
 
         $event->setResponse($response);
-        $event->setResult($response);
-        $event->getViewModel()->addChild($model);
+        $event->setResult($model);
     }
 }

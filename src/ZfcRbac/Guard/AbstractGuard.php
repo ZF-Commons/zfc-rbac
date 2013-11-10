@@ -94,11 +94,10 @@ abstract class AbstractGuard implements GuardInterface
     public function onRoute(MvcEvent $event)
     {
         if ($this->isGranted($event)) {
-            $event->setParam('guard-result', self::GUARD_AUTHORIZED);
             return;
         }
 
-        $event->setParam('guard-result', self::GUARD_UNAUTHORIZED);
+        $event->setError(self::GUARD_UNAUTHORIZED);
         $event->setParam('exception', new Exception\UnauthorizedException(
             'You are not authorized to access this resource'
         ));
