@@ -29,7 +29,7 @@ class RedirectStrategyOptionsTest extends \PHPUnit_Framework_TestCase
     {
         $redirectStrategyOptions = new RedirectStrategyOptions();
 
-        $this->assertNull($redirectStrategyOptions->getRedirectToRoute());
+        $this->assertEquals('login', $redirectStrategyOptions->getRedirectToRoute());
         $this->assertTrue($redirectStrategyOptions->getAppendPreviousUri());
         $this->assertEquals('redirectTo', $redirectStrategyOptions->getPreviousUriQueryKey());
     }

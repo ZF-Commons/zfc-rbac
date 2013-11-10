@@ -30,7 +30,7 @@ class RedirectStrategyOptions extends AbstractOptions
      *
      * @var string
      */
-    protected $redirectToRoute;
+    protected $redirectToRoute = 'login';
 
     /**
      * Should the previous URI should be appended as a query param?
