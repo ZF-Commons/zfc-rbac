@@ -16,7 +16,7 @@ $collection = $this->collector->getCollection();
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Current roles</span>
             <span class="zdt-detail-value">&nbsp;</span>
-            <span class="zdt-detail-value-right"><?= implode(',', $collection['options']['current_roles']); ?></span>
+            <span class="zdt-detail-value-right"><?= implode(', ', $collection['options']['current_roles']); ?></span>
         </span>
 
         <span class="zdt-toolbar-info-heading">Settings Details</span>
@@ -100,7 +100,7 @@ $collection = $this->collector->getCollection();
                 <span class="zdt-toolbar-info">
                     <span class="zdt-detail-label" style="text-transform: none"><?= $permission; ?></span>
                     <span class="zdt-detail-value">&nbsp;</span>
-                    <span class="zdt-detail-value-right"><?= implode(',', $roles) ?></span>
+                    <span class="zdt-detail-value-right"><?= implode(', ', $roles) ?></span>
                 </span>
             <?php endforeach; ?>
         <?php else: ?>

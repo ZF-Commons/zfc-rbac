@@ -26,7 +26,6 @@ use Zend\Permissions\Rbac\RoleInterface;
 use Zend\ServiceManager\ServiceManager;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RbacEvent;
 
 /**
  * RbacCollector
@@ -37,6 +36,11 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collector priority
      */
     const PRIORITY = -100;
+
+    /**
+     * @var array
+     */
+    protected $collection = array();
 
     /**
      * @var array
@@ -199,9 +203,15 @@ class RbacCollector implements CollectorInterface, Serializable
 
             $permissions = $reflProperty->getValue($role);
 
-            foreach ($permissions as $permission) {
-                $this->collectedPermissions[$permission][] = $role->getName();
+            foreach ($permissions as $permissionName => $permission) {
+                $this->collectedPermissions[$permissionName][] = $role->getName();
             }
+        }
+
+        // Because multiple roles may have the same permissions, the previous logic may have duplicate roles
+        // for each collected permissions, so we need a bit of cleaning
+        foreach ($this->collectedPermissions as &$permissions) {
+            $permissions = array_unique($permissions);
         }
     }
 }
