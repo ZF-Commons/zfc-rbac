@@ -68,10 +68,12 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
             return;
         }
 
-        // @TODO: pass error variables
-
         $model = new ViewModel();
         $model->setTemplate($this->options->getTemplate());
+
+        if ($result = $event->getParam('guard-result')) {
+            $model->setVariable('guardResult', $result);
+        }
 
         $response = new HttpResponse();
         $response->setStatusCode(403);

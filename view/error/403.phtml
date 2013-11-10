@@ -1,0 +1,9 @@
+<h1>A 403 error occurred</h1>
+
+<p>You are not allowed to access this resource</p>
+
+<p>
+    <?php if (isset($guardResult) && $guardResult === \ZfcRbac\Guard\GuardInterface::GUARD_UNAUTHORIZED): ?>
+        ZfcRbac has blocked access through a guard
+    <?php endif; ?>
+</p>
