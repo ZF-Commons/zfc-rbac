@@ -167,4 +167,30 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->isGranted('foo');
         $authorizationService->isGranted('foo');
     }
+
+    public function testLoadRolesAndPermissionsMultipleTimesIfForceReload()
+    {
+        $rbac = new Rbac();
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->exactly(2))
+                         ->method('getIdentityRoles')
+                         ->will($this->returnValue(array('role1')));
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $authorizationService->setForceReload(true);
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $authorizationService->setEventManager($eventManager);
+
+        $eventManager->expects($this->exactly(4))
+                     ->method('trigger')
+                     ->with($this->logicalOr(
+                        $this->equalTo(RbacEvent::EVENT_LOAD_ROLES),
+                        $this->equalTo(RbacEvent::EVENT_LOAD_PERMISSIONS)
+                     ));
+
+        $authorizationService->isGranted('foo');
+        $authorizationService->isGranted('foo');
+    }
 }

@@ -114,8 +114,8 @@ abstract class AbstractGuard implements GuardInterface
     /**
      * Load a rule inside the Rbac container
      *
-     * This avoids to load all the route permissions inside the Rbac container by only adding
-     * those on demand
+     * This allows to only add one permission relative to the route guard/controller guard, instead
+     * of adding permissions for all the rules
      *
      * @param  array  $roles
      * @param  string $permission
@@ -123,6 +123,10 @@ abstract class AbstractGuard implements GuardInterface
      */
     protected function loadRule(array $roles, $permission)
     {
+        // This will trigger the EVENT_LOAD_ROLES and EVENT_LOAD_PERMISSIONS events to load all
+        // roles and permissions inside the container
+        $this->authorizationService->load();
+
         $rbac = $this->authorizationService->getRbac();
 
         foreach ($roles as $role) {

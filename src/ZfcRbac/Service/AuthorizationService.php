@@ -50,6 +50,16 @@ class AuthorizationService implements EventManagerAwareInterface
     protected $isLoaded = false;
 
     /**
+     * Should we force reload the roles and permissions each time isGranted is called?
+     *
+     * This can be used for very complex use cases with tons of roles and permissions, so that
+     * it can triggers database queries only for a given role/permission couple
+     *
+     * @var bool
+     */
+    protected $forceReload = false;
+
+    /**
      * Constructor
      *
      * @param Rbac                      $rbac
@@ -82,6 +92,27 @@ class AuthorizationService implements EventManagerAwareInterface
     }
 
     /**
+     * Set if we should force reload each time isGranted is called
+     *
+     * @param boolean $forceReload
+     * @param void
+     */
+    public function setForceReload($forceReload)
+    {
+        $this->forceReload = (bool) $forceReload;
+    }
+
+    /**
+     * Get if we should force reload each time isGranted is called
+     *
+     * @return boolean
+     */
+    public function getForceReload()
+    {
+        return $this->forceReload;
+    }
+
+    /**
      * Check if the permission is granted to the current identity
      *
      * Note: if an identity has multiple role, ALL the roles must be granted for the permission
@@ -100,11 +131,7 @@ class AuthorizationService implements EventManagerAwareInterface
         }
 
         // First load everything inside the container
-        // @TODO: add an option to the authorization service to force loading everytime, as it is useful
-        // for more complex providers that do lazy-loading
-        if (!$this->isLoaded) {
-            $this->load($roles, $permission);
-        }
+        $this->load($roles, $permission);
 
         foreach ($roles as $role) {
             // If role does not exist, we consider this as not valid
@@ -130,8 +157,12 @@ class AuthorizationService implements EventManagerAwareInterface
      * @param  string $permission
      * @return void
      */
-    protected function load(array $roles, $permission)
+    public function load(array $roles = array(), $permission = '')
     {
+        if ($this->isLoaded && !$this->forceReload) {
+            return;
+        }
+
         $eventManager = $this->getEventManager();
 
         $rbacEvent = new RbacEvent($this->rbac, $roles, $permission);
