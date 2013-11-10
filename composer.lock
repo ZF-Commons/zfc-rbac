@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6ea5616c5d388b196c498d88caaa19b9",
+    "hash": "179c38d72aca4bd2f231bfff87b79e2e",
     "packages": [
         {
             "name": "zendframework/zendframework",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "2758d7b30355c2a1018fcb12e112c63a21050cd6"
+                "reference": "0a01bba04208523abb4f24f08f3bda3b62ef4bcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/2758d7b30355c2a1018fcb12e112c63a21050cd6",
-                "reference": "2758d7b30355c2a1018fcb12e112c63a21050cd6",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/0a01bba04208523abb4f24f08f3bda3b62ef4bcc",
+                "reference": "0a01bba04208523abb4f24f08f3bda3b62ef4bcc",
                 "shasum": ""
             },
             "require": {
@@ -121,7 +121,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-11-05 14:53:51"
+            "time": "2013-11-07 15:26:47"
         }
     ],
     "packages-dev": [
@@ -852,12 +852,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "a280594ffbb1b563a0f042182221f39e7de9efa3"
+                "reference": "4363c95b584dcafc8ff386c27116283ad53d738d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a280594ffbb1b563a0f042182221f39e7de9efa3",
-                "reference": "a280594ffbb1b563a0f042182221f39e7de9efa3",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4363c95b584dcafc8ff386c27116283ad53d738d",
+                "reference": "4363c95b584dcafc8ff386c27116283ad53d738d",
                 "shasum": ""
             },
             "require": {
@@ -936,7 +936,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-11-02 21:40:25"
+            "time": "2013-11-08 21:36:09"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1190,12 +1190,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6f80902c719fd516a9890a851d4ddb2c6242b0a7"
+                "reference": "c1fe4b7a93310bea8c25bf02ebb501310b2f9726"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6f80902c719fd516a9890a851d4ddb2c6242b0a7",
-                "reference": "6f80902c719fd516a9890a851d4ddb2c6242b0a7",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c1fe4b7a93310bea8c25bf02ebb501310b2f9726",
+                "reference": "c1fe4b7a93310bea8c25bf02ebb501310b2f9726",
                 "shasum": ""
             },
             "require": {
@@ -1259,7 +1259,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-11-05 09:40:45"
+            "time": "2013-11-08 08:46:38"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1267,12 +1267,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "346591b047bc04e22c0f608110087579f7518dba"
+                "reference": "1294a5890253c702aa4f72a0dd0cd83d29a7f064"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/346591b047bc04e22c0f608110087579f7518dba",
-                "reference": "346591b047bc04e22c0f608110087579f7518dba",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/1294a5890253c702aa4f72a0dd0cd83d29a7f064",
+                "reference": "1294a5890253c702aa4f72a0dd0cd83d29a7f064",
                 "shasum": ""
             },
             "require": {
@@ -1317,7 +1317,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-08-31 07:18:20"
+            "time": "2013-11-06 18:45:50"
         },
         {
             "name": "psr/log",
@@ -1481,12 +1481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "7c801c2db02018e00a91026994eadb9fae51701f"
+                "reference": "1ea51dd3c4c86d5d2d0fdbfd779a277c4c6aadc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/7c801c2db02018e00a91026994eadb9fae51701f",
-                "reference": "7c801c2db02018e00a91026994eadb9fae51701f",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/1ea51dd3c4c86d5d2d0fdbfd779a277c4c6aadc2",
+                "reference": "1ea51dd3c4c86d5d2d0fdbfd779a277c4c6aadc2",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2013-07-09 05:47:49"
+            "time": "2013-11-06 09:43:40"
         },
         {
             "name": "sebastian/version",
@@ -1699,12 +1699,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "92cdb410d68c7b6ccb6eb38ad0ffe4e2d1cd9a2c"
+                "reference": "3331d12934ea7bf4b8821b584cf7d0e3a7f393f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/92cdb410d68c7b6ccb6eb38ad0ffe4e2d1cd9a2c",
-                "reference": "92cdb410d68c7b6ccb6eb38ad0ffe4e2d1cd9a2c",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/3331d12934ea7bf4b8821b584cf7d0e3a7f393f9",
+                "reference": "3331d12934ea7bf4b8821b584cf7d0e3a7f393f9",
                 "shasum": ""
             },
             "require": {
@@ -1743,7 +1743,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-10-31 16:40:24"
+            "time": "2013-11-09 16:01:15"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1939,15 +1939,76 @@
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
             "time": "2013-10-17 11:48:11"
+        },
+        {
+            "name": "zendframework/zend-developer-tools",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/ZendDeveloperTools.git",
+                "reference": "8e12160731336b3f1add18958beee77e6b8418dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/8e12160731336b3f1add18958beee77e6b8418dd",
+                "reference": "8e12160731336b3f1add18958beee77e6b8418dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-debug": "2.*",
+                "zendframework/zend-eventmanager": "2.*",
+                "zendframework/zend-mvc": "2.*",
+                "zendframework/zend-servicemanager": "2.*",
+                "zendframework/zend-stdlib": "2.*",
+                "zendframework/zend-version": "2.*"
+            },
+            "suggest": {
+                "bjyoungblood/bjy-profiler": "Version: dev-master, allows the usage of the (Zend) Db collector.",
+                "ocramius/ocra-service-manager": "OcraServiceManager can help you track dependencies within your application."
+            },
+            "type": "zf-module",
+            "autoload": {
+                "psr-0": {
+                    "ZendDeveloperTools": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Evan Coury",
+                    "email": "me@evancoury.com",
+                    "homepage": "http://blog.evan.pro/"
+                },
+                {
+                    "name": "Eric Boh",
+                    "email": "cossish@gmail.com"
+                }
+            ],
+            "description": "Module for developer and debug tools for working with the ZF2 MVC layer.",
+            "homepage": "https://github.com/zendframework/ZendDeveloperTools",
+            "keywords": [
+                "debug",
+                "developer",
+                "module",
+                "zf2"
+            ],
+            "time": "2013-11-08 13:06:02"
         }
     ],
     "aliases": [
 
     ],
     "minimum-stability": "dev",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "zendframework/zend-developer-tools": 20
+    },
     "platform": {
         "php": ">=5.4"
     },

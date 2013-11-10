@@ -16,26 +16,21 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Factory;
+namespace ZfcRbacTest\Collector;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Mvc\MvcEvent;
 use ZfcRbac\Collector\RbacCollector;
 
 /**
- * Factory for the module options
+ * @covers \ZfcRbac\Collector\RbacCollector
  */
-class RbacCollectorFactory implements FactoryInterface
+class RbacCollectorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * {@inheritDoc}
-     * @return RbacCollector
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function testCollectNothingIfNoApplicationIsSet()
     {
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
+        $mvcEvent  = new MvcEvent();
+        $collector = new RbacCollector();
 
-        return new RbacCollector($authorizationService);
+        $this->assertNull($collector->collect($mvcEvent));
     }
 }

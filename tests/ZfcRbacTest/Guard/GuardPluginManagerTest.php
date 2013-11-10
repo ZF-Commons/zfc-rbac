@@ -67,4 +67,12 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf($type, $guard);
     }
+
+    public function testThrowExceptionForInvalidPlugin()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+
+        $pluginManager = new GuardPluginManager();
+        $pluginManager->get('stdClass');
+    }
 }

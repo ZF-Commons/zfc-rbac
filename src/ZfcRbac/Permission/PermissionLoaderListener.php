@@ -48,11 +48,16 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      *
      * @param PermissionProviderInterface $permissionProvider
      * @param CacheInterface              $cache
+     * @param string                      $cacheKey
      */
-    public function __construct(PermissionProviderInterface $permissionProvider, CacheInterface $cache)
+    public function __construct(PermissionProviderInterface $permissionProvider, CacheInterface $cache, $cacheKey = '')
     {
         $this->permissionProvider = $permissionProvider;
         $this->cache              = $cache;
+
+        if (!empty($cacheKey)) {
+            $this->cacheKey = $cacheKey;
+        }
     }
 
     /**
@@ -63,17 +68,6 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     public function getCache()
     {
         return $this->cache;
-    }
-
-    /**
-     * Set the cache key
-     *
-     * @param  string $cacheKey
-     * @return void
-     */
-    public function setCacheKey($cacheKey)
-    {
-        $this->cacheKey = (string) $cacheKey;
     }
 
     /**

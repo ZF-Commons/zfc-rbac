@@ -69,4 +69,12 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
         $permissionProvider = $pluginManager->get('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', $options);
         $this->assertInstanceOf('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', $permissionProvider);
     }
+
+    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+
+        $pluginManager  = new PermissionProviderPluginManager();
+        $pluginManager->get('stdClass', array());
+    }
 }

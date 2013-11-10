@@ -66,4 +66,12 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
         $roleProvider = $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', $options);
         $this->assertInstanceOf('ZfcRbac\Role\ObjectRepositoryRoleProvider', $roleProvider);
     }
+
+    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+
+        $pluginManager  = new RoleProviderPluginManager();
+        $pluginManager->get('stdClass', array());
+    }
 }
