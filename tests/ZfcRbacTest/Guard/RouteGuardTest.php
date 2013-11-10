@@ -21,6 +21,7 @@ namespace ZfcRbacTest\Guard;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Service\AuthorizationService;
@@ -402,5 +403,10 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(RouteGuard::GUARD_UNAUTHORIZED, $event->getParam('guard-result'));
         $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
+    }
+
+    public function testAssertRoutePriorityIsHigherThanControllerPriority()
+    {
+        $this->assertTrue(RouteGuard::EVENT_PRIORITY > ControllerGuard::EVENT_PRIORITY);
     }
 }

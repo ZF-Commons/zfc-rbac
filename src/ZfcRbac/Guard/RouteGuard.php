@@ -28,6 +28,11 @@ use ZfcRbac\Service\AuthorizationService;
 class RouteGuard extends AbstractGuard
 {
     /**
+     * Set a higher priority for route guards so that they are executed before any controller guards
+     */
+    const EVENT_PRIORITY = -10;
+
+    /**
      * Rule prefix that is used to avoid conflicts in the Rbac container
      *
      * Rules will be added to the Rbac container using the following syntax: __route__.$routeRule

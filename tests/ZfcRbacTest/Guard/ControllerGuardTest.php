@@ -23,6 +23,7 @@ use Zend\Mvc\Router\RouteMatch;
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
+use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Service\AuthorizationService;
 
 /**

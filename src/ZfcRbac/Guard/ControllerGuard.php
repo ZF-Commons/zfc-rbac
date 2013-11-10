@@ -27,6 +27,12 @@ use ZfcRbac\Service\AuthorizationService;
 class ControllerGuard extends AbstractGuard
 {
     /**
+     * Set a lower priority for controller guards than for route guards, so that they are
+     * always executed after them
+     */
+    const EVENT_PRIORITY = -20;
+
+    /**
      * Rule prefix that is used to avoid conflicts in the Rbac container
      *
      * Rules will be added to the Rbac container using the following syntax:
