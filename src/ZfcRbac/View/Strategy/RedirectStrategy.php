@@ -88,5 +88,6 @@ class RedirectStrategy extends AbstractListenerAggregate
         $response->setStatusCode(302);
 
         $event->setResponse($response);
+        $event->setResult($response);
     }
 }

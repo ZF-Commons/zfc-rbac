@@ -123,10 +123,6 @@ abstract class AbstractGuard implements GuardInterface
      */
     protected function loadRule(array $roles, $permission)
     {
-        // This will trigger the EVENT_LOAD_ROLES and EVENT_LOAD_PERMISSIONS events to load all
-        // roles and permissions inside the container
-        $this->authorizationService->load();
-
         $rbac = $this->authorizationService->getRbac();
 
         foreach ($roles as $role) {

@@ -26,7 +26,7 @@ use ZfcRbac\Service\RbacEvent;
 class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
-     * @var array
+     * @var string[]|array|\Zend\Permissions\Rbac\RoleInterface[]
      */
     private $roles = array();
 

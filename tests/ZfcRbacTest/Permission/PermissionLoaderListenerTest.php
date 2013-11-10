@@ -105,11 +105,10 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $rbacEvent = new RbacEvent($rbac);
 
         $cacheStorage             = new Memory();
-        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $cacheStorage);
+        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $cacheStorage, 'cacheKey');
 
-        $cacheStorage->setItem($permissionLoaderListener->getCacheKey(), array('permission1' => 'role1'));
+        $cacheStorage->setItem('cacheKey', array('permission1' => 'role1'));
 
         $permissionLoaderListener->onLoadPermissions($rbacEvent);
-        $this->assertSame($cacheStorage, $permissionLoaderListener->getCache());
     }
 }

@@ -41,7 +41,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     /**
      * @var string
      */
-    protected $cacheKey = 'zfc_rbac_permissions';
+    protected $cacheKey;
 
     /**
      * Constructor
@@ -50,34 +50,14 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      * @param CacheInterface              $cache
      * @param string                      $cacheKey
      */
-    public function __construct(PermissionProviderInterface $permissionProvider, CacheInterface $cache, $cacheKey = '')
-    {
+    public function __construct(
+        PermissionProviderInterface $permissionProvider,
+        CacheInterface $cache,
+        $cacheKey = 'zfc_rbac_permissions'
+    ) {
         $this->permissionProvider = $permissionProvider;
         $this->cache              = $cache;
-
-        if (!empty($cacheKey)) {
-            $this->cacheKey = $cacheKey;
-        }
-    }
-
-    /**
-     * Get the cache storage
-     *
-     * @return CacheInterface|null
-     */
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-    /**
-     * Get the cache key
-     *
-     * @return string
-     */
-    public function getCacheKey()
-    {
-        return $this->cacheKey;
+        $this->cacheKey           = (string) $cacheKey;
     }
 
     /**

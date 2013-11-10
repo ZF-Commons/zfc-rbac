@@ -168,12 +168,10 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $rbacEvent = new RbacEvent($rbac);
 
         $cacheStorage       = new Memory();
-        $roleLoaderListener = new RoleLoaderListener($roleProvider, $cacheStorage);
+        $roleLoaderListener = new RoleLoaderListener($roleProvider, $cacheStorage, 'cacheKey');
 
-        $cacheStorage->setItem($roleLoaderListener->getCacheKey(), array('role1', 'role2'));
+        $cacheStorage->setItem('cacheKey', array('role1', 'role2'));
 
         $roleLoaderListener->onLoadRoles($rbacEvent);
-
-        $this->assertSame($cacheStorage, $roleLoaderListener->getCache());
     }
 }

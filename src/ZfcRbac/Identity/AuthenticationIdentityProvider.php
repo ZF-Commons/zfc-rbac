@@ -18,8 +18,8 @@
 
 namespace ZfcRbac\Identity;
 
+use Traversable;
 use Zend\Authentication\AuthenticationService;
-use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Exception;
 
 /**
@@ -64,6 +64,12 @@ class AuthenticationIdentityProvider implements IdentityProviderInterface
             return array();
         }
 
-        return (array) $identity->getRoles();
+        $roles = $identity->getRoles();
+
+        if ($roles instanceof Traversable) {
+            $roles = iterator_to_array($roles);
+        }
+
+        return (array) $roles;
     }
 }

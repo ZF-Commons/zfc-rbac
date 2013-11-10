@@ -99,7 +99,7 @@ class RbacCollector implements CollectorInterface, Serializable
         $authorizationService = $serviceManager->get('ZfcRbac\Service\AuthorizationService');
 
         // Start collect all the data we need!
-        $this->collectOptions($authorizationService, $serviceManager);
+        $this->collectOptions($serviceManager);
         $this->collectGuards($serviceManager);
         $this->collectRolesAndPermissions($authorizationService);
     }
@@ -140,17 +140,19 @@ class RbacCollector implements CollectorInterface, Serializable
     /**
      * Collect options
      *
-     * @param  AuthorizationService $authorizationService
      * @param  ServiceManager       $serviceManager
      * @return void
      */
-    private function collectOptions(AuthorizationService $authorizationService, ServiceManager $serviceManager)
+    private function collectOptions(ServiceManager $serviceManager)
     {
         /* @var \ZfcRbac\Options\ModuleOptions $options */
-        $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
+        $options          = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
+
+        /* @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
+        $identityProvider = $serviceManager->get($options->getIdentityProvider());
 
         $this->collectedOptions = array(
-            'current_roles'     => $authorizationService->getIdentityProvider()->getIdentityRoles(),
+            'current_roles'     => $identityProvider->getIdentityRoles(),
             'guest_role'        => $options->getGuestRole(),
             'protection_policy' => $options->getProtectionPolicy()
         );

@@ -31,7 +31,7 @@ class ObjectRepositoryPermissionProvider implements PermissionProviderInterface
     /**
      * @var ObjectRepository
      */
-    protected $objectRepository;
+    private $objectRepository;
 
     /**
      * Constructor

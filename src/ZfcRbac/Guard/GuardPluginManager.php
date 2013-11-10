@@ -42,7 +42,7 @@ class GuardPluginManager extends AbstractPluginManager
     public function validatePlugin($plugin)
     {
         if ($plugin instanceof GuardInterface) {
-            return; // we're okey
+            return; // we're okay
         }
 
         throw new Exception\RuntimeException(sprintf(

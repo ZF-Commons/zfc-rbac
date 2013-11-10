@@ -43,6 +43,5 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
         $listener = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Role\RoleLoaderListener', $listener);
-        $this->assertInstanceOf('Zend\Cache\Storage\StorageInterface', $listener->getCache());
     }
 }

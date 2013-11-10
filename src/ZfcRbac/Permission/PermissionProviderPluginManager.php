@@ -50,7 +50,7 @@ class PermissionProviderPluginManager extends AbstractPluginManager
     public function validatePlugin($plugin)
     {
         if ($plugin instanceof PermissionProviderInterface) {
-            return; // we're okey
+            return; // we're okay
         }
 
         throw new Exception\RuntimeException(sprintf(

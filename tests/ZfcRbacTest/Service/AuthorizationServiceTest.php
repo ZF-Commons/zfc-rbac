@@ -36,7 +36,6 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
         $this->assertSame($rbac, $authorizationService->getRbac());
-        $this->assertSame($identityProvider, $authorizationService->getIdentityProvider());
     }
 
     public function grantedProvider()

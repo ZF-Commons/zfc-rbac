@@ -42,7 +42,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
     /**
      * @var string
      */
-    protected $cacheKey = 'zfc_rbac_roles';
+    protected $cacheKey;
 
     /**
      * Constructor
@@ -51,34 +51,14 @@ class RoleLoaderListener extends AbstractListenerAggregate
      * @param CacheInterface        $cache
      * @param string                $cacheKey
      */
-    public function __construct(RoleProviderInterface $roleProvider, CacheInterface $cache, $cacheKey = '')
-    {
+    public function __construct(
+        RoleProviderInterface $roleProvider,
+        CacheInterface $cache,
+        $cacheKey = 'zfc_rbac_roles'
+    ) {
         $this->roleProvider = $roleProvider;
         $this->cache        = $cache;
-
-        if (!empty($cacheKey)) {
-            $this->cacheKey = $cacheKey;
-        }
-    }
-
-    /**
-     * Get the cache storage
-     *
-     * @return CacheInterface|null
-     */
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-    /**
-     * Get the cache key
-     *
-     * @return string
-     */
-    public function getCacheKey()
-    {
-        return $this->cacheKey;
+        $this->cacheKey     = (string) $cacheKey;
     }
 
     /**

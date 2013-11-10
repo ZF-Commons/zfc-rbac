@@ -46,6 +46,5 @@ class PermissionLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
         $listener = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Permission\PermissionLoaderListener', $listener);
-        $this->assertInstanceOf('Zend\Cache\Storage\StorageInterface', $listener->getCache());
     }
 }

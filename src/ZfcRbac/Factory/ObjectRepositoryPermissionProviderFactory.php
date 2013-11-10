@@ -52,20 +52,23 @@ class ObjectRepositoryPermissionProviderFactory implements FactoryInterface, Mut
         $objectRepository = null;
 
         if (isset($this->options['object_repository'])) {
+            /* @var \Doctrine\Common\Persistence\ObjectRepository $objectRepository */
             $objectRepository = $parentLocator->get($this->options['object_repository']);
-        } elseif (isset($this->options['object_manager']) && isset($this->options['class_name'])) {
+
+            return new ObjectRepositoryPermissionProvider($objectRepository);
+        }
+
+        if (isset($this->options['object_manager']) && isset($this->options['class_name'])) {
             /* @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
             $objectManager    = $parentLocator->get($this->options['object_manager']);
             $objectRepository = $objectManager->getRepository($this->options['class_name']);
+
+            return new ObjectRepositoryPermissionProvider($objectRepository);
         }
 
-        if (null === $objectRepository) {
-            throw new Exception\RuntimeException(
-                'No object repository was found while creating the ZfcRbac object repository permission provider. Are
-                 you sure you specified either the object_repository option or object_manager/class_name options?'
-            );
-        }
-
-        return new ObjectRepositoryPermissionProvider($objectRepository);
+        throw new Exception\RuntimeException(
+            'No object repository was found while creating the ZfcRbac object repository permission provider. Are
+             you sure you specified either the object_repository option or object_manager/class_name options?'
+        );
     }
 }

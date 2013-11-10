@@ -59,7 +59,5 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotSame($response, $mvcEvent->getResponse(), 'Assert a new response is created');
         $this->assertEquals(403, $mvcEvent->getResponse()->getStatusCode());
-        $this->assertInstanceOf('Zend\View\Model\ViewModel', $mvcEvent->getResult());
-        $this->assertEquals($options->getTemplate(), $mvcEvent->getResult()->getTemplate());
     }
 }

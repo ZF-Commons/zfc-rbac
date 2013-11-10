@@ -78,17 +78,9 @@ class AuthorizationService implements EventManagerAwareInterface
      */
     public function getRbac()
     {
-        return $this->rbac;
-    }
+        $this->load();
 
-    /**
-     * Get the identity provider
-     *
-     * @return IdentityProviderInterface
-     */
-    public function getIdentityProvider()
-    {
-        return $this->identityProvider;
+        return $this->rbac;
     }
 
     /**
@@ -100,16 +92,6 @@ class AuthorizationService implements EventManagerAwareInterface
     public function setForceReload($forceReload)
     {
         $this->forceReload = (bool) $forceReload;
-    }
-
-    /**
-     * Get if we should force reload each time isGranted is called
-     *
-     * @return boolean
-     */
-    public function getForceReload()
-    {
-        return $this->forceReload;
     }
 
     /**
@@ -148,7 +130,7 @@ class AuthorizationService implements EventManagerAwareInterface
     }
 
     /**
-     * Load roles and permissions inside the container
+     * Load roles and permissions inside the container by triggering load events
      *
      * @see \ZfcRbac\Role\RoleLoaderListener
      * @see \ZfcRbac\Provider\ProviderLoaderListener
@@ -157,7 +139,7 @@ class AuthorizationService implements EventManagerAwareInterface
      * @param  string $permission
      * @return void
      */
-    public function load(array $roles = array(), $permission = '')
+    protected function load(array $roles = array(), $permission = '')
     {
         if ($this->isLoaded && !$this->forceReload) {
             return;
