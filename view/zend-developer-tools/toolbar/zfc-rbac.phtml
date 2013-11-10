@@ -16,7 +16,7 @@ $collection = $this->collector->getCollection();
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Current roles</span>
             <span class="zdt-detail-value">&nbsp;</span>
-            <span class="zdt-detail-value-right"><?php echo implode(',', $collection['options']['current_roles']); ?></span>
+            <span class="zdt-detail-value-right"><?= implode(',', $collection['options']['current_roles']); ?></span>
         </span>
 
         <span class="zdt-toolbar-info-heading">Settings Details</span>
@@ -24,12 +24,12 @@ $collection = $this->collector->getCollection();
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Guest role</span>
             <span class="zdt-detail-value">&nbsp;</span>
-            <span class="zdt-detail-value-right"><?php echo $collection['options']['guest_role']; ?></span>
+            <span class="zdt-detail-value-right"><?= $collection['options']['guest_role']; ?></span>
         </span>
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Guard protection policy</span>
             <span class="zdt-detail-value">&nbsp;</span>
-            <span class="zdt-detail-value-right"><?php echo $collection['options']['protection_policy']; ?></span>
+            <span class="zdt-detail-value-right"><?= $collection['options']['protection_policy']; ?></span>
         </span>
     </div>
 </div>
@@ -48,7 +48,7 @@ $collection = $this->collector->getCollection();
                 <span class="zdt-toolbar-info">
                     <span class="zdt-detail-label">Type</span>
                     <span class="zdt-detail-value">&nbsp;</span>
-                    <span class="zdt-detail-value-right"><?php echo $type; ?></span>
+                    <span class="zdt-detail-value-right"><?= $type; ?></span>
                 </span>
 
                 <span class="zdt-toolbar-info">
@@ -82,9 +82,9 @@ $collection = $this->collector->getCollection();
         <?php if (count($collection['roles']) > 0): ?>
             <?php foreach ($collection['roles'] as $role => $parent): ?>
                 <span class="zdt-toolbar-info">
-                    <span class="zdt-detail-label"><?php echo is_int($role) ? $parent : $role; ?></span>
+                    <span class="zdt-detail-label" style="text-transform: none"><?= is_int($role) ? $parent : $role; ?></span>
                     <span class="zdt-detail-value">&nbsp;</span>
-                    <span class="zdt-detail-value-right"><?php echo is_int($role) ? 'No parent' : $parent; ?></span>
+                    <span class="zdt-detail-value-right"><?= is_int($role) ? 'No parent' : $parent; ?></span>
                 </span>
             <?php endforeach; ?>
         <?php else: ?>
@@ -98,9 +98,9 @@ $collection = $this->collector->getCollection();
         <?php if (count($collection['permissions']) > 0): ?>
             <?php foreach ($collection['permissions'] as $permission => $roles): ?>
                 <span class="zdt-toolbar-info">
-                    <span class="zdt-detail-label"><?php echo $permission; ?></span>
+                    <span class="zdt-detail-label" style="text-transform: none"><?= $permission; ?></span>
                     <span class="zdt-detail-value">&nbsp;</span>
-                    <span class="zdt-detail-value-right"><?php echo implode(',', $roles) ?></span>
+                    <span class="zdt-detail-value-right"><?= implode(',', $roles) ?></span>
                 </span>
             <?php endforeach; ?>
         <?php else: ?>

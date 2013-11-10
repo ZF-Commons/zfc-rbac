@@ -19,10 +19,13 @@
 namespace ZfcRbac\Collector;
 
 use RecursiveIteratorIterator;
+use ReflectionProperty;
 use Serializable;
 use Zend\Mvc\MvcEvent;
 use Zend\Permissions\Rbac\RoleInterface;
+use Zend\ServiceManager\ServiceManager;
 use ZendDeveloperTools\Collector\CollectorInterface;
+use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RbacEvent;
 
 /**
@@ -33,7 +36,7 @@ class RbacCollector implements CollectorInterface, Serializable
     /**
      * Collector priority
      */
-    const PRIORITY = 10;
+    const PRIORITY = -100;
 
     /**
      * @var array
@@ -88,54 +91,13 @@ class RbacCollector implements CollectorInterface, Serializable
 
         $serviceManager = $mvcEvent->getApplication()->getServiceManager();
 
-        /* @var \ZfcRbac\Options\ModuleOptions $options */
-        $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
-
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $serviceManager->get('ZfcRbac\Service\AuthorizationService');
 
-        // We force the loading of roles
-        // @TODO: ugly
-        $authorizationService->isGranted('foo');
-
-        // Let's collect interesting options...
-        $this->collectedOptions = array(
-            'current_roles'     => $authorizationService->getIdentityProvider()->getIdentityRoles(),
-            'guest_role'        => $options->getGuestRole(),
-            'protection_policy' => $options->getProtectionPolicy()
-        );
-
-        // Now for guards
-        $this->collectedGuards = array();
-        foreach ($options->getGuards() as $type => $rules) {
-            $this->collectedGuards[$type] = $rules;
-        }
-
-        $rbac = $authorizationService->getRbac();
-
-        // Roles
-        $it = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);
-
-        foreach ($it as $role) {
-            if (!$role instanceof RoleInterface) {
-                continue;
-            }
-
-            if (null === $role->getParent()) {
-                $this->collectedRoles[] = $role->getName();
-            } else {
-                $this->collectedRoles[$role->getName()] = $role->getParent()->getName();
-            }
-        }
-
-        // Permissions
-        $permissionPluginManager = $serviceManager->get('ZfcRbac\Permission\PermissionProviderPluginManager');
-        $permissionChainProvider = $permissionPluginManager->get('ZfcRbac\Permission\PermissionProviderChain');
-        $permissions             = $permissionChainProvider->getPermissions(new RbacEvent($rbac));
-
-        foreach ($permissions as $permissionName => $roles) {
-            $this->collectedPermissions[$permissionName] = (array) $roles;
-        }
+        // Start collect all the data we need!
+        $this->collectOptions($authorizationService, $serviceManager);
+        $this->collectGuards($serviceManager);
+        $this->collectRolesAndPermissions($authorizationService);
     }
 
     /**
@@ -169,5 +131,77 @@ class RbacCollector implements CollectorInterface, Serializable
     public function unserialize($serialized)
     {
         $this->collection = unserialize($serialized);
+    }
+
+    /**
+     * Collect options
+     *
+     * @param  AuthorizationService $authorizationService
+     * @param  ServiceManager       $serviceManager
+     * @return void
+     */
+    private function collectOptions(AuthorizationService $authorizationService, ServiceManager $serviceManager)
+    {
+        /* @var \ZfcRbac\Options\ModuleOptions $options */
+        $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
+
+        $this->collectedOptions = array(
+            'current_roles'     => $authorizationService->getIdentityProvider()->getIdentityRoles(),
+            'guest_role'        => $options->getGuestRole(),
+            'protection_policy' => $options->getProtectionPolicy()
+        );
+    }
+
+    /**
+     * Collect guards
+     *
+     * @param  ServiceManager $serviceManager
+     * @return void
+     */
+    private function collectGuards(ServiceManager $serviceManager)
+    {
+        /* @var \ZfcRbac\Options\ModuleOptions $options */
+        $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
+
+        $this->collectedGuards = array();
+
+        foreach ($options->getGuards() as $type => $rules) {
+            $this->collectedGuards[$type] = $rules;
+        }
+    }
+
+    /**
+     * Collect roles and permissions
+     *
+     * @param  AuthorizationService $authorizationService
+     * @return void
+     */
+    private function collectRolesAndPermissions(AuthorizationService $authorizationService)
+    {
+        $rbac = $authorizationService->getRbac();
+        $this->collectedRoles = $this->collectedPermissions = array();
+
+        // Role recursive iterator
+        $roles = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);
+
+        /* @var RoleInterface $role */
+        foreach ($roles as $role) {
+            if (null === $role->getParent()) {
+                $this->collectedRoles[] = $role->getName();
+            } else {
+                $this->collectedRoles[$role->getName()] = $role->getParent()->getName();
+            }
+
+            // Rbac does not allow us to retrieve permissions from a role, so we need to use reflection. It
+            // obviously adds some overhead but this is the only way to do it
+            $reflProperty = new ReflectionProperty($role, 'permissions');
+            $reflProperty->setAccessible(true);
+
+            $permissions = $reflProperty->getValue($role);
+
+            foreach ($permissions as $permission) {
+                $this->collectedPermissions[$permission][] = $role->getName();
+            }
+        }
     }
 }

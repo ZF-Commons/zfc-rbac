@@ -23,6 +23,8 @@ use ZfcRbac\Exception;
 
 /**
  * Plugin manager to create role providers
+ *
+ * @method RoleProviderInterface get($name)
  */
 class RoleProviderPluginManager extends AbstractPluginManager
 {

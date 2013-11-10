@@ -23,6 +23,8 @@ use ZfcRbac\Exception;
 
 /**
  * Plugin manager to create permission providers
+ *
+ * @method PermissionProviderInterface get($name)
  */
 class PermissionProviderPluginManager extends AbstractPluginManager
 {
