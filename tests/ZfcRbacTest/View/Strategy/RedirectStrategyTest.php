@@ -16,12 +16,13 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\View\Helper;
+namespace ZfcRbacTest\View\Strategy;
 
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\TreeRouteStack;
+use ZfcRbac\Exception\UnauthorizedException;
 use ZfcRbac\Options\RedirectStrategyOptions;
 use ZfcRbac\View\Strategy\RedirectStrategy;
 
@@ -55,8 +56,8 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         ));
 
         $mvcEvent = new MvcEvent();
+        $mvcEvent->setParam('exception', new UnauthorizedException());
         $mvcEvent->setResponse($response);
-        $mvcEvent->setError('error');
         $mvcEvent->setRouter($router);
 
         $options = new RedirectStrategyOptions(array(
@@ -89,9 +90,9 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $request->setUri('http://www.example.com/previous');
 
         $mvcEvent = new MvcEvent();
+        $mvcEvent->setParam('exception', new UnauthorizedException());
         $mvcEvent->setRequest($request);
         $mvcEvent->setResponse($response);
-        $mvcEvent->setError('error');
         $mvcEvent->setRouter($router);
 
         $options = new RedirectStrategyOptions(array(

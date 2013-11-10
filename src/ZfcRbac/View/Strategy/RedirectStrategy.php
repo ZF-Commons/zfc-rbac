@@ -60,8 +60,7 @@ class RedirectStrategy extends AbstractListenerAggregate
     public function onError(MvcEvent $event)
     {
         // Do nothing if no error or if response is not HTTP response
-        if (!$error = $event->getError()
-            || !($exception = $event->getParam('exception') instanceof UnauthorizedException)
+        if (!($exception = $event->getParam('exception') instanceof UnauthorizedException)
             || ($result = $event->getResult() instanceof HttpResponse)
             || !($response = $event->getResponse() instanceof HttpResponse)
         ) {

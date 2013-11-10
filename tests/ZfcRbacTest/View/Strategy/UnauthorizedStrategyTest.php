@@ -16,10 +16,11 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\View\Helper;
+namespace ZfcRbacTest\View\Strategy;
 
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
+use ZfcRbac\Exception\UnauthorizedException;
 use ZfcRbac\Options\UnauthorizedStrategyOptions;
 use ZfcRbac\View\Strategy\UnauthorizedStrategy;
 
@@ -45,8 +46,8 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
         $response = new HttpResponse();
 
         $mvcEvent = new MvcEvent();
+        $mvcEvent->setParam('exception', new UnauthorizedException());
         $mvcEvent->setResponse($response);
-        $mvcEvent->setError('error');
 
         $options = new UnauthorizedStrategyOptions(array(
             'template' => 'error/403'
