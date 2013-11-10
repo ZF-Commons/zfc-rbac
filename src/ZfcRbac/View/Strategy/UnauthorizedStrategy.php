@@ -24,6 +24,7 @@ use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 use ZfcRbac\Exception\UnauthorizedException;
+use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\UnauthorizedStrategyOptions;
 
 /**
@@ -70,6 +71,14 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
 
         $model = new ViewModel();
         $model->setTemplate($this->options->getTemplate());
+
+        switch ($event->getError()) {
+            case GuardInterface::GUARD_UNAUTHORIZED:
+                $model->setVariable('error', GuardInterface::GUARD_UNAUTHORIZED);
+                break;
+
+            default:
+        }
 
         $response = $event->getResponse() ?: new HttpResponse();
         $response->setStatusCode(403);
