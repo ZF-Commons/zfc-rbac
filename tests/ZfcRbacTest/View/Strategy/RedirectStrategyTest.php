@@ -69,7 +69,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
         $redirectStrategy->onError($mvcEvent);
 
-        $this->assertNotSame($response, $mvcEvent->getResponse(), 'Assert a new response is created');
+        $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals('/login', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
@@ -105,7 +105,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
         $redirectStrategy->onError($mvcEvent);
 
-        $this->assertNotSame($response, $mvcEvent->getResponse(), 'Assert a new response is created');
+        $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
 
         $this->assertEquals(

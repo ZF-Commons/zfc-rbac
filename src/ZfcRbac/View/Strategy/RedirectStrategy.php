@@ -82,7 +82,7 @@ class RedirectStrategy extends AbstractListenerAggregate
             );
         }
 
-        $response = new HttpResponse();
+        $response = $event->getResponse() ?: new HttpResponse();
 
         $response->getHeaders()->addHeaderLine('Location', $uri);
         $response->setStatusCode(302);

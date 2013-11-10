@@ -71,7 +71,7 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
         $model = new ViewModel();
         $model->setTemplate($this->options->getTemplate());
 
-        $response = new HttpResponse();
+        $response = $event->getResponse() ?: new HttpResponse();
         $response->setStatusCode(403);
 
         $event->setResponse($response);
