@@ -16,6 +16,10 @@
  * and is licensed under the MIT license.
  */
 
+/**
+ * Copy-paste this file to your config/autoload folder (don't forget to remove the .dist extension!)
+ */
+
 return array(
     'zfc_rbac' => array(
         /**
