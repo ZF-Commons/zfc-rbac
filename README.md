@@ -34,4 +34,4 @@ the `zfc_rbac.global.php.dist` file to your `config/autoload` folder.
 
 ## Documentation
 
-The official documentation has been moved to the [repository wiki](https://github.com/ZF-Commons/ZfcRbac/wiki).
+The official documentation is available in the [/docs](/docs) folder.
