@@ -93,7 +93,7 @@ class RbacCollector implements CollectorInterface, Serializable
             return;
         }
 
-        $serviceManager = $mvcEvent->getApplication()->getServiceManager();
+        $serviceManager = $application->getServiceManager();
 
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $serviceManager->get('ZfcRbac\Service\AuthorizationService');
