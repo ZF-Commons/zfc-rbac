@@ -10,7 +10,7 @@ If you are looking for some information that is not listed in the documentation,
    2. The RBAC model
    3. How ZfcRbac integrates into your application?
 
-2. [Quick Start](/01. Introduction.md)
+2. [Quick Start](/02. Quick Start.md)
    1. [Specifying an identity provider](https://github.com/bakura10/ZfcRbac/wiki/Quick-Start#specifying-an-identity-provider)
    2. [Adding a guard](https://github.com/bakura10/ZfcRbac/wiki/Quick-Start#adding-a-guard)
    3. [Adding a role provider](https://github.com/bakura10/ZfcRbac/wiki/Quick-Start#adding-a-role-provider)
