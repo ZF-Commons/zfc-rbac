@@ -117,10 +117,8 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function serialize()
     {
-        return serialize
-        (
-            array
-            (
+        return serialize(
+            array(
                 'guards'      => $this->collectedGuards,
                 'roles'       => $this->collectedRoles,
                 'permissions' => $this->collectedPermissions,
