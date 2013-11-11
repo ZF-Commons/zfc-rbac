@@ -18,11 +18,9 @@
 
 namespace ZfcRbac\Exception;
 
-use RuntimeException as BaseRuntimeException;
-
 /**
- * Unauthorized exception
+ * Interface for an unauthorized exception
  */
-class UnauthorizedException extends BaseRuntimeException implements UnauthorizedExceptionInterface
+interface UnauthorizedExceptionInterface extends ExceptionInterface
 {
 }

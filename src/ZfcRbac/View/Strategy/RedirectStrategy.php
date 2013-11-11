@@ -22,7 +22,7 @@ use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
-use ZfcRbac\Exception\UnauthorizedException;
+use ZfcRbac\Exception\UnauthorizedExceptionInterface;
 use ZfcRbac\Options\RedirectStrategyOptions;
 
 /**
@@ -60,7 +60,7 @@ class RedirectStrategy extends AbstractListenerAggregate
     public function onError(MvcEvent $event)
     {
         // Do nothing if no error or if response is not HTTP response
-        if (!($exception = $event->getParam('exception') instanceof UnauthorizedException)
+        if (!($exception = $event->getParam('exception') instanceof UnauthorizedExceptionInterface)
             || ($result = $event->getResult() instanceof HttpResponse)
             || !($response = $event->getResponse() instanceof HttpResponse)
         ) {

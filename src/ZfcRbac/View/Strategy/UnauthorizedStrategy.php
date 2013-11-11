@@ -23,7 +23,7 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
-use ZfcRbac\Exception\UnauthorizedException;
+use ZfcRbac\Exception\UnauthorizedExceptionInterface;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\UnauthorizedStrategyOptions;
 
@@ -62,7 +62,7 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
     public function onError(MvcEvent $event)
     {
         // Do nothing if no error or if response is not HTTP response
-        if (!($exception = $event->getParam('exception') instanceof UnauthorizedException)
+        if (!($exception = $event->getParam('exception') instanceof UnauthorizedExceptionInterface)
             || ($result = $event->getResult() instanceof HttpResponse)
             || !($response = $event->getResponse() instanceof HttpResponse)
         ) {
