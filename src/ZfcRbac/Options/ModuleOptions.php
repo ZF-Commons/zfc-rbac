@@ -49,6 +49,13 @@ class ModuleOptions extends AbstractOptions
     protected $guestRole = 'guest';
 
     /**
+     * Should we force reload of roles and permissions each time "isGranted" is called?
+     *
+     * @var bool
+     */
+    protected $forceReload = false;
+
+    /**
      * Guards
      *
      * @var array
@@ -167,6 +174,27 @@ class ModuleOptions extends AbstractOptions
     public function getGuestRole()
     {
         return $this->guestRole;
+    }
+
+    /**
+     * Set if we should force reloading the roles and permissions whenever "isGranted" is called
+     *
+     * @param  boolean $forceReload
+     * @return void
+     */
+    public function setForceReload($forceReload)
+    {
+        $this->forceReload = (bool) $forceReload;
+    }
+
+    /**
+     * Get if we should force reloading the roles and permissions whenever "isGranted" is called
+     *
+     * @return boolean
+     */
+    public function getForceReload()
+    {
+        return $this->forceReload;
     }
 
     /**

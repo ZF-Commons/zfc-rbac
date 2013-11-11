@@ -47,6 +47,14 @@ return array(
         // 'guest_role' => 'guest',
 
         /**
+         * Allow to force the reload of roles and permissions each time "isGranted" is called in the
+         * AuthorizationService. This can be useful if you have custom role and permission providers that lazy
+         * load roles and permissions based on the current identity roles and asked permission (especially if
+         * you have tons of roles/permissions)
+         */
+        // 'force_reload' => false,
+
+        /**
          * Set the guards
          *
          * You must comply with the various options of guards. The format must be of the following format:

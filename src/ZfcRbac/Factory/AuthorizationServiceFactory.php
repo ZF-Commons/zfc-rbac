@@ -56,6 +56,7 @@ class AuthorizationServiceFactory implements FactoryInterface
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
         $authorizationService->setEventManager($eventManager);
+        $authorizationService->setForceReload($moduleOptions->getForceReload());
 
         return $authorizationService;
     }
