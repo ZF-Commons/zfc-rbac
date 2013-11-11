@@ -18,8 +18,6 @@
 
 namespace ZfcRbac\View\Strategy;
 
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
@@ -30,7 +28,7 @@ use ZfcRbac\Options\UnauthorizedStrategyOptions;
 /**
  * This strategy renders a specific template when a user is unauthorized
  */
-class UnauthorizedStrategy extends AbstractListenerAggregate
+class UnauthorizedStrategy extends AbstractStrategy
 {
     /**
      * @var UnauthorizedStrategyOptions
@@ -48,14 +46,7 @@ class UnauthorizedStrategy extends AbstractListenerAggregate
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function attach(EventManagerInterface $events)
-    {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
-    }
-
-    /**
+     * @private
      * @param  MvcEvent $event
      * @return void
      */

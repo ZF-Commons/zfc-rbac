@@ -18,8 +18,6 @@
 
 namespace ZfcRbac\View\Strategy;
 
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception\UnauthorizedExceptionInterface;
@@ -28,7 +26,7 @@ use ZfcRbac\Options\RedirectStrategyOptions;
 /**
  * This strategy redirects to another route when a user is unauthorized
  */
-class RedirectStrategy extends AbstractListenerAggregate
+class RedirectStrategy extends AbstractStrategy
 {
     /**
      * @var RedirectStrategyOptions
@@ -46,14 +44,7 @@ class RedirectStrategy extends AbstractListenerAggregate
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function attach(EventManagerInterface $events)
-    {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
-    }
-
-    /**
+     * @private
      * @param  MvcEvent $event
      * @return void
      */
