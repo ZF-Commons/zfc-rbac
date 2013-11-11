@@ -20,7 +20,7 @@ If you are looking for some information that is not listed in the documentation,
 
 3. [Guards](/docs/03. Guards.md)
    1. [What are guards and when to use them?](/docs/03. Guards.md#what-are-guards-and-when-to-use-them)
-   2. [Built-in guards](/docs/03. Guards.md#what-are-guards-and-when-to-use-them)
+   2. [Built-in guards](/docs/03. Guards.md#built-in-guards)
    3. [Creating custom guards](/docs/03. Guards.md#creating-custom-guards)
 
 4. [Role providers](/docs/04. Role providers.md)
