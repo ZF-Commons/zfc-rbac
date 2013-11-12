@@ -4,7 +4,7 @@ namespace ZfcRbacTest\Role;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * @coversDefaultClass \ZfcRbac\Role\RoleProviderPluginManager
+ * @covers \ZfcRbac\Role\RoleProviderPluginManager
  */
 class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
 {

@@ -3,6 +3,9 @@ namespace ZfcRbacTest\Role;
 
 use ZfcRbac\Permission\PermissionProviderPluginManager;
 
+/**
+ * @covers \ZfcRbac\Permission\PermissionProviderPluginManager
+ */
 class PermissionProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidationOfPluginSucceedsIfPermissionProviderInterfaceIsImplemented()
