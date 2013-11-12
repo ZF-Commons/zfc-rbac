@@ -5,11 +5,15 @@ use ZfcRbac\Permission\PermissionProviderPluginManager;
 
 class PermissionProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test to see the the PluginManager throws the correct exception when
-     * a Service is requested that doesn't implement \ZfcRbac\Permission\PermissionProviderInterface
-     */
-    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
+    public function testValidationOfPluginSucceedsIfPermissionProviderInterfaceIsImplemented()
+    {
+        $pluginMock    = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
+        $pluginManager = new PermissionProviderPluginManager();
+
+        $this->assertNull($pluginManager->validatePlugin($pluginMock));
+    }
+
+    public function testValidationOfPluginFailsIfPermissionProviderInterfaceIsNotImplemented()
     {
         $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
 

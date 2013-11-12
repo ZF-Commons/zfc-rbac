@@ -3,13 +3,20 @@ namespace ZfcRbacTest\Role;
 
 use ZfcRbac\Role\RoleProviderPluginManager;
 
+/**
+ * @coversDefaultClass \ZfcRbac\Role\RoleProviderPluginManager
+ */
 class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test to see the the PluginManager throws the correct exception when
-     * a Service is requested that doesn't implement \ZfcRbac\Role\RoleProviderInterface
-     */
-    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
+    public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
+    {
+        $pluginMock    = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
+        $pluginManager = new RoleProviderPluginManager();
+
+        $this->assertNull($pluginManager->validatePlugin($pluginMock));
+    }
+
+    public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
     {
         $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
 
