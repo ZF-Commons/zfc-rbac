@@ -27,6 +27,7 @@ use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
+ * @covers \ZfcRbac\Guard\AbstractGuard
  * @covers \ZfcRbac\Guard\ControllerGuard
  */
 class ControllerGuardTest extends \PHPUnit_Framework_TestCase
