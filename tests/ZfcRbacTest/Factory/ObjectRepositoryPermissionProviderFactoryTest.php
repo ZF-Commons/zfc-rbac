@@ -72,9 +72,20 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
 
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
     {
-        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+        try {
+            $pluginManager  = new PermissionProviderPluginManager();
+            $serviceManager = new ServiceManager();
 
-        $pluginManager  = new PermissionProviderPluginManager();
-        $pluginManager->get('stdClass', array());
+            $pluginManager->setServiceLocator($serviceManager);
+            $pluginManager->get('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', array());
+        } catch (\Zend\ServiceManager\Exception\ServiceNotCreatedException $zfException) {
+            while ($current = $zfException->getPrevious()) {
+                if ($current instanceof \ZfcRbac\Exception\RuntimeException) {
+                    return;
+                }
+            }
+        }
+
+        $this->fail('ZfcRbac\Exception\RuntimeException not found in previous exceptions');
     }
 }
