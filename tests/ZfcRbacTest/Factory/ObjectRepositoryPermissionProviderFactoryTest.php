@@ -73,7 +73,7 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
     {
         try {
-            $pluginManager  = new PermissionProviderPluginManager();
+            $pluginManager  = new PermissionProviderPluginManager();#
             $serviceManager = new ServiceManager();
 
             $pluginManager->setServiceLocator($serviceManager);
