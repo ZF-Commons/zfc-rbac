@@ -67,11 +67,31 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
         $this->assertInstanceOf('ZfcRbac\Role\ObjectRepositoryRoleProvider', $roleProvider);
     }
 
+    /**
+     * This test covers that the proper exception is found in the exception chain when no proper configuration is
+     * provided for the requested service.
+     *
+     * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
+     */
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
     {
-        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+        try {
+            $pluginManager  = new RoleProviderPluginManager();
+            $serviceManager = new ServiceManager();
 
-        $pluginManager  = new RoleProviderPluginManager();
-        $pluginManager->get('stdClass', array());
+            $pluginManager->setServiceLocator($serviceManager);
+            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', array());
+        } catch (\Zend\ServiceManager\Exception\ServiceNotCreatedException $smException) {
+            while ($e = $smException->getPrevious()) {
+                if ($e instanceof \ZfcRbac\Exception\RuntimeException) {
+                    return true;
+                }
+            }
+        }
+
+        $this->fail(
+             'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory::createService() :: '
+            .'ZfcRbac\Exception\RuntimeException was not found in the previous Exceptions'
+        );
     }
 }

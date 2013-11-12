@@ -70,6 +70,12 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
         $this->assertInstanceOf('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', $permissionProvider);
     }
 
+    /**
+     * This test covers that the proper exception is found in the exception chain when no proper configuration is
+     * provided for the requested service.
+     *
+     * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
+     */
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
     {
         try {
@@ -78,14 +84,17 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
 
             $pluginManager->setServiceLocator($serviceManager);
             $pluginManager->get('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', array());
-        } catch (\Zend\ServiceManager\Exception\ServiceNotCreatedException $zfException) {
-            while ($current = $zfException->getPrevious()) {
-                if ($current instanceof \ZfcRbac\Exception\RuntimeException) {
-                    return;
+        } catch(\Zend\ServiceManager\Exception\ServiceNotCreatedException $smException) {
+            while ($e = $smException->getPrevious()) {
+                if ($e instanceof \ZfcRbac\Exception\RuntimeException) {
+                    return true;
                 }
             }
         }
 
-        $this->fail('ZfcRbac\Exception\RuntimeException not found in previous exceptions');
+        $this->fail(
+             'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory::createService() :: '
+             .'ZfcRbac\Exception\RuntimeException was not found in the previous Exceptions'
+        );
     }
 }
