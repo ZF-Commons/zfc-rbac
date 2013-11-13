@@ -32,13 +32,13 @@ class RoleProviderChainFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $pluginManager = new RoleProviderPluginManager();
 
-        $moduleOptions = new ModuleOptions(array(
-            'role_providers' => array(
-                'ZfcRbac\Role\InMemoryRoleProvider' => array(
+        $moduleOptions = new ModuleOptions([
+            'role_providers' => [
+                'ZfcRbac\Role\InMemoryRoleProvider' => [
                     'role1'
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);

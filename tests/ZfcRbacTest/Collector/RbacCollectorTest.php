@@ -46,21 +46,21 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
 
         $unserialized = unserialize($serialized);
 
-        $this->assertSame(array(), $unserialized['guards']);
-        $this->assertSame(array(), $unserialized['roles']);
-        $this->assertSame(array(), $unserialized['permissions']);
-        $this->assertSame(array(), $unserialized['options']);
+        $this->assertSame([], $unserialized['guards']);
+        $this->assertSame([], $unserialized['roles']);
+        $this->assertSame([], $unserialized['permissions']);
+        $this->assertSame([], $unserialized['options']);
     }
 
     public function testUnserialize()
     {
         $collector    = new RbacCollector();
-        $unserialized = array(
-            'guards'      => array('foo' => 'bar'),
-            'roles'       => array('foo' => 'bar'),
-            'permissions' => array('foo' => 'bar'),
-            'options'     => array('foo' => 'bar')
-        );
+        $unserialized = [
+            'guards'      => ['foo' => 'bar'],
+            'roles'       => ['foo' => 'bar'],
+            'permissions' => ['foo' => 'bar'],
+            'options'     => ['foo' => 'bar']
+        ];
         $serialized   = serialize($unserialized);
 
         $collector->unserialize($serialized);
@@ -68,10 +68,10 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $collection = $collector->getCollection();
 
         $this->assertInternalType('array', $collection);
-        $this->assertSame(array('foo' => 'bar'), $collection['guards']);
-        $this->assertSame(array('foo' => 'bar'), $collection['roles']);
-        $this->assertSame(array('foo' => 'bar'), $collection['permissions']);
-        $this->assertSame(array('foo' => 'bar'), $collection['options']);
+        $this->assertSame(['foo' => 'bar'], $collection['guards']);
+        $this->assertSame(['foo' => 'bar'], $collection['roles']);
+        $this->assertSame(['foo' => 'bar'], $collection['permissions']);
+        $this->assertSame(['foo' => 'bar'], $collection['options']);
     }
 
     public function testCollectNothingIfNoApplicationIsSet()
@@ -85,13 +85,13 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
     public function testCollect()
     {
         $collector         = new RbacCollector();
-        $dataIdentityRoles = array('guest', 'user');
-        $dataGuards        = array(
-            'ZfcRbac\Guard\RouteGuard' => array(
-                'admin/*' => array('admin'),
-                'login'   => array('guest')
-            )
-        );
+        $dataIdentityRoles = ['guest', 'user'];
+        $dataGuards        = [
+            'ZfcRbac\Guard\RouteGuard' => [
+                'admin/*' => ['admin'],
+                'login'   => ['guest']
+            ]
+        ];
 
         $moduleOptionsMock = $this->getMock('ZfcRbac\Options\ModuleOptions');
         $moduleOptionsMock->expects($this->once())
@@ -130,11 +130,11 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
                          ->will($this->returnValue($dataIdentityRoles));
 
         //region Mock ServiceLocator
-        $slMockMap          = array(
-            array('ZfcRbac\Service\AuthorizationService', $authServiceMock),
-            array('ZfcRbac\Options\ModuleOptions', $moduleOptionsMock),
-            array('ZfcRbac\Identity\AuthenticationIdentityProvider', $authIdentityMock)
-        );
+        $slMockMap          = [
+            ['ZfcRbac\Service\AuthorizationService', $authServiceMock],
+            ['ZfcRbac\Options\ModuleOptions', $moduleOptionsMock],
+            ['ZfcRbac\Identity\AuthenticationIdentityProvider', $authIdentityMock]
+        ];
 
         $serviceLocatorMock = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
         $serviceLocatorMock->expects($this->any())

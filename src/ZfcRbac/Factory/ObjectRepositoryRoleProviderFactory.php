@@ -32,7 +32,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface, MutableCr
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * {@inheritDoc}

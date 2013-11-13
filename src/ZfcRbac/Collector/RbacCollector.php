@@ -41,27 +41,27 @@ class RbacCollector implements CollectorInterface, Serializable
     /**
      * @var array
      */
-    protected $collection = array();
+    protected $collection = [];
 
     /**
      * @var array
      */
-    protected $collectedGuards = array();
+    protected $collectedGuards = [];
 
     /**
      * @var array
      */
-    protected $collectedRoles = array();
+    protected $collectedRoles = [];
 
     /**
      * @var array
      */
-    protected $collectedPermissions = array();
+    protected $collectedPermissions = [];
 
     /**
      * @var array
      */
-    protected $collectedOptions = array();
+    protected $collectedOptions = [];
 
     /**
      * Collector Name.
@@ -121,11 +121,11 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     private function collectOptions(ModuleOptions $moduleOptions, IdentityProviderInterface $identityProvider)
     {
-        $this->collectedOptions = array(
+        $this->collectedOptions = [
             'current_roles'     => $identityProvider->getIdentityRoles(),
             'guest_role'        => $moduleOptions->getGuestRole(),
             'protection_policy' => $moduleOptions->getProtectionPolicy()
-        );
+        ];
     }
 
     /**
@@ -137,7 +137,7 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     private function collectGuards($guards)
     {
-        $this->collectedGuards = array();
+        $this->collectedGuards = [];
 
         foreach ($guards as $type => $rules) {
             $this->collectedGuards[$type] = $rules;
@@ -154,7 +154,7 @@ class RbacCollector implements CollectorInterface, Serializable
     private function collectRolesAndPermissions(AuthorizationService $authorizationService)
     {
         $rbac                 = $authorizationService->getRbac();
-        $this->collectedRoles = $this->collectedPermissions = array();
+        $this->collectedRoles = $this->collectedPermissions = [];
 
         // Role recursive iterator
         $roles = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);
@@ -199,14 +199,12 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function serialize()
     {
-        return serialize(
-            array(
-                'guards'      => $this->collectedGuards,
-                'roles'       => $this->collectedRoles,
-                'permissions' => $this->collectedPermissions,
-                'options'     => $this->collectedOptions
-            )
-        );
+        return serialize([
+            'guards'      => $this->collectedGuards,
+            'roles'       => $this->collectedRoles,
+            'permissions' => $this->collectedPermissions,
+            'options'     => $this->collectedOptions
+        ]);
     }
 
     /**

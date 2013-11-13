@@ -33,9 +33,9 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
 
         $pluginManager->setServiceLocator($serviceManager);
 
-        $options = array(
+        $options = [
             'object_repository' => 'PermissionObjectRepository'
-        );
+        ];
 
         $serviceManager->setService(
             'PermissionObjectRepository',
@@ -53,10 +53,10 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
 
         $pluginManager->setServiceLocator($serviceManager);
 
-        $options = array(
+        $options = [
             'object_manager' => 'ObjectManager',
             'class_name'     => 'Permission'
-        );
+        ];
 
         $objectManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
         $objectManager->expects($this->once())
@@ -83,7 +83,7 @@ class ObjectRepositoryPermissionProviderFactoryTest extends \PHPUnit_Framework_T
             $serviceManager = new ServiceManager();
 
             $pluginManager->setServiceLocator($serviceManager);
-            $pluginManager->get('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', array());
+            $pluginManager->get('ZfcRbac\Permission\ObjectRepositoryPermissionProvider', []);
         } catch(\Zend\ServiceManager\Exception\ServiceNotCreatedException $smException) {
             while ($e = $smException->getPrevious()) {
                 if ($e instanceof \ZfcRbac\Exception\RuntimeException) {

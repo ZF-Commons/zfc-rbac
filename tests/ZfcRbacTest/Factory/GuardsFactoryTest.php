@@ -30,20 +30,18 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $moduleOptions = new ModuleOptions(array(
-            'guards' => array(
-                'ZfcRbac\Guard\RouteGuard' => array(
+        $moduleOptions = new ModuleOptions([
+            'guards' => [
+                'ZfcRbac\Guard\RouteGuard' => [
                     'admin/*' => 'role1'
-                ),
-                'ZfcRbac\Guard\ControllerGuard' => array(
-                    array(
-                        'controller' => 'MyController',
-                        'actions'    => array('index', 'edit'),
-                        'roles'      => array('role')
-                    )
-                )
-            )
-        ));
+                ],
+                'ZfcRbac\Guard\ControllerGuard' => [[
+                    'controller' => 'MyController',
+                    'actions'    => ['index', 'edit'],
+                    'roles'      => ['role']
+                ]]
+            ]
+        ]);
 
         $pluginManager = new GuardPluginManager();
 
@@ -52,7 +50,7 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ZfcRbac\Guard\GuardPluginManager', $pluginManager);
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
+            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
         $pluginManager->setServiceLocator($serviceManager);
@@ -69,9 +67,9 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnArrayIfNoConfig()
     {
-        $moduleOptions = new ModuleOptions(array(
-            'guards' => array()
-        ));
+        $moduleOptions = new ModuleOptions([
+            'guards' => []
+        ]);
 
         $pluginManager = new GuardPluginManager();
 

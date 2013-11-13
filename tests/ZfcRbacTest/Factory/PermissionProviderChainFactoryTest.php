@@ -32,13 +32,13 @@ class PermissionProviderChainFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $pluginManager = new PermissionProviderPluginManager();
 
-        $moduleOptions = new ModuleOptions(array(
-            'permission_providers' => array(
-                'ZfcRbac\Permission\InMemoryPermissionProvider' => array(
+        $moduleOptions = new ModuleOptions([
+            'permission_providers' => [
+                'ZfcRbac\Permission\InMemoryPermissionProvider' => [
                     'edit' => 'role1'
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);

@@ -72,7 +72,7 @@ class ObjectRepositoryPermissionProviderTest extends \PHPUnit_Framework_TestCase
         $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\Permission');
 
         $objectRepositoryPermissionProvider = new ObjectRepositoryPermissionProvider($objectRepository);
-        $rbacEvent                          = $this->getMock('ZfcRbac\Service\RbacEvent', array(), array(), '', false);
+        $rbacEvent                          = $this->getMock('ZfcRbac\Service\RbacEvent', [], [], '', false);
 
         $permissions = $objectRepositoryPermissionProvider->getPermissions($rbacEvent);
 

@@ -28,7 +28,7 @@ class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $config = array('zfc_rbac' => array());
+        $config = ['zfc_rbac' => []];
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('Config', $config);

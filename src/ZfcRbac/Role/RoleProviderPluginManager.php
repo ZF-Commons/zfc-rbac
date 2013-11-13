@@ -31,17 +31,17 @@ class RoleProviderPluginManager extends AbstractPluginManager
     /**
      * @var array
      */
-    protected $invokableClasses = array(
+    protected $invokableClasses = [
         'ZfcRbac\Role\InMemoryRoleProvider' => 'ZfcRbac\Role\InMemoryRoleProvider'
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $factories = array(
+    protected $factories = [
         'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
         'ZfcRbac\Role\RoleProviderChain'            => 'ZfcRbac\Factory\RoleProviderChainFactory'
-    );
+    ];
 
     /**
      * {@inheritDoc}

@@ -60,7 +60,7 @@ class ModuleOptions extends AbstractOptions
      *
      * @var array
      */
-    protected $guards = array();
+    protected $guards = [];
 
     /**
      * Protection policy for guards (can be "deny" or "allow")
@@ -74,14 +74,14 @@ class ModuleOptions extends AbstractOptions
      *
      * @var array
      */
-    protected $roleProviders = array();
+    protected $roleProviders = [];
 
     /**
      * A configuration for permission providers
      *
      * @var array
      */
-    protected $permissionProviders = array();
+    protected $permissionProviders = [];
 
     /**
      * Options for the unauthorized strategy

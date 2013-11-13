@@ -46,7 +46,7 @@ class RouteGuard extends AbstractGuard
      *
      * @var array
      */
-    protected $rules = array();
+    protected $rules = [];
 
     /**
      * Constructor
@@ -54,7 +54,7 @@ class RouteGuard extends AbstractGuard
      * @param AuthorizationService $authorizationService
      * @param array                $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = array())
+    public function __construct(AuthorizationService $authorizationService, array $rules = [])
     {
         parent::__construct($authorizationService);
         $this->setRules($rules);
@@ -68,7 +68,7 @@ class RouteGuard extends AbstractGuard
      */
     public function setRules(array $rules)
     {
-        $this->rules = array();
+        $this->rules = [];
         $this->addRules($rules);
     }
 
@@ -83,7 +83,7 @@ class RouteGuard extends AbstractGuard
         foreach ($rules as $key => $value) {
             if (is_int($key)) {
                 $routeRegex = $value;
-                $roles      = array();
+                $roles      = [];
             } else {
                 $routeRegex = $key;
                 $roles      = (array) $value;
@@ -100,7 +100,7 @@ class RouteGuard extends AbstractGuard
     {
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
 
-        $allowedRoles = array();
+        $allowedRoles = [];
         $permission   = null;
 
         foreach (array_keys($this->rules) as $routeRule) {

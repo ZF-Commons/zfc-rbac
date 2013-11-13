@@ -32,10 +32,10 @@ class PermissionProviderChainTest extends \PHPUnit_Framework_TestCase
         $permissionProviderChain = new PermissionProviderChain($this->getPermissionProviders());
         $result                  = $permissionProviderChain->getPermissions(new RbacEvent(new Rbac()));
 
-        $expected = array(
-            'role1' => array('edit', 'read'),
-            'role2' => array('delete', 'write')
-        );
+        $expected = [
+            'role1' => ['edit', 'read'],
+            'role2' => ['delete', 'write']
+        ];
 
         $this->assertEquals($expected, $result);
     }
@@ -50,10 +50,10 @@ class PermissionProviderChainTest extends \PHPUnit_Framework_TestCase
 
         $result = $permissionProviderChain->getPermissions(new RbacEvent(new Rbac()));
 
-        $expected = array(
-            'role1' => array('edit', 'read'),
-            'role2' => array('delete', 'write')
-        );
+        $expected = [
+            'role1' => ['edit', 'read'],
+            'role2' => ['delete', 'write']
+        ];
 
         $this->assertEquals($expected, $result);
     }
@@ -63,17 +63,17 @@ class PermissionProviderChainTest extends \PHPUnit_Framework_TestCase
         $permissionProvider1 = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
         $permissionProvider1->expects($this->once())
                             ->method('getPermissions')
-                            ->will($this->returnValue(array('role1' => 'edit')));
+                            ->will($this->returnValue(['role1' => 'edit']));
 
         $permissionProvider2 = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
         $permissionProvider2->expects($this->once())
                             ->method('getPermissions')
-                            ->will($this->returnValue(array(
-                                'role2' => array('delete', 'write'),
-                                'role1' => array('read')
-                            )));
+                            ->will($this->returnValue([
+                                'role2' => ['delete', 'write'],
+                                'role1' => ['read']
+                            ]));
 
-        return array($permissionProvider1, $permissionProvider2);
+        return [$permissionProvider1, $permissionProvider2];
     }
 }
  

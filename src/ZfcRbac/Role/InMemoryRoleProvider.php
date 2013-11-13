@@ -28,7 +28,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
     /**
      * @var string[]|array|\Zend\Permissions\Rbac\RoleInterface[]
      */
-    private $roles = array();
+    private $roles = [];
 
     /**
      * @param string[]|array|\Zend\Permissions\Rbac\RoleInterface[] $roles

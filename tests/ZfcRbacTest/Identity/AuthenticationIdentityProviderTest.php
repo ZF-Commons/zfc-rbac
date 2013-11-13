@@ -47,7 +47,7 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
                                     ->method('hasIdentity')
                                     ->will($this->returnValue(false));
 
-        $this->assertEquals(array('guest'), $this->identityProvider->getIdentityRoles());
+        $this->assertEquals(['guest'], $this->identityProvider->getIdentityRoles());
     }
 
     public function testCanReturnRolesFromIdentity()
@@ -65,7 +65,7 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
                                     ->method('getIdentity')
                                     ->will($this->returnValue($identity));
 
-        $this->assertEquals(array('myRole'), $this->identityProvider->getIdentityRoles());
+        $this->assertEquals(['myRole'], $this->identityProvider->getIdentityRoles());
     }
 
     public function testReturnEmptyRolesIfIdentityIsWrongType()

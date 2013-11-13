@@ -38,7 +38,7 @@ class PermissionProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
 
         $pluginManager  = new PermissionProviderPluginManager();
-        $pluginManager->get('stdClass', array());
+        $pluginManager->get('stdClass', []);
     }
 }
  

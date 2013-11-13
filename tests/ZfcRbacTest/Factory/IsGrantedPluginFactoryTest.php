@@ -36,7 +36,7 @@ class IsGrantedPluginFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
+            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
         $factory   = new IsGrantedPluginFactory();

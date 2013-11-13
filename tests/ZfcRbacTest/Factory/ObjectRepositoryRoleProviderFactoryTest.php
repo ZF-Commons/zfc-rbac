@@ -33,9 +33,9 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
 
         $pluginManager->setServiceLocator($serviceManager);
 
-        $options = array(
+        $options = [
             'object_repository' => 'RoleObjectRepository'
-        );
+        ];
 
         $serviceManager->setService('RoleObjectRepository', $this->getMock('Doctrine\Common\Persistence\ObjectRepository'));
 
@@ -50,10 +50,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
 
         $pluginManager->setServiceLocator($serviceManager);
 
-        $options = array(
+        $options = [
             'object_manager' => 'ObjectManager',
             'class_name'     => 'Role'
-        );
+        ];
 
         $objectManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
         $objectManager->expects($this->once())
@@ -80,7 +80,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             $serviceManager = new ServiceManager();
 
             $pluginManager->setServiceLocator($serviceManager);
-            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', array());
+            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', []);
         } catch (\Zend\ServiceManager\Exception\ServiceNotCreatedException $smException) {
             while ($e = $smException->getPrevious()) {
                 if ($e instanceof \ZfcRbac\Exception\RuntimeException) {

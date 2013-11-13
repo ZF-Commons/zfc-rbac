@@ -31,18 +31,18 @@ class PermissionProviderPluginManager extends AbstractPluginManager
     /**
      * @var array
      */
-    protected $invokableClasses = array(
+    protected $invokableClasses = [
         'ZfcRbac\Role\InMemoryPermissionProvider' => 'ZfcRbac\Role\InMemoryPermissionProvider'
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $factories = array(
+    protected $factories = [
         'ZfcRbac\Permission\ObjectRepositoryPermissionProvider'
             => 'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory',
         'ZfcRbac\Permission\PermissionProviderChain' => 'ZfcRbac\Factory\PermissionProviderChainFactory'
-    );
+    ];
 
     /**
      * {@inheritDoc}

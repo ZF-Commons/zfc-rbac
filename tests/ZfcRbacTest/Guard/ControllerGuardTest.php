@@ -34,110 +34,110 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 {
     public function rulesConversionProvider()
     {
-        return array(
+        return [
             // Without actions
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'MyController',
                         'roles'      => 'role1'
-                    ),
-                    array(
+                    ],
+                    [
                         'controller' => 'MyController2',
-                        'roles'      => array('role2', 'role3')
-                    ),
-                    new \ArrayIterator(array(
+                        'roles'      => ['role2', 'role3']
+                    ],
+                    new \ArrayIterator([
                         'controller' => 'MyController3',
-                        'roles'      => new \ArrayIterator(array('role4'))
-                    ))
-                ),
-                'expected' => array(
-                    'mycontroller'  => array(0 => array('role1')),
-                    'mycontroller2' => array(0 => array('role2', 'role3')),
-                    'mycontroller3' => array(0 => array('role4'))
-                )
-            ),
+                        'roles'      => new \ArrayIterator(['role4'])
+                    ])
+                ],
+                'expected' => [
+                    'mycontroller'  => [0 => ['role1']],
+                    'mycontroller2' => [0 => ['role2', 'role3']],
+                    'mycontroller3' => [0 => ['role4']]
+                ]
+            ],
 
             // With one action
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'MyController',
                         'actions'    => 'DELETE',
                         'roles'      => 'role1'
-                    ),
-                    array(
+                    ],
+                    [
                         'controller' => 'MyController2',
-                        'actions'    => array('delete'),
+                        'actions'    => ['delete'],
                         'roles'      => 'role2'
-                    ),
-                    new \ArrayIterator(array(
+                    ],
+                    new \ArrayIterator([
                         'controller' => 'MyController3',
-                        'actions'    => new \ArrayIterator(array('DELETE')),
-                        'roles'      => new \ArrayIterator(array('role3'))
-                    ))
-                ),
-                'expected' => array(
-                    'mycontroller'  => array(
-                        'delete' => array('role1')
-                    ),
-                    'mycontroller2'  => array(
-                        'delete' => array('role2')
-                    ),
-                    'mycontroller3'  => array(
-                        'delete' => array('role3')
-                    ),
-                )
-            ),
+                        'actions'    => new \ArrayIterator(['DELETE']),
+                        'roles'      => new \ArrayIterator(['role3'])
+                    ])
+                ],
+                'expected' => [
+                    'mycontroller'  => [
+                        'delete' => ['role1']
+                    ],
+                    'mycontroller2'  => [
+                        'delete' => ['role2']
+                    ],
+                    'mycontroller3'  => [
+                        'delete' => ['role3']
+                    ],
+                ]
+            ],
 
             // With multiple actions
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'MyController',
-                        'actions'    => array('EDIT', 'delete'),
+                        'actions'    => ['EDIT', 'delete'],
                         'roles'      => 'role1'
-                    ),
-                    new \ArrayIterator(array(
+                    ],
+                    new \ArrayIterator([
                         'controller' => 'MyController2',
-                        'actions'    => new \ArrayIterator(array('edit', 'DELETE')),
-                        'roles'      => new \ArrayIterator(array('role2'))
-                    ))
-                ),
-                'expected' => array(
-                    'mycontroller'  => array(
-                        'edit'   => array('role1'),
-                        'delete' => array('role1')
-                    ),
-                    'mycontroller2'  => array(
-                        'edit'   => array('role2'),
-                        'delete' => array('role2')
-                    )
-                )
-            ),
+                        'actions'    => new \ArrayIterator(['edit', 'DELETE']),
+                        'roles'      => new \ArrayIterator(['role2'])
+                    ])
+                ],
+                'expected' => [
+                    'mycontroller'  => [
+                        'edit'   => ['role1'],
+                        'delete' => ['role1']
+                    ],
+                    'mycontroller2'  => [
+                        'edit'   => ['role2'],
+                        'delete' => ['role2']
+                    ]
+                ]
+            ],
 
             // Test that that if a rule is set globally to the controller, it does not override any
             // action specific rule that may have been specified before
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'MyController',
-                        'actions'    => array('edit'),
+                        'actions'    => ['edit'],
                         'roles'      => 'role1'
-                    ),
-                    array(
+                    ],
+                    [
                         'controller' => 'MyController',
                         'roles'      => 'role2'
-                    )
-                ),
-                'expected' => array(
-                    'mycontroller'  => array(
-                        'edit' => array('role1'),
-                        0      => array('role2')
-                    )
-                )
-            )
-        );
+                    ]
+                ],
+                'expected' => [
+                    'mycontroller'  => [
+                        'edit' => ['role1'],
+                        0      => ['role2']
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
@@ -145,7 +145,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
      */
     public function testRulesConversions(array $rules, array $expected)
     {
-        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
         $controllerGuard      = new ControllerGuard($authorizationService, $rules);
 
         $reflProperty = new \ReflectionProperty($controllerGuard, 'rules');
@@ -156,203 +156,203 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
     public function controllerDataProvider()
     {
-        return array(
+        return [
             // Test simple guard with both policies
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'roles'      => 'admin'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'BlogController',
                 'action'        => 'edit',
-                'rolesToCreate' => array('admin'),
+                'rolesToCreate' => ['admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_ALLOW
-            ),
-            array(
-                'rules' => array(
-                    array(
+            ],
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'roles'      => 'admin'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'BlogController',
                 'action'        => 'edit',
-                'rolesToCreate' => array('admin'),
+                'rolesToCreate' => ['admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_DENY
-            ),
+            ],
 
             // Test with multiple rules
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'actions'    => 'read',
                         'roles'      => 'admin'
-                    ),
-                    array(
+                    ],
+                    [
                         'controller' => 'BlogController',
                         'actions'    => 'edit',
                         'roles'      => 'admin'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'BlogController',
                 'action'        => 'edit',
-                'rolesToCreate' => array('admin'),
+                'rolesToCreate' => ['admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_ALLOW
-            ),
-            array(
-                'rules' => array(
-                    array(
+            ],
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'actions'    => 'read',
                         'roles'      => 'admin'
-                    ),
-                    array(
+                    ],
+                    [
                         'controller' => 'BlogController',
                         'actions'    => 'edit',
                         'roles'      => 'admin'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'BlogController',
                 'action'        => 'edit',
-                'rolesToCreate' => array('admin'),
+                'rolesToCreate' => ['admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_DENY
-            ),
+            ],
 
             // Assert that policy can deny unspecified rules
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'roles'      => 'member'
-                    ),
-                ),
+                    ],
+                ],
                 'controller'    => 'CommentController',
                 'action'        => 'edit',
-                'rolesToCreate' => array('member'),
+                'rolesToCreate' => ['member'],
                 'identityRole'  => 'member',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_ALLOW
-            ),
-            array(
-                'rules' => array(
-                    array(
+            ],
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'roles'      => 'member'
-                    ),
-                ),
+                    ],
+                ],
                 'controller'    => 'CommentController',
                 'action'        => 'edit',
-                'rolesToCreate' => array('member'),
+                'rolesToCreate' => ['member'],
                 'identityRole'  => 'member',
                 'isGranted'     => false,
                 'policy'        => GuardInterface::POLICY_DENY
-            ),
+            ],
 
             // Test assert policy can deny other actions from controller when only one is specified
-            array(
-                'rules' => array(
-                    array(
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'actions'    => 'edit',
                         'roles'      => 'member'
-                    ),
-                ),
+                    ],
+                ],
                 'controller'    => 'BlogController',
                 'action'        => 'read',
-                'rolesToCreate' => array('member'),
+                'rolesToCreate' => ['member'],
                 'identityRole'  => 'member',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_ALLOW
-            ),
-            array(
-                'rules' => array(
-                    array(
+            ],
+            [
+                'rules' => [
+                    [
                         'controller' => 'BlogController',
                         'actions'    => 'edit',
                         'roles'      => 'member'
-                    ),
-                ),
+                    ],
+                ],
                 'controller'    => 'BlogController',
                 'action'        => 'read',
-                'rolesToCreate' => array('member'),
+                'rolesToCreate' => ['member'],
                 'identityRole'  => 'member',
                 'isGranted'     => false,
                 'policy'        => GuardInterface::POLICY_DENY
-            ),
+            ],
 
             // Assert it can uses child-parent relationship
-            array(
-                'rules'            => array(
-                    array(
+            [
+                'rules'            => [
+                    [
                         'controller' => 'IndexController',
                         'actions'    => 'index',
                         'roles'      => 'guest'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'IndexController',
                 'action'        => 'index',
-                'rolesToCreate' => array('admin', 'guest' => 'admin'),
+                'rolesToCreate' => ['admin', 'guest' => 'admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_ALLOW
-            ),
-            array(
-                'rules'            => array(
-                    array(
+            ],
+            [
+                'rules'            => [
+                    [
                         'controller' => 'IndexController',
                         'actions'    => 'index',
                         'roles'      => 'guest'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'IndexController',
                 'action'        => 'index',
-                'rolesToCreate' => array('admin', 'guest' => 'admin'),
+                'rolesToCreate' => ['admin', 'guest' => 'admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_DENY
-            ),
+            ],
 
             // Assert wildcard in roles
-            array(
-                'rules'            => array(
-                    array(
+            [
+                'rules'            => [
+                    [
                         'controller' => 'IndexController',
                         'roles'      => '*'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'IndexController',
                 'action'        => 'index',
-                'rolesToCreate' => array('admin'),
+                'rolesToCreate' => ['admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_ALLOW
-            ),
-            array(
-                'rules'            => array(
-                    array(
+            ],
+            [
+                'rules'            => [
+                    [
                         'controller' => 'IndexController',
                         'roles'      => '*'
-                    )
-                ),
+                    ]
+                ],
                 'controller'    => 'IndexController',
                 'action'        => 'index',
-                'rolesToCreate' => array('admin'),
+                'rolesToCreate' => ['admin'],
                 'identityRole'  => 'admin',
                 'isGranted'     => true,
                 'policy'        => GuardInterface::POLICY_DENY
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -368,7 +368,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $protectionPolicy
     ) {
         $event      = new MvcEvent();
-        $routeMatch = new RouteMatch(array());
+        $routeMatch = new RouteMatch([]);
         $routeMatch->setParam('controller', $controller);
         $routeMatch->setParam('action', $action);
 
@@ -400,9 +400,9 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
     public function testProperlyFillEventOnAuthorization()
     {
         $event      = new MvcEvent();
-        $routeMatch = new RouteMatch(array());
+        $routeMatch = new RouteMatch([]);
 
-        $application  = $this->getMock('Zend\Mvc\Application', array(), array(), '', false);
+        $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
 
         $application->expects($this->never())
@@ -424,13 +424,11 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
-        $routeGuard = new ControllerGuard($authorizationService, array(
-            array(
-                'controller' => 'MyController',
-                'actions'    => 'edit',
-                'roles'      => 'member'
-            )
-        ));
+        $routeGuard = new ControllerGuard($authorizationService, [[
+            'controller' => 'MyController',
+            'actions'    => 'edit',
+            'roles'      => 'member'
+        ]]);
 
         $routeGuard->onRoute($event);
 
@@ -441,9 +439,9 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
     public function testProperlySetUnauthorizedAndTriggerEventOnUnauthorization()
     {
         $event      = new MvcEvent();
-        $routeMatch = new RouteMatch(array());
+        $routeMatch = new RouteMatch([]);
 
-        $application  = $this->getMock('Zend\Mvc\Application', array(), array(), '', false);
+        $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
 
         $application->expects($this->once())
@@ -470,13 +468,11 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
-        $routeGuard = new ControllerGuard($authorizationService, array(
-            array(
-                'controller' => 'MyController',
-                'actions'    => 'edit',
-                'roles'      => 'member'
-            )
-        ));
+        $routeGuard = new ControllerGuard($authorizationService, [[
+            'controller' => 'MyController',
+            'actions'    => 'edit',
+            'roles'      => 'member'
+        ]]);
 
         $routeGuard->onRoute($event);
 
@@ -494,7 +490,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $rbac                 = new Rbac();
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
-        $routeGuard           = new ControllerGuard($authorizationService, array());
+        $routeGuard           = new ControllerGuard($authorizationService, []);
 
         $this->assertSame(GuardInterface::POLICY_DENY, $routeGuard->getProtectionPolicy());
     }

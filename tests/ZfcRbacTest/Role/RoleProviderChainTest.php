@@ -32,7 +32,7 @@ class RoleProviderChainTest extends \PHPUnit_Framework_TestCase
         $roleProviderChain = new RoleProviderChain($this->getRoleProviders());
         $result            = $roleProviderChain->getRoles(new RbacEvent(new Rbac()));
 
-        $this->assertEquals(array('role1', 'role2', 'role3'), $result);
+        $this->assertEquals(['role1', 'role2', 'role3'], $result);
     }
 
     public function testCanAddRoleProvidersUsingAdder()
@@ -45,7 +45,7 @@ class RoleProviderChainTest extends \PHPUnit_Framework_TestCase
 
         $result = $roleProviderChain->getRoles(new RbacEvent(new Rbac()));
 
-        $this->assertEquals(array('role1', 'role2', 'role3'), $result);
+        $this->assertEquals(['role1', 'role2', 'role3'], $result);
     }
 
     protected function getRoleProviders()
@@ -53,14 +53,14 @@ class RoleProviderChainTest extends \PHPUnit_Framework_TestCase
         $roleProvider1 = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
         $roleProvider1->expects($this->once())
                       ->method('getRoles')
-                      ->will($this->returnValue(array('role1', 'role2')));
+                      ->will($this->returnValue(['role1', 'role2']));
 
         $roleProvider2 = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
         $roleProvider2->expects($this->once())
                       ->method('getRoles')
-                      ->will($this->returnValue(array('role3')));
+                      ->will($this->returnValue(['role3']));
 
-        return array($roleProvider1, $roleProvider2);
+        return [$roleProvider1, $roleProvider2];
     }
 }
  

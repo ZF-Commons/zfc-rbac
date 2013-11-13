@@ -65,7 +65,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(RbacEvent::EVENT_LOAD_PERMISSIONS, array($this, 'onLoadPermissions'));
+        $this->listeners[] = $events->attach(RbacEvent::EVENT_LOAD_PERMISSIONS, [$this, 'onLoadPermissions']);
     }
 
     /**

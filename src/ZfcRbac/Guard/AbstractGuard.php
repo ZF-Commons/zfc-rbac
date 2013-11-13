@@ -62,7 +62,7 @@ abstract class AbstractGuard implements GuardInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), static::EVENT_PRIORITY);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], static::EVENT_PRIORITY);
     }
 
     /**

@@ -47,12 +47,12 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $permissionProvider = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
         $permissionProvider->expects($this->once())
                            ->method('getPermissions')
-                           ->will($this->returnValue(array(
-                                'read'   => array('member', 'guest'),
+                           ->will($this->returnValue([
+                                'read'   => ['member', 'guest'],
                                 'write'  => 'member',
-                                'edit'   => array('roles' => 'member'),
+                                'edit'   => ['roles' => 'member'],
                                 'delete' => 'admin',
-                           )));
+                           ]));
 
         $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
@@ -107,7 +107,7 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $cacheStorage             = new Memory();
         $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $cacheStorage, 'cacheKey');
 
-        $cacheStorage->setItem('cacheKey', array('permission1' => 'role1'));
+        $cacheStorage->setItem('cacheKey', ['permission1' => 'role1']);
 
         $permissionLoaderListener->onLoadPermissions($rbacEvent);
     }

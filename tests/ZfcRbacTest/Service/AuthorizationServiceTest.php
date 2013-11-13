@@ -40,55 +40,55 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
     public function grantedProvider()
     {
-        return array(
+        return [
             // Simple is granted
-            array(
+            [
                 'guest',
                 'read',
                 null,
                 true
-            ),
+            ],
 
             // Simple is allowed from parent
-            array(
+            [
                 'member',
                 'read',
                 null,
                 true
-            ),
+            ],
 
             // Simple is refused
-            array(
+            [
                 'guest',
                 'write',
                 null,
                 false
-            ),
+            ],
 
             // Simple is refused from parent
-            array(
+            [
                 'guest',
                 'delete',
                 null,
                 false
-            ),
+            ],
 
             // Simple is refused from dynamic assertion
-            array(
+            [
                 'member',
                 'read',
                 function() { return false; },
                 false
-            ),
+            ],
 
             // Simple is refused from no role
-            array(
-                array(),
+            [
+                [],
                 'read',
                 null,
                 false
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -128,7 +128,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->once())
                          ->method('getIdentityRoles')
-                         ->will($this->returnValue(array()));
+                         ->will($this->returnValue([]));
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
@@ -148,7 +148,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->exactly(2))
                          ->method('getIdentityRoles')
-                         ->will($this->returnValue(array('role1')));
+                         ->will($this->returnValue(['role1']));
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
@@ -174,7 +174,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->exactly(2))
                          ->method('getIdentityRoles')
-                         ->will($this->returnValue(array('role1')));
+                         ->will($this->returnValue(['role1']));
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
         $authorizationService->setForceReload(true);

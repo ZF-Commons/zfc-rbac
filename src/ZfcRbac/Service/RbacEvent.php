@@ -56,7 +56,7 @@ class RbacEvent extends Event
      * @param array  $roles
      * @param string $permission
      */
-    public function __construct(Rbac $rbac, array $roles = array(), $permission = '')
+    public function __construct(Rbac $rbac, array $roles = [], $permission = '')
     {
         $this->rbac       = $rbac;
         $this->roles      = $roles;

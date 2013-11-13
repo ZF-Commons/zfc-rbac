@@ -36,7 +36,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module         = new Module();
         $mvcEvent       = $this->getMock('Zend\Mvc\MvcEvent');
-        $application    = $this->getMock('Zend\Mvc\Application', array(), array(), '', false);
+        $application    = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager   = $this->getMock('Zend\EventManager\EventManagerInterface');
         $serviceManager = $this->getMock('Zend\ServiceManager\ServiceManager');
 
@@ -44,7 +44,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
         $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
 
-        $guards = array($this->getMock('ZfcRbac\Guard\GuardInterface'));
+        $guards = [
+            $this->getMock('ZfcRbac\Guard\GuardInterface')
+        ];
 
         $serviceManager->expects($this->once())
                        ->method('get')

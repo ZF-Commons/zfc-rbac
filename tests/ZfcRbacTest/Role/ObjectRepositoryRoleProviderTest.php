@@ -66,7 +66,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\Role');
 
         $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository);
-        $rbacEvent                    = $this->getMock('ZfcRbac\Service\RbacEvent', array(), array(), '', false);
+        $rbacEvent                    = $this->getMock('ZfcRbac\Service\RbacEvent', [], [], '', false);
 
         $roles = $objectRepositoryRoleProvider->getRoles($rbacEvent);
 

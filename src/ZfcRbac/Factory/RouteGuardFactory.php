@@ -31,7 +31,7 @@ class RouteGuardFactory implements FactoryInterface, MutableCreationOptionsInter
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * {@inheritDoc}

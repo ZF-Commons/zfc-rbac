@@ -37,12 +37,12 @@ class GuardsFactory implements FactoryInterface
         $guardsOptions = $options->getGuards();
 
         if (empty($guardsOptions)) {
-            return array();
+            return [];
         }
 
         /* @var \ZfcRbac\Guard\GuardPluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('ZfcRbac\Guard\GuardPluginManager');
-        $guards        = array();
+        $guards        = [];
 
         foreach ($guardsOptions as $type => $options) {
             $guards[] = $pluginManager->get($type, $options);

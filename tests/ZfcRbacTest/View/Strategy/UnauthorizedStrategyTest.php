@@ -49,9 +49,9 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
         $mvcEvent->setParam('exception', new UnauthorizedException());
         $mvcEvent->setResponse($response);
 
-        $options = new UnauthorizedStrategyOptions(array(
+        $options = new UnauthorizedStrategyOptions([
             'template' => 'error/403'
-        ));
+        ]);
 
         $unauthorizedStrategy = new UnauthorizedStrategy($options);
 
