@@ -26,6 +26,7 @@ use ZfcRbac\View\Strategy\UnauthorizedStrategy;
 
 /**
  * @covers \ZfcRbac\View\Strategy\UnauthorizedStrategy
+ * @covers \ZfcRbac\View\Strategy\AbstractGuard
  */
 class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
 {

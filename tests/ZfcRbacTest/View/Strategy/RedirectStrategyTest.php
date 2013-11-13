@@ -28,6 +28,7 @@ use ZfcRbac\View\Strategy\RedirectStrategy;
 
 /**
  * @covers \ZfcRbac\View\Strategy\RedirectStrategy
+ * @covers \ZfcRbac\View\Strategy\AbstractGuard
  */
 class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,6 +42,15 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
                      ->with(MvcEvent::EVENT_DISPATCH_ERROR);
 
         $strategyListener->attach($eventManager);
+    }
+
+    public function testReturnNullIfNotRightException()
+    {
+        $redirectStrategy = new RedirectStrategy(new RedirectStrategyOptions());
+        $event            = new MvcEvent();
+        $event->setParam('exception', new \RuntimeException());
+
+        $this->assertNull($redirectStrategy->onError($event));
     }
 
     public function testCanRedirectWithoutPreviousUri()
