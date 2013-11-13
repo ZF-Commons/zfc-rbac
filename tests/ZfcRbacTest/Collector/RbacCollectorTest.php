@@ -15,6 +15,7 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
     public function testDefaultGetterReturnValues()
     {
         $collector = new RbacCollector();
+
         $this->assertSame(-100, $collector->getPriority());
         $this->assertSame('zfc_rbac', $collector->getName());
     }
@@ -23,8 +24,11 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $collector  = new RbacCollector();
         $serialized = $collector->serialize();
+
         $this->assertInternalType('string', $serialized);
+
         $unserialized = unserialize($serialized);
+
         $this->assertSame(array(), $unserialized['guards']);
         $this->assertSame(array(), $unserialized['roles']);
         $this->assertSame(array(), $unserialized['permissions']);
@@ -41,8 +45,11 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
             'options'     => array('foo' => 'bar')
         );
         $serialized   = serialize($unserialized);
+
         $collector->unserialize($serialized);
+
         $collection = $collector->getCollection();
+
         $this->assertInternalType('array', $collection);
         $this->assertSame(array('foo' => 'bar'), $collection['guards']);
         $this->assertSame(array('foo' => 'bar'), $collection['roles']);
@@ -54,6 +61,7 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $mvcEvent  = new MvcEvent();
         $collector = new RbacCollector();
+
         $this->assertNull($collector->collect($mvcEvent));
     }
 
