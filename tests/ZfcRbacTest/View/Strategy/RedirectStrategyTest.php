@@ -28,7 +28,7 @@ use ZfcRbac\View\Strategy\RedirectStrategy;
 
 /**
  * @covers \ZfcRbac\View\Strategy\RedirectStrategy
- * @covers \ZfcRbac\View\Strategy\AbstractGuard
+ * @covers \ZfcRbac\View\Strategy\AbstractStrategy
  */
 class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 {
