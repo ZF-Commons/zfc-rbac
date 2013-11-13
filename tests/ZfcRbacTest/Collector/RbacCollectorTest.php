@@ -1,24 +1,8 @@
 <?php
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license.
- */
-
 namespace ZfcRbacTest\Collector;
 
 use Zend\Mvc\MvcEvent;
+use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Collector\RbacCollector;
 use ZfcRbac\Guard\GuardInterface;
 
@@ -112,23 +96,34 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         //endregion
 
         //region Mock AuthorizationService && Rbac Mock
-        $roleOneMock = $this->getMock('Zend\Permissions\Rbac\RoleInterface');
+        $dumpIteratorMock = $this->getMock('RecursiveIterator');
+        $dumpIteratorMock->expects($this->any())->method('hasChildren')->will($this->returnValue(false));
+
+        $roleOneMock = $this->getMockBuilder('Zend\Permissions\Rbac\Role')->disableOriginalConstructor()->getMock();
         $roleOneMock->expects($this->any())->method('getParent')->will($this->returnValue(null));
         $roleOneMock->expects($this->any())->method('getName')->will($this->returnValue('user'));
+        $roleOneMock->expects($this->any())->method('hasChildren')->will($this->returnValue(false));
+        $roleOneMock->expects($this->any())->method('getChildren')->will($this->returnValue($dumpIteratorMock));
 
-        $roleTwoMock = $this->getMock('Zend\Permissions\Rbac\RoleInterface');
+        $roleTwoMock = $this->getMockBuilder('Zend\Permissions\Rbac\Role')->disableOriginalConstructor()->getMock();
         $roleTwoMock->expects($this->any())->method('getParent')->will($this->returnValue($roleOneMock));
         $roleTwoMock->expects($this->any())->method('getName')->will($this->returnValue('guest'));
+        $roleTwoMock->expects($this->any())->method('hasChildren')->will($this->returnValue(false));
+        $roleTwoMock->expects($this->any())->method('getChildren')->will($this->returnValue($dumpIteratorMock));
 
         // @todo Fix RbacMock to be a valid Iterateable Mock Object
         $rbacMock = $this->getMock('Zend\Permissions\Rbac\Rbac');
 
         $rbacMock->expects($this->at(0))->method('rewind');
         $rbacMock->expects($this->at(1))->method('valid')->will($this->returnValue(true));
-        $rbacMock->expects($this->at(2))->method('current')->will($this->returnValue($roleOneMock));
-        $rbacMock->expects($this->at(3))->method('next');
-//        $rbacMock->expects($this->at(4))->method('valid')->will($this->returnValue(true));
-//        $rbacMock->expects($this->at(5))->method('current')->will($this->returnValue($roleTwoMock));
+        $rbacMock->expects($this->at(2))->method('hasChildren')->will($this->returnValue(false));
+        $rbacMock->expects($this->at(3))->method('valid')->will($this->returnValue(true));
+        $rbacMock->expects($this->at(4))->method('current')->will($this->returnValue($roleOneMock));
+        $rbacMock->expects($this->at(5))->method('getChildren')->will($this->returnValue($roleOneMock));
+        $rbacMock->expects($this->at(6))->method('rewind');
+        $rbacMock->expects($this->at(7))->method('valid')->will($this->returnValue(false));
+        $rbacMock->expects($this->at(8))->method('key')->will($this->returnValue(true));
+//        $rbacMock->expects($this->at(8))->method('current')->will($this->returnValue($roleTwoMock));
 //        $rbacMock->expects($this->at(6))->method('next');
 //        $rbacMock->expects($this->at(7))->method('valid')->will($this->returnValue(false));
 
