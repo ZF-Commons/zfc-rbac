@@ -61,15 +61,18 @@ class RedirectStrategy extends AbstractStrategy
         $router        = $event->getRouter();
         $redirectRoute = $this->options->getRedirectToRoute();
 
-        $uri = $router->assemble(array(), array('name' => $redirectRoute));
+        $uri = $router->assemble([], ['name' => $redirectRoute]);
 
         if ($this->options->getAppendPreviousUri()) {
             $redirectKey = $this->options->getPreviousUriQueryKey();
             $previousUri = $event->getRequest()->getUriString();
 
             $uri = $router->assemble(
-                array(),
-                array('name' => $redirectRoute, 'query' => array($redirectKey => $previousUri))
+                [],
+                [
+                    'name' => $redirectRoute,
+                    'query' => [$redirectKey => $previousUri]
+                ]
             );
         }
 

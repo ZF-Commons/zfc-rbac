@@ -45,7 +45,7 @@ class ControllerGuard extends AbstractGuard
      *
      * @var array
      */
-    protected $rules = array();
+    protected $rules = [];
 
     /**
      * Constructor
@@ -53,7 +53,7 @@ class ControllerGuard extends AbstractGuard
      * @param AuthorizationService $authorizationService
      * @param array                $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = array())
+    public function __construct(AuthorizationService $authorizationService, array $rules = [])
     {
         parent::__construct($authorizationService);
         $this->setRules($rules);
@@ -67,7 +67,7 @@ class ControllerGuard extends AbstractGuard
      */
     public function setRules(array $rules)
     {
-        $this->rules = array();
+        $this->rules = [];
         $this->addRules($rules);
     }
 
@@ -78,8 +78,8 @@ class ControllerGuard extends AbstractGuard
      *
      * array(
      *      'controller' => 'ControllerName',
-     *      'actions'    => array()/string
-     *      'roles'      => array()/string
+     *      'actions'    => []/string
+     *      'roles'      => []/string
      * )
      *
      * @param  array $rules
@@ -89,7 +89,7 @@ class ControllerGuard extends AbstractGuard
     {
         foreach ($rules as $rule) {
             $controller = strtolower($rule['controller']);
-            $actions    = isset($rule['actions']) ? (array) $rule['actions'] : array();
+            $actions    = isset($rule['actions']) ? (array) $rule['actions'] : [];
             $roles      = (array) $rule['roles'];
 
             if (empty($actions)) {

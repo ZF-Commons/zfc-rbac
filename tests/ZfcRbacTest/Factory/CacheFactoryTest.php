@@ -29,17 +29,17 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function cacheProvider()
     {
-        return array(
-            array('my_cache'),
-            array(
-                array(
-                    'adapter' => array(
+        return [
+            ['my_cache'],
+            [
+                [
+                    'adapter' => [
                         'name' => 'memory'
-                    )
-                )
-            ),
-            array(new \stdClass())
-        );
+                    ]
+                ]
+            ],
+            [new \stdClass()]
+        ];
     }
 
     /**
@@ -47,9 +47,9 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactory($cacheConfig)
     {
-        $moduleOptions = new ModuleOptions(array(
+        $moduleOptions = new ModuleOptions([
             'cache' => $cacheConfig
-        ));
+        ]);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);

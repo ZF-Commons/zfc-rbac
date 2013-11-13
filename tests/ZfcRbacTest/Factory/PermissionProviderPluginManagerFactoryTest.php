@@ -29,11 +29,11 @@ class PermissionProviderPluginManagerFactoryTest extends \PHPUnit_Framework_Test
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', array(
-            'zfc_rbac' => array(
-                'permission_provider_manager' => array()
-            )
-        ));
+        $serviceManager->setService('Config', [
+            'zfc_rbac' => [
+                'permission_provider_manager' => []
+            ]
+        ]);
 
         $factory       = new PermissionProviderPluginManagerFactory();
         $pluginManager = $factory->createService($serviceManager);

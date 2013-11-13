@@ -43,7 +43,7 @@ class RoleProviderChainFactory implements FactoryInterface
         /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
         $pluginManager = $parentLocator->get('ZfcRbac\Role\RoleProviderPluginManager');
 
-        $roleProviders = array();
+        $roleProviders = [];
 
         foreach ($options as $type => $roleProviderOptions) {
             $roleProviders[] = $pluginManager->get($type, $roleProviderOptions);

@@ -29,8 +29,8 @@ class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testInMemoryProvider()
     {
-        $inMemoryProvider = new InMemoryRoleProvider(array('role'));
-        $this->assertEquals(array('role'), $inMemoryProvider->getRoles(new RbacEvent(new Rbac())));
+        $inMemoryProvider = new InMemoryRoleProvider(['role']);
+        $this->assertEquals(['role'], $inMemoryProvider->getRoles(new RbacEvent(new Rbac())));
     }
 }
  

@@ -66,7 +66,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(RbacEvent::EVENT_LOAD_ROLES, array($this, 'onLoadRoles'));
+        $this->listeners[] = $events->attach(RbacEvent::EVENT_LOAD_ROLES, [$this, 'onLoadRoles']);
     }
 
     /**

@@ -42,7 +42,7 @@ class PermissionProviderChainFactory implements FactoryInterface
         /* @var \ZfcRbac\Permission\PermissionProviderPluginManager $pluginManager */
         $pluginManager = $parentLocator->get('ZfcRbac\Permission\PermissionProviderPluginManager');
 
-        $permissionProviders = array();
+        $permissionProviders = [];
 
         foreach ($options as $type => $permissionProviderOptions) {
             $permissionProviders[] = $pluginManager->get($type, $permissionProviderOptions);

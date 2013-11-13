@@ -37,7 +37,7 @@ class PermissionProviderChain implements PermissionProviderInterface
      *
      * @param PermissionProviderInterface[] $permissionProviders
      */
-    public function __construct(array $permissionProviders = array())
+    public function __construct(array $permissionProviders = [])
     {
         $this->permissionProviders = $permissionProviders;
     }
@@ -58,7 +58,7 @@ class PermissionProviderChain implements PermissionProviderInterface
      */
     public function getPermissions(RbacEvent $event)
     {
-        $permissions = array();
+        $permissions = [];
 
         foreach ($this->permissionProviders as $permissionProvider) {
             $permissions = array_merge_recursive($permissions, $permissionProvider->getPermissions($event));

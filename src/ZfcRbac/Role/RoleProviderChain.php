@@ -37,7 +37,7 @@ class RoleProviderChain implements RoleProviderInterface
      *
      * @param RoleProviderInterface[]|array $roleProviders
      */
-    public function __construct(array $roleProviders = array())
+    public function __construct(array $roleProviders = [])
     {
         $this->roleProviders = $roleProviders;
     }
@@ -58,7 +58,7 @@ class RoleProviderChain implements RoleProviderInterface
      */
     public function getRoles(RbacEvent $event)
     {
-        $roles = array();
+        $roles = [];
 
         foreach ($this->roleProviders as $roleProvider) {
             $roles = array_merge($roles, $roleProvider->getRoles($event));

@@ -29,24 +29,24 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function guardProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'ZfcRbac\Guard\RouteGuard',
-                array(
+                [
                     'admin/*' => 'foo'
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'ZfcRbac\Guard\ControllerGuard',
-                array(
-                    array(
+                [
+                    [
                         'controller' => 'Foo',
                         'actions'    => 'bar',
                         'roles'      => 'baz'
-                    )
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
@@ -58,7 +58,7 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
+            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
         $pluginManager = new GuardPluginManager();

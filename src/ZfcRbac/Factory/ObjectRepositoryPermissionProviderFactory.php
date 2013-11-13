@@ -32,7 +32,7 @@ class ObjectRepositoryPermissionProviderFactory implements FactoryInterface, Mut
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * {@inheritDoc}

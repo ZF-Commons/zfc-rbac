@@ -30,7 +30,7 @@ class InMemoryPermissionProvider implements PermissionProviderInterface
      *
      * @var array
      */
-    protected $permissions = array();
+    protected $permissions = [];
 
     /**
      * Constructor

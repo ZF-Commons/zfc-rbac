@@ -31,25 +31,25 @@ class ControllerGuardFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $creationOptions = array(
+        $creationOptions = [
             'controller' => 'MyController',
             'actions'    => 'edit',
             'roles'      => 'member'
-        );
+        ];
 
-        $options = new ModuleOptions(array(
+        $options = new ModuleOptions([
             'identity_provider' => 'ZfcRbac\Identity\AuthenticationProvider',
-            'guards'            => array(
+            'guards'            => [
                 'ZfcRbac\Guard\ControllerGuard' => $creationOptions
-            ),
+            ],
             'protection_policy' => GuardInterface::POLICY_ALLOW
-        ));
+        ]);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', array(), array(), '', false)
+            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
         $pluginManager = new GuardPluginManager();

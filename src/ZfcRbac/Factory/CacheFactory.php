@@ -46,6 +46,6 @@ class CacheFactory implements FactoryInterface
             return StorageFactory::factory($cacheOptions);
         }
 
-        return StorageFactory::factory(array('adapter' => 'memory'));
+        return StorageFactory::factory(['adapter' => 'memory']);
     }
 }

@@ -29,11 +29,11 @@ class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', array(
-            'zfc_rbac' => array(
-                'role_provider_manager' => array()
-            )
-        ));
+        $serviceManager->setService('Config', [
+            'zfc_rbac' => [
+                'role_provider_manager' => []
+            ]
+        ]);
 
         $factory       = new RoleProviderPluginManagerFactory();
         $pluginManager = $factory->createService($serviceManager);

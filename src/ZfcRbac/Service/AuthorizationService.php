@@ -139,7 +139,7 @@ class AuthorizationService implements EventManagerAwareInterface
      * @param  string $permission
      * @return void
      */
-    protected function load(array $roles = array(), $permission = '')
+    protected function load(array $roles = [], $permission = '')
     {
         if ($this->isLoaded && !$this->forceReload) {
             return;

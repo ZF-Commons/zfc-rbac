@@ -34,45 +34,45 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function conversionProvider()
     {
-        return array(
+        return [
             // With an RoleInterface instance
-            array(
-                'roleConfig' => array(new SimpleRole('role', 'parent')),
+            [
+                'roleConfig' => [new SimpleRole('role', 'parent')],
                 'role'       => 'role',
-                'parent'     => array('role' => 'parent')
-            ),
+                'parent'     => ['role' => 'parent']
+            ],
 
             // With an array of RoleInterface instances
-            array(
-                'roleConfig' => array(
+            [
+                'roleConfig' => [
                     new SimpleRole('role1', 'parent1'),
                     new SimpleRole('role2', 'parent2')
-                ),
-                'role'   => array('role1', 'role2'),
-                'parent' => array('role1' => 'parent1', 'role2' => 'parent2')
-            ),
+                ],
+                'role'   => ['role1', 'role2'],
+                'parent' => ['role1' => 'parent1', 'role2' => 'parent2']
+            ],
 
             // With a single string name
-            array(
-                'roleConfig' => array('role'),
+            [
+                'roleConfig' => ['role'],
                 'role'       => 'role',
-                'parent'     => array('role' => null)
-            ),
+                'parent'     => ['role' => null]
+            ],
 
             // With an array of strings
-            array(
-                'roleConfig' => array('role1', 'role2'),
-                'role'       => array('role1', 'role2'),
-                'parent'     => array('role1' => null, 'role2' => null)
-            ),
+            [
+                'roleConfig' => ['role1', 'role2'],
+                'role'       => ['role1', 'role2'],
+                'parent'     => ['role1' => null, 'role2' => null]
+            ],
 
             // With an array of string that map to a parent
-            array(
-                'roleConfig' => array('role' => 'parent'),
-                'role'       => array('role'),
-                'parent'     => array('role' => 'parent')
-            ),
-        );
+            [
+                'roleConfig' => ['role' => 'parent'],
+                'role'       => ['role'],
+                'parent'     => ['role' => 'parent']
+            ],
+        ];
     }
 
     /**
@@ -124,7 +124,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
         $roleProvider->expects($this->once())
                      ->method('getRoles')
-                     ->will($this->returnValue(array('role1', 'role2')));
+                     ->will($this->returnValue(['role1', 'role2']));
 
         $rbac      = new Rbac();
         $rbacEvent = new RbacEvent($rbac);
@@ -142,7 +142,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
         $roleProvider->expects($this->once())
                      ->method('getRoles')
-                     ->will($this->returnValue(array('role1', 'role2' => 'parent1')));
+                     ->will($this->returnValue(['role1', 'role2' => 'parent1']));
 
         $rbac      = new Rbac();
         $rbac->setCreateMissingRoles(true);
@@ -170,7 +170,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
         $cacheStorage       = new Memory();
         $roleLoaderListener = new RoleLoaderListener($roleProvider, $cacheStorage, 'cacheKey');
 
-        $cacheStorage->setItem('cacheKey', array('role1', 'role2'));
+        $cacheStorage->setItem('cacheKey', ['role1', 'role2']);
 
         $roleLoaderListener->onLoadRoles($rbacEvent);
     }

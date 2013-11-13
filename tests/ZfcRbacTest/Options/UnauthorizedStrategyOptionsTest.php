@@ -34,9 +34,9 @@ class UnauthorizedStrategyOptionsTest extends \PHPUnit_Framework_TestCase
 
     public function testSettersAndGetters()
     {
-        $unauthorizedStrategyOptions = new UnauthorizedStrategyOptions(array(
+        $unauthorizedStrategyOptions = new UnauthorizedStrategyOptions([
             'template' => 'error/unauthorized'
-        ));
+        ]);
 
         $this->assertEquals('error/unauthorized', $unauthorizedStrategyOptions->getTemplate());
     }

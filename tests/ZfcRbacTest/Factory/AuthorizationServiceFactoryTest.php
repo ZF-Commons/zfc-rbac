@@ -29,11 +29,11 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $options = new ModuleOptions(array(
+        $options = new ModuleOptions([
             'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
             'create_missing_roles' => true,
             'guest_role'           => 'guest'
-        ));
+        ]);
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);

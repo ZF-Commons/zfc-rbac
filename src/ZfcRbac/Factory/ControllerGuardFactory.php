@@ -31,7 +31,7 @@ class ControllerGuardFactory implements FactoryInterface, MutableCreationOptions
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * {@inheritDoc}

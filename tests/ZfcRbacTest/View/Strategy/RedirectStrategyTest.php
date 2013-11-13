@@ -48,22 +48,22 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $response = new HttpResponse();
 
         $router = new TreeRouteStack();
-        $router->addRoute('login', array(
+        $router->addRoute('login', [
             'type'    => 'Zend\Mvc\Router\Http\Literal',
-            'options' => array(
+            'options' => [
                 'route' => '/login'
-            )
-        ));
+            ]
+        ]);
 
         $mvcEvent = new MvcEvent();
         $mvcEvent->setParam('exception', new UnauthorizedException());
         $mvcEvent->setResponse($response);
         $mvcEvent->setRouter($router);
 
-        $options = new RedirectStrategyOptions(array(
+        $options = new RedirectStrategyOptions([
             'redirect_to_route'   => 'login',
             'append_previous_uri' => false
-        ));
+        ]);
 
         $redirectStrategy = new RedirectStrategy($options);
 
@@ -79,12 +79,12 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $response = new HttpResponse();
 
         $router = new TreeRouteStack();
-        $router->addRoute('login', array(
+        $router->addRoute('login', [
             'type'    => 'Zend\Mvc\Router\Http\Literal',
-            'options' => array(
+            'options' => [
                 'route' => '/login'
-            )
-        ));
+            ]
+        ]);
 
         $request = new HttpRequest();
         $request->setUri('http://www.example.com/previous');
@@ -95,11 +95,11 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $mvcEvent->setResponse($response);
         $mvcEvent->setRouter($router);
 
-        $options = new RedirectStrategyOptions(array(
+        $options = new RedirectStrategyOptions([
             'redirect_to_route'      => 'login',
             'append_previous_uri'    => true,
             'previous_uri_query_key' => 'redirectTo'
-        ));
+        ]);
 
         $redirectStrategy = new RedirectStrategy($options);
 

@@ -29,11 +29,11 @@ class GuardPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', array(
-            'zfc_rbac' => array(
-                'guard_manager' => array()
-            )
-        ));
+        $serviceManager->setService('Config', [
+            'zfc_rbac' => [
+                'guard_manager' => []
+            ]
+        ]);
 
         $factory       = new GuardPluginManagerFactory();
         $pluginManager = $factory->createService($serviceManager);
