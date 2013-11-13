@@ -149,8 +149,10 @@ class RbacCollector implements CollectorInterface, Serializable
     {
         $rbac                 = $authorizationService->getRbac();
         $this->collectedRoles = $this->collectedPermissions = array();
+
         // Role recursive iterator
         $roles = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);
+
         /* @var RoleInterface $role */
         foreach ($roles as $role) {
             if (null === $role->getParent()) {
@@ -158,15 +160,19 @@ class RbacCollector implements CollectorInterface, Serializable
             } else {
                 $this->collectedRoles[$role->getName()] = $role->getParent()->getName();
             }
+
             // Rbac does not allow us to retrieve permissions from a role, so we need to use reflection. It
             // obviously adds some overhead but this is the only way to do it
             $reflProperty = new ReflectionProperty($role, 'permissions');
             $reflProperty->setAccessible(true);
+
             $permissions = $reflProperty->getValue($role);
+
             foreach ($permissions as $permissionName => $permission) {
                 $this->collectedPermissions[$permissionName][] = $role->getName();
             }
         }
+
         // Because multiple roles may have the same permissions, the previous logic may have duplicate roles
         // for each collected permissions, so we need a bit of cleaning
         foreach ($this->collectedPermissions as &$permissions) {
