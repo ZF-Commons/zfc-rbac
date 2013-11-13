@@ -410,4 +410,18 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(RouteGuard::EVENT_PRIORITY > ControllerGuard::EVENT_PRIORITY);
     }
+
+    public function testDefaultProtectionPolicyIsInherited()
+    {
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->any())
+                         ->method('getIdentityRoles')
+                         ->will($this->returnValue('member'));
+
+        $rbac                 = new Rbac();
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $routeGuard           = new RouteGuard($authorizationService, array());
+
+        $this->assertSame(GuardInterface::POLICY_DENY, $routeGuard->getProtectionPolicy());
+    }
 }
