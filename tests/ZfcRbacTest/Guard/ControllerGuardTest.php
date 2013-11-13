@@ -484,4 +484,18 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getError());
         $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
     }
+
+    public function testDefaultProtectionPolicyIsInherited()
+    {
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->any())
+                         ->method('getIdentityRoles')
+                         ->will($this->returnValue('member'));
+
+        $rbac                 = new Rbac();
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $routeGuard           = new ControllerGuard($authorizationService, array());
+
+        $this->assertSame(GuardInterface::POLICY_DENY, $routeGuard->getProtectionPolicy());
+    }
 }
