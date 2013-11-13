@@ -17,6 +17,7 @@
  */
 
 namespace ZfcRbacTest\Role;
+
 use Doctrine\ORM\Tools\SchemaTool;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
