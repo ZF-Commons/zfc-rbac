@@ -37,22 +37,27 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collector priority
      */
     const PRIORITY = -100;
+
     /**
      * @var array
      */
     protected $collection = array();
+
     /**
      * @var array
      */
     protected $collectedGuards = array();
+
     /**
      * @var array
      */
     protected $collectedRoles = array();
+
     /**
      * @var array
      */
     protected $collectedPermissions = array();
+
     /**
      * @var array
      */
