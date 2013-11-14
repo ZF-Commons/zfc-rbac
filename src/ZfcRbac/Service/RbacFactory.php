@@ -23,7 +23,7 @@ class RbacFactory implements FactoryInterface
         }
 
         foreach($options->getFirewalls() as $class => $config) {
-            $rbac->addFirewall(new $class($sl, $config));
+            $rbac->addFirewall(new $class($config, $sl));
         }
 
         $identity = $rbac->getOptions()->getIdentityProvider();
