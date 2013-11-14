@@ -16,13 +16,13 @@
  * and is licensed under the MIT license.
  */
 
-return array(
-    'service_manager' => array(
-        'invokables' => array(
+return [
+    'service_manager' => [
+        'invokables' => [
             'ZfcRbac\Collector\RbacCollector' => 'ZfcRbac\Collector\RbacCollector',
-        ),
+        ],
 
-        'factories' => array(
+        'factories' => [
             /* Factories that do not map to a class */
             'ZfcRbac\Cache'  => 'ZfcRbac\Factory\CacheFactory',
             'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
@@ -38,51 +38,51 @@ return array(
             'ZfcRbac\Service\AuthorizationService'               => 'ZfcRbac\Factory\AuthorizationServiceFactory',
             'ZfcRbac\View\Strategy\RedirectStrategy'             => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'         => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
-        )
-    ),
+        ]
+    ],
 
-    'view_helpers' => array(
-        'factories' => array(
+    'view_helpers' => [
+        'factories' => [
             'ZfcRbac\View\Helper\IsGranted' => 'ZfcRbac\Factory\IsGrantedViewHelperFactory'
-        ),
-        'aliases' => array(
+        ],
+        'aliases' => [
             'isGranted' => 'ZfcRbac\View\Helper\IsGranted'
-        )
-    ),
+        ]
+    ],
 
-    'controller_plugins' => array(
-        'factories' => array(
+    'controller_plugins' => [
+        'factories' => [
             'ZfcRbac\Mvc\Controller\Plugin\IsGranted' => 'ZfcRbac\Factory\IsGrantedPluginFactory'
-        ),
-        'aliases' => array(
+        ],
+        'aliases' => [
             'isGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted'
-        )
-    ),
+        ]
+    ],
 
-    'view_manager' => array(
-        'template_path_stack' => array(__DIR__ . '/../view'),
-    ),
+    'view_manager' => [
+        'template_path_stack' => [__DIR__ . '/../view'],
+    ],
 
-    'zenddevelopertools' => array(
-        'profiler' => array(
-            'collectors' => array(
+    'zenddevelopertools' => [
+        'profiler' => [
+            'collectors' => [
                 'zfc_rbac' => 'ZfcRbac\Collector\RbacCollector',
-            ),
-        ),
-        'toolbar' => array(
-            'entries' => array(
+            ],
+        ],
+        'toolbar' => [
+            'entries' => [
                 'zfc_rbac' => 'zend-developer-tools/toolbar/zfc-rbac',
-            ),
-        ),
-    ),
+            ],
+        ],
+    ],
 
-    'zfc_rbac' => array(
-        'unauthorized_strategy' => array(),
-        'redirect_strategy'     => array(),
+    'zfc_rbac' => [
+        'unauthorized_strategy' => [],
+        'redirect_strategy'     => [],
 
         // Plugin managers
-        'guard_manager'               => array(),
-        'role_provider_manager'       => array(),
-        'permission_provider_manager' => array()
-    )
-);
+        'guard_manager'               => [],
+        'role_provider_manager'       => [],
+        'permission_provider_manager' => []
+    ]
+];
