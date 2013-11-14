@@ -20,8 +20,8 @@
  * Copy-paste this file to your config/autoload folder (don't forget to remove the .dist extension!)
  */
 
-return array(
-    'zfc_rbac' => array(
+return [
+    'zfc_rbac' => [
         /**
          * Key that is used to fetch the identity provider
          *
@@ -59,13 +59,13 @@ return array(
          *
          * You must comply with the various options of guards. The format must be of the following format:
          *
-         *      'guards' => array(
-         *          'ZfcRbac\Guard\RouteGuard' => array(
+         *      'guards' => [
+         *          'ZfcRbac\Guard\RouteGuard' => [
          *              // options
-         *          )
-         *      )
+         *          ]
+         *      ]
          */
-        // 'guards' => array(),
+        // 'guards' => [],
 
         /**
          * As soon as one rule for either route or controller is specified, a guard will be automatically
@@ -85,14 +85,14 @@ return array(
          * It must be an array of array that contains configuration for each role provider. Each provider config
          * must follow the following format:
          *
-         *      'ZfcRbac\Role\InMemoryRoleProvider' => array(
+         *      'ZfcRbac\Role\InMemoryRoleProvider' => [
          *          'role1',
          *          'children' => 'parent'
-         *      )
+         *      ]
          *
          * Supported options depend of the role provider, so please refer to the official documentation
          */
-        'role_providers' => array(),
+        'role_providers' => [],
 
         /**
          * Configuration for permission providers
@@ -100,29 +100,29 @@ return array(
          * It must be an array of array that contains configuration for each permission provider. Each provider
          * config must follow the following format:
          *
-         *      'ZfcRbac\Permission\InMemoryRoleProvider' => array(
-         *          'permission1' => array('role1', 'role2')
-         *      )
+         *      'ZfcRbac\Permission\InMemoryRoleProvider' => [
+         *          'permission1' => ['role1', 'role2']
+         *      ]
          *
          * Supported options depend of the permission provider, so please refer to the official documentation
          */
-        'permission_providers' => array(),
+        'permission_providers' => [],
 
         /**
          * Configure the unauthorized strategy. It is used to render a template whenever a user is unauthorized
          */
-        'unauthorized_strategy' => array(
+        'unauthorized_strategy' => [
             /**
              * Set the template name to render
              */
             // 'template' => 'error/403'
-        ),
+        ],
 
         /**
          * Configure the redirect strategy. It is used to redirect the user to another route when a user is
          * unauthorized
          */
-        'redirect_strategy' => array(
+        'redirect_strategy' => [
             /**
              * Set the route to redirect (of course, it must exist!)
              */
@@ -139,7 +139,7 @@ return array(
              * the previous uri is appended
              */
             // 'previous_uri_query_key' => 'redirectTo'
-        ),
+        ],
 
         /**
          * Cache options used by role and permission providers
@@ -149,14 +149,14 @@ return array(
          *
          * @see http://framework.zend.com/manual/2.2/en/modules/zend.cache.storage.adapter.html#quick-start
          */
-        // 'cache' => array()|string,
+        // 'cache' => []|string,
 
         /**
          * Various plugin managers for guards, role providers and permission providers. Each of them must
          * follow a common plugin manager config format, and can be used to create your custom objects
          */
-        // 'guard_manager'               => array(),
-        // 'role_provider_manager'       => array(),
-        // 'permission_provider_manager' => array()
-    )
-);
+        // 'guard_manager'               => [],
+        // 'role_provider_manager'       => [],
+        // 'permission_provider_manager' => []
+    ]
+];

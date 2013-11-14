@@ -16,26 +16,26 @@
  * and is licensed under the MIT license.
  */
 
-return array(
-    'zfc_rbac' => array(),
+return [
+    'zfc_rbac' => [],
 
-    'doctrine' => array(
-        'driver' => array(
-            'application_driver' => array(
+    'doctrine' => [
+        'driver' => [
+            'application_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
-                'paths' => array(__DIR__ . '/ZfcRbacTest/Asset')
-            ),
-            'orm_default' => array(
-                'drivers' => array(
+                'paths' => [__DIR__ . '/ZfcRbacTest/Asset']
+            ],
+            'orm_default' => [
+                'drivers' => [
                     'ZfcRbacTest\Asset' => 'application_driver'
-                )
-            )
-        ),
+                ]
+            ]
+        ],
 
-        'connection' => array(
-            'orm_default' => array(
-                'params' => array(
+        'connection' => [
+            'orm_default' => [
+                'params' => [
                     'host'          => null,
                     'port'          => null,
                     'user'          => null,
@@ -45,8 +45,8 @@ return array(
                     'driverClass'   => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
                     'path'          => null,
                     'memory'        => true,
-                ),
-            ),
-        ),
-    ),
-);
+                ],
+            ],
+        ],
+    ],
+];
