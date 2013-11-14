@@ -6,6 +6,9 @@ use ZfcRbac\Service\Rbac;
 
 abstract class AbstractFirewall
 {
+    
+    use \Zend\ServiceManager\ServiceLocatorAwareTrait;
+    
     const SEPARATOR = ':';
 
     /**
