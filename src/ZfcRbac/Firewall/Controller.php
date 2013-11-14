@@ -12,7 +12,7 @@ class Controller extends AbstractFirewall
     /**
      * @param array $rules
      */
-    public function __construct($serviceLocator, array $rules)
+    public function __construct(array $rules, $serviceLocator = NULL)
     {
         $this->setServiceLocator($serviceLocator);
         foreach($rules as $rule) {
