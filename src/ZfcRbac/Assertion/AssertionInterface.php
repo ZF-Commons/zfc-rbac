@@ -35,4 +35,4 @@ interface AssertionInterface
      * @return bool
      */
     public function assert(AuthorizationService $authorizationService);
-} 
+}

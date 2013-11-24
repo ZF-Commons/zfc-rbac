@@ -42,6 +42,7 @@ If you are looking for some information that is not listed in the documentation,
 7. [Cookbook](/docs/07. Cookbook.md)
    1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
    2. [Best practices](/docs/07. Cookbook.md#best-practices)
-   3. [Optimize for production](/docs/07. Cookbook.md#optimize-for-production)
-   4. Using ZfcRbac with Doctrine ORM
-   5. How to lazy-load roles and permissions for very complex use cases?
+   3. [Using dynamic assertions](/docs/07. Cookbook.md#using-dynamic-assertions)
+   4. [Optimize for production](/docs/07. Cookbook.md#optimize-for-production)
+   5. Using ZfcRbac with Doctrine ORM
+   6. How to lazy-load roles and permissions for very complex use cases?
