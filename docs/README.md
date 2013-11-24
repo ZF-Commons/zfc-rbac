@@ -5,10 +5,10 @@ and extend ZfcRbac.
 
 If you are looking for some information that is not listed in the documentation, please open an issue!
 
-1. Introduction
-   1. Why using an authorization module?
-   2. The RBAC model
-   3. How ZfcRbac integrates into your application?
+1. [Introduction](/docs/01. Introduction.md)
+   1. [Why using an authorization module?](/docs/01. Introduction.md##why-using-an-authorization-module)
+   2. [The RBAC model](/docs/01. Introduction.md#the-rbac-model)
+   3. [How ZfcRbac integrates into your application?](/docs/01. Introduction.md#how-zfcrbac-integrates-into-your-application)
 
 2. [Quick Start](/docs/02. Quick Start.md)
    1. [Specifying an identity provider](/docs/02. Quick Start.md#specifying-an-identity-provider)
