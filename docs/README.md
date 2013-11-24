@@ -39,8 +39,9 @@ If you are looking for some information that is not listed in the documentation,
    2. [Built-in strategies](/docs/06. Strategies.md#built-in-strategies)
    3. [Creating custom strategies](/docs/06. Strategies.md#creating-custom-strategies)
 
-6. [Cookbook](/docs/07. Cookbook.md)
-   1. [Best practices](/docs/07. Cookbook.md#best-practices)
-   2. [Optimize for production](/docs/07. Cookbook.md#optimize-for-production)
-   3. Using ZfcRbac with Doctrine ORM
-   4. How to lazy-load roles and permissions for very complex use cases?
+7. [Cookbook](/docs/07. Cookbook.md)
+   1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
+   2. [Best practices](/docs/07. Cookbook.md#best-practices)
+   3. [Optimize for production](/docs/07. Cookbook.md#optimize-for-production)
+   4. Using ZfcRbac with Doctrine ORM
+   5. How to lazy-load roles and permissions for very complex use cases?
