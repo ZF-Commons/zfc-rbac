@@ -16,29 +16,23 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbac\Assertion;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
-use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
- * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
+ * Interface that you can implement for dynamic assertions
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
-class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestCase
+interface AssertionInterface
 {
-    public function testFactory()
-    {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
-        );
-
-        $factory                = new AuthenticationIdentityProviderFactory();
-        $authenticationProvider = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
-    }
-}
- 
+    /**
+     * Assert if the identity has the permission
+     *
+     * @param  AuthorizationService $authorizationService
+     * @return bool
+     */
+    public function assert(AuthorizationService $authorizationService);
+} 

@@ -305,10 +305,13 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
 
         $event->setRouteMatch($routeMatch);
 
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity->expects($this->any())->method('getRoles')->will($this->returnValue($identityRole));
+
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentityRoles')
-                         ->will($this->returnValue($identityRole));
+                         ->method('getIdentity')
+                         ->will($this->returnValue($identity));
 
         $rbac = new Rbac();
 
@@ -344,10 +347,13 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity->expects($this->any())->method('getRoles')->will($this->returnValue(['member']));
+
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentityRoles')
-                         ->will($this->returnValue('member'));
+                         ->method('getIdentity')
+                         ->will($this->returnValue($identity));
 
         $rbac = new Rbac();
         $rbac->addRole('member');

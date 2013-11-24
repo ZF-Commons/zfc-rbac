@@ -33,43 +33,20 @@ class AuthenticationIdentityProvider implements IdentityProviderInterface
     protected $authenticationService;
 
     /**
-     * @var string
-     */
-    protected $guestRole;
-
-    /**
      * Constructor
      *
      * @param AuthenticationService $authenticationService
-     * @param string                $guestRole
      */
-    public function __construct(AuthenticationService $authenticationService, $guestRole = '')
+    public function __construct(AuthenticationService $authenticationService)
     {
         $this->authenticationService = $authenticationService;
-        $this->guestRole             = (string) $guestRole;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getIdentityRoles()
+    public function getIdentity()
     {
-        if (!$this->authenticationService->hasIdentity()) {
-            return [$this->guestRole];
-        }
-
-        $identity = $this->authenticationService->getIdentity();
-
-        if (!$identity instanceof IdentityInterface) {
-            return [];
-        }
-
-        $roles = $identity->getRoles();
-
-        if ($roles instanceof Traversable) {
-            $roles = iterator_to_array($roles);
-        }
-
-        return (array) $roles;
+        return $this->authenticationService->getIdentity();
     }
 }

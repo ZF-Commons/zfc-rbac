@@ -18,11 +18,13 @@
 
 namespace ZfcRbac\Service;
 
+use Traversable;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Permissions\Rbac\AssertionInterface;
 use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
+use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
 
 /**
@@ -41,6 +43,11 @@ class AuthorizationService implements EventManagerAwareInterface
      * @var IdentityProviderInterface
      */
     protected $identityProvider;
+
+    /**
+     * @var string
+     */
+    protected $guestRole;
 
     /**
      * Is the container correctly loaded?
@@ -64,11 +71,18 @@ class AuthorizationService implements EventManagerAwareInterface
      *
      * @param Rbac                      $rbac
      * @param IdentityProviderInterface $identityProvider
+     * @param string                    $guestRole
      */
-    public function __construct(Rbac $rbac, IdentityProviderInterface $identityProvider)
+    public function __construct(Rbac $rbac, IdentityProviderInterface $identityProvider, $guestRole = '')
     {
         $this->rbac             = $rbac;
         $this->identityProvider = $identityProvider;
+        $this->guestRole        = $guestRole;
+
+        // We register the guest role inside the container
+        if ($this->guestRole) {
+            $this->rbac->addRole($this->guestRole);
+        }
     }
 
     /**
@@ -81,6 +95,42 @@ class AuthorizationService implements EventManagerAwareInterface
         $this->load();
 
         return $this->rbac;
+    }
+
+    /**
+     * Get the current identity
+     *
+     * @return IdentityInterface|null
+     */
+    public function getIdentity()
+    {
+        return $this->identityProvider->getIdentity();
+    }
+
+    /**
+     * Get the identity roles from the identity, applying some more logic
+     *
+     * @return string[]|\Zend\Permissions\Rbac\RoleInterface[]
+     */
+    public function getIdentityRoles()
+    {
+        $identity = $this->identityProvider->getIdentity();
+
+        if (null === $identity) {
+            return [$this->guestRole];
+        }
+
+        if (!$identity instanceof IdentityInterface) {
+            return [];
+        }
+
+        $roles = $identity->getRoles();
+
+        if ($roles instanceof Traversable) {
+            $roles = iterator_to_array($roles);
+        }
+
+        return (array) $roles;
     }
 
     /**
@@ -100,13 +150,14 @@ class AuthorizationService implements EventManagerAwareInterface
      * Note: if an identity has multiple role, ALL the roles must be granted for the permission
      * to be granted
      *
-     * @param  string                                                  $permission
-     * @param  callable|\Zend\Permissions\Rbac\AssertionInterface|null $assertion
+     * @param  string                           $permission
+     * @param  callable|AssertionInterface|null $assertion
      * @return bool
+     * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
     public function isGranted($permission, $assertion = null)
     {
-        $roles = (array) $this->identityProvider->getIdentityRoles();
+        $roles = $this->getIdentityRoles();
 
         if (empty($roles)) {
             return false;
@@ -115,13 +166,27 @@ class AuthorizationService implements EventManagerAwareInterface
         // First load everything inside the container
         $this->load($roles, $permission);
 
+        // Check the assertion first
+        if (null !== $assertion) {
+            if (is_callable($assertion) && !$assertion($this)) {
+                return false;
+            } elseif ($assertion instanceof AssertionInterface && !$assertion->assert($this)) {
+                return false;
+            } else {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
+                    is_object($assertion) ? get_class($assertion) : gettype($assertion)
+                ));
+            }
+        }
+
         foreach ($roles as $role) {
             // If role does not exist, we consider this as not valid
             if (!$this->rbac->hasRole($role)) {
                 return false;
             }
 
-            if ($this->rbac->isGranted($role, $permission, $assertion)) {
+            if ($this->rbac->isGranted($role, $permission)) {
                 return true;
             }
         }

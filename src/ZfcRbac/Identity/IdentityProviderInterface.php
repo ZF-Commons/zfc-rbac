@@ -18,17 +18,15 @@
 
 namespace ZfcRbac\Identity;
 
-use Zend\Permissions\Rbac\RoleInterface;
-
 /**
  * An identity provider is an object that returns an object that implement ZfcRbac\Identity\IdentityInterface
  */
 interface IdentityProviderInterface
 {
     /**
-     * Get the roles of the current identity
+     * Get the identity
      *
-     * @return string[]|RoleInterface[]
+     * @return IdentityInterface|null
      */
-    public function getIdentityRoles();
+    public function getIdentity();
 }

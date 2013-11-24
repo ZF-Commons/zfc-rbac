@@ -16,29 +16,32 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Asset;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
-use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Assertion\AssertionInterface;
+use ZfcRbac\Service\AuthorizationService;
 
-/**
- * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
- */
-class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class SimpleAssertion implements AssertionInterface
 {
-    public function testFactory()
+    /**
+     * @var bool
+     */
+    protected $called = false;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function assert(AuthorizationService $authorizationService)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
-        );
+        $this->called = true;
+        return false;
+    }
 
-        $factory                = new AuthenticationIdentityProviderFactory();
-        $authenticationProvider = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
+    /**
+     * @return bool
+     */
+    public function getCalled()
+    {
+        return $this->called;
     }
 }
- 

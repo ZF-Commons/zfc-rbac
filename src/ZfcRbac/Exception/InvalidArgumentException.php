@@ -16,29 +16,13 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbac\Exception;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
-use ZfcRbac\Options\ModuleOptions;
+use InvalidArgumentException as BaseInvalidArgumentException;
 
 /**
- * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
+ * InvalidArgumentException
  */
-class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class InvalidArgumentException extends BaseInvalidArgumentException implements ExceptionInterface
 {
-    public function testFactory()
-    {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
-        );
-
-        $factory                = new AuthenticationIdentityProviderFactory();
-        $authenticationProvider = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
-    }
 }
- 

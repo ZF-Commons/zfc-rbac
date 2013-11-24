@@ -23,6 +23,7 @@ use Zend\Permissions\Rbac\Rbac;
 use Zend\Permissions\Rbac\Role;
 use ZfcRbac\Collector\RbacCollector;
 use ZfcRbac\Guard\GuardInterface;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Collector\RbacCollector
@@ -93,19 +94,12 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $moduleOptionsMock = $this->getMock('ZfcRbac\Options\ModuleOptions');
-        $moduleOptionsMock->expects($this->once())
-                          ->method('getIdentityProvider')
-                          ->will($this->returnValue('ZfcRbac\Identity\AuthenticationIdentityProvider'));
-        $moduleOptionsMock->expects($this->once())
-                          ->method('getGuestRole')
-                          ->will($this->returnValue('guest'));
-        $moduleOptionsMock->expects($this->once())
-                          ->method('getProtectionPolicy')
-                          ->will($this->returnValue(GuardInterface::POLICY_DENY));
-        $moduleOptionsMock->expects($this->once())
-                          ->method('getGuards')
-                          ->will($this->returnValue($dataGuards));
+        $moduleOptions = new ModuleOptions([
+            'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
+            'guest_role'        => 'guest',
+            'protection_policy' => GuardInterface::POLICY_DENY,
+            'guards'            => $dataGuards
+        ]);
 
         $rbacImplementation = new Rbac();
         $roleGuest          = new Role('guest');
@@ -124,15 +118,16 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
                         ->method('getRbac')
                         ->will($this->returnValue($rbacImplementation));
 
+        $authServiceMock->expects($this->once())
+                        ->method('getIdentityRoles')
+                        ->will($this->returnValue($dataIdentityRoles));
+
         $authIdentityMock = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $authIdentityMock->expects($this->once())
-                         ->method('getIdentityRoles')
-                         ->will($this->returnValue($dataIdentityRoles));
 
         //region Mock ServiceLocator
         $slMockMap          = [
             ['ZfcRbac\Service\AuthorizationService', $authServiceMock],
-            ['ZfcRbac\Options\ModuleOptions', $moduleOptionsMock],
+            ['ZfcRbac\Options\ModuleOptions', $moduleOptions],
             ['ZfcRbac\Identity\AuthenticationIdentityProvider', $authIdentityMock]
         ];
 

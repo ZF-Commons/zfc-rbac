@@ -38,49 +38,17 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
-        $this->identityProvider = new AuthenticationIdentityProvider($this->authenticationService, 'guest');
+        $this->identityProvider = new AuthenticationIdentityProvider($this->authenticationService);
     }
 
-    public function testReturnGuestRoleIfNoIdentityIsFound()
+    public function testCanReturnIdentity()
     {
-        $this->authenticationService->expects($this->once())
-                                    ->method('hasIdentity')
-                                    ->will($this->returnValue(false));
-
-        $this->assertEquals(['guest'], $this->identityProvider->getIdentityRoles());
-    }
-
-    public function testCanReturnRolesFromIdentity()
-    {
-        $this->authenticationService->expects($this->once())
-                                    ->method('hasIdentity')
-                                    ->will($this->returnValue(true));
-
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->once())
-                 ->method('getRoles')
-                 ->will($this->returnValue('myRole'));
 
         $this->authenticationService->expects($this->once())
                                     ->method('getIdentity')
                                     ->will($this->returnValue($identity));
 
-        $this->assertEquals(['myRole'], $this->identityProvider->getIdentityRoles());
-    }
-
-    public function testReturnEmptyRolesIfIdentityIsWrongType()
-    {
-        $this->authenticationService->expects($this->once())
-                                    ->method('hasIdentity')
-                                    ->will($this->returnValue(true));
-
-        $this->authenticationService->expects($this->once())
-                                    ->method('getIdentity')
-                                    ->will($this->returnValue(new \stdClass));
-
-        $result = $this->identityProvider->getIdentityRoles();
-
-        $this->assertInternalType('array', $result);
-        $this->assertEmpty($result);
+        $this->assertSame($identity, $this->identityProvider->getIdentity());
     }
 }

@@ -44,17 +44,12 @@ class AuthorizationServiceFactory implements FactoryInterface
         $rbac = new Rbac();
         $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
 
-        // We need to register the guest role inside the container
-        if ($guestRole = $moduleOptions->getGuestRole()) {
-            $rbac->addRole($guestRole);
-        }
-
         // Create the event manager and add some events
         $eventManager = new EventManager();
         $eventManager->attach($serviceLocator->get('ZfcRbac\Role\RoleLoaderListener'));
         $eventManager->attach($serviceLocator->get('ZfcRbac\Permission\PermissionLoaderListener'));
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $authorizationService = new AuthorizationService($rbac, $identityProvider, $moduleOptions->getGuestRole());
         $authorizationService->setEventManager($eventManager);
         $authorizationService->setForceReload($moduleOptions->getForceReload());
 
