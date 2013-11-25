@@ -107,7 +107,7 @@ class AuthorizationService implements EventManagerAwareInterface
         $identity = $this->identityProvider->getIdentity();
 
         if (null === $identity) {
-            return [$this->guestRole];
+            return empty($this->guestRole) ? [] : [$this->guestRole];
         }
 
         if (!$identity instanceof IdentityInterface) {
