@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Service;
 
 use Zend\Permissions\Rbac\Rbac;
+use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RbacEvent;
 use ZfcRbacTest\Asset\SimpleAssertion;
@@ -112,7 +113,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $identity->expects($this->once())->method('getRoles')->will($this->returnValue($role));
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->once())
+        $identityProvider->expects($this->any())
                          ->method('getIdentity')
                          ->will($this->returnValue($identity));
 
@@ -214,7 +215,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $identity->expects($this->once())->method('getRoles')->will($this->returnValue(['role1']));
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->once())
+        $identityProvider->expects($this->any())
                          ->method('getIdentity')
                          ->will($this->returnValue($identity));
 
@@ -242,8 +243,8 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         // Using a callable
         $called = false;
         $this->assertFalse($authorizationService->isGranted('foo',
-                function(AuthorizationService $service) use($authorizationService, &$called) {
-                    $this->assertSame($service, $authorizationService);
+                function(IdentityInterface $expectedIdentity = null) use($identity, &$called) {
+                    $this->assertSame($expectedIdentity, $identity);
                     $called = true;
 
                     return false;
@@ -265,22 +266,6 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService = new AuthorizationService($rbac, $identityProvider, 'guest');
 
         $this->assertTrue($authorizationService->getRbac()->hasRole('guest'));
-    }
-
-    public function testCanReturnIdentity()
-    {
-        $rbac = new Rbac();
-
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-
-        $this->assertSame($identity, $authorizationService->getIdentity());
     }
 
     public function testReturnGuestRoleIfNoIdentityIsFound()

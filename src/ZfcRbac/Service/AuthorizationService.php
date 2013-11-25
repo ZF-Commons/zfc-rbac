@@ -98,16 +98,6 @@ class AuthorizationService implements EventManagerAwareInterface
     }
 
     /**
-     * Get the current identity
-     *
-     * @return IdentityInterface|null
-     */
-    public function getIdentity()
-    {
-        return $this->identityProvider->getIdentity();
-    }
-
-    /**
      * Get the identity roles from the identity, applying some more logic
      *
      * @return string[]|\Zend\Permissions\Rbac\RoleInterface[]
@@ -168,9 +158,11 @@ class AuthorizationService implements EventManagerAwareInterface
 
         // Check the assertion first
         if (null !== $assertion) {
-            if (is_callable($assertion) && !$assertion($this)) {
+            $identity = $this->identityProvider->getIdentity();
+
+            if (is_callable($assertion) && !$assertion($identity)) {
                 return false;
-            } elseif ($assertion instanceof AssertionInterface && !$assertion->assert($this)) {
+            } elseif ($assertion instanceof AssertionInterface && !$assertion->assert($identity)) {
                 return false;
             } else {
                 throw new Exception\InvalidArgumentException(sprintf(
