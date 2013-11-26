@@ -18,7 +18,6 @@
 
 namespace ZfcRbac\Identity;
 
-use Traversable;
 use Zend\Authentication\AuthenticationService;
 use ZfcRbac\Exception;
 

@@ -19,8 +19,6 @@
 namespace ZfcRbac\Role;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use RecursiveIteratorIterator;
-use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Service\RbacEvent;
 
 /**
