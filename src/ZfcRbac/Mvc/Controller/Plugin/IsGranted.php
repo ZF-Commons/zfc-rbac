@@ -44,8 +44,8 @@ class IsGranted extends AbstractPlugin
     /**
      * Check against the given permission
      *
-     * @param  string                                                  $permission
-     * @param  callable|\Zend\Permissions\Rbac\AssertionInterface|null $assert
+     * @param  string                                              $permission
+     * @param  callable|\ZfcRbac\Assertion\AssertionInterface|null $assert
      * @return bool
      */
     public function __invoke($permission, $assert = null)
