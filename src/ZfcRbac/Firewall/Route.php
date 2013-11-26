@@ -22,8 +22,10 @@ class Route extends AbstractFirewall
     /**
      * @param array $rules
      */
-    public function __construct(array $rules)
+    public function __construct(array $rules, $serviceLocator = NULL)
     {
+        $this->setServiceLocator($serviceLocator);
+        
         $regex = array();
         foreach($rules as $rule) {
             if (isset($rule['roles'])) {
