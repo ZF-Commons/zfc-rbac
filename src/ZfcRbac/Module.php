@@ -1,106 +1,53 @@
 <?php
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
+ */
 
 namespace ZfcRbac;
 
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
-use ZfcRbac\Collector\RbacCollector;
 
-class Module implements
-    BootstrapListenerInterface,
-    AutoloaderProviderInterface,
-    ConfigProviderInterface,
-    ServiceProviderInterface,
-    ViewHelperProviderInterface
+/**
+ * Module class for ZfcRbac
+ */
+class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {
     /**
-     * @param  EventInterface $e
-     * @return array|void
+     * {@inheritDoc}
      */
-    public function onBootstrap(EventInterface $e)
+    public function onBootstrap(EventInterface $event)
     {
-        $app         = $e->getTarget();
-        $sm          = $app->getServiceManager();
-        $rbacService = $sm->get('ZfcRbac\Service\Rbac');
-        $strategy    = $sm->get('ZfcRbac\View\UnauthorizedStrategy');
+        /* @var \Zend\Mvc\Application $application */
+        $application    = $event->getTarget();
+        $serviceManager = $application->getServiceManager();
+        $eventManager   = $application->getEventManager();
 
-        if ($rbacService->getOptions()->getFirewallRoute()) {
-            $app->getEventManager()->attach('route', array('ZfcRbac\Firewall\Listener\Route', 'onRoute'), -1000);
+        /* @var \ZfcRbac\Guard\GuardInterface[]|array $guards */
+        $guards = $serviceManager->get('ZfcRbac\Guards');
+
+        // Register listeners, if any
+        foreach ($guards as $guard) {
+            $eventManager->attachAggregate($guard);
         }
-
-        if ($rbacService->getOptions()->getFirewallController()) {
-            $app->getEventManager()->attach('route', array('ZfcRbac\Firewall\Listener\Controller', 'onRoute'), -1000);
-        }
-
-        $app->getEventManager()->attach($strategy);
     }
 
     /**
-     * @return array
-     */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__,
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @return array|\Zend\ServiceManager\Config
-     */
-    public function getServiceConfig()
-    {
-        return array(
-            'aliases' => array(
-                'service.security' => 'ZfcRbac\Service\Rbac',
-            ),
-            'factories' => array(
-                'ZfcRbac\Collector\RbacCollector' => function($sm) {
-                    return new RbacCollector($sm->get('ZfcRbac\Service\Rbac'));
-                },
-                'ZfcRbac\View\UnauthorizedStrategy' => 'ZfcRbac\Service\UnauthorizedStrategyFactory',
-                'ZfcRbac\Service\Rbac' => 'ZfcRbac\Service\RbacFactory'
-            )
-        );
-    }
-
-    /**
-     * @return array|\Zend\ServiceManager\Config
-     */
-    public function getControllerPluginConfig()
-    {
-        return array(
-            'invokables' => array(
-                'isGranted' => 'ZfcRbac\Controller\Plugin\IsGranted',
-            )
-        );
-    }
-
-    /**
-     * @return array|\Zend\ServiceManager\Config
-     */
-    public function getViewHelperConfig()
-    {
-        return array(
-            'factories' => array(
-                'isGranted' => function($sm) {
-                    $sl = $sm->getServiceLocator();
-                    return new View\Helper\IsGranted($sl->get('ZfcRbac\Service\Rbac'));
-                },
-            )
-        );
-    }
-
-    /**
-     * @return array|mixed|\Traversable
+     * {@inheritDoc}
      */
     public function getConfig()
     {
