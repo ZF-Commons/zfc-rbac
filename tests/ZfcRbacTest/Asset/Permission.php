@@ -20,15 +20,17 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Permissions\Rbac\AbstractRole;
+use ZfcRbac\Permission\PermissionInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="permissions")
  */
-class Permission
+class Permission implements PermissionInterface
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -37,14 +39,14 @@ class Permission
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=32)
      */
     protected $name;
 
     /**
-     * @var Role[]
+     * @var Role[]|\Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions")
      */

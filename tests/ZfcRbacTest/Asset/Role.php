@@ -22,6 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Permissions\Rbac\AbstractRole;
 use Zend\Permissions\Rbac\RoleInterface;
+use ZfcRbac\Permission\PermissionInterface;
 
 /**
  * @ORM\Entity
@@ -30,7 +31,7 @@ use Zend\Permissions\Rbac\RoleInterface;
 class Role extends AbstractRole
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -39,7 +40,7 @@ class Role extends AbstractRole
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=32)
      */
@@ -53,7 +54,7 @@ class Role extends AbstractRole
     protected $parent;
 
     /**
-     * @var Permission[]
+     * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", inversedBy="permissions")
      */
@@ -122,11 +123,17 @@ class Role extends AbstractRole
     /**
      * Add a permission
      *
-     * @param  Permission $permission
+     * @param  PermissionInterface|string $permission
      * @return void
      */
     public function addPermission($permission)
     {
+        if (is_string($permission)) {
+            $name       = $permission;
+            $permission = new Permission();
+            $permission->setName($name);
+        }
+
         $permission->addRole($this);
         $this->permissions[$permission->getName()] = $permission;
     }
