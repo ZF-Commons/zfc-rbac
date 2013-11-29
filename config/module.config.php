@@ -77,9 +77,6 @@ return [
     ],
 
     'zfc_rbac' => [
-        'unauthorized_strategy' => [],
-        'redirect_strategy'     => [],
-
         // Plugin managers
         'guard_manager'               => [],
         'role_provider_manager'       => [],
