@@ -18,24 +18,30 @@
 
 namespace ZfcRbac\Permission;
 
-use ZfcRbac\Service\RbacEvent;
+use Zend\Permissions\Rbac\RoleInterface;
 
 /**
- * A permission provider is an object that returns a list of permissions
+ * Interface for permission
  *
- * Permission providers must follow a specific format when returning roles. Supported formats are as below:
+ * This interface is likely to be deprecated in next minor version of ZfcRbac, and removed in next major
+ * as this interface will be part of the RBAC component
  *
- *      - an array of PermissionInterface instances (starting from ZF 2.3)
- *      - an array that map a permission to a single role (eg.: array("permissionName" => "role"))
- *      - an array that map a permission to multiple roles (eg.: array("permissionName" => array("role1", "role2"))
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
-interface PermissionProviderInterface
+interface PermissionInterface
 {
     /**
-     * Get the permissions from the provider
+     * Get the permission name
      *
-     * @param  RbacEvent $event
-     * @return array|PermissionInterface[]
+     * @return string|int
      */
-    public function getPermissions(RbacEvent $event);
+    public function getName();
+
+    /**
+     * Get roles associated with the permission
+     *
+     * @return string[]|RoleInterface[]
+     */
+    public function getRoles();
 }

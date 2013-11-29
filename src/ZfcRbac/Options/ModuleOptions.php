@@ -304,6 +304,10 @@ class ModuleOptions extends AbstractOptions
      */
     public function getUnauthorizedStrategy()
     {
+        if (null === $this->unauthorizedStrategy) {
+            $this->unauthorizedStrategy = new UnauthorizedStrategyOptions();
+        }
+
         return $this->unauthorizedStrategy;
     }
 
@@ -324,6 +328,10 @@ class ModuleOptions extends AbstractOptions
      */
     public function getRedirectStrategy()
     {
+        if (null === $this->redirectStrategy) {
+            $this->redirectStrategy = new RedirectStrategyOptions();
+        }
+
         return $this->redirectStrategy;
     }
 

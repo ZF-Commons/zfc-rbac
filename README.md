@@ -11,7 +11,7 @@ ZfcRbac is an access control module for Zend Framework 2, based on the RBAC perm
 ## Requirements
 
 - PHP 5.4 or higher
-- [Zend Framework 2.3 or higher](http://www.github.com/zendframework/zf2)
+- [Zend Framework 2.2 or higher](http://www.github.com/zendframework/zf2)
 
 > If you are looking for older version of ZfcRbac, please refer to the 0.2.x branch.
 
