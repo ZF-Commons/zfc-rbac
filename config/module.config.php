@@ -28,18 +28,16 @@ return [
             'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
-            'ZfcRbac\Guard\GuardPluginManager'                      => 'ZfcRbac\Factory\GuardPluginManagerFactory',
-            'ZfcRbac\Identity\AuthenticationIdentityProvider'       => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
-            'ZfcRbac\Options\ModuleOptions'                         => 'ZfcRbac\Factory\ModuleOptionsFactory',
-            'ZfcRbac\Permission\ObjectRepositoryPermissionProvider' => 'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory',
-            'ZfcRbac\Permission\PermissionLoaderListener'           => 'ZfcRbac\Factory\PermissionLoaderListenerFactory',
-            'ZfcRbac\Permission\PermissionProviderPluginManager'    => 'ZfcRbac\Factory\PermissionProviderPluginManagerFactory',
-            'ZfcRbac\Role\ObjectRepositoryRoleProvider'             => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
-            'ZfcRbac\Role\RoleLoaderListener'                       => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
-            'ZfcRbac\Role\RoleProviderPluginManager'                => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
-            'ZfcRbac\Service\AuthorizationService'                  => 'ZfcRbac\Factory\AuthorizationServiceFactory',
-            'ZfcRbac\View\Strategy\RedirectStrategy'                => 'ZfcRbac\Factory\RedirectStrategyFactory',
-            'ZfcRbac\View\Strategy\UnauthorizedStrategy'            => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
+            'ZfcRbac\Guard\GuardPluginManager'                   => 'ZfcRbac\Factory\GuardPluginManagerFactory',
+            'ZfcRbac\Identity\AuthenticationIdentityProvider'    => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
+            'ZfcRbac\Options\ModuleOptions'                      => 'ZfcRbac\Factory\ModuleOptionsFactory',
+            'ZfcRbac\Permission\PermissionLoaderListener'        => 'ZfcRbac\Factory\PermissionLoaderListenerFactory',
+            'ZfcRbac\Permission\PermissionProviderPluginManager' => 'ZfcRbac\Factory\PermissionProviderPluginManagerFactory',
+            'ZfcRbac\Role\RoleLoaderListener'                    => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
+            'ZfcRbac\Role\RoleProviderPluginManager'             => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
+            'ZfcRbac\Service\AuthorizationService'               => 'ZfcRbac\Factory\AuthorizationServiceFactory',
+            'ZfcRbac\View\Strategy\RedirectStrategy'             => 'ZfcRbac\Factory\RedirectStrategyFactory',
+            'ZfcRbac\View\Strategy\UnauthorizedStrategy'         => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
         ]
     ],
 
@@ -79,9 +77,21 @@ return [
     ],
 
     'zfc_rbac' => [
-        // Plugin managers
-        'guard_manager'               => [],
-        'role_provider_manager'       => [],
-        'permission_provider_manager' => []
+        // Guard plugin manager
+        'guard_manager' => [],
+
+        // Role provider plugin manager
+        'role_provider_manager' => [
+            'factories' => [
+                'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
+            ]
+        ],
+
+        // Permission provider plugin manager
+        'permission_provider_manager' => [
+            'factories' => [
+                'ZfcRbac\Permission\ObjectRepositoryPermissionProvider' => 'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory',
+            ]
+        ]
     ]
 ];
