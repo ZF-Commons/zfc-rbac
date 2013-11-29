@@ -77,9 +77,21 @@ return [
     ],
 
     'zfc_rbac' => [
-        // Plugin managers
-        'guard_manager'               => [],
-        'role_provider_manager'       => [],
-        'permission_provider_manager' => []
+        // Guard plugin manager
+        'guard_manager' => [],
+
+        // Role provider plugin manager
+        'role_provider_manager' => [
+            'factories' => [
+                'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
+            ]
+        ],
+
+        // Permission provider plugin manager
+        'permission_provider_manager' => [
+            'factories' => [
+                'ZfcRbac\Permission\ObjectRepositoryPermissionProvider' => 'ZfcRbac\Factory\ObjectRepositoryPermissionProviderFactory',
+            ]
+        ]
     ]
 ];
