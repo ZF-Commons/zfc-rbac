@@ -18,7 +18,6 @@
 
 namespace ZfcRbac\Permission;
 
-use Zend\Cache\Storage\StorageInterface as CacheInterface;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use ZfcRbac\Service\RbacEvent;
@@ -34,30 +33,13 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     protected $permissionProvider;
 
     /**
-     * @var CacheInterface
-     */
-    protected $cache;
-
-    /**
-     * @var string
-     */
-    protected $cacheKey;
-
-    /**
      * Constructor
      *
      * @param PermissionProviderInterface $permissionProvider
-     * @param CacheInterface              $cache
-     * @param string                      $cacheKey
      */
-    public function __construct(
-        PermissionProviderInterface $permissionProvider,
-        CacheInterface $cache,
-        $cacheKey = 'zfc_rbac_permissions'
-    ) {
+    public function __construct(PermissionProviderInterface $permissionProvider)
+    {
         $this->permissionProvider = $permissionProvider;
-        $this->cache              = $cache;
-        $this->cacheKey           = (string) $cacheKey;
     }
 
     /**
@@ -77,7 +59,7 @@ class PermissionLoaderListener extends AbstractListenerAggregate
     public function onLoadPermissions(RbacEvent $event)
     {
         $rbac        = $event->getRbac();
-        $permissions = $this->getPermissions($event);
+        $permissions = $this->permissionProvider->getPermissions($event);
 
         foreach ($permissions as $key => $value) {
             if ($value instanceof PermissionInterface) {
@@ -96,24 +78,5 @@ class PermissionLoaderListener extends AbstractListenerAggregate
                 $role->addPermission($permission);
             }
         }
-    }
-
-    /**
-     * Get the permissions, optionally fetched from cache
-     *
-     * @param  RbacEvent $event
-     * @return array|PermissionInterface[]
-     */
-    protected function getPermissions(RbacEvent $event)
-    {
-        $success = false;
-        $result  = $this->cache->getItem($this->cacheKey, $success);
-
-        if (!$success) {
-            $result = $this->permissionProvider->getPermissions($event);
-            $this->cache->setItem($this->cacheKey, $result);
-        }
-
-        return $result;
     }
 }

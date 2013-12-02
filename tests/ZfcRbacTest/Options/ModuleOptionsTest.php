@@ -39,7 +39,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $moduleOptions->getPermissionProviders());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
-        $this->assertNull($moduleOptions->getCache());
         $this->assertFalse($moduleOptions->getForceReload());
     }
 
@@ -59,7 +58,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'redirect_strategy' => [
                 'redirect_to_route' => 'login'
             ],
-            'cache' => 'my_cache',
             'force_reload' => true
         ]);
 
@@ -72,7 +70,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $moduleOptions->getPermissionProviders());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
-        $this->assertEquals('my_cache', $moduleOptions->getCache());
         $this->assertTrue($moduleOptions->getForceReload());
     }
 

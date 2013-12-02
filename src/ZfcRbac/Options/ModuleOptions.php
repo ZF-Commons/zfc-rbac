@@ -98,13 +98,6 @@ class ModuleOptions extends AbstractOptions
     protected $redirectStrategy;
 
     /**
-     * Either a string fetched from service locator, or a StorageFactory compliant config
-     *
-     * @var string|array
-     */
-    protected $cache;
-
-    /**
      * Constructor
      *
      * {@inheritDoc}
@@ -333,26 +326,5 @@ class ModuleOptions extends AbstractOptions
         }
 
         return $this->redirectStrategy;
-    }
-
-    /**
-     * Set the cache config of key
-     *
-     * @param  array|string $cache
-     * @return void
-     */
-    public function setCache($cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * Get the cache config or key
-     *
-     * @return array|string
-     */
-    public function getCache()
-    {
-        return $this->cache;
     }
 }

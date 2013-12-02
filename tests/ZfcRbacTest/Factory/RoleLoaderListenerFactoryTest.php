@@ -37,7 +37,6 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
-        $serviceManager->setService('ZfcRbac\Cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
 
         $factory  = new RoleLoaderListenerFactory();
         $listener = $factory->createService($serviceManager);

@@ -24,7 +24,6 @@ return [
 
         'factories' => [
             /* Factories that do not map to a class */
-            'ZfcRbac\Cache'  => 'ZfcRbac\Factory\CacheFactory',
             'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
