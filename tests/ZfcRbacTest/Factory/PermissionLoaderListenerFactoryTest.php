@@ -40,8 +40,6 @@ class PermissionLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->setService('ZfcRbac\Permission\PermissionProviderPluginManager', $pluginManager);
 
-        $serviceManager->setService('ZfcRbac\Cache', $this->getMock('Zend\Cache\Storage\StorageInterface'));
-
         $factory  = new PermissionLoaderListenerFactory();
         $listener = $factory->createService($serviceManager);
 

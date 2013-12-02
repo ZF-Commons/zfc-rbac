@@ -18,7 +18,6 @@
 
 namespace ZfcRbacTest\Role;
 
-use Zend\Cache\Storage\Adapter\Memory;
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Permission\PermissionLoaderListener;
 use ZfcRbac\Service\AuthorizationService;
@@ -54,7 +53,7 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
                                 'delete' => 'admin',
                            ]));
 
-        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $this->getMock('Zend\Cache\Storage\StorageInterface'));
+        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider);
 
         $permissionLoaderListener->onLoadPermissions($rbacEvent);
 
@@ -80,10 +79,7 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
     public function testAttachToRightEvent()
     {
         $permissionProvider       = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
-        $permissionLoaderListener = new PermissionLoaderListener(
-            $permissionProvider,
-            $this->getMock('Zend\Cache\Storage\StorageInterface')
-        );
+        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider);
 
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
@@ -91,24 +87,5 @@ class PermissionLoaderListenerTest extends \PHPUnit_Framework_TestCase
                      ->with(RbacEvent::EVENT_LOAD_PERMISSIONS);
 
         $permissionLoaderListener->attach($eventManager);
-    }
-
-    public function testCanLoadPermissionsFromCache()
-    {
-        $permissionProvider = $this->getMock('ZfcRbac\Permission\PermissionProviderInterface');
-        $permissionProvider->expects($this->never())
-                           ->method('getPermissions');
-
-        $rbac = new Rbac();
-        $rbac->addRole('role1');
-
-        $rbacEvent = new RbacEvent($rbac);
-
-        $cacheStorage             = new Memory();
-        $permissionLoaderListener = new PermissionLoaderListener($permissionProvider, $cacheStorage, 'cacheKey');
-
-        $cacheStorage->setItem('cacheKey', ['permission1' => 'role1']);
-
-        $permissionLoaderListener->onLoadPermissions($rbacEvent);
     }
 }

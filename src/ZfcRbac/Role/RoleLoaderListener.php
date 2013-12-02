@@ -18,7 +18,6 @@
 
 namespace ZfcRbac\Role;
 
-use Zend\Cache\Storage\StorageInterface as CacheInterface;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Permissions\Rbac\RoleInterface;
@@ -35,30 +34,13 @@ class RoleLoaderListener extends AbstractListenerAggregate
     protected $roleProvider;
 
     /**
-     * @var CacheInterface
-     */
-    protected $cache;
-
-    /**
-     * @var string
-     */
-    protected $cacheKey;
-
-    /**
      * Constructor
      *
      * @param RoleProviderInterface $roleProvider
-     * @param CacheInterface        $cache
-     * @param string                $cacheKey
      */
-    public function __construct(
-        RoleProviderInterface $roleProvider,
-        CacheInterface $cache,
-        $cacheKey = 'zfc_rbac_roles'
-    ) {
+    public function __construct(RoleProviderInterface $roleProvider)
+    {
         $this->roleProvider = $roleProvider;
-        $this->cache        = $cache;
-        $this->cacheKey     = (string) $cacheKey;
     }
 
     /**
@@ -79,7 +61,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
     public function onLoadRoles(RbacEvent $event)
     {
         $rbac  = $event->getRbac();
-        $roles = $this->getRoles($event);
+        $roles = $this->roleProvider->getRoles($event);
 
         foreach ($roles as $key => $value) {
             if ($value instanceof RoleInterface) {
@@ -90,24 +72,5 @@ class RoleLoaderListener extends AbstractListenerAggregate
                 $rbac->addRole($key, $value);
             }
         }
-    }
-
-    /**
-     * Get the roles, optionally fetched from cache
-     *
-     * @param  RbacEvent $event
-     * @return string[]|array|RoleInterface[]
-     */
-    protected function getRoles(RbacEvent $event)
-    {
-        $success = false;
-        $result  = $this->cache->getItem($this->cacheKey, $success);
-
-        if (!$success) {
-            $result = $this->roleProvider->getRoles($event);
-            $this->cache->setItem($this->cacheKey, $result);
-        }
-
-        return $result;
     }
 }
