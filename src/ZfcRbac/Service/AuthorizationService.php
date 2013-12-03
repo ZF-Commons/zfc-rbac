@@ -194,8 +194,9 @@ class AuthorizationService implements EventManagerAwareInterface
      * @throws Exception\InvalidArgumentException
      * @return boolean
      */
-    public function doesIdentityStatisfyRoles($roles) {
-        if (! (is_array($roles) || $roles instanceof Traversable ) ) {
+    public function doesIdentityStatisfyRoles($roles)
+    {
+        if (! (is_array($roles) || $roles instanceof Traversable) ) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Role must be array or implement Traversable, "%s" given',
                 is_object($roles) ? get_class($roles) : gettype($roles)
@@ -211,7 +212,7 @@ class AuthorizationService implements EventManagerAwareInterface
         // First load everything inside the container
         $this->load($identityRoles);
         
-        foreach($roles as $role){
+        foreach ($roles as $role) {
             
             // This shouldn't happen, but if it does, we assume something went wrong and for better or worse deny access
             if(!$this->rbac->hasRole($role)) {
@@ -222,20 +223,20 @@ class AuthorizationService implements EventManagerAwareInterface
             $role = $this->rbac->getRole($role);
             
             foreach($identityRoles as $identityRole) {
-                
-                // This shouldn't happen as well, but if it does, we assume something went wrong and for better or worse deny access
-                if(!$this->rbac->hasRole($identityRole)) {
+                // This shouldn't happen as well, but if it does, we assume something went wrong and deny access
+                if (!$this->rbac->hasRole($identityRole)) {
                     return false;
                 }
 
                 // "Convert" to RoleInterface
                 $identityRole = $this->rbac->getRole($identityRole);
 
-                if( $this->inRole($role, $identityRole) ) {
+                if ($this->inRole($role, $identityRole)) {
                     return true;
                 }
             }
         }
+        
         return false;
     }
     
@@ -246,14 +247,16 @@ class AuthorizationService implements EventManagerAwareInterface
      * @param RoleInterface $needle
      * @return boolean
      */
-    protected function inRole(RoleInterface $haystack, RoleInterface $needle) {
-        if($haystack === $needle){
+    protected function inRole(RoleInterface $haystack, RoleInterface $needle)
+    {
+        if ($haystack === $needle) {
             return true;
-        } elseif($haystack->getParent() !== NULL) {
-            if($this->inRole($haystack->getParent(), $needle)){
+        } elseif ($haystack->getParent() !== null) {
+            if ($this->inRole($haystack->getParent(), $needle)) {
                 return true;
             }
         }
+        
         return false;
     }
 
