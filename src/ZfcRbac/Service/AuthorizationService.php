@@ -196,7 +196,7 @@ class AuthorizationService implements EventManagerAwareInterface
      */
     public function doesIdentityStatisfyRoles($roles)
     {
-        if (! (is_array($roles) || $roles instanceof Traversable) ) {
+        if (! (is_array($roles) || $roles instanceof Traversable)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Role must be array or implement Traversable, "%s" given',
                 is_object($roles) ? get_class($roles) : gettype($roles)
@@ -215,14 +215,14 @@ class AuthorizationService implements EventManagerAwareInterface
         foreach ($roles as $role) {
             
             // This shouldn't happen, but if it does, we assume something went wrong and for better or worse deny access
-            if(!$this->rbac->hasRole($role)) {
+            if (!$this->rbac->hasRole($role)) {
                 return false;
             }
             
             // "Convert" to RoleInterface
             $role = $this->rbac->getRole($role);
             
-            foreach($identityRoles as $identityRole) {
+            foreach ($identityRoles as $identityRole) {
                 // This shouldn't happen as well, but if it does, we assume something went wrong and deny access
                 if (!$this->rbac->hasRole($identityRole)) {
                     return false;

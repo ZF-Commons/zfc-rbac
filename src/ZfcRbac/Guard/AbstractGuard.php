@@ -107,7 +107,7 @@ abstract class AbstractGuard implements GuardInterface
         $eventManager = $application->getEventManager();
 
         $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
-    }    
+    }
     
     /**
      * Checks if the current identity statisfies any of the required roles.
