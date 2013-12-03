@@ -121,9 +121,6 @@ class RouteGuard extends AbstractGuard
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
-        // Load the needed permission inside the container
-        $this->loadRule($allowedRoles, $permission);
-
-        return $this->authorizationService->isGranted($permission);
+        return $this->isAllowed($allowedRoles);
     }
 }
