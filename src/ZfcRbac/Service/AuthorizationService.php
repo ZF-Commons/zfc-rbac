@@ -27,6 +27,7 @@ use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use Zend\Permissions\Rbac\RoleInterface;
+use RecursiveIteratorIterator;
 
 /**
  * Authorization service is a simple service that internally uses a Rbac container
@@ -212,48 +213,31 @@ class AuthorizationService implements EventManagerAwareInterface
         // First load everything inside the container
         $this->load($identityRoles);
         
-        foreach ($roles as $role) {
-            
-            // This shouldn't happen, but if it does, we assume something went wrong and for better or worse deny access
-            if (!$this->rbac->hasRole($role)) {
-                return false;
-            }
-            
-            // "Convert" to RoleInterface
-            $role = $this->rbac->getRole($role);
-            
-            foreach ($identityRoles as $identityRole) {
-                // This shouldn't happen as well, but if it does, we assume something went wrong and deny access
-                if (!$this->rbac->hasRole($identityRole)) {
-                    return false;
+        // Roles should only contain strings, not objects.
+        $roles = array_map(function($e)
+            {
+                if ($e instanceof RoleInterface) {
+                    return $e->getName();
+                } else {
+                    return $e;
                 }
-
-                // "Convert" to RoleInterface
-                $identityRole = $this->rbac->getRole($identityRole);
-
-                if ($this->inRole($role, $identityRole)) {
-                    return true;
-                }
-            }
-        }
+            }, $roles);
         
-        return false;
-    }
-    
-    /**
-     * Checks if a needle can be found in a rbac role stack (haystack).
-     * 
-     * @param RoleInterface $haystack
-     * @param RoleInterface $needle
-     * @return boolean
-     */
-    protected function inRole(RoleInterface $haystack, RoleInterface $needle)
-    {
-        if ($haystack === $needle) {
-            return true;
-        } elseif ($haystack->getParent() !== null) {
-            if ($this->inRole($haystack->getParent(), $needle)) {
+        foreach ($identityRoles as $identityRole) {
+            if (in_array($identityRole, $roles)) {
                 return true;
+            } else {
+                $it = new RecursiveIteratorIterator($this->rbac->getRole($identityRole), RecursiveIteratorIterator::CHILD_FIRST);
+                foreach ($it as $leaf) {
+                    foreach ($roles as $role) {
+                        if (! $this->rbac->hasRole($role)) {
+                            return false;
+                        }
+                        if ($this->rbac->getRole($role) === $leaf) {
+                            return true;
+                        }
+                    }
+                }
             }
         }
         
