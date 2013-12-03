@@ -214,20 +214,20 @@ class AuthorizationService implements EventManagerAwareInterface
         $this->load($identityRoles);
         
         // Roles should only contain strings, not objects.
-        $roles = array_map(function($e)
-            {
-                if ($e instanceof RoleInterface) {
-                    return $e->getName();
-                } else {
-                    return $e;
-                }
-            }, $roles);
+        $roles = array_map(function ($e) {
+            if ($e instanceof RoleInterface) {
+                return $e->getName();
+            } else {
+                return $e;
+            }
+        }, $roles);
         
         foreach ($identityRoles as $identityRole) {
             if (in_array($identityRole, $roles)) {
                 return true;
             } else {
-                $it = new RecursiveIteratorIterator($this->rbac->getRole($identityRole), RecursiveIteratorIterator::CHILD_FIRST);
+                $identityRoleFromRbac = $this->rbac->getRole($identityRole);
+                $it = new RecursiveIteratorIterator($identityRoleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
                 foreach ($it as $leaf) {
                     foreach ($roles as $role) {
                         if (! $this->rbac->hasRole($role)) {
