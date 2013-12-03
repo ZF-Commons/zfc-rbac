@@ -107,24 +107,20 @@ abstract class AbstractGuard implements GuardInterface
         $eventManager = $application->getEventManager();
 
         $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
-    }
-
+    }    
+    
     /**
-     * Load a rule inside the Rbac container
-     *
-     * This allows to only add one permission relative to the route guard/controller guard, instead
-     * of adding permissions for all the rules
-     *
-     * @param  array  $roles
-     * @param  string $permission
-     * @return void
+     * Checks if the current identity holds any of the required roles.
+     * 
+     * @param array $allowedRoles
+     * @return boolean
      */
-    protected function loadRule(array $roles, $permission)
+    protected function isAllowed(array $allowedRoles)
     {
-        $rbac = $this->authorizationService->getRbac();
-
-        foreach ($roles as $role) {
-            $rbac->getRole($role)->addPermission($permission);
+        foreach($allowedRoles as $checkRole){
+            if($this->authorizationService->getRbac()->hasRole($checkRole))
+                return true;
         }
+        return false;
     }
 }
