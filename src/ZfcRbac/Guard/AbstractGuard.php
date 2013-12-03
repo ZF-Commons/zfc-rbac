@@ -110,17 +110,13 @@ abstract class AbstractGuard implements GuardInterface
     }    
     
     /**
-     * Checks if the current identity holds any of the required roles.
+     * Checks if the current identity statisfies any of the required roles.
      * 
      * @param array $allowedRoles
      * @return boolean
      */
     protected function isAllowed(array $allowedRoles)
     {
-        foreach($allowedRoles as $checkRole){
-            if($this->authorizationService->getRbac()->hasRole($checkRole))
-                return true;
-        }
-        return false;
+        return $this->authorizationService->doesIdentityStatisfyRoles($allowedRoles);
     }
 }

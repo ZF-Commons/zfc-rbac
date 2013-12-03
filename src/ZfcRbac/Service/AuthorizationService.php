@@ -26,6 +26,7 @@ use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
+use Zend\Permissions\Rbac\RoleInterface;
 
 /**
  * Authorization service is a simple service that internally uses a Rbac container
@@ -183,6 +184,76 @@ class AuthorizationService implements EventManagerAwareInterface
             }
         }
 
+        return false;
+    }
+    
+    /**
+     * Returns true, if the current identity holds (statisfies) one of the given roles.
+     * 
+     * @param Traversable|array $roles
+     * @throws Exception\InvalidArgumentException
+     * @return boolean
+     */
+    public function doesIdentityStatisfyRoles($roles) {
+        if (! (is_array($roles) || $roles instanceof Traversable ) ) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Role must be array or implement Traversable, "%s" given',
+                is_object($roles) ? get_class($roles) : gettype($roles)
+            ));
+        }
+        
+        $identityRoles = $this->getIdentityRoles();
+
+        if (empty($identityRoles)) {
+            return false;
+        }
+
+        // First load everything inside the container
+        $this->load($identityRoles);
+        
+        foreach($roles as $role){
+            
+            // This shouldn't happen, but if it does, we assume something went wrong and for better or worse deny access
+            if(!$this->rbac->hasRole($role)) {
+                return false;
+            }
+            
+            // "Convert" to RoleInterface
+            $role = $this->rbac->getRole($role);
+            
+            foreach($identityRoles as $identityRole) {
+                
+                // This shouldn't happen as well, but if it does, we assume something went wrong and for better or worse deny access
+                if(!$this->rbac->hasRole($identityRole)) {
+                    return false;
+                }
+
+                // "Convert" to RoleInterface
+                $identityRole = $this->rbac->getRole($identityRole);
+
+                if( $this->inRole($role, $identityRole) ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if a needle can be found in a rbac role stack (haystack).
+     * 
+     * @param RoleInterface $haystack
+     * @param RoleInterface $needle
+     * @return boolean
+     */
+    protected function inRole(RoleInterface $haystack, RoleInterface $needle) {
+        if($haystack === $needle){
+            return true;
+        } elseif($haystack->getParent() !== NULL) {
+            if($this->inRole($haystack->getParent(), $needle)){
+                return true;
+            }
+        }
         return false;
     }
 
