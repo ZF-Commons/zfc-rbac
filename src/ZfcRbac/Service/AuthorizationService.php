@@ -213,29 +213,34 @@ class AuthorizationService implements EventManagerAwareInterface
         // First load everything inside the container
         $this->load($identityRoles);
         
-        // Roles should only contain strings, not objects.
-        $roles = array_map(function ($e) {
-            if ($e instanceof RoleInterface) {
-                return $e->getName();
-            } else {
-                return $e;
+        // We are working with objects here. Additionally we have to check if rbac knows our role
+        foreach ($roles as &$role) {
+            if (!$this->rbac->hasRole($role)) {
+                return false;
             }
-        }, $roles);
+            $role = $this->rbac->getRole($role);
+        }
         
         foreach ($identityRoles as $identityRole) {
-            if (in_array($identityRole, $roles)) {
+            
+            // This shouldn't happen, but if it does, we'll deny access
+            if (! $this->rbac->hasRole($identityRole)) {
+                return false;
+            }
+            
+            $identityRoleFromRbac = $this->rbac->getRole($identityRole);
+            
+            if (in_array($identityRoleFromRbac, $roles)) {
+                
+                // We found the required role immediately and do not need to iterate through its children
                 return true;
             } else {
-                $identityRoleFromRbac = $this->rbac->getRole($identityRole);
+                
+                // We need to iterate through the identities children.
                 $it = new RecursiveIteratorIterator($identityRoleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
                 foreach ($it as $leaf) {
-                    foreach ($roles as $role) {
-                        if (! $this->rbac->hasRole($role)) {
-                            return false;
-                        }
-                        if ($this->rbac->getRole($role) === $leaf) {
-                            return true;
-                        }
+                    if(in_array($leaf, $roles)){
+                        return true;
                     }
                 }
             }
