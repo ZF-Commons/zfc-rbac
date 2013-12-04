@@ -213,37 +213,37 @@ class AuthorizationService implements EventManagerAwareInterface
         // First load everything inside the container
         $this->load($identityRoles);
         
-        // We are working with objects here. Additionally we have to check if rbac knows our role
+        // If roles is an instance of RoleInterface, we convert it to a string.
+        // It could be possible to skip further checks, if the first item is not of RoleInterface
+        // since it should be very uncommon for the RoleProvider to return an ambigous array.
         foreach ($roles as &$role) {
-            if (!$this->rbac->hasRole($role)) {
-                return false;
+            if ($role instanceof RoleInterface) {
+                $role = $role->getName();
             }
-            $role = $this->rbac->getRole($role);
         }
-        
+            
+        $computedIdentityRoles = [];
         foreach ($identityRoles as $identityRole) {
             
-            // This shouldn't happen, but if it does, we'll deny access
-            if (! $this->rbac->hasRole($identityRole)) {
-                return false;
-            }
-            
-            $identityRoleFromRbac = $this->rbac->getRole($identityRole);
-            
-            if (in_array($identityRoleFromRbac, $roles)) {
+            $computedIdentityRoles[] = $identityRole;
+               
+            if ($this->rbac->hasRole($identityRole)) {
                 
-                // We found the required role immediately and do not need to iterate through its children
-                return true;
-            } else {
-                
+                $identityRoleFromRbac = $this->rbac->getRole($identityRole);
                 // We need to iterate through the identities children.
                 $it = new RecursiveIteratorIterator($identityRoleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
                 foreach ($it as $leaf) {
-                    if (in_array($leaf, $roles)) {
-                        return true;
-                    }
+                    $computedIdentityRoles[] = $leaf->getName();
                 }
             }
+        }
+        
+        // check for intersetions
+        $intersect = array_intersect($computedIdentityRoles, $roles);
+        
+        if (!empty($intersect)) {
+            // Intersection found -> identity has at least one of the required roles
+            return true;
         }
         
         return false;
