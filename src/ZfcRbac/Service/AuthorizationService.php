@@ -239,7 +239,7 @@ class AuthorizationService implements EventManagerAwareInterface
                 // We need to iterate through the identities children.
                 $it = new RecursiveIteratorIterator($identityRoleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
                 foreach ($it as $leaf) {
-                    if(in_array($leaf, $roles)){
+                    if (in_array($leaf, $roles)) {
                         return true;
                     }
                 }
