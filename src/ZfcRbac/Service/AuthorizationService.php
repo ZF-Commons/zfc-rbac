@@ -210,7 +210,7 @@ class AuthorizationService implements EventManagerAwareInterface
         $roleNames = (array) $roles;
         foreach ($roleNames as &$role) {
             if ($role instanceof RoleInterface) {
-                $roleNames[] = $role->getName();
+                $role = $role->getName();
             }
         }
             
