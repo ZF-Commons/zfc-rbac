@@ -170,8 +170,8 @@ class RbacCollector implements CollectorInterface, Serializable
 
             $permissions = $reflProperty->getValue($role);
 
-            foreach ($permissions as $permissionName => $permission) {
-                $this->collectedPermissions[$permissionName][] = $role->getName();
+            foreach ($permissions as $permission) {
+                $this->collectedPermissions[$permission->getName()][] = $role->getName();
             }
         }
 
