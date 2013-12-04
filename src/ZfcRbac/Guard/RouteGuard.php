@@ -33,13 +33,6 @@ class RouteGuard extends AbstractGuard
     const EVENT_PRIORITY = -10;
 
     /**
-     * Rule prefix that is used to avoid conflicts in the Rbac container
-     *
-     * Rules will be added to the Rbac container using the following syntax: __route__.$routeRule
-     */
-    const RULE_PREFIX = '__route__';
-
-    /**
      * Route guard rules
      *
      * Those rules are an associative array that map a rule with one or multiple roles
@@ -101,12 +94,10 @@ class RouteGuard extends AbstractGuard
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
 
         $allowedRoles = [];
-        $permission   = null;
 
         foreach (array_keys($this->rules) as $routeRule) {
             if (fnmatch($routeRule, $matchedRouteName, FNM_CASEFOLD)) {
                 $allowedRoles = $this->rules[$routeRule];
-                $permission   = self::RULE_PREFIX . '.' . $routeRule;
 
                 break;
             }
@@ -115,9 +106,9 @@ class RouteGuard extends AbstractGuard
         if (in_array('*', $allowedRoles)) {
             return true;
         }
-
+        
         // If no rules apply, it is considered as granted or not based on the protection policy
-        if (empty($permission)) {
+        if (empty($allowedRoles)) {
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 

@@ -33,14 +33,6 @@ class ControllerGuard extends AbstractGuard
     const EVENT_PRIORITY = -20;
 
     /**
-     * Rule prefix that is used to avoid conflicts in the Rbac container
-     *
-     * Rules will be added to the Rbac container using the following syntax:
-     *      __controller__.$controller.$action
-     */
-    const RULE_PREFIX = '__controller__';
-
-    /**
      * Controller guard rules
      *
      * @var array
@@ -123,10 +115,8 @@ class ControllerGuard extends AbstractGuard
 
         if (isset($this->rules[$controller][$action])) {
             $allowedRoles = $this->rules[$controller][$action];
-            $permission   = self::RULE_PREFIX . '.' . $controller . '.' . $action;
         } elseif (isset($this->rules[$controller][0])) {
             $allowedRoles = $this->rules[$controller][0];
-            $permission   = self::RULE_PREFIX . '.' . $controller;
         } else {
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
