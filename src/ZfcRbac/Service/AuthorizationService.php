@@ -197,49 +197,27 @@ class AuthorizationService implements EventManagerAwareInterface
      */
     public function doesIdentityStatisfyRoles($roles)
     {
-        if (! (is_array($roles) || $roles instanceof Traversable)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Role must be array or implement Traversable, "%s" given',
-                is_object($roles) ? get_class($roles) : gettype($roles)
-            ));
-        }
-        
         $identityRoles = $this->getIdentityRoles();
 
         if (empty($identityRoles)) {
             return false;
         }
 
-        // First load everything inside the container
+        // Load everything inside the container
         $this->load($identityRoles);
         
         // If roles is an instance of RoleInterface, we convert it to a string.
-        // It could be possible to skip further checks, if the first item is not of RoleInterface
-        // since it should be very uncommon for the RoleProvider to return an ambigous array.
-        foreach ($roles as &$role) {
+        $roleNames = (array) $roles;
+        foreach ($roleNames as &$role) {
             if ($role instanceof RoleInterface) {
-                $role = $role->getName();
+                $roleNames[] = $role->getName();
             }
         }
             
-        $computedIdentityRoles = [];
-        foreach ($identityRoles as $identityRole) {
-            
-            $computedIdentityRoles[] = $identityRole;
-               
-            if ($this->rbac->hasRole($identityRole)) {
-                
-                $identityRoleFromRbac = $this->rbac->getRole($identityRole);
-                // We need to iterate through the identities children.
-                $it = new RecursiveIteratorIterator($identityRoleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
-                foreach ($it as $leaf) {
-                    $computedIdentityRoles[] = $leaf->getName();
-                }
-            }
-        }
+        $flattenedIdentityRoles = $this->flattenRoles($identityRoles);
         
         // check for intersetions
-        $intersect = array_intersect($computedIdentityRoles, $roles);
+        $intersect = array_intersect($flattenedIdentityRoles, $roleNames);
         
         if (!empty($intersect)) {
             // Intersection found -> identity has at least one of the required roles
@@ -247,6 +225,46 @@ class AuthorizationService implements EventManagerAwareInterface
         }
         
         return false;
+    }
+    
+    /**
+     * Flattens a given set of roles.
+     * 
+     * @param array $roles
+     * @return array
+     */
+    protected function flattenRoles(array $roles)
+    {
+        $flattenedRoles = [];
+        
+        foreach ($roles as $role) {
+        
+            // Skip duplicates (saves us some time)
+            if (in_array($role, $flattenedRoles)) {
+                continue;
+            }
+        
+            $flattenedRoles[] = $role;
+             
+            if ($this->rbac->hasRole($role)) {
+                $roleFromRbac = $this->rbac->getRole($role);
+        
+                // We need to iterate through the identities children.
+                $it = new RecursiveIteratorIterator($roleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
+                foreach ($it as $leaf) {
+        
+                    if (in_array($leaf->getName(), $flattenedRoles)) {
+                        // Skip treesearch, as we've been here already
+                        break;
+                    }
+        
+                    $flattenedRoles[] = $leaf->getName();
+                }
+        
+            }
+        }
+        
+        return $flattenedRoles;
     }
 
     /**
