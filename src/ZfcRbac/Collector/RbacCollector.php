@@ -25,9 +25,8 @@ use Zend\Mvc\MvcEvent;
 use Zend\Permissions\Rbac\RoleInterface;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Permission\PermissionInterface;
-
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * RbacCollector
@@ -173,11 +172,11 @@ class RbacCollector implements CollectorInterface, Serializable
             $permissions = $reflProperty->getValue($role);
 
             foreach ($permissions as $permissionName => $permission) {
-            	if($permission instanceof PermissionInterface){
-            		$this->collectedPermissions[$permission->getName()][] = $role->getName();
-            	} else {
-            		$this->collectedPermissions[$permissionName][] = $role->getName();
-            	}
+                if ($permission instanceof PermissionInterface) {
+                    $this->collectedPermissions[$permission->getName()][] = $role->getName();
+                } else {
+                    $this->collectedPermissions[$permissionName][] = $role->getName();
+                }
             }
         }
 
