@@ -46,3 +46,4 @@ If you are looking for some information that is not listed in the documentation,
    4. [Using ZfcRbac with Doctrine ORM](/docs/07. Cookbook.md#using-zfcrbac-with-doctrine-orm)
    5. [How to lazy-load roles and permissions for very complex use cases?](/docs/07. Cookbook.md#how-to-lazy-load-roles-and-permissions-for-very-complex-use-cases)
    6. [Using ZfcRbac and ZF2 Assetic](/docs/07. Cookbook.md#using-zfcrbac-and-zf2-assetic)
+   7. [Using ZfcRbac and ZfcUser](/docs/07. Cookbook.md#using-zfcrbac-and-zfcuser)
