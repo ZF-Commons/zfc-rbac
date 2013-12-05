@@ -207,10 +207,12 @@ class AuthorizationService implements EventManagerAwareInterface
         $this->load($identityRoles);
         
         // If roles is an instance of RoleInterface, we convert it to a string.
-        $roleNames = (array) $roles;
-        foreach ($roleNames as &$role) {
+        $roleNames = [];
+        foreach ($roles as $role) {
             if ($role instanceof RoleInterface) {
-                $role = $role->getName();
+                $roleNames[] = $role->getName();
+            } else {
+                $roleNames[] = $role;
             }
         }
             
