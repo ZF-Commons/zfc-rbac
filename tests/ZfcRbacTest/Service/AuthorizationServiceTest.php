@@ -285,8 +285,13 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['guest'], $result);
     }
 
-    public function testReturnEmptyRolesIfIdentityIsWrongType()
+    public function testThrowExceptionIfIdentityIsWrongType()
     {
+        $this->setExpectedException(
+            'ZfcRbac\Exception\RuntimeException',
+            'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "stdClass" given'
+        );
+
         $rbac = new Rbac();
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
