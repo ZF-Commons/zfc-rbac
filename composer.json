@@ -46,5 +46,10 @@
         "psr-0": {
             "ZfcRbac\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
