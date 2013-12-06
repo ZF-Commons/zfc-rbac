@@ -111,7 +111,10 @@ class AuthorizationService implements EventManagerAwareInterface
         }
 
         if (!$identity instanceof IdentityInterface) {
-            return [];
+            throw new Exception\RuntimeException(sprintf(
+                'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
+                is_object($identity) ? get_class($identity) : gettype($identity)
+            ));
         }
 
         $roles = $identity->getRoles();
