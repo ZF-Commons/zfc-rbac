@@ -122,6 +122,143 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
     }
 
+    public function roleProvider()
+    {
+        return [
+            // Simple
+            [
+                'rolesToCreate' => [
+	               'login',
+	               'guest' => 'login'
+                ],
+                'identityRoles' => [
+	               'guest'
+                ],
+                'rolesToCheck' => [
+	               'login'
+                ],
+                'isGranted' => false
+            ],
+            [
+                'rolesToCreate' => [
+	               'login',
+	               'guest' => 'login'
+                ],
+                'identityRoles' => [
+	               'login'
+                ],
+                'rolesToCheck' => [
+	               'login'
+                ],
+                'isGranted' => true
+            ],
+            
+            // Complex role inheritance
+            [
+                'rolesToCreate' => [
+                    'admin',
+                    'moderator' => 'admin',
+                    'login' => 'moderator',
+	                'guest' => 'login'
+                ],
+                'identityRoles' => [
+                    'login',
+                    'moderator'
+                ],
+                'rolesToCheck' => [
+	                'admin'
+                ],
+                'isGranted' => false
+            ],
+            [
+                'rolesToCreate' => [
+                    'admin',
+                    'moderator' => 'admin',
+                    'login' => 'moderator',
+	                'guest' => 'login'
+                ],
+                'identityRoles' => [
+                    'login',
+                    'admin'
+                ],
+                'rolesToCheck' => [
+	               'moderator'
+                ],
+                'isGranted' => true
+            ],
+            
+            // Complex role inheritance and multiple check
+            [
+                'rolesToCreate' => [
+                    'sysadmin',
+                    'siteadmin' => 'sysadmin',
+                    'admin' => 'sysadmin',
+                    'moderator' => 'admin',
+                    'login' => 'moderator',
+	                'guest' => 'login'
+                ],
+                'identityRoles' => [
+                    'login',
+                    'moderator'
+                ],
+                'rolesToCheck' => [
+	                'admin',
+	                'sysadmin'
+                ],
+                'isGranted' => false
+            ],
+            [
+                'rolesToCreate' => [
+                    'sysadmin',
+                    'siteadmin' => 'sysadmin',
+                    'admin' => 'sysadmin',
+                    'moderator' => 'admin',
+                    'login' => 'moderator',
+	                'guest' => 'login'
+                ],
+                'identityRoles' => [
+                    'moderator',
+                    'admin'
+                ],
+                'rolesToCheck' => [
+	               'sysadmin',
+	               'siteadmin',
+	               'login'
+                ],
+                'isGranted' => true
+            ],
+        ];
+    }
+    
+    /**
+     * @dataProvider roleProvider
+     */
+    public function testDoesIdentityStatisfyRoles(array $rolesToCreate, array $identityRoles, array $rolesToCheck, $isGranted)
+    {
+        // Let's fill the RBAC container with some values
+        $rbac = new Rbac();
+
+        foreach ($rolesToCreate as $roleToCreate => $parent) {
+            if (is_int($roleToCreate)) {
+                $rbac->addRole($parent);
+            } else {
+                $rbac->addRole($roleToCreate, $parent);
+            }
+        }
+
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity->expects($this->once())->method('getRoles')->will($this->returnValue($identityRoles));
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->any())
+                         ->method('getIdentity')
+                         ->will($this->returnValue($identity));
+
+        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+
+        $this->assertEquals($isGranted, $authorizationService->doesIdentityStatisfyRoles($rolesToCheck));
+    }
+
     /**
      * Assert that event to load roles and permissions is not triggered if no role can be found in an
      * identity, because it will be refused anyway

@@ -191,6 +191,8 @@ class AuthorizationService implements EventManagerAwareInterface
     /**
      * Returns true, if the current identity holds (statisfies) one of the given roles.
      * 
+     * @todo Refactor
+     * @internal This is a hotfix for AbstractGuard and should not be used by any other component.
      * @param Traversable|array $roles
      * @throws Exception\InvalidArgumentException
      * @return boolean
@@ -252,7 +254,7 @@ class AuthorizationService implements EventManagerAwareInterface
                 $roleFromRbac = $this->rbac->getRole($role);
         
                 // We need to iterate through the identities children.
-                $it = new RecursiveIteratorIterator($roleFromRbac, RecursiveIteratorIterator::CHILD_FIRST);
+                $it = new RecursiveIteratorIterator($roleFromRbac, RecursiveIteratorIterator::SELF_FIRST);
                 foreach ($it as $leaf) {
         
                     if (in_array($leaf->getName(), $flattenedRoles)) {
