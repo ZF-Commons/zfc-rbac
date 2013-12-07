@@ -134,10 +134,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'identityRoles' => [
                     'guest'
                 ],
-                'statisfyRoles' => [
+                'rolesToCheck' => [
                     'login'
                 ],
-                'isGranted' => false
+                'doesStatisfy' => false
             ],
             [
                 'rolesToCreate' => [
@@ -147,10 +147,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'identityRoles' => [
                     'login'
                 ],
-                'statisfyRoles' => [
+                'rolesToCheck' => [
                     'login'
                 ],
-                'isGranted' => true
+                'doesStatisfy' => true
             ],
             
             // Complex role inheritance
@@ -165,10 +165,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                     'login',
                     'moderator'
                 ],
-                'statisfyRoles' => [
+                'rolesToCheck' => [
                     'admin'
                 ],
-                'isGranted' => false
+                'doesStatisfy' => false
             ],
             [
                 'rolesToCreate' => [
@@ -181,10 +181,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                     'login',
                     'admin'
                 ],
-                'statisfyRoles' => [
+                'rolesToCheck' => [
                     'moderator'
                 ],
-                'isGranted' => true
+                'doesStatisfy' => true
             ],
             
             // Complex role inheritance and multiple check
@@ -201,11 +201,11 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                     'login',
                     'moderator'
                 ],
-                'statisfyRoles' => [
+                'rolesToCheck' => [
                     'admin',
                     'sysadmin'
                 ],
-                'isGranted' => false
+                'doesStatisfy' => false
             ],
             [
                 'rolesToCreate' => [
@@ -220,12 +220,12 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                     'moderator',
                     'admin'
                 ],
-                'statisfyRoles' => [
+                'rolesToCheck' => [
                     'sysadmin',
                     'siteadmin',
                     'login'
                 ],
-                'isGranted' => true
+                'doesStatisfy' => true
             ]
         ];
     }
@@ -233,7 +233,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider roleProvider
      */
-    public function testDoesIdentityStatisfyRoles(array $rolesToCreate, array $identityRoles, array $statisfyRoles, $isGranted)
+    public function testDoesIdentityStatisfyRoles(array $rolesToCreate, array $identityRoles, array $rolesToCheck, $doesStatisfy)
     {
         // Let's fill the RBAC container with some values
         $rbac = new Rbac();
@@ -256,7 +256,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
-        $this->assertEquals($isGranted, $authorizationService->doesIdentityStatisfyRoles($statisfyRoles));
+        $this->assertEquals($doesStatisfy, $authorizationService->doesIdentityStatisfyRoles($rolesToCheck));
     }
 
     /**
