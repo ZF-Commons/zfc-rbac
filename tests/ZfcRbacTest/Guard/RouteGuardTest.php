@@ -254,7 +254,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
             [
                 'rules'            => ['home' => 'guest'],
                 'matchedRouteName' => 'home',
-                'rolesToCreate'    => ['admin', 'guest' => 'admin'],
+                'rolesToCreate'    => ['admin', 'login' => 'admin', 'guest' => 'login'],
                 'identityRole'     => 'admin',
                 'isGranted'        => true,
                 'policy'           => GuardInterface::POLICY_ALLOW
@@ -262,9 +262,27 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
             [
                 'rules'            => ['home' => 'guest'],
                 'matchedRouteName' => 'home',
-                'rolesToCreate'    => ['admin', 'guest' => 'admin'],
+                'rolesToCreate'    => ['admin', 'login' => 'admin', 'guest' => 'login'],
                 'identityRole'     => 'admin',
                 'isGranted'        => true,
+                'policy'           => GuardInterface::POLICY_DENY
+            ],
+
+            // Assert it can deny access although using child-parent relationship between roles (just to be sure)
+            [
+                'rules'            => ['route' => 'admin'],
+                'matchedRouteName' => 'route',
+                'rolesToCreate'    => ['admin', 'login' => 'admin'],
+                'identityRole'     => 'login',
+                'isGranted'        => false,
+                'policy'           => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'            => ['route' => 'admin'],
+                'matchedRouteName' => 'route',
+                'rolesToCreate'    => ['admin', 'login' => 'admin'],
+                'identityRole'     => 'login',
+                'isGranted'        => false,
                 'policy'           => GuardInterface::POLICY_DENY
             ],
 
