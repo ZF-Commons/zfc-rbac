@@ -250,8 +250,12 @@ class AuthorizationService implements EventManagerAwareInterface
             if (in_array($role, $flattenedRoles)) {
                 continue;
             }
-        
-            $flattenedRoles[] = $role;
+
+            if ($role instanceof RoleInterface) {
+                $flattenedRoles[] = $role->getName();
+            } else {
+                $flattenedRoles[] = $role;
+            }
              
             if ($this->rbac->hasRole($role)) {
                 $roleFromRbac = $this->rbac->getRole($role);
