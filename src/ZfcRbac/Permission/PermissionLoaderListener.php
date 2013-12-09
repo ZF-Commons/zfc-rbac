@@ -75,7 +75,11 @@ class PermissionLoaderListener extends AbstractListenerAggregate
                     $role = $rbac->getRole($role);
                 }
 
-                $role->addPermission($permission);
+                // We have to check the role does not already contain the permission. This can
+                // happen if you load roles from database, with a ManyToMany associations with Doctrine
+                if (!$role->hasPermission($permission)) {
+                    $role->addPermission($permission);
+                }
             }
         }
     }
