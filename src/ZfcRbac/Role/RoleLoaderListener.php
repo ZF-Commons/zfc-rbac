@@ -63,13 +63,27 @@ class RoleLoaderListener extends AbstractListenerAggregate
         $rbac  = $event->getRbac();
         $roles = $this->roleProvider->getRoles($event);
 
+        // NOTE: as you can see, even if we have a RoleInterface, we create a new role from it instead
+        // of adding it. The reason is because this may be a Doctrine entity, and it can create a lot
+        // of edge cases that are hard to debug
+
         foreach ($roles as $key => $value) {
+            $parent = null;
+
             if ($value instanceof RoleInterface) {
-                $rbac->addRole($value);
+                $role   = $value->getName();
+                $parent = $value->getParent()->getName();
             } elseif (is_int($key)) {
-                $rbac->addRole($value);
+                $role = $value;
             } else {
-                $rbac->addRole($key, $value);
+                $role   = $key;
+                $parent = $value;
+            }
+
+            // Because multiple providers may have the same role, we first need to check if it exists
+            // before adding it
+            if (!$rbac->hasRole($role)) {
+                $rbac->addRole($role, $parent);
             }
         }
     }
