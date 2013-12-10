@@ -93,6 +93,17 @@ class AuthorizationService implements EventManagerAwareInterface
     }
 
     /**
+     * Set if we should force reload each time isGranted is called
+     *
+     * @param boolean $forceReload
+     * @param void
+     */
+    public function setForceReload($forceReload)
+    {
+        $this->forceReload = (bool) $forceReload;
+    }
+
+    /**
      * Get the identity roles from the identity, applying some more logic
      *
      * @return string[]|\Zend\Permissions\Rbac\RoleInterface[]
@@ -123,21 +134,36 @@ class AuthorizationService implements EventManagerAwareInterface
     }
 
     /**
-     * Set if we should force reload each time isGranted is called
+     * Check if a given role satisfy through one of the identity roles (it checks inheritance)
      *
-     * @param boolean $forceReload
-     * @param void
+     * @param  string|RoleInterface $roleToCheck
+     * @return bool
      */
-    public function setForceReload($forceReload)
+    public function satisfyIdentityRoles($roleToCheck)
     {
-        $this->forceReload = (bool) $forceReload;
+        $roleName      = $roleToCheck instanceof RoleInterface ? $roleToCheck->getName() : $roleToCheck;
+        $identityRoles = $this->getIdentityRoles();
+
+        // Too easy...
+        if (empty($identityRoles)) {
+            return false;
+        }
+
+        // We first directly check through the names, as this is the fastest
+        foreach ($identityRoles as $identityRole) {
+            $identityRole = $identityRole instanceof RoleInterface ? $identityRole->getName() : $identityRole;
+
+            if ($identityRole === $roleName) {
+                return true;
+            }
+        }
+
+        // Houston, we need to check the Rbac container! First, trigger a load
+        $this->load($identityRoles);
     }
 
     /**
      * Check if the permission is granted to the current identity
-     *
-     * Note: if an identity has multiple role, ALL the roles must be granted for the permission
-     * to be granted
      *
      * @param  string                           $permission
      * @param  callable|AssertionInterface|null $assertion
@@ -186,7 +212,7 @@ class AuthorizationService implements EventManagerAwareInterface
     }
 
     /**
-     * Load roles and permissions inside the container by triggering load events
+     * Load roles and permissions inside the container by triggering load event
      *
      * @see \ZfcRbac\Role\RoleLoaderListener
      *
