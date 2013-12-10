@@ -70,18 +70,11 @@ class ModuleOptions extends AbstractOptions
     protected $protectionPolicy = GuardInterface::POLICY_DENY;
 
     /**
-     * A configuration for role providers
+     * A configuration for role provider
      *
      * @var array
      */
-    protected $roleProviders = [];
-
-    /**
-     * A configuration for permission providers
-     *
-     * @var array
-     */
-    protected $permissionProviders = [];
+    protected $roleProvider = [];
 
     /**
      * Options for the unauthorized strategy
@@ -241,43 +234,29 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     * Set the configuration for role providers
+     * Set the configuration for the role provider
      *
-     * @param array $roleProviders
+     * @param array $roleProvider
      */
-    public function setRoleProviders(array $roleProviders)
+    public function setRoleProvider(array $roleProvider)
     {
-        $this->roleProviders = $roleProviders;
+        if (count($roleProvider) > 1) {
+            throw new Exception\RuntimeException(
+                'You can only have one role provider'
+            );
+        }
+
+        $this->roleProvider = $roleProvider;
     }
 
     /**
-     * Get the configuration for role providers
+     * Get the configuration for the role provider
      *
      * @return array
      */
-    public function getRoleProviders()
+    public function getRoleProvider()
     {
-        return $this->roleProviders;
-    }
-
-    /**
-     * Set the configuration for permission providers
-     *
-     * @param array $permissionProviders
-     */
-    public function setPermissionProviders(array $permissionProviders)
-    {
-        $this->permissionProviders = $permissionProviders;
-    }
-
-    /**
-     * Get the configuration for permission providers
-     *
-     * @return array
-     */
-    public function getPermissionProviders()
-    {
-        return $this->permissionProviders;
+        return $this->roleProvider;
     }
 
     /**

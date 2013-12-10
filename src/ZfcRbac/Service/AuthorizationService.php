@@ -220,7 +220,6 @@ class AuthorizationService implements EventManagerAwareInterface
         $rbacEvent->setTarget($this);
 
         $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
-        $eventManager->trigger(RbacEvent::EVENT_LOAD_PERMISSIONS, $rbacEvent);
 
         $this->isLoaded = true;
     }

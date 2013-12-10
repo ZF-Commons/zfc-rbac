@@ -39,8 +39,7 @@ class RoleProviderPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $factories = [
-        'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory',
-        'ZfcRbac\Role\RoleProviderChain'            => 'ZfcRbac\Factory\RoleProviderChainFactory'
+        'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory'
     ];
 
     /**

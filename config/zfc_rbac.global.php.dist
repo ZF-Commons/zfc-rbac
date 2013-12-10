@@ -95,20 +95,6 @@ return [
         'role_providers' => [],
 
         /**
-         * Configuration for permission providers
-         *
-         * It must be an array of array that contains configuration for each permission provider. Each provider
-         * config must follow the following format:
-         *
-         *      'ZfcRbac\Permission\InMemoryRoleProvider' => [
-         *          'permission1' => ['role1', 'role2']
-         *      ]
-         *
-         * Supported options depend of the permission provider, so please refer to the official documentation
-         */
-        'permission_providers' => [],
-
-        /**
          * Configure the unauthorized strategy. It is used to render a template whenever a user is unauthorized
          */
         'unauthorized_strategy' => [
@@ -146,7 +132,6 @@ return [
          * follow a common plugin manager config format, and can be used to create your custom objects
          */
         // 'guard_manager'               => [],
-        // 'role_provider_manager'       => [],
-        // 'permission_provider_manager' => []
+        // 'role_provider_manager'       => []
     ]
 ];

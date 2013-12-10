@@ -22,15 +22,14 @@ use Zend\EventManager\Event;
 use Zend\Permissions\Rbac\Rbac;
 
 /**
- * Event triggered for loading roles and permissions to populate the Rbac container
+ * Event triggered for loading roles to populate the Rbac container
  */
 class RbacEvent extends Event
 {
     /**
      * Event names
      */
-    const EVENT_LOAD_ROLES       = 'loadRoles';
-    const EVENT_LOAD_PERMISSIONS = 'loadPermissions';
+    const EVENT_LOAD_ROLES = 'loadRoles';
 
     /**
      * Rbac container
@@ -84,7 +83,7 @@ class RbacEvent extends Event
     }
 
     /**
-     * Get the current permission (can be used to lazy-load complex permissions graph)
+     * Get the current asked permission (can be used to lazy-load complex permissions graph)
      *
      * @return string
      */

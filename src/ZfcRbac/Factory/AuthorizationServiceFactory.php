@@ -47,7 +47,6 @@ class AuthorizationServiceFactory implements FactoryInterface
         // Create the event manager and add some events
         $eventManager = new EventManager();
         $eventManager->attach($serviceLocator->get('ZfcRbac\Role\RoleLoaderListener'));
-        $eventManager->attach($serviceLocator->get('ZfcRbac\Permission\PermissionLoaderListener'));
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider, $moduleOptions->getGuestRole());
         $authorizationService->setEventManager($eventManager);

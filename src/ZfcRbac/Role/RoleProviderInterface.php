@@ -22,13 +22,18 @@ use Zend\Permissions\Rbac\RoleInterface;
 use ZfcRbac\Service\RbacEvent;
 
 /**
- * A role provider is an object that returns a list of roles
+ * A role provider is an object that returns a list of roles with their permissions
  *
- * Role providers must follow a specific format when returning roles. Supported formats are as below:
+ * Role providers must follow a very specific format when returning roles. Supported formats are as below:
  *
  *      - an array of RoleInterface instances
- *      - an array of strings (role names) (eg.: array("role1", "role2")
- *      - an array that map a string with its parent (eg.: array("role" => "parent")
+ *      - an array of strings, like this:
+ *          [
+ *              'roleName' => [
+ *                  'children'    => ['child1', 'child2']; // OPTIONAL
+ *                  'permissions' => ['perm1', 'perm2']; // OPTIONAL
+ *              ]
+ *          ]
  */
 interface RoleProviderInterface
 {
@@ -36,7 +41,7 @@ interface RoleProviderInterface
      * Get the roles from the provider
      *
      * @param  RbacEvent $event
-     * @return string[]|array|RoleInterface[]
+     * @return array|RoleInterface[]
      */
     public function getRoles(RbacEvent $event);
 }
