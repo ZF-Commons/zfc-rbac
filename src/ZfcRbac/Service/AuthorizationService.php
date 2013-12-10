@@ -80,11 +80,6 @@ class AuthorizationService implements EventManagerAwareInterface
         $this->rbac             = $rbac;
         $this->identityProvider = $identityProvider;
         $this->guestRole        = $guestRole;
-
-        // We register the guest role inside the container
-        if ($this->guestRole) {
-            $this->rbac->addRole($this->guestRole);
-        }
     }
 
     /**
@@ -103,6 +98,7 @@ class AuthorizationService implements EventManagerAwareInterface
      * Get the identity roles from the identity, applying some more logic
      *
      * @return string[]|\Zend\Permissions\Rbac\RoleInterface[]
+     * @throws Exception\RuntimeException
      */
     public function getIdentityRoles()
     {
@@ -208,13 +204,6 @@ class AuthorizationService implements EventManagerAwareInterface
         }
 
         $eventManager = $this->getEventManager();
-
-        // Any permission that beging with __zfc_rbac__ is a reserved keyword. It's used among other
-        // thing by guards, but it should not be transfered to the event (for instance if you use this
-        // info to lazy-load permissions from DB)
-        if (substr($permission, 0, 12) === '__zfc_rbac__') {
-            $permission = '';
-        }
 
         $rbacEvent = new RbacEvent($this->rbac, $roles, $permission);
         $rbacEvent->setTarget($this);

@@ -80,19 +80,21 @@ return [
         // 'protection_policy' => GuardInterface::DENY,
 
         /**
-         * Configuration for role providers
+         * Configuration for role provider
          *
-         * It must be an array of array that contains configuration for each role provider. Each provider config
+         * It must be an array of array that contains configuration for the role provider. Each provider config
          * must follow the following format:
          *
          *      'ZfcRbac\Role\InMemoryRoleProvider' => [
-         *          'role1',
-         *          'children' => 'parent'
+         *          'role1' => [
+         *              'children'    => ['children1', 'children2'], // OPTIONAL
+         *              'permissions' => ['edit', 'read'] // OPTIONAL
+         *          ]
          *      ]
          *
          * Supported options depend of the role provider, so please refer to the official documentation
          */
-        'role_providers' => [],
+        'role_provider' => [],
 
         /**
          * Configure the unauthorized strategy. It is used to render a template whenever a user is unauthorized

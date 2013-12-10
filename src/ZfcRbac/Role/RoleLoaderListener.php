@@ -67,6 +67,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
         $roles = $this->roleProvider->getRoles($event);
 
         foreach ($roles as $key => $value) {
+            // A RoleInterface already embeds hierarchy and permission, so we're good to go!
             if ($value instanceof RoleInterface) {
                 $rbac->addRole($value);
                 continue;

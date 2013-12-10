@@ -236,7 +236,8 @@ class ModuleOptions extends AbstractOptions
     /**
      * Set the configuration for the role provider
      *
-     * @param array $roleProvider
+     * @param  array $roleProvider
+     * @throws Exception\RuntimeException
      */
     public function setRoleProvider(array $roleProvider)
     {
