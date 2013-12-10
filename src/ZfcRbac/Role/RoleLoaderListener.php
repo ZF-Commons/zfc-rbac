@@ -77,6 +77,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
             $children    = isset($value['children']) ? $value['children'] : [];
             $permissions = isset($value['permissions']) ? $value['permissions'] : [];
 
+            // @TODO: why this?
             if ($rbac->hasRole($roleName)) {
                 throw new Exception\RuntimeException(sprintf(
                     'A role with name "%s" already exists in the RBAC container',

@@ -89,8 +89,6 @@ class AuthorizationService implements EventManagerAwareInterface
      */
     public function getRbac()
     {
-        $this->load();
-
         return $this->rbac;
     }
 
@@ -206,6 +204,11 @@ class AuthorizationService implements EventManagerAwareInterface
 
         $eventManager = $this->getEventManager();
         $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
+
+        // If, after loading the roles, the guest role is not in the container, we add it with no permissions
+        if (!empty($this->guestRole) && !$this->rbac->hasRole($this->guestRole)) {
+            $this->rbac->addRole($this->guestRole);
+        }
 
         $this->isLoaded = true;
     }
