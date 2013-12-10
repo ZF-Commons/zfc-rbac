@@ -190,93 +190,6 @@ class AuthorizationService implements EventManagerAwareInterface
 
         return false;
     }
-    
-    /**
-     * Returns true, if the current identity holds (statisfies) one of the given roles.
-     * 
-     * @todo Refactor
-     * @internal This is a hotfix for AbstractGuard and should not be used by any other component.
-     * @param Traversable|array $roles
-     * @throws Exception\InvalidArgumentException
-     * @return boolean
-     */
-    public function doesIdentityStatisfyRoles($roles)
-    {
-        $identityRoles = $this->getIdentityRoles();
-
-        if (empty($identityRoles)) {
-            return false;
-        }
-
-        // Load everything inside the container
-        $this->load($identityRoles);
-        
-        // If roles is an instance of RoleInterface, we convert it to a string.
-        $roleNames = [];
-        foreach ($roles as $role) {
-            if ($role instanceof RoleInterface) {
-                $roleNames[] = $role->getName();
-            } else {
-                $roleNames[] = $role;
-            }
-        }
-            
-        $flattenedIdentityRoles = $this->flattenRoles($identityRoles);
-        
-        // check for intersetions
-        $intersect = array_intersect($flattenedIdentityRoles, $roleNames);
-        
-        if (!empty($intersect)) {
-            // Intersection found -> identity has at least one of the required roles
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Flattens a given set of roles.
-     * 
-     * @param array $roles
-     * @return array
-     */
-    protected function flattenRoles(array $roles)
-    {
-        $flattenedRoles = [];
-        
-        foreach ($roles as $role) {
-        
-            // Skip duplicates (saves us some time)
-            if (in_array($role, $flattenedRoles)) {
-                continue;
-            }
-
-            if ($role instanceof RoleInterface) {
-                $flattenedRoles[] = $role->getName();
-            } else {
-                $flattenedRoles[] = $role;
-            }
-             
-            if ($this->rbac->hasRole($role)) {
-                $roleFromRbac = $this->rbac->getRole($role);
-        
-                // We need to iterate through the identities children.
-                $it = new RecursiveIteratorIterator($roleFromRbac, RecursiveIteratorIterator::SELF_FIRST);
-                foreach ($it as $leaf) {
-        
-                    if (in_array($leaf->getName(), $flattenedRoles)) {
-                        // Skip treesearch, as we've been here already
-                        break;
-                    }
-        
-                    $flattenedRoles[] = $leaf->getName();
-                }
-        
-            }
-        }
-        
-        return $flattenedRoles;
-    }
 
     /**
      * Load roles and permissions inside the container by triggering load events
@@ -295,6 +208,13 @@ class AuthorizationService implements EventManagerAwareInterface
         }
 
         $eventManager = $this->getEventManager();
+
+        // Any permission that beging with __zfc_rbac__ is a reserved keyword. It's used among other
+        // thing by guards, but it should not be transfered to the event (for instance if you use this
+        // info to lazy-load permissions from DB)
+        if (substr($permission, 0, 12) === '__zfc_rbac__') {
+            $permission = '';
+        }
 
         $rbacEvent = new RbacEvent($this->rbac, $roles, $permission);
         $rbacEvent->setTarget($this);
