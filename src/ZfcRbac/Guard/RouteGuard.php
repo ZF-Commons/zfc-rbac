@@ -33,13 +33,6 @@ class RouteGuard extends AbstractGuard
     const EVENT_PRIORITY = -10;
 
     /**
-     * Rule prefix that is used to avoid conflicts in the Rbac container
-     *
-     * Rules will be added to the Rbac container using the following syntax: __route__.$routeRule
-     */
-    const RULE_PREFIX = '__zfc_rbac__route__';
-
-    /**
      * Route guard rules
      *
      * Those rules are an associative array that map a rule with one or multiple roles
@@ -99,31 +92,24 @@ class RouteGuard extends AbstractGuard
     public function isGranted(MvcEvent $event)
     {
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
-
-        $allowedRoles = [];
-        $permission   = null;
+        $allowedRoles     = null;
 
         foreach (array_keys($this->rules) as $routeRule) {
             if (fnmatch($routeRule, $matchedRouteName, FNM_CASEFOLD)) {
                 $allowedRoles = $this->rules[$routeRule];
-                $permission   = self::RULE_PREFIX . '.' . $routeRule;
-
                 break;
             }
+        }
+
+        // If no rules apply, it is considered as granted or not based on the protection policy
+        if (null === $allowedRoles) {
+            return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
         if (in_array('*', $allowedRoles)) {
             return true;
         }
 
-        // If no rules apply, it is considered as granted or not based on the protection policy
-        if (empty($permission)) {
-            return $this->protectionPolicy === self::POLICY_ALLOW;
-        }
-
-        // Load the needed permission inside the container
-        $this->loadRule($allowedRoles, $permission);
-
-        return $this->authorizationService->isGranted($permission);
+        return $this->authorizationService->satisfyIdentityRoles($allowedRoles);
     }
 }
