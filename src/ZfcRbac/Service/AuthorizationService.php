@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Service;
 
+use RecursiveIteratorIterator;
 use Traversable;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
@@ -27,7 +28,6 @@ use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use Zend\Permissions\Rbac\RoleInterface;
-use RecursiveIteratorIterator;
 
 /**
  * Authorization service is a simple service that internally uses a Rbac container
@@ -160,6 +160,21 @@ class AuthorizationService implements EventManagerAwareInterface
 
         // Houston, we need to check the Rbac container! First, trigger a load
         $this->load($identityRoles);
+
+        // Now we just need to recursively check the roles
+        foreach ($identityRoles as $identityRole) {
+            if (!$identityRole instanceof RoleInterface) {
+                $identityRole = $this->rbac->getRole($identityRole);
+            }
+
+            $iterator = new RecursiveIteratorIterator($identityRole, RecursiveIteratorIterator::CHILD_FIRST);
+
+            foreach ($iterator as $role) {
+                if ($role->getName() === $roleName) {
+                    return true;
+                }
+            }
+        }
     }
 
     /**
