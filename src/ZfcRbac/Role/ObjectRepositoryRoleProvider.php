@@ -49,6 +49,8 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     public function getRoles(RbacEvent $event)
     {
+        // @TODO: should we add a "role_name" option so that we can do something like:
+        // $objectRepository->findBy([$roleName => $event->getRoles()]) ?
         return $this->objectRepository->findAll();
     }
 }
