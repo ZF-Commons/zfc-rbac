@@ -118,8 +118,19 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     private function collectOptions(ModuleOptions $moduleOptions, AuthorizationService $authorizationService)
     {
+        $identityRoles = $authorizationService->getIdentityRoles();
+
+        $currentRoles = array();
+        foreach ($identityRoles as $role) {
+            if ($role instanceof RoleInterface) {
+                $currentRoles[] = $role->getName();
+            } else {
+                $currentRoles[] = $role;
+            }
+        }
+
         $this->collectedOptions = [
-            'current_roles'     => $authorizationService->getIdentityRoles(),
+            'current_roles'     => $currentRoles,
             'guest_role'        => $moduleOptions->getGuestRole(),
             'protection_policy' => $moduleOptions->getProtectionPolicy()
         ];
