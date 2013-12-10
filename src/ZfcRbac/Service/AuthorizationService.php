@@ -191,7 +191,6 @@ class AuthorizationService implements EventManagerAwareInterface
      * Load roles and permissions inside the container by triggering load events
      *
      * @see \ZfcRbac\Role\RoleLoaderListener
-     * @see \ZfcRbac\Provider\ProviderLoaderListener
      *
      * @param  array  $roles
      * @param  string $permission
@@ -203,11 +202,9 @@ class AuthorizationService implements EventManagerAwareInterface
             return;
         }
 
-        $eventManager = $this->getEventManager();
-
         $rbacEvent = new RbacEvent($this->rbac, $roles, $permission);
-        $rbacEvent->setTarget($this);
 
+        $eventManager = $this->getEventManager();
         $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
 
         $this->isLoaded = true;

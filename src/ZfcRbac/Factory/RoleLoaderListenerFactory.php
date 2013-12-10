@@ -32,12 +32,16 @@ class RoleLoaderListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /* @var \ZfcRbac\Options\ModuleOptions $options */
+        $options            = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $roleProviderConfig = $options->getRoleProvider();
+
         /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('ZfcRbac\Role\RoleProviderPluginManager');
 
-        /** @var \ZfcRbac\Role\RoleProviderChain $roleProviderChain */
-        $roleProviderChain = $pluginManager->get('ZfcRbac\Role\RoleProviderChain');
+        /** @var \ZfcRbac\Role\RoleProviderInterface $roleProvider */
+        $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
 
-        return new RoleLoaderListener($roleProviderChain);
+        return new RoleLoaderListener($roleProvider);
     }
 }

@@ -49,8 +49,6 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     public function getRoles(RbacEvent $event)
     {
-        // @TODO: we actually have the requested roles here in the event. Can't we simply load the matched
-        // roles instead of loading EVERYTHING?
         return $this->objectRepository->findAll();
     }
 }
