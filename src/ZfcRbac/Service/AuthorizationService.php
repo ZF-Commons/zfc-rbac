@@ -169,6 +169,7 @@ class AuthorizationService implements EventManagerAwareInterface
 
             $iterator = new RecursiveIteratorIterator($identityRole, RecursiveIteratorIterator::CHILD_FIRST);
 
+            /* @var $role \Zend\Permissions\Rbac\RoleInterface */
             foreach ($iterator as $role) {
                 if ($role->getName() === $roleName) {
                     return true;
