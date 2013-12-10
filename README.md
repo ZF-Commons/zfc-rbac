@@ -1,7 +1,5 @@
 # ZfcRbac
 
-> WARNING ABOUT ZFCRBAC 1.0: [PLEASE READ THIS](https://github.com/ZF-Commons/ZfcRbac/pull/114#issuecomment-30245638).
-
 [![Master Branch Build Status](https://secure.travis-ci.org/ZF-Commons/ZfcRbac.png?branch=master)](http://travis-ci.org/ZF-Commons/ZfcRbac)
 [![Coverage Status](https://coveralls.io/repos/ZF-Commons/ZfcRbac/badge.png)](https://coveralls.io/r/ZF-Commons/ZfcRbac)
 [![Latest Stable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/stable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
