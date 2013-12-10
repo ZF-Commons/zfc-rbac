@@ -22,6 +22,7 @@ use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Permissions\Rbac\Role;
 use Zend\Permissions\Rbac\RoleInterface;
+use ZfcRbac\Exception;
 use ZfcRbac\Service\RbacEvent;
 
 /**
@@ -58,6 +59,7 @@ class RoleLoaderListener extends AbstractListenerAggregate
      * @private
      * @param  RbacEvent $event
      * @return void
+     * @throws Exception\RuntimeException
      */
     public function onLoadRoles(RbacEvent $event)
     {
@@ -75,7 +77,10 @@ class RoleLoaderListener extends AbstractListenerAggregate
             $permissions = isset($value['permissions']) ? $value['permissions'] : [];
 
             if ($rbac->hasRole($roleName)) {
-                // @TODO: throw exception
+                throw new Exception\RuntimeException(sprintf(
+                    'A role with name "%s" already exists in the RBAC container',
+                    $roleName
+                ));
             }
 
             $role = new Role($roleName);
