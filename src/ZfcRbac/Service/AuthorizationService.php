@@ -136,12 +136,11 @@ class AuthorizationService implements EventManagerAwareInterface
     /**
      * Check if a given role satisfy through one of the identity roles (it checks inheritance)
      *
-     * @param  string|RoleInterface $roleToCheck
+     * @param  string[]|RoleInterface[] $rolesToCheck
      * @return bool
      */
-    public function satisfyIdentityRoles($roleToCheck)
+    public function satisfyIdentityRoles(array $rolesToCheck)
     {
-        $roleName      = $roleToCheck instanceof RoleInterface ? $roleToCheck->getName() : $roleToCheck;
         $identityRoles = $this->getIdentityRoles();
 
         // Too easy...
@@ -149,33 +148,12 @@ class AuthorizationService implements EventManagerAwareInterface
             return false;
         }
 
-        // We first directly check through the names, as this is the fastest
-        foreach ($identityRoles as $identityRole) {
-            $identityRole = $identityRole instanceof RoleInterface ? $identityRole->getName() : $identityRole;
-
-            if ($identityRole === $roleName) {
-                return true;
-            }
-        }
-
-        // Houston, we need to check the Rbac container! First, trigger a load
         $this->load($identityRoles);
 
-        // Now we just need to recursively check the roles
-        foreach ($identityRoles as $identityRole) {
-            if (!$identityRole instanceof RoleInterface) {
-                $identityRole = $this->rbac->getRole($identityRole);
-            }
+        $rolesToCheck  = $this->flattenRoles($rolesToCheck);
+        $identityRoles = $this->flattenRoles($identityRoles);
 
-            $iterator = new RecursiveIteratorIterator($identityRole, RecursiveIteratorIterator::CHILD_FIRST);
-
-            /* @var $role \Zend\Permissions\Rbac\RoleInterface */
-            foreach ($iterator as $role) {
-                if ($role->getName() === $roleName) {
-                    return true;
-                }
-            }
-        }
+        return count(array_intersect($rolesToCheck, $identityRoles)) > 0;
     }
 
     /**
@@ -253,5 +231,40 @@ class AuthorizationService implements EventManagerAwareInterface
         }
 
         $this->isLoaded = true;
+    }
+
+    /**
+     * Flatten an array of role with role names
+     *
+     * This method iterates through the list of roles, and convert any RoleInterface to a string. For any
+     * role, it also extracts all the children
+     *
+     * @param  array|RoleInterface[] $roles
+     * @return string[]
+     */
+    protected function flattenRoles(array $roles)
+    {
+        $roleNames = [];
+
+        foreach ($roles as $role) {
+            if ($role instanceof RoleInterface) {
+                $roleNames[] = $role->getName();
+            } else {
+                $role = $this->rbac->getRole($role);
+            }
+
+            if (!$role->hasChildren()) {
+                continue;
+            }
+
+            $iterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);
+
+            /* @var RoleInterface $childRole */
+            foreach ($iterator as $childRole) {
+                $roleNames[] = $childRole->getName();
+            }
+        }
+
+        return array_unique($roleNames);
     }
 }

@@ -70,20 +70,13 @@ class RoleLoaderListener extends AbstractListenerAggregate
             // A RoleInterface already embeds hierarchy and permission, so we're good to go!
             if ($value instanceof RoleInterface) {
                 $rbac->addRole($value);
+
                 continue;
             }
 
             $roleName    = $key;
             $children    = isset($value['children']) ? $value['children'] : [];
             $permissions = isset($value['permissions']) ? $value['permissions'] : [];
-
-            // @TODO: why this?
-            if ($rbac->hasRole($roleName)) {
-                throw new Exception\RuntimeException(sprintf(
-                    'A role with name "%s" already exists in the RBAC container',
-                    $roleName
-                ));
-            }
 
             $role = new Role($roleName);
             $rbac->addRole($role);
