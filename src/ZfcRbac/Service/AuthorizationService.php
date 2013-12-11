@@ -150,7 +150,7 @@ class AuthorizationService implements EventManagerAwareInterface
 
         $this->load($identityRoles);
 
-        $rolesToCheck  = $this->flattenRoles($rolesToCheck);
+        $rolesToCheck  = $this->flattenRoles($rolesToCheck, false);
         $identityRoles = $this->flattenRoles($identityRoles);
 
         return count(array_intersect($rolesToCheck, $identityRoles)) > 0;
@@ -240,9 +240,10 @@ class AuthorizationService implements EventManagerAwareInterface
      * role, it also extracts all the children
      *
      * @param  array|RoleInterface[] $roles
+     * @param  bool                  $recursive
      * @return string[]
      */
-    protected function flattenRoles(array $roles)
+    protected function flattenRoles(array $roles, $recursive = true)
     {
         $roleNames = [];
 
@@ -252,6 +253,10 @@ class AuthorizationService implements EventManagerAwareInterface
             } else {
                 $roleNames[] = $role;
                 $role        = $this->rbac->getRole($role);
+            }
+
+            if (!$recursive) {
+                continue;
             }
 
             $iterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);

@@ -268,7 +268,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                 'policy'           => GuardInterface::POLICY_DENY
             ],
 
-            // Assert it can deny access although using child-parent relationship between roles (just to be sure)
+            // Assert it can deny access using child-parent relationship between roles (just to be sure)
             [
                 'rules'            => ['route' => 'admin'],
                 'matchedRouteName' => 'route',
