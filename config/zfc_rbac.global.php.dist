@@ -82,7 +82,7 @@ return [
         /**
          * Configuration for role provider
          *
-         * It must be an array of array that contains configuration for the role provider. Each provider config
+         * It must be an array that contains configuration for the role provider. The provider config
          * must follow the following format:
          *
          *      'ZfcRbac\Role\InMemoryRoleProvider' => [
@@ -130,8 +130,8 @@ return [
         ],
 
         /**
-         * Various plugin managers for guards, role providers and permission providers. Each of them must
-         * follow a common plugin manager config format, and can be used to create your custom objects
+         * Various plugin managers for guards and role providers. Each of them must follow a common
+         * plugin manager config format, and can be used to create your custom objects
          */
         // 'guard_manager'               => [],
         // 'role_provider_manager'       => []

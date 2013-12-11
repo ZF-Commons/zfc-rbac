@@ -24,8 +24,8 @@ use ZfcRbac\Service\RbacEvent;
 /**
  * Role provider that uses Doctrine object repository to fetch roles
  *
- * This provider can be used for small applications that do not have a lot of roles, as everything
- * is loaded in memory. The loaded entity must implement Zend\Permissions\Rbac\RoleInterface
+ * This provider optionally accepts a role property name that allow to filter roles when retrieving them,
+ * instead of retrieving them all in memory
  */
 class ObjectRepositoryRoleProvider implements RoleProviderInterface
 {
@@ -35,13 +35,20 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     private $objectRepository;
 
     /**
+     * @var string
+     */
+    private $roleNameProperty;
+
+    /**
      * Constructor
      *
      * @param ObjectRepository $objectRepository
+     * @param string           $roleNameProperty
      */
-    public function __construct(ObjectRepository $objectRepository)
+    public function __construct(ObjectRepository $objectRepository, $roleNameProperty = '')
     {
         $this->objectRepository = $objectRepository;
+        $this->roleNameProperty = $roleNameProperty;
     }
 
     /**
@@ -49,8 +56,12 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     public function getRoles(RbacEvent $event)
     {
-        // @TODO: should we add a "role_name" option so that we can do something like:
-        // $objectRepository->findBy([$roleName => $event->getRoles()]) ?
+        $roles = $event->getRoles();
+
+        if (!empty($this->roleNameProperty) && !empty($roles)) {
+            return $this->objectRepository->findBy([$this->roleNameProperty => $roles]);
+        }
+
         return $this->objectRepository->findAll();
     }
 }
