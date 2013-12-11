@@ -37,6 +37,15 @@ class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
 
+        $options = new ModuleOptions([
+            'role_provider' => [
+                'foo' => [
+                    'bar'
+                ]
+            ]
+        ]);
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
+
         $factory  = new RoleLoaderListenerFactory();
         $listener = $factory->createService($serviceManager);
 

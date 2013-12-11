@@ -53,10 +53,12 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
             [
                 'roleConfig' => [
                     'role' => [
-                        'children' => ['child']
+                        'children'    => ['child'],
+                        'permissions' => ['perm1']
                     ]
                 ],
-                'role' => ['role']
+                'role'        => ['role'],
+                'permissions' => ['perm1']
             ],
         ];
     }
@@ -64,7 +66,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider conversionProvider
      */
-    public function testConversions($roleConfig, $role)
+    public function testConversions($roleConfig, $role, $permissions = [])
     {
         $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
         $roleProvider->expects($this->once())
@@ -85,6 +87,10 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
 
             $role = $rbac->getRole($singleRole);
             $this->assertInstanceOf('Zend\Permissions\Rbac\RoleInterface', $role);
+
+            foreach ($permissions as $permission) {
+                $this->assertTrue($role->hasPermission($permission));
+            }
         }
     }
 
@@ -99,44 +105,5 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
                      ->with(RbacEvent::EVENT_LOAD_ROLES);
 
         $roleLoaderListener->attach($eventManager);
-    }
-
-    public function testAddRolesToRbacContainer()
-    {
-        $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
-        $roleProvider->expects($this->once())
-                     ->method('getRoles')
-                     ->will($this->returnValue(['role1', 'role2']));
-
-        $rbac      = new Rbac();
-        $rbacEvent = new RbacEvent($rbac);
-
-        $roleLoaderListener = new RoleLoaderListener($roleProvider);
-
-        $roleLoaderListener->onLoadRoles($rbacEvent);
-
-        $this->assertTrue($rbac->hasRole('role1'));
-        $this->assertTrue($rbac->hasRole('role2'));
-    }
-
-    public function testCanAddParentRolesToRbacContainer()
-    {
-        $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
-        $roleProvider->expects($this->once())
-                     ->method('getRoles')
-                     ->will($this->returnValue(['role1', 'role2' => 'parent1']));
-
-        $rbac      = new Rbac();
-        $rbac->setCreateMissingRoles(true);
-        $rbacEvent = new RbacEvent($rbac);
-
-        $roleLoaderListener = new RoleLoaderListener($roleProvider);
-
-        $roleLoaderListener->onLoadRoles($rbacEvent);
-
-        $this->assertTrue($rbac->hasRole('role1'));
-        $this->assertTrue($rbac->hasRole('role2'));
-
-        $this->assertEquals('parent1', $rbac->getRole('role2')->getParent()->getName());
     }
 }
