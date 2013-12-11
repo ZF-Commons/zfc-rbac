@@ -149,7 +149,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->isGranted('foo');
     }
 
-    public function testLoadRolesAndPermissions()
+    public function testLoadRoles()
     {
         $rbac = new Rbac();
 
@@ -168,17 +168,14 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $eventManager->expects($this->exactly(2))
                      ->method('trigger')
-                     ->with($this->logicalOr(
-                        $this->equalTo(RbacEvent::EVENT_LOAD_ROLES),
-                        $this->equalTo(RbacEvent::EVENT_LOAD_PERMISSIONS)
-                     ));
+                     ->with(RbacEvent::EVENT_LOAD_ROLES);
 
         // Call twice to assert initialization is not done twice
         $authorizationService->isGranted('foo');
         $authorizationService->isGranted('foo');
     }
 
-    public function testLoadRolesAndPermissionsMultipleTimesIfForceReload()
+    public function testLoadRolesMultipleTimesIfForceReload()
     {
         $rbac = new Rbac();
 
@@ -198,10 +195,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $eventManager->expects($this->exactly(4))
                      ->method('trigger')
-                     ->with($this->logicalOr(
-                        $this->equalTo(RbacEvent::EVENT_LOAD_ROLES),
-                        $this->equalTo(RbacEvent::EVENT_LOAD_PERMISSIONS)
-                     ));
+                     ->with(RbacEvent::EVENT_LOAD_ROLES);
 
         $authorizationService->isGranted('foo');
         $authorizationService->isGranted('foo');

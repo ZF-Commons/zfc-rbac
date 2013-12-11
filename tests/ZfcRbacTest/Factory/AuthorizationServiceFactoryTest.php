@@ -45,10 +45,6 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
             'ZfcRbac\Role\RoleLoaderListener',
             $this->getMock('Zend\EventManager\ListenerAggregateInterface')
         );
-        $serviceManager->setService(
-            'ZfcRbac\Permission\PermissionLoaderListener',
-            $this->getMock('Zend\EventManager\ListenerAggregateInterface')
-        );
 
         $factory              = new AuthorizationServiceFactory();
         $authorizationService = $factory->createService($serviceManager);

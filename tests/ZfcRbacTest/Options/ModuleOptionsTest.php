@@ -35,8 +35,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
         $this->assertInternalType('array', $moduleOptions->getGuards());
-        $this->assertInternalType('array', $moduleOptions->getRoleProviders());
-        $this->assertInternalType('array', $moduleOptions->getPermissionProviders());
+        $this->assertInternalType('array', $moduleOptions->getRoleProvider());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
         $this->assertFalse($moduleOptions->getForceReload());
@@ -50,8 +49,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'guest_role'            => 'unknown',
             'guards'                => [],
             'protection_policy'     => 'deny',
-            'role_providers'        => [],
-            'permission_providers'  => [],
+            'role_provider'         => [],
             'unauthorized_strategy' => [
                 'template' => 'error/unauthorized'
             ],
@@ -66,8 +64,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
         $this->assertEquals([], $moduleOptions->getGuards());
         $this->assertEquals('deny', $moduleOptions->getProtectionPolicy());
-        $this->assertEquals([], $moduleOptions->getRoleProviders());
-        $this->assertEquals([], $moduleOptions->getPermissionProviders());
+        $this->assertEquals([], $moduleOptions->getRoleProvider());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
         $this->assertTrue($moduleOptions->getForceReload());

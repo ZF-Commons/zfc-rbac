@@ -34,42 +34,29 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
     public function conversionProvider()
     {
         return [
-            // With an RoleInterface instance
-            [
-                'roleConfig' => [new SimpleRole('role', 'parent')],
-                'role'       => 'role',
-                'parent'     => ['role' => 'parent']
-            ],
-
             // With an array of RoleInterface instances
             [
                 'roleConfig' => [
                     new SimpleRole('role1', 'parent1'),
                     new SimpleRole('role2', 'parent2')
                 ],
-                'role'   => ['role1', 'role2'],
-                'parent' => ['role1' => 'parent1', 'role2' => 'parent2']
-            ],
-
-            // With a single string name
-            [
-                'roleConfig' => ['role'],
-                'role'       => 'role',
-                'parent'     => ['role' => null]
+                'role'   => ['role1', 'role2']
             ],
 
             // With an array of strings
             [
                 'roleConfig' => ['role1', 'role2'],
                 'role'       => ['role1', 'role2'],
-                'parent'     => ['role1' => null, 'role2' => null]
             ],
 
-            // With an array of string that map to a parent
+            // With an array of string that map to children
             [
-                'roleConfig' => ['role' => 'parent'],
-                'role'       => ['role'],
-                'parent'     => ['role' => 'parent']
+                'roleConfig' => [
+                    'role' => [
+                        'children' => ['child']
+                    ]
+                ],
+                'role' => ['role']
             ],
         ];
     }
@@ -77,7 +64,7 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider conversionProvider
      */
-    public function testConversions($roleConfig, $role, $parentRole)
+    public function testConversions($roleConfig, $role)
     {
         $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
         $roleProvider->expects($this->once())
@@ -98,10 +85,6 @@ class RoleLoaderListenerTest extends \PHPUnit_Framework_TestCase
 
             $role = $rbac->getRole($singleRole);
             $this->assertInstanceOf('Zend\Permissions\Rbac\RoleInterface', $role);
-
-            if (null !== $parentRole[$singleRole]) {
-                $this->assertEquals($parentRole[$singleRole], $role->getParent()->getName());
-            }
         }
     }
 

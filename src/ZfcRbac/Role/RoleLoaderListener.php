@@ -78,8 +78,11 @@ class RoleLoaderListener extends AbstractListenerAggregate
             $children    = isset($value['children']) ? $value['children'] : [];
             $permissions = isset($value['permissions']) ? $value['permissions'] : [];
 
-            $role = new Role($roleName);
-            $rbac->addRole($role);
+            if (!$rbac->hasRole($roleName)) {
+                $rbac->addRole($roleName);
+            }
+
+            $role = $rbac->getRole($roleName);
 
             foreach ($children as $child) {
                 if (!$rbac->hasRole($child)) {
