@@ -166,7 +166,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $authorizationService->setEventManager($eventManager);
 
-        $eventManager->expects($this->exactly(2))
+        $eventManager->expects($this->exactly(1))
                      ->method('trigger')
                      ->with(RbacEvent::EVENT_LOAD_ROLES);
 
@@ -193,7 +193,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $authorizationService->setEventManager($eventManager);
 
-        $eventManager->expects($this->exactly(4))
+        $eventManager->expects($this->exactly(2))
                      ->method('trigger')
                      ->with(RbacEvent::EVENT_LOAD_ROLES);
 
@@ -250,16 +250,6 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $assertion = new SimpleAssertion();
         $this->assertFalse($authorizationService->isGranted('foo', $assertion));
         $this->assertTrue($assertion->getCalled());
-    }
-
-    public function testAssertGuestRoleIsAddedToContainer()
-    {
-        $rbac             = new Rbac();
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, 'guest');
-
-        $this->assertTrue($authorizationService->getRbac()->hasRole('guest'));
     }
 
     public function testReturnGuestRoleIfNoIdentityIsFound()

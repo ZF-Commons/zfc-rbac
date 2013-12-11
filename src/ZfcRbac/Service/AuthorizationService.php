@@ -250,11 +250,8 @@ class AuthorizationService implements EventManagerAwareInterface
             if ($role instanceof RoleInterface) {
                 $roleNames[] = $role->getName();
             } else {
-                $role = $this->rbac->getRole($role);
-            }
-
-            if (!$role->hasChildren()) {
-                continue;
+                $roleNames[] = $role;
+                $role        = $this->rbac->getRole($role);
             }
 
             $iterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);
