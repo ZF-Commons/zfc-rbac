@@ -237,7 +237,7 @@ class AuthorizationService implements EventManagerAwareInterface
      * Flatten an array of role with role names
      *
      * This method iterates through the list of roles, and convert any RoleInterface to a string. For any
-     * role, it also extracts all the children
+     * role, it also extracts all the children if $recursive is set to true
      *
      * @param  array|RoleInterface[] $roles
      * @param  bool                  $recursive
