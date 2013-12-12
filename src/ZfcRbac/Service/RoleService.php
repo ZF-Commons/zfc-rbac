@@ -99,6 +99,7 @@ class RoleService
             $toCollect[] = (string) $role;
         }
 
+        // Nothing to collect, we don't even need to hit the (potentially) costly role provider
         if (empty($toCollect)) {
             return $collectedRoles;
         }

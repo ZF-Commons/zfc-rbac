@@ -54,25 +54,39 @@ class InMemoryRoleProvider implements RoleProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles(array $roles)
+    public function getRoles(array $roleNames)
     {
-        $rolesConfig    = $this->rolesConfig; // We copy it so we can do fun on it
-        $collectedRoles = [];
+        $roles = [];
 
-        foreach ($rolesConfig as $roleName => $roleConfig) {
+        foreach ($roleNames as $roleName) {
+            // If no config, we create a simple role with no permission
+            if (!isset($this->rolesConfig[$roleName])) {
+                $roles[] = new Role($roleName);
+                continue;
+            }
+
+            $roleConfig = $this->rolesConfig[$roleName];
+
             if (isset($roleConfig['children'])) {
-                $role = new HierarchicalRole($roleName);
+                $role       = new HierarchicalRole($roleName);
+                $childRoles = $roleConfig['children'];
+
+                foreach ($this->getRoles($childRoles) as $childRole) {
+                    $role->addChild($childRole);
+                }
             } else {
                 $role = new Role($roleName);
             }
 
-            $permissions = isset($roleConfig['permissions']
-            foreach ($roleConfig)
+            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+
+            foreach ($permissions as $permission) {
+                $role->addPermission($permission);
+            }
+
+            $roles[] = $role;
         }
-    }
 
-    private function createRole($roleName, array $config)
-    {
-
+        return $roles;
     }
 }

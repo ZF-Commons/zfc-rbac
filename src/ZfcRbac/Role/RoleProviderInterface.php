@@ -29,8 +29,8 @@ interface RoleProviderInterface
     /**
      * Get the roles from the provider
      *
-     * @param  string[] $roles
+     * @param  string[] $roleNames
      * @return \Rbac\Role\RoleInterface[]
      */
-    public function getRoles(array $roles);
+    public function getRoles(array $roleNames);
 }

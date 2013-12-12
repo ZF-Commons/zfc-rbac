@@ -50,8 +50,8 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles(array $roles)
+    public function getRoles(array $roleNames)
     {
-        return $this->objectRepository->findBy([$this->roleNameProperty => $roles]);
+        return $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
     }
 }
