@@ -25,8 +25,8 @@
     "require": {
         "php": ">=5.4",
         "zendframework/zend-mvc": "~2.2",
-        "zendframework/zend-permissions-rbac": "~2.2",
-        "zendframework/zend-servicemanager": "~2.2"
+        "zendframework/zend-servicemanager": "~2.2",
+        "zfr/rbac": "dev-master"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "zend-developer-tools if you want to show information about the roles",

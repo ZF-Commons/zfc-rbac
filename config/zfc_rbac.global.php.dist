@@ -31,28 +31,11 @@ return [
         // 'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
 
         /**
-         * This option allows to specify if you want the Rbac container to automatically create roles inside the
-         * container when it has not been added
-         *
-         * For instance, if you have a role that has a parent role that has not been added yet, if you set this
-         * option to true, then the parent role will be created
-         */
-        // 'create_missing_roles' => true,
-
-        /**
          * Set the guest role
          *
          * This role is used by the authorization service when the authentication service returns no identity
          */
         // 'guest_role' => 'guest',
-
-        /**
-         * Allow to force the reload of roles and permissions each time "isGranted" is called in the
-         * AuthorizationService. This can be useful if you have custom role and permission providers that lazy
-         * load roles and permissions based on the current identity roles and asked permission (especially if
-         * you have tons of roles/permissions)
-         */
-        // 'force_reload' => false,
 
         /**
          * Set the guards

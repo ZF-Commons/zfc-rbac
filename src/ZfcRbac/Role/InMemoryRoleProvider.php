@@ -18,31 +18,61 @@
 
 namespace ZfcRbac\Role;
 
-use ZfcRbac\Service\RbacEvent;
+use Rbac\Role\HierarchicalRole;
+use Rbac\Role\Role;
 
 /**
  * Simple role providers that store them in memory (ideal for small websites)
+ *
+ * This provider expects role to be specified using string only. The format is as follow:
+ *
+ *  [
+ *      'myRole' => [
+ *          'children'    => ['subRole1', 'subRole2'], // OPTIONAL
+ *          'permissions' => ['permission1'] // OPTIONAL
+ *      ]
+ *  ]
+ *
+ *  For maximum performance, this provider DOES NOT do a lot of type check, so you must closely
+ *  follow the format :)
  */
 class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
-     * @var string[]|array|\Zend\Permissions\Rbac\RoleInterface[]
+     * @var array
      */
-    private $roles = [];
+    private $rolesConfig = [];
 
     /**
-     * @param string[]|array|\Zend\Permissions\Rbac\RoleInterface[] $roles
+     * @param array
      */
-    public function __construct(array $roles)
+    public function __construct(array $rolesConfig)
     {
-        $this->roles = $roles;
+        $this->rolesConfig = $rolesConfig;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getRoles(RbacEvent $event)
+    public function getRoles(array $roles)
     {
-        return $this->roles;
+        $rolesConfig    = $this->rolesConfig; // We copy it so we can do fun on it
+        $collectedRoles = [];
+
+        foreach ($rolesConfig as $roleName => $roleConfig) {
+            if (isset($roleConfig['children'])) {
+                $role = new HierarchicalRole($roleName);
+            } else {
+                $role = new Role($roleName);
+            }
+
+            $permissions = isset($roleConfig['permissions']
+            foreach ($roleConfig)
+        }
+    }
+
+    private function createRole($roleName, array $config)
+    {
+
     }
 }

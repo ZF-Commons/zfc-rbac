@@ -20,21 +20,22 @@ namespace ZfcRbac\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Role\RoleLoaderListener;
+use ZfcRbac\Service\RoleService;
 
 /**
- * Factory to create a role loader
+ * Factory to create the role service
  */
-class RoleLoaderListenerFactory implements FactoryInterface
+class RoleServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * @return RoleService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var \ZfcRbac\Options\ModuleOptions $options */
-        $options            = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-        $roleProviderConfig = $options->getRoleProvider();
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $roleProviderConfig = $moduleOptions->getRoleProvider();
 
         /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('ZfcRbac\Role\RoleProviderPluginManager');
@@ -42,6 +43,6 @@ class RoleLoaderListenerFactory implements FactoryInterface
         /** @var \ZfcRbac\Role\RoleProviderInterface $roleProvider */
         $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
 
-        return new RoleLoaderListener($roleProvider);
+        return new RoleService($roleProvider, $moduleOptions->getGuestRole());
     }
 }

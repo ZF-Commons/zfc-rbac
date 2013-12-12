@@ -18,8 +18,6 @@
 
 namespace ZfcRbac\Factory;
 
-use Zend\EventManager\EventManager;
-use Zend\Permissions\Rbac\Rbac;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -36,22 +34,14 @@ class AuthorizationServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions    = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
         $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
 
-        $rbac = new Rbac();
-        $rbac->setCreateMissingRoles($moduleOptions->getCreateMissingRoles());
+        /* @var \ZfcRbac\Service\RoleService $roleService */
+        $roleService = $serviceLocator->get('ZfcRbac\Service\RoleService');
 
-        // Create the event manager and add some events
-        $eventManager = new EventManager();
-        $eventManager->attach($serviceLocator->get('ZfcRbac\Role\RoleLoaderListener'));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, $moduleOptions->getGuestRole());
-        $authorizationService->setEventManager($eventManager);
-        $authorizationService->setForceReload($moduleOptions->getForceReload());
-
-        return $authorizationService;
+        return new AuthorizationService($identityProvider, $roleService);
     }
 }

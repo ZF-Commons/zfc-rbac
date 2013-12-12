@@ -30,9 +30,9 @@ return [
             'ZfcRbac\Guard\GuardPluginManager'                   => 'ZfcRbac\Factory\GuardPluginManagerFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider'    => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                      => 'ZfcRbac\Factory\ModuleOptionsFactory',
-            'ZfcRbac\Role\RoleLoaderListener'                    => 'ZfcRbac\Factory\RoleLoaderListenerFactory',
             'ZfcRbac\Role\RoleProviderPluginManager'             => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
             'ZfcRbac\Service\AuthorizationService'               => 'ZfcRbac\Factory\AuthorizationServiceFactory',
+            'ZfcRbac\Service\RoleService'                        => 'ZfcRbac\Factory\RoleServiceFactory',
             'ZfcRbac\View\Strategy\RedirectStrategy'             => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'         => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
         ]

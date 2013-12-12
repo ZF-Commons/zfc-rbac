@@ -18,24 +18,17 @@
 
 namespace ZfcRbac\Service;
 
-use RecursiveIteratorIterator;
-use Traversable;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Permissions\Rbac\Rbac;
+use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
-use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
-use Zend\Permissions\Rbac\RoleInterface;
 
 /**
- * Authorization service is a simple service that internally uses a Rbac container
+ * Authorization service is a simple service that internally uses Rbac to check if identity is
+ * granted a permission
  */
-class AuthorizationService implements EventManagerAwareInterface
+class AuthorizationService
 {
-    use EventManagerAwareTrait;
-
     /**
      * @var Rbac
      */
@@ -47,113 +40,21 @@ class AuthorizationService implements EventManagerAwareInterface
     protected $identityProvider;
 
     /**
-     * @var string
+     * @var RoleService
      */
-    protected $guestRole;
-
-    /**
-     * Is the container correctly loaded?
-     *
-     * @var bool
-     */
-    protected $isLoaded = false;
-
-    /**
-     * Should we force reload the roles and permissions each time isGranted is called?
-     *
-     * This can be used for very complex use cases with tons of roles and permissions, so that
-     * it can triggers database queries only for a given role/permission couple
-     *
-     * @var bool
-     */
-    protected $forceReload = false;
+    protected $roleService;
 
     /**
      * Constructor
      *
-     * @param Rbac                      $rbac
      * @param IdentityProviderInterface $identityProvider
-     * @param string                    $guestRole
+     * @param RoleService               $roleService
      */
-    public function __construct(Rbac $rbac, IdentityProviderInterface $identityProvider, $guestRole = '')
+    public function __construct(IdentityProviderInterface $identityProvider, RoleService $roleService)
     {
-        $this->rbac             = $rbac;
+        $this->rbac             = new Rbac();
         $this->identityProvider = $identityProvider;
-        $this->guestRole        = $guestRole;
-    }
-
-    /**
-     * Get the Rbac container
-     *
-     * @return Rbac
-     */
-    public function getRbac()
-    {
-        return $this->rbac;
-    }
-
-    /**
-     * Set if we should force reload each time isGranted is called
-     *
-     * @param boolean $forceReload
-     * @param void
-     */
-    public function setForceReload($forceReload)
-    {
-        $this->forceReload = (bool) $forceReload;
-    }
-
-    /**
-     * Get the identity roles from the identity, applying some more logic
-     *
-     * @return string[]|\Zend\Permissions\Rbac\RoleInterface[]
-     * @throws Exception\RuntimeException
-     */
-    public function getIdentityRoles()
-    {
-        $identity = $this->identityProvider->getIdentity();
-
-        if (null === $identity) {
-            return empty($this->guestRole) ? [] : [$this->guestRole];
-        }
-
-        if (!$identity instanceof IdentityInterface) {
-            throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
-                is_object($identity) ? get_class($identity) : gettype($identity)
-            ));
-        }
-
-        $roles = $identity->getRoles();
-
-        if ($roles instanceof Traversable) {
-            $roles = iterator_to_array($roles);
-        }
-
-        return (array) $roles;
-    }
-
-    /**
-     * Check if a given role satisfy through one of the identity roles (it checks inheritance)
-     *
-     * @param  string[]|RoleInterface[] $rolesToCheck
-     * @return bool
-     */
-    public function satisfyIdentityRoles(array $rolesToCheck)
-    {
-        $identityRoles = $this->getIdentityRoles();
-
-        // Too easy...
-        if (empty($identityRoles)) {
-            return false;
-        }
-
-        $this->load($identityRoles);
-
-        $rolesToCheck  = $this->flattenRoles($rolesToCheck, false);
-        $identityRoles = $this->flattenRoles($identityRoles);
-
-        return count(array_intersect($rolesToCheck, $identityRoles)) > 0;
+        $this->roleService      = $roleService;
     }
 
     /**
@@ -166,19 +67,15 @@ class AuthorizationService implements EventManagerAwareInterface
      */
     public function isGranted($permission, $assertion = null)
     {
-        $roles = $this->getIdentityRoles();
+        $identity = $this->identityProvider->getIdentity();
+        $roles    = $this->roleService->getIdentityRoles($identity);
 
         if (empty($roles)) {
             return false;
         }
 
-        // First load everything inside the container
-        $this->load($roles, $permission);
-
         // Check the assertion first
         if (null !== $assertion) {
-            $identity = $this->identityProvider->getIdentity();
-
             if (is_callable($assertion) && !$assertion($identity)) {
                 return false;
             } elseif ($assertion instanceof AssertionInterface && !$assertion->assert($identity)) {
@@ -191,82 +88,13 @@ class AuthorizationService implements EventManagerAwareInterface
             }
         }
 
+        /* @var \Rbac\Role\RoleInterface $role */
         foreach ($roles as $role) {
-            // If role does not exist, we consider this as not valid
-            if (!$this->rbac->hasRole($role)) {
-                return false;
-            }
-
             if ($this->rbac->isGranted($role, $permission)) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    /**
-     * Load roles and permissions inside the container by triggering load event
-     *
-     * @see \ZfcRbac\Role\RoleLoaderListener
-     *
-     * @param  array  $roles
-     * @param  string $permission
-     * @return void
-     */
-    protected function load(array $roles = [], $permission = '')
-    {
-        if ($this->isLoaded && !$this->forceReload) {
-            return;
-        }
-
-        $rbacEvent = new RbacEvent($this->rbac, $roles, $permission);
-
-        $eventManager = $this->getEventManager();
-        $eventManager->trigger(RbacEvent::EVENT_LOAD_ROLES, $rbacEvent);
-
-        // If, after loading the roles, the guest role is not in the container, we add it with no permissions
-        if (!empty($this->guestRole) && !$this->rbac->hasRole($this->guestRole)) {
-            $this->rbac->addRole($this->guestRole);
-        }
-
-        $this->isLoaded = true;
-    }
-
-    /**
-     * Flatten an array of role with role names
-     *
-     * This method iterates through the list of roles, and convert any RoleInterface to a string. For any
-     * role, it also extracts all the children if $recursive is set to true
-     *
-     * @param  array|RoleInterface[] $roles
-     * @param  bool                  $recursive
-     * @return string[]
-     */
-    protected function flattenRoles(array $roles, $recursive = true)
-    {
-        $roleNames = [];
-
-        foreach ($roles as $role) {
-            if ($role instanceof RoleInterface) {
-                $roleNames[] = $role->getName();
-            } else {
-                $roleNames[] = $role;
-                $role        = $this->rbac->getRole($role);
-            }
-
-            if (!$recursive) {
-                continue;
-            }
-
-            $iterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);
-
-            /* @var RoleInterface $childRole */
-            foreach ($iterator as $childRole) {
-                $roleNames[] = $childRole->getName();
-            }
-        }
-
-        return array_unique($roleNames);
     }
 }

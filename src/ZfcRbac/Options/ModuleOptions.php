@@ -35,25 +35,11 @@ class ModuleOptions extends AbstractOptions
     protected $identityProvider = 'ZfcRbac\Identity\AuthenticationIdentityProvider';
 
     /**
-     * Should the RBAC container automatically create roles for missing roles?
-     *
-     * @var bool
-     */
-    protected $createMissingRoles = true;
-
-    /**
      * Guest role (used when no identity is found)
      *
      * @var string
      */
     protected $guestRole = 'guest';
-
-    /**
-     * Should we force reload of roles and permissions each time "isGranted" is called?
-     *
-     * @var bool
-     */
-    protected $forceReload = false;
 
     /**
      * Guards
@@ -123,26 +109,6 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     * Should the RBAC container automatically create roles for missing roles?
-     *
-     * @param boolean $createMissingRoles
-     */
-    public function setCreateMissingRoles($createMissingRoles)
-    {
-        $this->createMissingRoles = (bool) $createMissingRoles;
-    }
-
-    /**
-     * Retrieve if the RBAC container should automatically create roles for missing roles
-     *
-     * @return boolean
-     */
-    public function getCreateMissingRoles()
-    {
-        return $this->createMissingRoles;
-    }
-
-    /**
      * Set the guest role (used when no identity is found)
      *
      * @param string $guestRole
@@ -160,27 +126,6 @@ class ModuleOptions extends AbstractOptions
     public function getGuestRole()
     {
         return $this->guestRole;
-    }
-
-    /**
-     * Set if we should force reloading the roles and permissions whenever "isGranted" is called
-     *
-     * @param  boolean $forceReload
-     * @return void
-     */
-    public function setForceReload($forceReload)
-    {
-        $this->forceReload = (bool) $forceReload;
-    }
-
-    /**
-     * Get if we should force reloading the roles and permissions whenever "isGranted" is called
-     *
-     * @return boolean
-     */
-    public function getForceReload()
-    {
-        return $this->forceReload;
     }
 
     /**

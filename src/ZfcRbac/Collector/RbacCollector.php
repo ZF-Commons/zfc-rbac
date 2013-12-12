@@ -18,14 +18,14 @@
 
 namespace ZfcRbac\Collector;
 
+use Rbac\Permission\PermissionInterface;
+use Rbac\Role\RoleInterface;
 use RecursiveIteratorIterator;
 use ReflectionProperty;
 use Serializable;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Rbac\RoleInterface;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Permission\PermissionInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**

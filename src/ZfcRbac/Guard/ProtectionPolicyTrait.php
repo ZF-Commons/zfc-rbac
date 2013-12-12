@@ -16,32 +16,36 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Permission;
-
-use Zend\Permissions\Rbac\RoleInterface;
+namespace ZfcRbac\Guard;
 
 /**
- * Interface for permission
- *
- * This interface is likely to be deprecated in next minor version of ZfcRbac, and removed in next major
- * as this interface will be part of the RBAC component
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * Trait that is can be used for any guard that uses the protection policy pattern
  */
-interface PermissionInterface
+trait ProtectionPolicyTrait
 {
     /**
-     * Get the permission name
-     *
-     * @return string|int
+     * @var string
      */
-    public function getName();
+    protected $protectionPolicy = GuardInterface::POLICY_DENY;
 
     /**
-     * Get roles associated with the permission
+     * Set the protection policy
      *
-     * @return string[]|RoleInterface[]
+     * @param  string $protectionPolicy
+     * @return void
      */
-    public function getRoles();
+    public function setProtectionPolicy($protectionPolicy)
+    {
+        $this->protectionPolicy = (string) $protectionPolicy;
+    }
+
+    /**
+     * Get the protection policy
+     *
+     * @return string
+     */
+    public function getProtectionPolicy()
+    {
+        return $this->protectionPolicy;
+    }
 }

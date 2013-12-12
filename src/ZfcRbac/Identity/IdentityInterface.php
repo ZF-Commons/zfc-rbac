@@ -18,8 +18,6 @@
 
 namespace ZfcRbac\Identity;
 
-use Zend\Permissions\Rbac\RoleInterface;
-
 /**
  * Interface for an identity
  */
@@ -28,7 +26,7 @@ interface IdentityInterface
     /**
      * Get the list of roles of this identity
      *
-     * @return string[]|RoleInterface[]
+     * @return string[]|\Rbac\Role\RoleInterface[]
      */
     public function getRoles();
 }
