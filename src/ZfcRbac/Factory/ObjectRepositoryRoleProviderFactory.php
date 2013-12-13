@@ -50,12 +50,13 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface, MutableCr
     {
         $parentLocator    = $serviceLocator->getServiceLocator();
         $objectRepository = null;
+        $roleNameProperty = isset($this->options['role_name_property']) ? $this->options['role_name_property'] : '';
 
         if (isset($this->options['object_repository'])) {
             /* @var \Doctrine\Common\Persistence\ObjectRepository $objectRepository */
             $objectRepository = $parentLocator->get($this->options['object_repository']);
 
-            return new ObjectRepositoryRoleProvider($objectRepository);
+            return new ObjectRepositoryRoleProvider($objectRepository, $roleNameProperty);
         }
 
         if (isset($this->options['object_manager']) && isset($this->options['class_name'])) {
@@ -63,7 +64,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface, MutableCr
             $objectManager    = $parentLocator->get($this->options['object_manager']);
             $objectRepository = $objectManager->getRepository($this->options['class_name']);
 
-            return new ObjectRepositoryRoleProvider($objectRepository);
+            return new ObjectRepositoryRoleProvider($objectRepository, $roleNameProperty);
         }
 
         throw new Exception\RuntimeException(

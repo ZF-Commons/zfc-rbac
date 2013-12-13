@@ -27,10 +27,12 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class RouteGuard extends AbstractGuard
 {
+    use ProtectionPolicyTrait;
+
     /**
-     * Set a higher priority for route guards so that they are executed before any controller guards
+     * @var AuthorizationService
      */
-    const EVENT_PRIORITY = -10;
+    protected $authorizationService;
 
     /**
      * Route guard rules
@@ -49,7 +51,7 @@ class RouteGuard extends AbstractGuard
      */
     public function __construct(AuthorizationService $authorizationService, array $rules = [])
     {
-        parent::__construct($authorizationService);
+        $this->authorizationService = $authorizationService;
         $this->setRules($rules);
     }
 
@@ -62,17 +64,7 @@ class RouteGuard extends AbstractGuard
     public function setRules(array $rules)
     {
         $this->rules = [];
-        $this->addRules($rules);
-    }
 
-    /**
-     * Add route rules
-     *
-     * @param  array $rules
-     * @return void
-     */
-    public function addRules(array $rules)
-    {
         foreach ($rules as $key => $value) {
             if (is_int($key)) {
                 $routeRegex = $value;
@@ -92,26 +84,24 @@ class RouteGuard extends AbstractGuard
     public function isGranted(MvcEvent $event)
     {
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
-
-        $allowedRoles = [];
+        $allowedRoles     = null;
 
         foreach (array_keys($this->rules) as $routeRule) {
             if (fnmatch($routeRule, $matchedRouteName, FNM_CASEFOLD)) {
                 $allowedRoles = $this->rules[$routeRule];
-
                 break;
             }
+        }
+
+        // If no rules apply, it is considered as granted or not based on the protection policy
+        if (null === $allowedRoles) {
+            return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
         if (in_array('*', $allowedRoles)) {
             return true;
         }
-        
-        // If no rules apply, it is considered as granted or not based on the protection policy
-        if (empty($allowedRoles)) {
-            return $this->protectionPolicy === self::POLICY_ALLOW;
-        }
 
-        return $this->isAllowed($allowedRoles);
+        return $this->authorizationService->satisfyIdentityRoles($allowedRoles);
     }
 }

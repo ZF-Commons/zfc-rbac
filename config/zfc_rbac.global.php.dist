@@ -31,28 +31,11 @@ return [
         // 'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
 
         /**
-         * This option allows to specify if you want the Rbac container to automatically create roles inside the
-         * container when it has not been added
-         *
-         * For instance, if you have a role that has a parent role that has not been added yet, if you set this
-         * option to true, then the parent role will be created
-         */
-        // 'create_missing_roles' => true,
-
-        /**
          * Set the guest role
          *
          * This role is used by the authorization service when the authentication service returns no identity
          */
         // 'guest_role' => 'guest',
-
-        /**
-         * Allow to force the reload of roles and permissions each time "isGranted" is called in the
-         * AuthorizationService. This can be useful if you have custom role and permission providers that lazy
-         * load roles and permissions based on the current identity roles and asked permission (especially if
-         * you have tons of roles/permissions)
-         */
-        // 'force_reload' => false,
 
         /**
          * Set the guards
@@ -80,33 +63,21 @@ return [
         // 'protection_policy' => GuardInterface::DENY,
 
         /**
-         * Configuration for role providers
+         * Configuration for role provider
          *
-         * It must be an array of array that contains configuration for each role provider. Each provider config
+         * It must be an array that contains configuration for the role provider. The provider config
          * must follow the following format:
          *
          *      'ZfcRbac\Role\InMemoryRoleProvider' => [
-         *          'role1',
-         *          'children' => 'parent'
+         *          'role1' => [
+         *              'children'    => ['children1', 'children2'], // OPTIONAL
+         *              'permissions' => ['edit', 'read'] // OPTIONAL
+         *          ]
          *      ]
          *
          * Supported options depend of the role provider, so please refer to the official documentation
          */
-        'role_providers' => [],
-
-        /**
-         * Configuration for permission providers
-         *
-         * It must be an array of array that contains configuration for each permission provider. Each provider
-         * config must follow the following format:
-         *
-         *      'ZfcRbac\Permission\InMemoryRoleProvider' => [
-         *          'permission1' => ['role1', 'role2']
-         *      ]
-         *
-         * Supported options depend of the permission provider, so please refer to the official documentation
-         */
-        'permission_providers' => [],
+        'role_provider' => [],
 
         /**
          * Configure the unauthorized strategy. It is used to render a template whenever a user is unauthorized
@@ -142,11 +113,10 @@ return [
         ],
 
         /**
-         * Various plugin managers for guards, role providers and permission providers. Each of them must
-         * follow a common plugin manager config format, and can be used to create your custom objects
+         * Various plugin managers for guards and role providers. Each of them must follow a common
+         * plugin manager config format, and can be used to create your custom objects
          */
         // 'guard_manager'               => [],
-        // 'role_provider_manager'       => [],
-        // 'permission_provider_manager' => []
+        // 'role_provider_manager'       => []
     ]
 ];

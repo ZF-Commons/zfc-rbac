@@ -18,31 +18,75 @@
 
 namespace ZfcRbac\Role;
 
-use ZfcRbac\Service\RbacEvent;
+use Rbac\Role\HierarchicalRole;
+use Rbac\Role\Role;
 
 /**
  * Simple role providers that store them in memory (ideal for small websites)
+ *
+ * This provider expects role to be specified using string only. The format is as follow:
+ *
+ *  [
+ *      'myRole' => [
+ *          'children'    => ['subRole1', 'subRole2'], // OPTIONAL
+ *          'permissions' => ['permission1'] // OPTIONAL
+ *      ]
+ *  ]
+ *
+ *  For maximum performance, this provider DOES NOT do a lot of type check, so you must closely
+ *  follow the format :)
  */
 class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
-     * @var string[]|array|\Zend\Permissions\Rbac\RoleInterface[]
+     * @var array
      */
-    private $roles = [];
+    private $rolesConfig = [];
 
     /**
-     * @param string[]|array|\Zend\Permissions\Rbac\RoleInterface[] $roles
+     * @param array
      */
-    public function __construct(array $roles)
+    public function __construct(array $rolesConfig)
     {
-        $this->roles = $roles;
+        $this->rolesConfig = $rolesConfig;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getRoles(RbacEvent $event)
+    public function getRoles(array $roleNames)
     {
-        return $this->roles;
+        $roles = [];
+
+        foreach ($roleNames as $roleName) {
+            // If no config, we create a simple role with no permission
+            if (!isset($this->rolesConfig[$roleName])) {
+                $roles[] = new Role($roleName);
+                continue;
+            }
+
+            $roleConfig = $this->rolesConfig[$roleName];
+
+            if (isset($roleConfig['children'])) {
+                $role       = new HierarchicalRole($roleName);
+                $childRoles = $roleConfig['children'];
+
+                foreach ($this->getRoles($childRoles) as $childRole) {
+                    $role->addChild($childRole);
+                }
+            } else {
+                $role = new Role($roleName);
+            }
+
+            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+
+            foreach ($permissions as $permission) {
+                $role->addPermission($permission);
+            }
+
+            $roles[] = $role;
+        }
+
+        return $roles;
     }
 }

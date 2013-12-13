@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Guard;
 
+use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -26,11 +27,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class ControllerGuard extends AbstractGuard
 {
-    /**
-     * Set a lower priority for controller guards than for route guards, so that they are
-     * always executed after them
-     */
-    const EVENT_PRIORITY = -20;
+    use ProtectionPolicyTrait;
 
     /**
      * Controller guard rules
@@ -47,12 +44,33 @@ class ControllerGuard extends AbstractGuard
      */
     public function __construct(AuthorizationService $authorizationService, array $rules = [])
     {
-        parent::__construct($authorizationService);
+        $this->authorizationService = $authorizationService;
         $this->setRules($rules);
     }
 
     /**
-     * Set the rules (it overrides any existing rules)
+     * {@inheritDoc}
+     */
+    public function attach(EventManagerInterface $events)
+    {
+        // We can't actually listen to the EVENT_ROUTE event, because user can call the "forward" method
+        // on the controller, and this bypasses the routing mechanism
+
+        $sharedManager = $events->getSharedManager();
+        $sharedManager->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, [$this, 'onResult'], 5);
+    }
+
+
+    /**
+     * Set the rules
+     *
+     * A controller rule is made the following way:
+     *
+     * [
+     *     'controller' => 'ControllerName',
+     *     'actions'    => []/string
+     *     'roles'      => []/string
+     * ]
      *
      * @param  array $rules
      * @return void
@@ -60,25 +78,7 @@ class ControllerGuard extends AbstractGuard
     public function setRules(array $rules)
     {
         $this->rules = [];
-        $this->addRules($rules);
-    }
 
-    /**
-     * Add controller rules
-     *
-     * A controller rule is made the following way:
-     *
-     * array(
-     *      'controller' => 'ControllerName',
-     *      'actions'    => []/string
-     *      'roles'      => []/string
-     * )
-     *
-     * @param  array $rules
-     * @return void
-     */
-    public function addRules(array $rules)
-    {
         foreach ($rules as $rule) {
             $controller = strtolower($rule['controller']);
             $actions    = isset($rule['actions']) ? (array) $rule['actions'] : [];
@@ -125,6 +125,6 @@ class ControllerGuard extends AbstractGuard
             return true;
         }
 
-        return $this->isAllowed($allowedRoles);
+        return $this->authorizationService->satisfyIdentityRoles($allowedRoles);
     }
 }

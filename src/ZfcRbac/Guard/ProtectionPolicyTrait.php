@@ -16,54 +16,36 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
-
-use ZfcRbac\Service\RbacEvent;
+namespace ZfcRbac\Guard;
 
 /**
- * Simple implementation for a role provider chain
+ * Trait that is can be used for any guard that uses the protection policy pattern
  */
-class RoleProviderChain implements RoleProviderInterface
+trait ProtectionPolicyTrait
 {
     /**
-     * List of role providers
-     *
-     * @var RoleProviderInterface[]
+     * @var string
      */
-    private $roleProviders;
+    protected $protectionPolicy = GuardInterface::POLICY_DENY;
 
     /**
-     * Constructor
+     * Set the protection policy
      *
-     * @param RoleProviderInterface[]|array $roleProviders
-     */
-    public function __construct(array $roleProviders = [])
-    {
-        $this->roleProviders = $roleProviders;
-    }
-
-    /**
-     * Add a role provider in the chain
-     *
-     * @param  RoleProviderInterface $roleProvider
+     * @param  string $protectionPolicy
      * @return void
      */
-    public function addRoleProvider(RoleProviderInterface $roleProvider)
+    public function setProtectionPolicy($protectionPolicy)
     {
-        $this->roleProviders[] = $roleProvider;
+        $this->protectionPolicy = (string) $protectionPolicy;
     }
 
     /**
-     * {@inheritDoc}
+     * Get the protection policy
+     *
+     * @return string
      */
-    public function getRoles(RbacEvent $event)
+    public function getProtectionPolicy()
     {
-        $roles = [];
-
-        foreach ($this->roleProviders as $roleProvider) {
-            $roles = array_merge($roles, $roleProvider->getRoles($event));
-        }
-
-        return $roles;
+        return $this->protectionPolicy;
     }
 }

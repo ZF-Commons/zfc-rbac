@@ -120,8 +120,8 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
-    }
-
+    }    
+    
     public function roleProvider()
     {
         return [
@@ -137,7 +137,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'rolesToCheck' => [
                     'login'
                 ],
-                'doesStatisfy' => false
+                'doesSatisfy' => false
             ],
             [
                 'rolesToCreate' => [
@@ -150,7 +150,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'rolesToCheck' => [
                     'login'
                 ],
-                'doesStatisfy' => true
+                'doesSatisfy' => true
             ],
             
             // Complex role inheritance
@@ -168,7 +168,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'rolesToCheck' => [
                     'admin'
                 ],
-                'doesStatisfy' => false
+                'doesSatisfy' => false
             ],
             [
                 'rolesToCreate' => [
@@ -184,7 +184,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'rolesToCheck' => [
                     'moderator'
                 ],
-                'doesStatisfy' => true
+                'doesSatisfy' => true
             ],
             
             // Complex role inheritance and multiple check
@@ -205,7 +205,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                     'admin',
                     'sysadmin'
                 ],
-                'doesStatisfy' => false
+                'doesSatisfy' => false
             ],
             [
                 'rolesToCreate' => [
@@ -225,7 +225,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                     'siteadmin',
                     'login'
                 ],
-                'doesStatisfy' => true
+                'doesSatisfy' => true
             ]
         ];
     }
@@ -233,7 +233,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider roleProvider
      */
-    public function testDoesIdentityStatisfyRoles(array $rolesToCreate, array $identityRoles, array $rolesToCheck, $doesStatisfy)
+    public function testSatisfiesIdentityRoles(array $rolesToCreate, array $identityRoles, array $rolesToCheck, $doesSatisfy)
     {
         // Let's fill the RBAC container with some values
         $rbac = new Rbac();
@@ -256,7 +256,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $authorizationService = new AuthorizationService($rbac, $identityProvider);
 
-        $this->assertEquals($doesStatisfy, $authorizationService->doesIdentityStatisfyRoles($rolesToCheck));
+        $this->assertEquals($doesSatisfy, $authorizationService->satisfyIdentityRoles($rolesToCheck));
     }
 
     /**
@@ -286,7 +286,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->isGranted('foo');
     }
 
-    public function testLoadRolesAndPermissions()
+    public function testLoadRoles()
     {
         $rbac = new Rbac();
 
@@ -303,19 +303,16 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $authorizationService->setEventManager($eventManager);
 
-        $eventManager->expects($this->exactly(2))
+        $eventManager->expects($this->exactly(1))
                      ->method('trigger')
-                     ->with($this->logicalOr(
-                        $this->equalTo(RbacEvent::EVENT_LOAD_ROLES),
-                        $this->equalTo(RbacEvent::EVENT_LOAD_PERMISSIONS)
-                     ));
+                     ->with(RbacEvent::EVENT_LOAD_ROLES);
 
         // Call twice to assert initialization is not done twice
         $authorizationService->isGranted('foo');
         $authorizationService->isGranted('foo');
     }
 
-    public function testLoadRolesAndPermissionsMultipleTimesIfForceReload()
+    public function testLoadRolesMultipleTimesIfForceReload()
     {
         $rbac = new Rbac();
 
@@ -333,12 +330,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $authorizationService->setEventManager($eventManager);
 
-        $eventManager->expects($this->exactly(4))
+        $eventManager->expects($this->exactly(2))
                      ->method('trigger')
-                     ->with($this->logicalOr(
-                        $this->equalTo(RbacEvent::EVENT_LOAD_ROLES),
-                        $this->equalTo(RbacEvent::EVENT_LOAD_PERMISSIONS)
-                     ));
+                     ->with(RbacEvent::EVENT_LOAD_ROLES);
 
         $authorizationService->isGranted('foo');
         $authorizationService->isGranted('foo');
@@ -393,16 +387,6 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $assertion = new SimpleAssertion();
         $this->assertFalse($authorizationService->isGranted('foo', $assertion));
         $this->assertTrue($assertion->getCalled());
-    }
-
-    public function testAssertGuestRoleIsAddedToContainer()
-    {
-        $rbac             = new Rbac();
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, 'guest');
-
-        $this->assertTrue($authorizationService->getRbac()->hasRole('guest'));
     }
 
     public function testReturnGuestRoleIfNoIdentityIsFound()

@@ -1,4 +1,4 @@
-_Up-to-date with version 1.0.0 of ZfcRbac_
+_Up-to-date with version 2.0.* of ZfcRbac_
 
 Welcome to the official ZfcRbac documentation. This documentation will help you to quickly understand how to use
 and extend ZfcRbac.
@@ -29,21 +29,16 @@ If you are looking for some information that is not listed in the documentation,
    3. [Built-in role providers](/docs/04. Role providers.md#built-in-role-providers)
    4. [Creating custom role providers](/docs/04. Role providers.md#creating-custom-role-providers)
 
-5. [Permission providers](/docs/05. Permission providers.md)
-   1. [What are permission providers?](/docs/05. Permission providers.md#what-are-permission-providers)
-   2. [Built-in permission providers](/docs/05. Permission providers.md#built-in-permission-providers)
-   3. [Creating custom permission providers](/docs/05. Permission providers.md#creating-custom-permission-providers)
+5. [Strategies](/docs/05. Strategies.md)
+   1. [What are strategies?](/docs/05. Strategies.md#what-are-strategies)
+   2. [Built-in strategies](/docs/05. Strategies.md#built-in-strategies)
+   3. [Creating custom strategies](/docs/05. Strategies.md#creating-custom-strategies)
 
-6. [Strategies](/docs/06. Strategies.md)
-   1. [What are strategies?](/docs/06. Strategies.md#what-are-strategies)
-   2. [Built-in strategies](/docs/06. Strategies.md#built-in-strategies)
-   3. [Creating custom strategies](/docs/06. Strategies.md#creating-custom-strategies)
-
-7. [Cookbook](/docs/07. Cookbook.md)
-   1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
-   2. [Best practices](/docs/07. Cookbook.md#best-practices)
-   3. [Using dynamic assertions](/docs/07. Cookbook.md#using-dynamic-assertions)
-   4. [Using ZfcRbac with Doctrine ORM](/docs/07. Cookbook.md#using-zfcrbac-with-doctrine-orm)
-   5. [How to lazy-load roles and permissions for very complex use cases?](/docs/07. Cookbook.md#how-to-lazy-load-roles-and-permissions-for-very-complex-use-cases)
-   6. [Using ZfcRbac and ZF2 Assetic](/docs/07. Cookbook.md#using-zfcrbac-and-zf2-assetic)
-   7. [Using ZfcRbac and ZfcUser](/docs/07. Cookbook.md#using-zfcrbac-and-zfcuser)
+6. [Cookbook](/docs/06. Cookbook.md)
+   1. [A real world example](/docs/06. Cookbook.md#a-real-world-application)
+   2. [Best practices](/docs/06. Cookbook.md#best-practices)
+   3. [Using dynamic assertions](/docs/06. Cookbook.md#using-dynamic-assertions)
+   4. [Using ZfcRbac with Doctrine ORM](/docs/06. Cookbook.md#using-zfcrbac-with-doctrine-orm)
+   5. [How to lazy-load roles and permissions for very complex use cases?](/docs/06. Cookbook.md#how-to-lazy-load-roles-and-permissions-for-very-complex-use-cases)
+   6. [Using ZfcRbac and ZF2 Assetic](/docs/06. Cookbook.md#using-zfcrbac-and-zf2-assetic)
+   7. [Using ZfcRbac and ZfcUser](/docs/06. Cookbook.md#using-zfcrbac-and-zfcuser)

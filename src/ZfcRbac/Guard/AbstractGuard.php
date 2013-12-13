@@ -22,67 +22,30 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Abstract guard that registers on the "onRoute" event
+ * Abstract guard that hook on the MVC workflow
  */
 abstract class AbstractGuard implements GuardInterface
 {
     use ListenerAggregateTrait;
 
     /**
-     * Event priority for the onRoute event
+     * Event priority
      */
-    const EVENT_PRIORITY = -100;
+    const EVENT_PRIORITY = -5;
 
     /**
-     * @var AuthorizationService
+     * MVC event to listen
      */
-    protected $authorizationService;
-
-    /**
-     * @var string
-     */
-    protected $protectionPolicy = self::POLICY_DENY;
-
-    /**
-     * Constructor
-     *
-     * @param AuthorizationService $authorizationService
-     */
-    public function __construct(AuthorizationService $authorizationService)
-    {
-        $this->authorizationService = $authorizationService;
-    }
+    const EVENT_NAME = MvcEvent::EVENT_ROUTE;
 
     /**
      * {@inheritDoc}
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], static::EVENT_PRIORITY);
-    }
-
-    /**
-     * Set the protection policy
-     *
-     * @param  string $protectionPolicy
-     * @return void
-     */
-    public function setProtectionPolicy($protectionPolicy)
-    {
-        $this->protectionPolicy = (string) $protectionPolicy;
-    }
-
-    /**
-     * Get the protection policy
-     *
-     * @return string
-     */
-    public function getProtectionPolicy()
-    {
-        return $this->protectionPolicy;
+        $this->listeners[] = $events->attach(static::EVENT_NAME, [$this, 'onResult'], static::EVENT_PRIORITY);
     }
 
     /**
@@ -90,7 +53,7 @@ abstract class AbstractGuard implements GuardInterface
      * @param  MvcEvent $event
      * @return void
      */
-    public function onRoute(MvcEvent $event)
+    public function onResult(MvcEvent $event)
     {
         if ($this->isGranted($event)) {
             return;
@@ -107,16 +70,5 @@ abstract class AbstractGuard implements GuardInterface
         $eventManager = $application->getEventManager();
 
         $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
-    }
-    
-    /**
-     * Checks if the current identity statisfies any of the required roles.
-     * 
-     * @param array $allowedRoles
-     * @return boolean
-     */
-    protected function isAllowed(array $allowedRoles)
-    {
-        return $this->authorizationService->doesIdentityStatisfyRoles($allowedRoles);
     }
 }
