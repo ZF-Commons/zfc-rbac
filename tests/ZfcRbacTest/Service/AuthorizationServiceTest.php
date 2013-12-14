@@ -83,6 +83,14 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 false
             ],
 
+            // Simple is accepted from dynamic assertion
+            [
+                'member',
+                'read',
+                function() { return true; },
+                true
+            ],
+
             // Simple is refused from no role
             [
                 [],
