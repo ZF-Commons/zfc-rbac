@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Rbac\Permission\PermissionInterface;
 use Rbac\Role\HierarchicalRoleInterface;
 use Rbac\Role\RoleInterface;
+use RecursiveIterator;
 
 /**
  * @ORM\Entity
