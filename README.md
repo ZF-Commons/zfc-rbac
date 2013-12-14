@@ -1,5 +1,11 @@
 # ZfcRbac
 
+Important post ZfcRbac 1.0 release: please DO NOT use ZfcRbac 1.0 and use the develop branch instead (should be merged into master in
+a few days and tagged as ZfcRbac 2.0 as soon as it's stable enough). The reason is that I release ZfcRbac 1.0 a bit
+too fast, and a few design mistakes were made that make it hard to use and sometimes inefficient. The new version
+will be based on a new, more flexible and faster Rbac component! Sorry about that. I promise, ZfcRbac 2.0 will be
+awesome!
+
 [![Master Branch Build Status](https://secure.travis-ci.org/ZF-Commons/ZfcRbac.png?branch=master)](http://travis-ci.org/ZF-Commons/ZfcRbac)
 [![Coverage Status](https://coveralls.io/repos/ZF-Commons/ZfcRbac/badge.png)](https://coveralls.io/r/ZF-Commons/ZfcRbac)
 [![Latest Stable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/stable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
