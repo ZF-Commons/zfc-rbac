@@ -20,7 +20,7 @@ namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using simple wildcard pattern)
@@ -30,9 +30,9 @@ class RouteGuard extends AbstractGuard
     use ProtectionPolicyTrait;
 
     /**
-     * @var AuthorizationService
+     * @var RoleService
      */
-    protected $authorizationService;
+    protected $roleService;
 
     /**
      * Route guard rules
@@ -46,12 +46,12 @@ class RouteGuard extends AbstractGuard
     /**
      * Constructor
      *
-     * @param AuthorizationService $authorizationService
-     * @param array                $rules
+     * @param RoleService $roleService
+     * @param array       $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = [])
+    public function __construct(RoleService $roleService, array $rules = [])
     {
-        $this->authorizationService = $authorizationService;
+        $this->roleService = $roleService;
         $this->setRules($rules);
     }
 
@@ -102,6 +102,6 @@ class RouteGuard extends AbstractGuard
             return true;
         }
 
-        return $this->authorizationService->satisfyIdentityRoles($allowedRoles);
+        return $this->roleService->matchIdentityRoles($allowedRoles);
     }
 }

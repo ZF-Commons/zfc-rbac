@@ -19,36 +19,38 @@
 namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\RoleLoaderListenerFactory;
+use ZfcRbac\Factory\RoleServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\RoleLoaderListenerFactory
+ * @covers \ZfcRbac\Factory\RoleServiceFactory
  */
-class RoleLoaderListenerFactoryTest extends \PHPUnit_Framework_TestCase
+class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $pluginManager = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $pluginManager->expects($this->once())
-                      ->method('get')
-                      ->will($this->returnValue($this->getMock('ZfcRbac\Role\RoleProviderInterface')));
-
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
-
         $options = new ModuleOptions([
-            'role_provider' => [
-                'foo' => [
-                    'bar'
+            'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
+            'guest_role'           => 'guest',
+            'role_provider'        => [
+                'ZfcRbac\Role\InMemoryRoleProvider' => [
+                    'foo'
                 ]
             ]
         ]);
+
+        $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', new RoleProviderPluginManager());
+        $serviceManager->setService(
+            'ZfcRbac\Identity\AuthenticationProvider',
+            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
+        );
 
-        $factory  = new RoleLoaderListenerFactory();
-        $listener = $factory->createService($serviceManager);
+        $factory     = new RoleServiceFactory();
+        $roleService = $factory->createService($serviceManager);
 
-        $this->assertInstanceOf('ZfcRbac\Role\RoleLoaderListener', $listener);
+        $this->assertInstanceOf('ZfcRbac\Service\RoleService', $roleService);
     }
 }

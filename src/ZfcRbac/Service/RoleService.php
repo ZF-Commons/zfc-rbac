@@ -18,10 +18,13 @@
 
 namespace ZfcRbac\Service;
 
+use Rbac\Role\HierarchicalRoleInterface;
 use Rbac\Role\RoleInterface;
+use RecursiveIteratorIterator;
 use Traversable;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
 /**
@@ -30,6 +33,11 @@ use ZfcRbac\Role\RoleProviderInterface;
 class RoleService
 {
     /**
+     * @var IdentityProviderInterface
+     */
+    protected $identityProvider;
+
+    /**
      * @var RoleProviderInterface
      */
     protected $roleProvider;
@@ -37,30 +45,60 @@ class RoleService
     /**
      * @var string
      */
-    protected $guestRole;
+    protected $guestRole = '';
 
     /**
      * Constructor
      *
-     * @param string                $guestRole
-     * @param RoleProviderInterface $roleProvider
+     * @param IdentityProviderInterface $identityProvider
+     * @param RoleProviderInterface     $roleProvider
      */
-    public function __construct(RoleProviderInterface $roleProvider, $guestRole = '')
+    public function __construct(IdentityProviderInterface $identityProvider, RoleProviderInterface $roleProvider)
     {
-        $this->roleProvider = $roleProvider;
-        $this->guestRole    = $guestRole;
+        $this->identityProvider = $identityProvider;
+        $this->roleProvider     = $roleProvider;
     }
 
     /**
-     * Get the identity roles from the identity, applying some more logic
+     * Set the guest role
      *
-     * @param  IdentityInterface|null $identity
+     * @param  string $guestRole
+     * @return void
+     */
+    public function setGuestRole($guestRole)
+    {
+        $this->guestRole = (string) $guestRole;
+    }
+
+    /**
+     * Get the guest role
+     *
+     * @return string
+     */
+    public function getGuestRole()
+    {
+        return $this->guestRole;
+    }
+
+    /**
+     * Get the current identity from the identity provider
+     *
+     * @return IdentityInterface|null
+     */
+    public function getIdentity()
+    {
+        return $this->identityProvider->getIdentity();
+    }
+
+    /**
+     * Get the identity roles from the current identity, applying some more logic
+     *
      * @return RoleInterface[]
      * @throws Exception\RuntimeException
      */
-    public function getIdentityRoles(IdentityInterface $identity = null)
+    public function getIdentityRoles()
     {
-        if (null === $identity) {
+        if (!$identity = $this->getIdentity()) {
             return $this->convertRoles([$this->guestRole]);
         }
 
@@ -72,6 +110,29 @@ class RoleService
         }
 
         return $this->convertRoles($identity->getRoles());
+    }
+
+    /**
+     * Check if the given roles match one of the identity roles
+     *
+     * This method is smart enough to automatically recursively extracts roles for hierarchical roles
+     *
+     * @param  string[]|RoleInterface[] $roles
+     * @return bool
+     */
+    public function matchIdentityRoles(array $roles)
+    {
+        $identityRoles = $this->getIdentityRoles();
+
+        // Too easy...
+        if (empty($identityRoles)) {
+            return false;
+        }
+
+        $roles         = $this->flattenRoles($roles);
+        $identityRoles = $this->flattenRoles($identityRoles);
+
+        return count(array_intersect($roles, $identityRoles)) > 0;
     }
 
     /**
@@ -89,7 +150,7 @@ class RoleService
         $collectedRoles = [];
         $toCollect      = [];
 
-        foreach ($roles as $role) {
+        foreach ((array) $roles as $role) {
             // If it's already a RoleInterface, nothing to do as a RoleInterface contains everything already
             if ($role instanceof RoleInterface) {
                 $collectedRoles[] = $role;
@@ -105,5 +166,36 @@ class RoleService
         }
 
         return array_merge($collectedRoles, $this->roleProvider->getRoles($toCollect));
+    }
+
+    /**
+     * Flatten an array of role with role names
+     *
+     * This method iterates through the list of roles, and convert any RoleInterface to a string. For any
+     * role, it also extracts all the children
+     *
+     * @param  array|RoleInterface[] $roles
+     * @return string[]
+     */
+    protected function flattenRoles(array $roles)
+    {
+        $roleNames = [];
+
+        foreach ($roles as $role) {
+            $roleNames[] = $role instanceof RoleInterface ? $role->getName() : (string) $role;
+
+            if (!$role instanceof HierarchicalRoleInterface) {
+                continue;
+            }
+
+            $iterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);
+
+            /* @var RoleInterface $childRole */
+            foreach ($iterator as $childRole) {
+                $roleNames[] = $childRole->getName();
+            }
+        }
+
+        return array_unique($roleNames);
     }
 }

@@ -52,10 +52,10 @@ class RouteGuardFactory implements FactoryInterface, MutableCreationOptionsInter
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
 
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
+        /* @var \ZfcRbac\Service\RoleService $roleService */
+        $roleService = $parentLocator->get('ZfcRbac\Service\RoleService');
 
-        $routeGuard = new RouteGuard($authorizationService, $this->options);
+        $routeGuard = new RouteGuard($roleService, $this->options);
         $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;

@@ -21,7 +21,6 @@ namespace ZfcRbac\Service;
 use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
-use ZfcRbac\Identity\IdentityProviderInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -35,11 +34,6 @@ class AuthorizationService
     protected $rbac;
 
     /**
-     * @var IdentityProviderInterface
-     */
-    protected $identityProvider;
-
-    /**
      * @var RoleService
      */
     protected $roleService;
@@ -47,13 +41,11 @@ class AuthorizationService
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface $identityProvider
      * @param RoleService               $roleService
      */
-    public function __construct(IdentityProviderInterface $identityProvider, RoleService $roleService)
+    public function __construct(RoleService $roleService)
     {
         $this->rbac             = new Rbac();
-        $this->identityProvider = $identityProvider;
         $this->roleService      = $roleService;
     }
 
@@ -67,8 +59,7 @@ class AuthorizationService
      */
     public function isGranted($permission, $assertion = null)
     {
-        $identity = $this->identityProvider->getIdentity();
-        $roles    = $this->roleService->getIdentityRoles($identity);
+        $roles = $this->roleService->getIdentityRoles();
 
         if (empty($roles)) {
             return false;
@@ -76,6 +67,8 @@ class AuthorizationService
 
         // Check the assertion first
         if (null !== $assertion) {
+            $identity = $this->roleService->getIdentity();
+
             if (is_callable($assertion)) {
                 if (!$assertion($identity)) {
                     return false;

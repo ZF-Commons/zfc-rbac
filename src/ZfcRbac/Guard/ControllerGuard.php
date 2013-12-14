@@ -20,7 +20,7 @@ namespace ZfcRbac\Guard;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 
 /**
  * A controller guard can protect a controller and a set of actions
@@ -28,6 +28,11 @@ use ZfcRbac\Service\AuthorizationService;
 class ControllerGuard extends AbstractGuard
 {
     use ProtectionPolicyTrait;
+
+    /**
+     * @var RoleService
+     */
+    protected $roleService;
 
     /**
      * Controller guard rules
@@ -39,12 +44,12 @@ class ControllerGuard extends AbstractGuard
     /**
      * Constructor
      *
-     * @param AuthorizationService $authorizationService
-     * @param array                $rules
+     * @param RoleService $roleService
+     * @param array       $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = [])
+    public function __construct(RoleService $roleService, array $rules = [])
     {
-        $this->authorizationService = $authorizationService;
+        $this->roleService = $roleService;
         $this->setRules($rules);
     }
 
@@ -125,6 +130,6 @@ class ControllerGuard extends AbstractGuard
             return true;
         }
 
-        return $this->authorizationService->satisfyIdentityRoles($allowedRoles);
+        return $this->roleService->matchIdentityRoles($allowedRoles);
     }
 }

@@ -34,15 +34,22 @@ class RoleServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions      = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+
+        /* @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
+        $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
+
         $roleProviderConfig = $moduleOptions->getRoleProvider();
 
         /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('ZfcRbac\Role\RoleProviderPluginManager');
 
-        /** @var \ZfcRbac\Role\RoleProviderInterface $roleProvider */
+        /* @var \ZfcRbac\Role\RoleProviderInterface $roleProvider */
         $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
 
-        return new RoleService($roleProvider, $moduleOptions->getGuestRole());
+        $roleService = new RoleService($identityProvider, $roleProvider);
+        $roleService->setGuestRole($moduleOptions->getGuestRole());
+
+        return $roleService;
     }
 }

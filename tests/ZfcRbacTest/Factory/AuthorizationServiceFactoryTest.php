@@ -20,7 +20,6 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\AuthorizationServiceFactory;
-use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Factory\AuthorizationServiceFactory
@@ -29,27 +28,15 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $options = new ModuleOptions([
-            'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
-            'create_missing_roles' => true,
-            'guest_role'           => 'guest'
-        ]);
-
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
         $serviceManager->setService(
-            'ZfcRbac\Identity\AuthenticationProvider',
-            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
-        );
-        $serviceManager->setService(
-            'ZfcRbac\Role\RoleLoaderListener',
-            $this->getMock('Zend\EventManager\ListenerAggregateInterface')
+            'ZfcRbac\Service\RoleService',
+            $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
         );
 
         $factory              = new AuthorizationServiceFactory();
         $authorizationService = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Service\AuthorizationService', $authorizationService);
-        $this->assertTrue($authorizationService->getRbac()->getCreateMissingRoles());
     }
 }

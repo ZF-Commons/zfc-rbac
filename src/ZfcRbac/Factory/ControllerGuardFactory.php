@@ -52,10 +52,10 @@ class ControllerGuardFactory implements FactoryInterface, MutableCreationOptions
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
 
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
+        /* @var \ZfcRbac\Service\RoleService $roleService */
+        $roleService = $parentLocator->get('ZfcRbac\Service\RoleService');
 
-        $controllerGuard = new ControllerGuard($authorizationService, $this->options);
+        $controllerGuard = new ControllerGuard($roleService, $this->options);
         $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $controllerGuard;

@@ -49,8 +49,8 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
         $serviceManager->setService('ZfcRbac\Guard\GuardPluginManager', $pluginManager);
         $serviceManager->setService(
-            'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
+            'ZfcRbac\Service\RoleService',
+            $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
         );
 
         $pluginManager->setServiceLocator($serviceManager);

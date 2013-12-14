@@ -27,6 +27,7 @@ use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 
 /**
  * RbacCollector
@@ -52,11 +53,6 @@ class RbacCollector implements CollectorInterface, Serializable
      * @var array
      */
     protected $collectedRoles = [];
-
-    /**
-     * @var array
-     */
-    protected $collectedPermissions = [];
 
     /**
      * @var array
@@ -96,30 +92,27 @@ class RbacCollector implements CollectorInterface, Serializable
 
         $serviceManager = $application->getServiceManager();
 
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $serviceManager->get('ZfcRbac\Service\AuthorizationService');
+        /* @var \ZfcRbac\Service\RoleService $roleService */
+        $roleService = $serviceManager->get('ZfcRbac\Service\RoleService');
 
         /* @var \ZfcRbac\Options\ModuleOptions $options */
         $options = $serviceManager->get('ZfcRbac\Options\ModuleOptions');
 
         // Start collect all the data we need!
-        $this->collectOptions($options, $authorizationService);
+        $this->collectOptions($options);
         $this->collectGuards($options->getGuards());
-        $this->collectRolesAndPermissions($authorizationService);
+        $this->collectRolesAndPermissions($roleService);
     }
 
     /**
      * Collect options
      *
-     * @param ModuleOptions        $moduleOptions
-     * @param AuthorizationService $authorizationService
-     *
+     * @param  ModuleOptions $moduleOptions
      * @return void
      */
-    private function collectOptions(ModuleOptions $moduleOptions, AuthorizationService $authorizationService)
+    private function collectOptions(ModuleOptions $moduleOptions)
     {
         $this->collectedOptions = [
-            'current_roles'     => $authorizationService->getIdentityRoles(),
             'guest_role'        => $moduleOptions->getGuestRole(),
             'protection_policy' => $moduleOptions->getProtectionPolicy()
         ];
@@ -129,7 +122,6 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collect guards
      *
      * @param  array $guards
-     *
      * @return void
      */
     private function collectGuards($guards)
@@ -144,14 +136,15 @@ class RbacCollector implements CollectorInterface, Serializable
     /**
      * Collect roles and permissions
      *
-     * @param  AuthorizationService $authorizationService
-     *
+     * @param  RoleService $roleService
      * @return void
      */
-    private function collectRolesAndPermissions(AuthorizationService $authorizationService)
+    private function collectRolesAndPermissions(RoleService $roleService)
     {
-        $rbac                 = $authorizationService->getRbac();
-        $this->collectedRoles = $this->collectedPermissions = [];
+
+        $this->collectedRoles = [];
+
+
 
         // Role recursive iterator
         $roles = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);

@@ -18,7 +18,9 @@
 
 namespace ZfcRbacTest\Factory;
 
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -34,7 +36,8 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
         $pluginManager->setServiceLocator($serviceManager);
 
         $options = [
-            'object_repository' => 'RoleObjectRepository'
+            'role_name_property' => 'name',
+            'object_repository'  => 'RoleObjectRepository'
         ];
 
         $serviceManager->setService('RoleObjectRepository', $this->getMock('Doctrine\Common\Persistence\ObjectRepository'));
@@ -51,8 +54,9 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
         $pluginManager->setServiceLocator($serviceManager);
 
         $options = [
-            'object_manager' => 'ObjectManager',
-            'class_name'     => 'Role'
+            'role_name_property' => 'name',
+            'object_manager'     => 'ObjectManager',
+            'class_name'         => 'Role'
         ];
 
         $objectManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
@@ -68,9 +72,31 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * This test covers that the proper exception is found in the exception chain when no proper configuration is
-     * provided for the requested service.
-     *
+     * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
+     */
+    public function testThrowExceptionIfNoRoleNamePropertyIsSet()
+    {
+        try {
+            $pluginManager  = new RoleProviderPluginManager();
+            $serviceManager = new ServiceManager();
+
+            $pluginManager->setServiceLocator($serviceManager);
+            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', []);
+        } catch (ServiceNotCreatedException $smException) {
+            while ($e = $smException->getPrevious()) {
+                if ($e instanceof RuntimeException) {
+                    return true;
+                }
+            }
+        }
+
+        $this->fail(
+            'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory::createService() :: '
+            .'ZfcRbac\Exception\RuntimeException was not found in the previous Exceptions'
+        );
+    }
+
+    /**
      * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
      */
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
@@ -80,10 +106,13 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             $serviceManager = new ServiceManager();
 
             $pluginManager->setServiceLocator($serviceManager);
-            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', []);
-        } catch (\Zend\ServiceManager\Exception\ServiceNotCreatedException $smException) {
+            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', [
+                'role_name_property' => 'name'
+            ]);
+        } catch (ServiceNotCreatedException $smException) {
+
             while ($e = $smException->getPrevious()) {
-                if ($e instanceof \ZfcRbac\Exception\RuntimeException) {
+                if ($e instanceof RuntimeException) {
                     return true;
                 }
             }
