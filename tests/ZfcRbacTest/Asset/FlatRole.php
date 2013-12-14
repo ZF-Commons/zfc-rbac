@@ -72,16 +72,6 @@ class FlatRole extends Role
     }
 
     /**
-     * Get the role name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Add a permission
      *
      * @param  PermissionInterface|string $permission

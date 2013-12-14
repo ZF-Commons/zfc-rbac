@@ -14,7 +14,6 @@ If you are looking for some information that is not listed in the documentation,
    1. [Specifying an identity provider](/docs/02. Quick Start.md#specifying-an-identity-provider)
    2. [Adding a guard](/docs/02. Quick Start.md#adding-a-guard)
    3. [Adding a role provider](/docs/02. Quick Start.md#adding-a-role-provider)
-   4. [Adding a permission provider](/docs/02. Quick Start.md#adding-a-permission-provider)
    5. [Registering a strategy](/docs/02. Quick Start.md#registering-a-strategy)
    6. [Using the authorization service](/docs/02. Quick Start.md#using-the-authorization-service)
 

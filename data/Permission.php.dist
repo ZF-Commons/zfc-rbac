@@ -18,8 +18,7 @@
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Permissions\Rbac\AbstractRole;
-use ZfcRbac\Permission\PermissionInterface;
+use Rbac\Permission\PermissionInterface;
 
 /**
  * @ORM\Entity
@@ -39,22 +38,16 @@ class Permission implements PermissionInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=128, unique=true)
      */
     protected $name;
 
     /**
-     * @var Role[]|\Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Role", mappedBy="permissions")
-     */
-    protected $roles;
-
-    /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($name)
     {
+        $this->name  = (string) $name;
         $this->roles = new ArrayCollection();
     }
 
@@ -69,17 +62,6 @@ class Permission implements PermissionInterface
     }
 
     /**
-     * Set the permission name
-     *
-     * @param  string $name
-     * @return void
-     */
-    public function setName($name)
-    {
-        $this->name = (string) $name;
-    }
-
-    /**
      * Get the permission name
      *
      * @return string
@@ -90,22 +72,10 @@ class Permission implements PermissionInterface
     }
 
     /**
-     * Add a role
-     * @param  $role
-     * @return void
+     * {@inheritDoc}
      */
-    public function addRole($role)
+    public function __toString()
     {
-        $this->roles[] = $role;
-    }
-
-    /**
-     * Get the roles
-     *
-     * @return Role[]
-     */
-    public function getRoles()
-    {
-        return $this->roles;
+        return $this->name;
     }
 }
