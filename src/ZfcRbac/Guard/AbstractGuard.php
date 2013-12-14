@@ -34,7 +34,7 @@ abstract class AbstractGuard implements GuardInterface
     /**
      * Event priority for the onRoute event
      */
-    const EVENT_PRIORITY = -100;
+    const EVENT_PRIORITY = 100;
 
     /**
      * @var AuthorizationService
@@ -61,7 +61,7 @@ abstract class AbstractGuard implements GuardInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], static::EVENT_PRIORITY);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], static::EVENT_PRIORITY);
     }
 
     /**
@@ -90,7 +90,7 @@ abstract class AbstractGuard implements GuardInterface
      * @param  MvcEvent $event
      * @return void
      */
-    public function onRoute(MvcEvent $event)
+    public function onDispatch(MvcEvent $event)
     {
         if ($this->isGranted($event)) {
             return;
