@@ -18,7 +18,10 @@
 
 namespace ZfcRbac\Collector;
 
+use Rbac\Role\HierarchicalRoleInterface;
 use Rbac\Role\RoleInterface;
+use RecursiveIteratorIterator;
+use ReflectionProperty;
 use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
@@ -49,6 +52,11 @@ class RbacCollector implements CollectorInterface, Serializable
      * @var array
      */
     protected $collectedRoles = [];
+
+    /**
+     * @var array
+     */
+    protected $collectedPermissions = [];
 
     /**
      * @var array
@@ -97,7 +105,7 @@ class RbacCollector implements CollectorInterface, Serializable
         // Start collect all the data we need!
         $this->collectOptions($options);
         $this->collectGuards($options->getGuards());
-        $this->collectIdentityRoles($roleService);
+        $this->collectIdentityRolesAndPermissions($roleService);
     }
 
     /**
@@ -135,9 +143,30 @@ class RbacCollector implements CollectorInterface, Serializable
      * @param  RoleService $roleService
      * @return RoleInterface[]
      */
-    private function collectIdentityRoles(RoleService $roleService)
+    private function collectIdentityRolesAndPermissions(RoleService $roleService)
     {
-        return $roleService->getIdentityRoles();
+        $identityRoles = $roleService->getIdentityRoles();
+
+        foreach ($identityRoles as $role) {
+            $roleName = $role->getName();
+
+            if (!$role instanceof HierarchicalRoleInterface) {
+                $this->collectedRoles[] = $roleName;
+            } else {
+                $iteratorIterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);
+
+                foreach ($iteratorIterator as $childRole) {
+                    $this->collectedRoles[$roleName][] = $childRole->getName();
+                }
+            }
+
+            // Gather the permissions for the given role. We have to use reflection as
+            // the RoleInterface does not have "getPermissions" method
+            $reflectionProperty = new ReflectionProperty($role, 'permissions');
+            $reflectionProperty->setAccessible(true);
+
+            $this->collectedPermissions[$role->getName()] = $reflectionProperty->getValue($role);
+        }
     }
 
     /**
@@ -156,6 +185,7 @@ class RbacCollector implements CollectorInterface, Serializable
         return serialize([
             'guards'      => $this->collectedGuards,
             'roles'       => $this->collectedRoles,
+            'permissions' => $this->collectedPermissions,
             'options'     => $this->collectedOptions
         ]);
     }
