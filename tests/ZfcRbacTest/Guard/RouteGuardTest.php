@@ -382,7 +382,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
             'adminRoute' => 'member'
         ]);
 
-        $routeGuard->onRoute($event);
+        $routeGuard->onDispatch($event);
 
         $this->assertEmpty($event->getError());
         $this->assertNull($event->getParam('exception'));
@@ -423,7 +423,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
             'adminRoute' => 'guest'
         ]);
 
-        $routeGuard->onRoute($event);
+        $routeGuard->onDispatch($event);
 
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(RouteGuard::GUARD_UNAUTHORIZED, $event->getError());

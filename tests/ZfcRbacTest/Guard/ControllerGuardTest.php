@@ -436,7 +436,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
             'roles'      => 'member'
         ]]);
 
-        $routeGuard->onRoute($event);
+        $routeGuard->onDispatch($event);
 
         $this->assertEmpty($event->getError());
         $this->assertNull($event->getParam('exception'));
@@ -480,7 +480,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
             'roles'      => 'member'
         ]]);
 
-        $routeGuard->onRoute($event);
+        $routeGuard->onDispatch($event);
 
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getError());
