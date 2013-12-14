@@ -34,7 +34,7 @@ abstract class AbstractGuard implements GuardInterface
     /**
      * Event priority for the onRoute event
      */
-    const EVENT_PRIORITY = -100;
+    const EVENT_PRIORITY = 100;
 
     /**
      * @var AuthorizationService
