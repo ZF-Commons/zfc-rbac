@@ -20,7 +20,6 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
-use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
@@ -41,4 +40,3 @@ class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestC
         $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
     }
 }
- 

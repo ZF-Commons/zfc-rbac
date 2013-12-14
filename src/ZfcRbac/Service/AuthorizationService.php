@@ -41,12 +41,12 @@ class AuthorizationService
     /**
      * Constructor
      *
-     * @param RoleService               $roleService
+     * @param RoleService $roleService
      */
     public function __construct(RoleService $roleService)
     {
-        $this->rbac             = new Rbac();
-        $this->roleService      = $roleService;
+        $this->rbac        = new Rbac();
+        $this->roleService = $roleService;
     }
 
     /**

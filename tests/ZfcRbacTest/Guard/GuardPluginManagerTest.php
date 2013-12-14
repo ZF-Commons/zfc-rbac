@@ -57,8 +57,8 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
         $serviceManager->setService(
-            'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
+            'ZfcRbac\Service\RoleService',
+            $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
         );
 
         $pluginManager = new GuardPluginManager();

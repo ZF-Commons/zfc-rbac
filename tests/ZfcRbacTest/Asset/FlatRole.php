@@ -21,12 +21,13 @@ namespace ZfcRbacTest\Asset;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rbac\Permission\PermissionInterface;
+use Rbac\Role\Role;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="permissions")
+ * @ORM\Table(name="roles")
  */
-class Permission implements PermissionInterface
+class FlatRole extends Role
 {
     /**
      * @var int|null
@@ -45,16 +46,23 @@ class Permission implements PermissionInterface
     protected $name;
 
     /**
-     * Constructor
+     * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name")
+     */
+    protected $permissions;
+
+    /**
+     * Init the Doctrine collection
      */
     public function __construct($name)
     {
-        $this->name  = (string) $name;
-        $this->roles = new ArrayCollection();
+        $this->name        = (string) $name;
+        $this->permissions = new ArrayCollection();
     }
 
     /**
-     * Get the permission identifier
+     * Get the role identifier
      *
      * @return int
      */
@@ -64,7 +72,7 @@ class Permission implements PermissionInterface
     }
 
     /**
-     * Get the permission name
+     * Get the role name
      *
      * @return string
      */
@@ -74,10 +82,18 @@ class Permission implements PermissionInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Add a permission
+     *
+     * @param  PermissionInterface|string $permission
+     * @return void
      */
-    public function __toString()
+    public function addPermission($permission)
     {
-        return $this->getName();
+        if (is_string($permission)) {
+            $name       = $permission;
+            $permission = new Permission($name);
+        }
+
+        $this->permissions[$permission->getName()] = $permission;
     }
 }

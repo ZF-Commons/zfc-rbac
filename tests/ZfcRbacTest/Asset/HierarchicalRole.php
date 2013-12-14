@@ -20,15 +20,14 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Permissions\Rbac\AbstractRole;
-use Zend\Permissions\Rbac\RoleInterface;
-use ZfcRbac\Permission\PermissionInterface;
+use Rbac\Permission\PermissionInterface;
+use Rbac\Role\HierarchicalRole as BaseHierarchicalRole;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="roles")
+ * @ORM\Table(name="hierarchical_roles")
  */
-class Role extends AbstractRole
+class HierarchicalRole extends BaseHierarchicalRole
 {
     /**
      * @var int|null
@@ -42,29 +41,30 @@ class Role extends AbstractRole
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32, unique=true)
      */
     protected $name;
 
     /**
-     * @var Role
+     * @var \Rbac\Role\RoleInterface[]|\Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToOne(targetEntity="Role")
+     * @ORM\ManyToMany(targetEntity="HierarchicalRole")
      */
-    protected $parent;
+    protected $children;
 
     /**
      * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", inversedBy="permissions")
+     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name")
      */
     protected $permissions;
 
     /**
      * Init the Doctrine collection
      */
-    public function __construct()
+    public function __construct($name)
     {
+        $this->name        = (string) $name;
         $this->permissions = new ArrayCollection();
     }
 
@@ -79,17 +79,6 @@ class Role extends AbstractRole
     }
 
     /**
-     * Set the role name
-     *
-     * @param  string $name
-     * @return void
-     */
-    public function setName($name)
-    {
-        $this->name = (string) $name;
-    }
-
-    /**
      * Get the role name
      *
      * @return string
@@ -97,27 +86,6 @@ class Role extends AbstractRole
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set the parent role
-     *
-     * @param  string|Role $parent
-     * @return void
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
-    /**
-     * Get the parent role
-     *
-     * @return Role
-     */
-    public function getParent()
-    {
-        return $this->parent;
     }
 
     /**
@@ -130,11 +98,9 @@ class Role extends AbstractRole
     {
         if (is_string($permission)) {
             $name       = $permission;
-            $permission = new Permission();
-            $permission->setName($name);
+            $permission = new Permission($name);
         }
 
-        $permission->addRole($this);
         $this->permissions[$permission->getName()] = $permission;
     }
 }

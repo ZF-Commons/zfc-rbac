@@ -21,7 +21,8 @@ namespace ZfcRbacTest\Role;
 use Doctrine\ORM\Tools\SchemaTool;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
-use ZfcRbacTest\Asset\Role;
+use ZfcRbacTest\Asset\FlatRole;
+use ZfcRbacTest\Asset\HierarchicalRole;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
@@ -34,48 +35,75 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected $serviceManager;
 
-    public function testObjectRepositoryProvider()
+    public function testObjectRepositoryProviderForFlatRole()
     {
         $this->serviceManager = ServiceManagerFactory::getServiceManager();
         $objectManager        = $this->getObjectManager();
 
         // Let's add some roles
-        $adminRole = new Role();
-        $adminRole->setName('admin');
+        $adminRole = new FlatRole('admin');
         $objectManager->persist($adminRole);
-        $objectManager->flush();
 
-        $memberRole = new Role();
-        $memberRole->setName('member');
-        $memberRole->setParent($adminRole);
+        $memberRole = new FlatRole('member');
         $objectManager->persist($memberRole);
+
         $objectManager->flush();
 
-        $coAdminRole = new Role();
-        $coAdminRole->setName('coAdmin');
-        $coAdminRole->setParent($adminRole);
-        $objectManager->persist($coAdminRole);
-        $objectManager->flush();
+        $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\FlatRole');
 
-        $guestRole = new Role();
-        $guestRole->setName('guest');
-        $guestRole->setParent($memberRole);
-        $objectManager->persist($guestRole);
-        $objectManager->flush();
+        $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
 
-        $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\Role');
+        // Get only the admin role
+        $roles = $objectRepositoryRoleProvider->getRoles(['admin']);
 
-        $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository);
-        $rbacEvent                    = $this->getMock('ZfcRbac\Service\RbacEvent', [], [], '', false);
-
-        $roles = $objectRepositoryRoleProvider->getRoles($rbacEvent);
-
-        $this->assertCount(4, $roles);
+        $this->assertCount(1, $roles);
         $this->assertInternalType('array', $roles);
 
-        foreach ($roles as $role) {
-            $this->assertInstanceOf('Zend\Permissions\Rbac\RoleInterface', $role);
+        $this->assertInstanceOf('Rbac\Role\RoleInterface', $roles[0]);
+        $this->assertEquals('admin', $roles[0]->getName());
+    }
+
+    public function testObjectRepositoryProviderForHierarchicalRole()
+    {
+        $this->serviceManager = ServiceManagerFactory::getServiceManager();
+        $objectManager        = $this->getObjectManager();
+
+        // Let's add some roles
+        $guestRole = new HierarchicalRole('guest');
+        $objectManager->persist($guestRole);
+
+        $memberRole = new HierarchicalRole('member');
+        $memberRole->addChild($guestRole);
+        $objectManager->persist($memberRole);
+
+        $adminRole = new HierarchicalRole('admin');
+        $adminRole->addChild($memberRole);
+        $objectManager->persist($adminRole);
+
+        $objectManager->flush();
+
+        $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\HierarchicalRole');
+
+        $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+
+        // Get only the admin role
+        $roles = $objectRepositoryRoleProvider->getRoles(['admin']);
+
+        $this->assertCount(1, $roles);
+        $this->assertInternalType('array', $roles);
+
+        $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $roles[0]);
+        $this->assertEquals('admin', $roles[0]->getName());
+
+        $iteratorIterator = new \RecursiveIteratorIterator($roles[0], \RecursiveIteratorIterator::SELF_FIRST);
+        $childRolesString = '';
+
+        foreach ($iteratorIterator as $childRole) {
+            $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $childRole);
+            $childRolesString .= $childRole->getName();
         }
+
+        $this->assertEquals('memberguest', $childRolesString);
     }
 
     /**
@@ -86,10 +114,9 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         /* @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $this->serviceManager->get('Doctrine\\ORM\\EntityManager');
         $schemaTool    = new SchemaTool($entityManager);
-
+        $schemaTool->dropDatabase();
         $schemaTool->createSchema($entityManager->getMetadataFactory()->getAllMetadata());
 
         return $entityManager;
     }
 }
- 

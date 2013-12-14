@@ -26,7 +26,6 @@ use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
 
 /**

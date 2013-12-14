@@ -18,9 +18,7 @@
 
 namespace ZfcRbacTest\Role;
 
-use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Role\InMemoryRoleProvider;
-use ZfcRbac\Service\RbacEvent;
 
 /**
  * @covers \ZfcRbac\Role\InMemoryRoleProvider
@@ -29,8 +27,41 @@ class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testInMemoryProvider()
     {
-        $inMemoryProvider = new InMemoryRoleProvider(['role']);
-        $this->assertEquals(['role'], $inMemoryProvider->getRoles(new RbacEvent(new Rbac())));
+        $inMemoryProvider = new InMemoryRoleProvider([
+            'admin' => [
+                'children'    => ['member'],
+                'permissions' => ['delete']
+            ],
+            'member' => [
+                'children'    => ['guest'],
+                'permissions' => ['write']
+            ],
+            'guest'
+        ]);
+
+        $roles = $inMemoryProvider->getRoles(['admin', 'member', 'guest']);
+
+        $this->assertCount(3, $roles);
+
+        // Test admin role
+        $adminRole = $roles[0];
+        $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $adminRole);
+        $this->assertEquals('admin', $adminRole->getName());
+        $this->assertTrue($adminRole->hasPermission('delete'));
+
+        // Test member role
+        $memberRole = $roles[1];
+        $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $memberRole);
+        $this->assertEquals('member', $memberRole->getName());
+        $this->assertTrue($memberRole->hasPermission('write'));
+        $this->assertFalse($memberRole->hasPermission('delete'));
+
+        // Test guest role
+        $guestRole = $roles[2];
+        $this->assertInstanceOf('Rbac\Role\RoleInterface', $guestRole);
+        $this->assertNotInstanceOf('Rbac\Role\HierarchicalRoleInterface', $guestRole);
+        $this->assertEquals('guest', $guestRole->getName());
+        $this->assertFalse($guestRole->hasPermission('write'));
+        $this->assertFalse($guestRole->hasPermission('delete'));
     }
 }
- 

@@ -19,7 +19,6 @@
 namespace ZfcRbacTest;
 
 use ZfcRbac\Module;
-use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Module

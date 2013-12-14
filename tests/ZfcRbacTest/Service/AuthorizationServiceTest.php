@@ -20,8 +20,9 @@ namespace ZfcRbacTest\Service;
 
 use Zend\Permissions\Rbac\Rbac;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RbacEvent;
+use ZfcRbac\Service\RoleService;
 use ZfcRbacTest\Asset\SimpleAssertion;
 
 /**
@@ -29,17 +30,6 @@ use ZfcRbacTest\Asset\SimpleAssertion;
  */
 class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testBasicGetterAndSetters()
-    {
-        // Let's fill the RBAC container with some values
-        $rbac = new Rbac();
-
-        $identityProvider     = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-
-        $this->assertSame($rbac, $authorizationService->getRbac());
-    }
-
     public function grantedProvider()
     {
         return [
@@ -83,6 +73,14 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 false
             ],
 
+            // Simple is accepted with dynamic assertion
+            [
+                'member',
+                'read',
+                function() { return true; },
+                true
+            ],
+
             // Simple is refused from no role
             [
                 [],
@@ -98,259 +96,43 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGranted($role, $permission, $assertion = null, $isGranted)
     {
-        // Let's fill the RBAC container with some values
-        $rbac = new Rbac();
-
-        $rbac->addRole('admin');
-        $rbac->addRole('member', 'admin');
-        $rbac->addRole('guest', 'member');
-
-        $rbac->getRole('guest')->addPermission('read');
-        $rbac->getRole('member')->addPermission('write');
-        $rbac->getRole('admin')->addPermission('delete');
-
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->once())->method('getRoles')->will($this->returnValue($role));
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-
-        $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
-    }    
-    
-    public function roleProvider()
-    {
-        return [
-            // Simple
-            [
-                'rolesToCreate' => [
-                    'login',
-                    'guest' => 'login'
-                ],
-                'identityRoles' => [
-                    'guest'
-                ],
-                'rolesToCheck' => [
-                    'login'
-                ],
-                'doesSatisfy' => false
+        $roleConfig = [
+            'admin' => [
+                'children'    => ['member'],
+                'permissions' => ['delete']
             ],
-            [
-                'rolesToCreate' => [
-                    'login',
-                    'guest' => 'login'
-                ],
-                'identityRoles' => [
-                    'login'
-                ],
-                'rolesToCheck' => [
-                    'login'
-                ],
-                'doesSatisfy' => true
+            'member' => [
+                'children'    => ['guest'],
+                'permissions' => ['write']
             ],
-            
-            // Complex role inheritance
-            [
-                'rolesToCreate' => [
-                    'admin',
-                    'moderator' => 'admin',
-                    'login' => 'moderator',
-                    'guest' => 'login'
-                ],
-                'identityRoles' => [
-                    'login',
-                    'moderator'
-                ],
-                'rolesToCheck' => [
-                    'admin'
-                ],
-                'doesSatisfy' => false
-            ],
-            [
-                'rolesToCreate' => [
-                    'admin',
-                    'moderator' => 'admin',
-                    'login' => 'moderator',
-                    'guest' => 'login'
-                ],
-                'identityRoles' => [
-                    'login',
-                    'admin'
-                ],
-                'rolesToCheck' => [
-                    'moderator'
-                ],
-                'doesSatisfy' => true
-            ],
-            
-            // Complex role inheritance and multiple check
-            [
-                'rolesToCreate' => [
-                    'sysadmin',
-                    'siteadmin' => 'sysadmin',
-                    'admin' => 'sysadmin',
-                    'moderator' => 'admin',
-                    'login' => 'moderator',
-                    'guest' => 'login'
-                ],
-                'identityRoles' => [
-                    'login',
-                    'moderator'
-                ],
-                'rolesToCheck' => [
-                    'admin',
-                    'sysadmin'
-                ],
-                'doesSatisfy' => false
-            ],
-            [
-                'rolesToCreate' => [
-                    'sysadmin',
-                    'siteadmin' => 'sysadmin',
-                    'admin' => 'sysadmin',
-                    'moderator' => 'admin',
-                    'login' => 'moderator',
-                    'guest' => 'login'
-                ],
-                'identityRoles' => [
-                    'moderator',
-                    'admin'
-                ],
-                'rolesToCheck' => [
-                    'sysadmin',
-                    'siteadmin',
-                    'login'
-                ],
-                'doesSatisfy' => true
+            'guest' => [
+                'permissions' => ['read']
             ]
         ];
-    }
-    
-    /**
-     * @dataProvider roleProvider
-     */
-    public function testSatisfiesIdentityRoles(array $rolesToCreate, array $identityRoles, array $rolesToCheck, $doesSatisfy)
-    {
-        // Let's fill the RBAC container with some values
-        $rbac = new Rbac();
-
-        foreach ($rolesToCreate as $roleToCreate => $parent) {
-            if (is_int($roleToCreate)) {
-                $rbac->addRole($parent);
-            } else {
-                $rbac->addRole($roleToCreate, $parent);
-            }
-        }
 
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->once())->method('getRoles')->will($this->returnValue($identityRoles));
+        $identity->expects($this->once())->method('getRoles')->will($this->returnValue((array) $role));
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
                          ->method('getIdentity')
                          ->will($this->returnValue($identity));
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig));
 
-        $this->assertEquals($doesSatisfy, $authorizationService->satisfyIdentityRoles($rolesToCheck));
-    }
+        $authorizationService = new AuthorizationService($roleService);
 
-    /**
-     * Assert that event to load roles and permissions is not triggered if no role can be found in an
-     * identity, because it will be refused anyway
-     */
-    public function testDoesNotLoadIfNoIdentityIsFound()
-    {
-        $rbac = new Rbac();
-
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->once())->method('getRoles')->will($this->returnValue([]));
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->once())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $authorizationService->setEventManager($eventManager);
-
-        $eventManager->expects($this->never())
-                     ->method('trigger');
-
-        $authorizationService->isGranted('foo');
-    }
-
-    public function testLoadRoles()
-    {
-        $rbac = new Rbac();
-
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->exactly(2))->method('getRoles')->will($this->returnValue(['role1']));
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->exactly(2))
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $authorizationService->setEventManager($eventManager);
-
-        $eventManager->expects($this->exactly(1))
-                     ->method('trigger')
-                     ->with(RbacEvent::EVENT_LOAD_ROLES);
-
-        // Call twice to assert initialization is not done twice
-        $authorizationService->isGranted('foo');
-        $authorizationService->isGranted('foo');
-    }
-
-    public function testLoadRolesMultipleTimesIfForceReload()
-    {
-        $rbac = new Rbac();
-
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->exactly(2))->method('getRoles')->will($this->returnValue(['role1']));
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->exactly(2))
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-        $authorizationService->setForceReload(true);
-
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $authorizationService->setEventManager($eventManager);
-
-        $eventManager->expects($this->exactly(2))
-                     ->method('trigger')
-                     ->with(RbacEvent::EVENT_LOAD_ROLES);
-
-        $authorizationService->isGranted('foo');
-        $authorizationService->isGranted('foo');
+        $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
     }
 
     public function testThrowExceptionForInvalidAssertion()
     {
-        $rbac = new Rbac();
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([
+            $this->getMock('Rbac\Role\RoleInterface')
+        ]));
 
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->once())->method('getRoles')->will($this->returnValue(['role1']));
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $authorizationService = new AuthorizationService($roleService);
 
         $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
 
@@ -359,17 +141,15 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDynamicAssertions()
     {
-        $rbac = new Rbac();
-
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->any())->method('getRoles')->will($this->returnValue(['role1']));
 
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->exactly(2))->method('getIdentity')->will($this->returnValue($identity));
+        $roleService->expects($this->exactly(2))->method('getIdentityRoles')->will($this->returnValue([
+            $this->getMock('Rbac\Role\RoleInterface')
+        ]));
 
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
+        $authorizationService = new AuthorizationService($roleService);
 
         // Using a callable
         $called = false;
@@ -387,44 +167,5 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $assertion = new SimpleAssertion();
         $this->assertFalse($authorizationService->isGranted('foo', $assertion));
         $this->assertTrue($assertion->getCalled());
-    }
-
-    public function testReturnGuestRoleIfNoIdentityIsFound()
-    {
-        $rbac = new Rbac();
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue(null));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider, 'guest');
-
-        $result = $authorizationService->getIdentityRoles();
-
-        $this->assertInternalType('array', $result);
-        $this->assertEquals(['guest'], $result);
-    }
-
-    public function testThrowExceptionIfIdentityIsWrongType()
-    {
-        $this->setExpectedException(
-            'ZfcRbac\Exception\RuntimeException',
-            'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "stdClass" given'
-        );
-
-        $rbac = new Rbac();
-
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue(new \stdClass()));
-
-        $authorizationService = new AuthorizationService($rbac, $identityProvider);
-
-        $result = $authorizationService->getIdentityRoles();
-
-        $this->assertInternalType('array', $result);
-        $this->assertEmpty($result);
     }
 }

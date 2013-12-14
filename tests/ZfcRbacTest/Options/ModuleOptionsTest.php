@@ -32,20 +32,17 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $moduleOptions = ServiceManagerFactory::getServiceManager()->get('ZfcRbac\Options\ModuleOptions');
 
         $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
-        $this->assertTrue($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
         $this->assertInternalType('array', $moduleOptions->getGuards());
         $this->assertInternalType('array', $moduleOptions->getRoleProvider());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
-        $this->assertFalse($moduleOptions->getForceReload());
     }
 
     public function testSettersAndGetters()
     {
         $moduleOptions = new ModuleOptions([
             'identity_provider'     => 'IdentityProvider',
-            'create_missing_roles'  => false,
             'guest_role'            => 'unknown',
             'guards'                => [],
             'protection_policy'     => 'deny',
@@ -55,19 +52,16 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             ],
             'redirect_strategy' => [
                 'redirect_to_route' => 'login'
-            ],
-            'force_reload' => true
+            ]
         ]);
 
         $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
-        $this->assertFalse($moduleOptions->getCreateMissingRoles());
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
         $this->assertEquals([], $moduleOptions->getGuards());
         $this->assertEquals('deny', $moduleOptions->getProtectionPolicy());
         $this->assertEquals([], $moduleOptions->getRoleProvider());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
-        $this->assertTrue($moduleOptions->getForceReload());
     }
 
     public function testThrowExceptionForInvalidProtectionPolicy()
