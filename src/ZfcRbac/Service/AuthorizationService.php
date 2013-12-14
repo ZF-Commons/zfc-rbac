@@ -165,10 +165,14 @@ class AuthorizationService implements EventManagerAwareInterface
         if (null !== $assertion) {
             $identity = $this->identityProvider->getIdentity();
 
-            if (is_callable($assertion) && !$assertion($identity)) {
-                return false;
-            } elseif ($assertion instanceof AssertionInterface && !$assertion->assert($identity)) {
-                return false;
+           if (is_callable($assertion)) {
+                if (!$assertion($identity)) {
+                    return false;
+                }
+            } elseif ($assertion instanceof AssertionInterface) {
+                if (!$assertion->assert($identity)) {
+                    return false;
+                }
             } else {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
