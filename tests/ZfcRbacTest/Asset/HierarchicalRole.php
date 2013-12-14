@@ -55,7 +55,7 @@ class HierarchicalRole extends BaseHierarchicalRole
     /**
      * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name")
+     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", fetch="EAGER")
      */
     protected $permissions;
 

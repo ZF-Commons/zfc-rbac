@@ -52,5 +52,6 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $roleService = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Service\RoleService', $roleService);
+        $this->assertEquals('guest', $roleService->getGuestRole());
     }
 }

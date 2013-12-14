@@ -18,10 +18,7 @@
 
 namespace ZfcRbac\Collector;
 
-use Rbac\Permission\PermissionInterface;
 use Rbac\Role\RoleInterface;
-use RecursiveIteratorIterator;
-use ReflectionProperty;
 use Serializable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
@@ -100,7 +97,7 @@ class RbacCollector implements CollectorInterface, Serializable
         // Start collect all the data we need!
         $this->collectOptions($options);
         $this->collectGuards($options->getGuards());
-        $this->collectRolesAndPermissions($roleService);
+        $this->collectIdentityRoles($roleService);
     }
 
     /**
@@ -136,47 +133,11 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collect roles and permissions
      *
      * @param  RoleService $roleService
-     * @return void
+     * @return RoleInterface[]
      */
-    private function collectRolesAndPermissions(RoleService $roleService)
+    private function collectIdentityRoles(RoleService $roleService)
     {
-
-        $this->collectedRoles = [];
-
-
-
-        // Role recursive iterator
-        $roles = new RecursiveIteratorIterator($rbac, RecursiveIteratorIterator::CHILD_FIRST);
-
-        /* @var RoleInterface $role */
-        foreach ($roles as $role) {
-            if (null === $role->getParent()) {
-                $this->collectedRoles[] = $role->getName();
-            } else {
-                $this->collectedRoles[$role->getName()] = $role->getParent()->getName();
-            }
-
-            // Rbac does not allow us to retrieve permissions from a role, so we need to use reflection. It
-            // obviously adds some overhead but this is the only way to do it
-            $reflProperty = new ReflectionProperty($role, 'permissions');
-            $reflProperty->setAccessible(true);
-
-            $permissions = $reflProperty->getValue($role);
-
-            foreach ($permissions as $permissionName => $permission) {
-                if ($permission instanceof PermissionInterface) {
-                    $this->collectedPermissions[$permission->getName()][] = $role->getName();
-                } else {
-                    $this->collectedPermissions[$permissionName][] = $role->getName();
-                }
-            }
-        }
-
-        // Because multiple roles may have the same permissions, the previous logic may have duplicate roles
-        // for each collected permissions, so we need a bit of cleaning
-        foreach ($this->collectedPermissions as &$permissions) {
-            $permissions = array_unique($permissions);
-        }
+        return $roleService->getIdentityRoles();
     }
 
     /**
@@ -195,7 +156,6 @@ class RbacCollector implements CollectorInterface, Serializable
         return serialize([
             'guards'      => $this->collectedGuards,
             'roles'       => $this->collectedRoles,
-            'permissions' => $this->collectedPermissions,
             'options'     => $this->collectedOptions
         ]);
     }

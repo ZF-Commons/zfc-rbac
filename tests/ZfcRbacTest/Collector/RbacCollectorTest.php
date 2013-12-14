@@ -24,6 +24,8 @@ use Zend\Permissions\Rbac\Role;
 use ZfcRbac\Collector\RbacCollector;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Service\RoleService;
 
 /**
  * @covers \ZfcRbac\Collector\RbacCollector
@@ -49,7 +51,6 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame([], $unserialized['guards']);
         $this->assertSame([], $unserialized['roles']);
-        $this->assertSame([], $unserialized['permissions']);
         $this->assertSame([], $unserialized['options']);
     }
 
@@ -59,7 +60,6 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $unserialized = [
             'guards'      => ['foo' => 'bar'],
             'roles'       => ['foo' => 'bar'],
-            'permissions' => ['foo' => 'bar'],
             'options'     => ['foo' => 'bar']
         ];
         $serialized   = serialize($unserialized);
@@ -71,7 +71,6 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $collection);
         $this->assertSame(['foo' => 'bar'], $collection['guards']);
         $this->assertSame(['foo' => 'bar'], $collection['roles']);
-        $this->assertSame(['foo' => 'bar'], $collection['permissions']);
         $this->assertSame(['foo' => 'bar'], $collection['options']);
     }
 
@@ -81,103 +80,5 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $collector = new RbacCollector();
 
         $this->assertNull($collector->collect($mvcEvent));
-    }
-
-    public function testCollect()
-    {
-        $collector         = new RbacCollector();
-        $dataIdentityRoles = ['guest', 'user'];
-        $dataGuards        = [
-            'ZfcRbac\Guard\RouteGuard' => [
-                'admin/*' => ['admin'],
-                'login'   => ['guest']
-            ]
-        ];
-
-        $moduleOptions = new ModuleOptions([
-            'identity_provider' => 'ZfcRbac\Identity\AuthenticationIdentityProvider',
-            'guest_role'        => 'guest',
-            'protection_policy' => GuardInterface::POLICY_DENY,
-            'guards'            => $dataGuards
-        ]);
-
-        $rbacImplementation = new Rbac();
-        $roleGuest          = new Role('guest');
-        $roleUser           = new Role('user');
-
-        $roleGuest->addPermission('read');
-        $roleUser->addPermission('comment');
-
-        $rbacImplementation->addRole($roleGuest);
-        $rbacImplementation->addRole($roleUser, $roleGuest);
-
-        $authServiceMock = $this->getMockBuilder('ZfcRbac\Service\AuthorizationService')
-                                ->disableOriginalConstructor()
-                                ->getMock();
-        $authServiceMock->expects($this->once())
-                        ->method('getRbac')
-                        ->will($this->returnValue($rbacImplementation));
-
-        $authServiceMock->expects($this->once())
-                        ->method('getIdentityRoles')
-                        ->will($this->returnValue($dataIdentityRoles));
-
-        $authIdentityMock = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-
-        //region Mock ServiceLocator
-        $slMockMap          = [
-            ['ZfcRbac\Service\AuthorizationService', $authServiceMock],
-            ['ZfcRbac\Options\ModuleOptions', $moduleOptions],
-            ['ZfcRbac\Identity\AuthenticationIdentityProvider', $authIdentityMock]
-        ];
-
-        $serviceLocatorMock = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $serviceLocatorMock->expects($this->any())
-                           ->method('get')
-                           ->will($this->returnValueMap($slMockMap));
-        //endregion
-
-        $applicationMock = $this->getMock('Zend\Mvc\ApplicationInterface');
-
-        $applicationMock->expects($this->once())
-                        ->method('getServiceManager')
-                        ->will($this->returnValue($serviceLocatorMock));
-
-        $mvcEventMock = $this->getMock('Zend\Mvc\MvcEvent');
-
-        $mvcEventMock->expects($this->once())
-                     ->method('getApplication')
-                     ->will($this->returnValue($applicationMock));
-
-        $collector->collect($mvcEventMock);
-        $collector->unserialize($collector->serialize());
-
-        $theCollection = $collector->getCollection();
-
-        $this->assertArrayHasKey('guards', $theCollection);
-        $this->assertArrayHasKey('roles', $theCollection);
-        $this->assertArrayHasKey('permissions', $theCollection);
-        $this->assertArrayHasKey('options', $theCollection);
-
-        $guards      = $theCollection['guards'];
-        $roles       = $theCollection['roles'];
-        $permissions = $theCollection['permissions'];
-        $options     = $theCollection['options'];
-
-        // Guard Assertions
-        $this->assertArrayHasKey('ZfcRbac\Guard\RouteGuard', $guards);
-
-        // Roles Assertions
-        $this->assertArrayHasKey('user', $roles);
-        $this->assertSame('guest', $roles['user']);
-
-        // Permission Assertions
-        $this->assertArrayHasKey('read', $permissions);
-        $this->assertArrayHasKey('comment', $permissions);
-
-        // Option Assertions
-        $this->assertArrayHasKey('current_roles', $options);
-        $this->assertArrayHasKey('guest_role', $options);
-        $this->assertArrayHasKey('protection_policy', $options);
     }
 }
