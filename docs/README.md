@@ -38,6 +38,6 @@ If you are looking for some information that is not listed in the documentation,
    2. [Best practices](/docs/06. Cookbook.md#best-practices)
    3. [Using dynamic assertions](/docs/06. Cookbook.md#using-dynamic-assertions)
    4. [Using ZfcRbac with Doctrine ORM](/docs/06. Cookbook.md#using-zfcrbac-with-doctrine-orm)
-   5. [How to lazy-load roles and permissions for very complex use cases?](/docs/06. Cookbook.md#how-to-lazy-load-roles-and-permissions-for-very-complex-use-cases)
+   5. [How to deal with roles with lot of permissions?](/docs/06. Cookbook.md#how-to-deal-with-roles-with-lot-of-permissions)
    6. [Using ZfcRbac and ZF2 Assetic](/docs/06. Cookbook.md#using-zfcrbac-and-zf2-assetic)
    7. [Using ZfcRbac and ZfcUser](/docs/06. Cookbook.md#using-zfcrbac-and-zfcuser)
