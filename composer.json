@@ -8,7 +8,7 @@
         "rbac",
         "permissions"
     ],
-    "homepage": "http://www.github.com/ZF-Commons/ZfcRbac/",
+    "homepage": "http://www.github.com/ZF-Commons/zfc-rbac",
     "authors": [
         {
             "name": "Kyle Spraggs",
