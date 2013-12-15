@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/ZF-Commons/zfc-rbac/badge.png)](https://coveralls.io/r/ZF-Commons/zfc-rbac)
 [![Latest Stable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/stable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
 [![Latest Unstable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/unstable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/badges/quality-score.png?s=0bf2b72bb233e93ba766cac36cc6dcb99b33acb5)](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/badges/quality-score.png?s=685a2b34dc626a0af9934f9c8d246b68a8cac884)](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/)
 [![Total Downloads](https://poser.pugx.org/zf-commons/zfc-rbac/downloads.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
 
 ZfcRbac is an access control module for Zend Framework 2, based on the RBAC permission model.
