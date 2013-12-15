@@ -52,7 +52,7 @@ class RoleProviderPluginManager extends AbstractPluginManager
         }
 
         throw new Exception\RuntimeException(sprintf(
-            'Guards must implement "ZfcRbac\Role\RoleProviderInterface", but "%s" was given',
+            'Role provider must implement "ZfcRbac\Role\RoleProviderInterface", but "%s" was given',
             is_object($plugin) ? get_class($plugin) : gettype($plugin)
         ));
     }
