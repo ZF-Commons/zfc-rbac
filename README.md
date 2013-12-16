@@ -35,6 +35,8 @@ Install the module:
 $ php composer.phar require zf-commons/zfc-rbac:~2.0
 ```
 
+IMPORTANT: there is currently a problem with Packagist because I mess with the names. As a result, you couldn't download ZfcRbac this way. Until it's fixed (hopefully today or tomorrow), please specify "dev-develop" instead of 2.0 to fetch the branch 2.0. Sorry!
+
 Enable the module by adding `ZfcRbac` key to your `application.config.php` file. Customize the module by copy-pasting
 the `zfc_rbac.global.php.dist` file to your `config/autoload` folder.
 
