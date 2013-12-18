@@ -40,8 +40,8 @@
     "doctrine/doctrine-orm-module": "~0.8"
   },
   "suggest": {
-    "zendframework/zend-developer-tools": "zend-developer-tools if you want to show information about the roles",
-    "doctrine/doctrine-module": "if you want to use Doctrine role and permission providers"
+    "zendframework/zend-developer-tools": "if you want to show information about the roles",
+    "doctrine/doctrine-module": "if you want to use Doctrine role provider"
   },
   "autoload": {
     "psr-0": {
