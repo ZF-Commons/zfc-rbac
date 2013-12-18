@@ -29,10 +29,6 @@
     "zendframework/zend-servicemanager": "~2.2",
     "zfr/rbac": "dev-master"
   },
-  "suggests": {
-    "zendframework/zend-developer-tools": "zend-developer-tools if you want to show information about the roles",
-    "doctrine/doctrine-module": "if you want to use Doctrine role and permission providers"
-  },
   "require-dev": {
     "zendframework/zendframework": "~2.2",
     "zendframework/zend-developer-tools": "dev-master",
@@ -42,6 +38,10 @@
     "doctrine/common": "~2.4",
     "doctrine/doctrine-module": "~0.8",
     "doctrine/doctrine-orm-module": "~0.8"
+  },
+  "suggest": {
+    "zendframework/zend-developer-tools": "zend-developer-tools if you want to show information about the roles",
+    "doctrine/doctrine-module": "if you want to use Doctrine role and permission providers"
   },
   "autoload": {
     "psr-0": {
