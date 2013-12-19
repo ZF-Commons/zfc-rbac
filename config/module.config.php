@@ -57,7 +57,9 @@ return [
     ],
 
     'view_manager' => [
-        'template_path_stack' => [__DIR__ . '/../view'],
+        'template_map' => [
+            'error/403' => __DIR__ . '/../view/error/403'
+        ]
     ],
 
     'zenddevelopertools' => [

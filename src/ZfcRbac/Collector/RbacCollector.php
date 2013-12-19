@@ -167,7 +167,7 @@ class RbacCollector implements CollectorInterface, Serializable
             $reflectionProperty->setAccessible(true);
 
             $permissions = $reflectionProperty->getValue($role);
-            
+
             if ($permissions instanceof Traversable) {
                 $permissions = iterator_to_array($permissions);
             }
