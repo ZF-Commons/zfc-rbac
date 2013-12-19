@@ -23,6 +23,7 @@ use Rbac\Role\RoleInterface;
 use RecursiveIteratorIterator;
 use ReflectionProperty;
 use Serializable;
+use Traversable;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Options\ModuleOptions;
@@ -165,7 +166,13 @@ class RbacCollector implements CollectorInterface, Serializable
             $reflectionProperty = new ReflectionProperty($role, 'permissions');
             $reflectionProperty->setAccessible(true);
 
-            $this->collectedPermissions[$role->getName()] = $reflectionProperty->getValue($role);
+            $permissions = $reflectionProperty->getValue($role);
+            
+            if ($permissions instanceof Traversable) {
+                $permissions = iterator_to_array($permissions);
+            }
+
+            $this->collectedPermissions[$role->getName()] = $permissions;
         }
     }
 
