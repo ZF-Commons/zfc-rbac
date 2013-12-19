@@ -18,7 +18,6 @@
 
 namespace ZfcRbac\Guard;
 
-use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Service\RoleService;
 
@@ -28,6 +27,11 @@ use ZfcRbac\Service\RoleService;
 class ControllerGuard extends AbstractGuard
 {
     use ProtectionPolicyTrait;
+
+    /**
+     * Event priority
+     */
+    const EVENT_PRIORITY = -10;
 
     /**
      * @var RoleService
@@ -52,19 +56,6 @@ class ControllerGuard extends AbstractGuard
         $this->roleService = $roleService;
         $this->setRules($rules);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function attach(EventManagerInterface $events)
-    {
-        // We can't actually listen to the EVENT_ROUTE event, because user can call the "forward" method
-        // on the controller, and this bypasses the routing mechanism
-
-        $sharedManager = $events->getSharedManager();
-        $sharedManager->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, [$this, 'onResult'], 5);
-    }
-
 
     /**
      * Set the rules
