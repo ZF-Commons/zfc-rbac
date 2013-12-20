@@ -185,7 +185,7 @@ class RbacCollector implements CollectorInterface, Serializable
             $permissions = iterator_to_array($permissions);
         }
 
-        array_walk($permissions, function(&$permission) {
+        array_walk($permissions, function (&$permission) {
             $permission = (string) $permission;
         });
 
