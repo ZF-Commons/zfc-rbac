@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Guard;
 
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Role\InMemoryRoleProvider;
@@ -31,6 +32,26 @@ use ZfcRbac\Service\RoleService;
  */
 class RouteGuardTest extends \PHPUnit_Framework_TestCase
 {
+    public function testAttachToRightEvent()
+    {
+        $guard = new RouteGuard($this->getMock('ZfcRbac\Service\RoleService', [], [], '', false));
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager->expects($this->once())
+                     ->method('attach')
+                     ->with(RouteGuard::EVENT_NAME);
+
+        $guard->attach($eventManager);
+    }
+
+    /**
+     * We want to ensure an order for guards
+     */
+    public function testAssertRouteGuardPriorityIsHigherThanControllerGuardPriority()
+    {
+        $this->assertTrue(RouteGuard::EVENT_PRIORITY > ControllerGuard::EVENT_PRIORITY);
+    }
+
     public function rulesConversionProvider()
     {
         return [
