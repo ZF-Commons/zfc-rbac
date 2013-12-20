@@ -81,4 +81,98 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($collector->collect($mvcEvent));
     }
+
+    public function testCanCollect()
+    {
+        $dataToCollect = [
+            'module_options' => [
+                'guest_role'        => 'guest',
+                'protection_policy' => GuardInterface::POLICY_ALLOW,
+                'guards'            => [
+                    'ZfcRbac\Guard\RouteGuard' => [
+                        'admin*' => ['*']
+                    ],
+                    'ZfcRbac\Guard\ControllerGuard' => [
+                        [
+                            'controller' => 'Foo',
+                            'roles'      => ['*']
+                        ]
+                    ]
+                ]
+            ],
+            'role_config' => [
+                'member' => [
+                    'children'    => ['guest'],
+                    'permissions' => ['write', 'delete']
+                ],
+                'guest' => [
+                    'permissions' => ['read']
+                ]
+            ],
+            'identity_role' => 'member'
+        ];
+
+        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+
+        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
+        $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
+
+        $mvcEvent = new MvcEvent();
+        $mvcEvent->setApplication($application);
+
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity->expects($this->once())
+                 ->method('getRoles')
+                 ->will($this->returnValue($dataToCollect['identity_role']));
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->once())
+                         ->method('getIdentity')
+                         ->will($this->returnValue($identity));
+
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($dataToCollect['role_config']));
+
+        $serviceManager->expects($this->at(0))
+                       ->method('get')
+                       ->with('ZfcRbac\Service\RoleService')
+                       ->will($this->returnValue($roleService));
+
+        $serviceManager->expects($this->at(1))
+                       ->method('get')
+                       ->with('ZfcRbac\Options\ModuleOptions')
+                       ->will($this->returnValue(new ModuleOptions($dataToCollect['module_options'])));
+
+        $collector = new RbacCollector();
+        $collector->collect($mvcEvent);
+
+        $collector->unserialize($collector->serialize());
+        $collection = $collector->getCollection();
+
+        $expectedCollection = [
+            'options' => [
+                'guest_role'        => 'guest',
+                'protection_policy' => 'allow'
+            ],
+            'guards' => [
+                'ZfcRbac\Guard\RouteGuard' => [
+                    'admin*' => ['*']
+                ],
+                'ZfcRbac\Guard\ControllerGuard' => [
+                    [
+                        'controller' => 'Foo',
+                        'roles'      => ['*']
+                    ]
+                ]
+            ],
+            'roles'  => [
+                'member' => ['guest']
+            ],
+            'permissions' => [
+                'member' => ['write', 'delete'],
+                'guest'  => ['read']
+            ]
+        ];
+
+        $this->assertEquals($expectedCollection, $collection);
+    }
 }

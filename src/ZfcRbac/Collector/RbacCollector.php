@@ -142,7 +142,7 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collect roles and permissions
      *
      * @param  RoleService $roleService
-     * @return RoleInterface[]
+     * @return void
      */
     private function collectIdentityRolesAndPermissions(RoleService $roleService)
     {
@@ -158,22 +158,38 @@ class RbacCollector implements CollectorInterface, Serializable
 
                 foreach ($iteratorIterator as $childRole) {
                     $this->collectedRoles[$roleName][] = $childRole->getName();
+                    $this->collectPermissions($childRole);
                 }
             }
 
-            // Gather the permissions for the given role. We have to use reflection as
-            // the RoleInterface does not have "getPermissions" method
-            $reflectionProperty = new ReflectionProperty($role, 'permissions');
-            $reflectionProperty->setAccessible(true);
-
-            $permissions = $reflectionProperty->getValue($role);
-
-            if ($permissions instanceof Traversable) {
-                $permissions = iterator_to_array($permissions);
-            }
-
-            $this->collectedPermissions[$role->getName()] = $permissions;
+            $this->collectPermissions($role);
         }
+    }
+
+    /**
+     * Collect permissions for the given role
+     *
+     * @param  RoleInterface $role
+     * @return void
+     */
+    private function collectPermissions(RoleInterface $role)
+    {
+        // Gather the permissions for the given role. We have to use reflection as
+        // the RoleInterface does not have "getPermissions" method
+        $reflectionProperty = new ReflectionProperty($role, 'permissions');
+        $reflectionProperty->setAccessible(true);
+
+        $permissions = $reflectionProperty->getValue($role);
+
+        if ($permissions instanceof Traversable) {
+            $permissions = iterator_to_array($permissions);
+        }
+
+        array_walk($permissions, function (&$permission) {
+            $permission = (string) $permission;
+        });
+
+        $this->collectedPermissions[$role->getName()] = array_values($permissions);
     }
 
     /**

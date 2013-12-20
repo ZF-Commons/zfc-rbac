@@ -29,6 +29,16 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
     public function roleProvider()
     {
         return [
+            // No identity role
+            [
+                'rolesConfig' => [],
+                'identityRoles' => [],
+                'rolesToCheck' => [
+                    'member'
+                ],
+                'doesMatch' => false
+            ],
+
             // Simple
             [
                 'rolesConfig' => [
@@ -196,6 +206,7 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
 
         $result = $roleService->getIdentityRoles();
 
+        $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertCount(1, $result);
         $this->assertInstanceOf('Rbac\Role\RoleInterface', $result[0]);
         $this->assertEquals('guest', $result[0]->getName());

@@ -31,6 +31,18 @@ use ZfcRbac\Service\RoleService;
  */
 class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 {
+    public function testAttachToRightEvent()
+    {
+        $guard = new ControllerGuard($this->getMock('ZfcRbac\Service\RoleService', [], [], '', false));
+
+        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager->expects($this->once())
+                     ->method('attach')
+                     ->with(ControllerGuard::EVENT_NAME);
+
+        $guard->attach($eventManager);
+    }
+
     public function rulesConversionProvider()
     {
         return [

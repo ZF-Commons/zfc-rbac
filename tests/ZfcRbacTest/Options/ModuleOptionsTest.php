@@ -71,4 +71,12 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $moduleOptions = new ModuleOptions();
         $moduleOptions->setProtectionPolicy('invalid');
     }
+
+    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+
+        $moduleOptions = new ModuleOptions();
+        $moduleOptions->setRoleProvider(['foo', 'bar']);
+    }
 }
