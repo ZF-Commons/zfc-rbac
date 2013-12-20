@@ -98,7 +98,7 @@ class FlatRole implements RoleInterface
             $permission = new Permission($permission);
         }
 
-        $this->permissions[$permission->getName()] = $permission;
+        $this->permissions[(string) $permission] = $permission;
     }
 
     /**

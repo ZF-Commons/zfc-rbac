@@ -16,7 +16,6 @@
  * and is licensed under the MIT license.
  */
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rbac\Permission\PermissionInterface;
 
@@ -48,7 +47,6 @@ class Permission implements PermissionInterface
     public function __construct($name)
     {
         $this->name  = (string) $name;
-        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -59,16 +57,6 @@ class Permission implements PermissionInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get the permission name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
