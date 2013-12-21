@@ -70,13 +70,9 @@ class AuthorizationService
             $identity = $this->roleService->getIdentity();
 
             if (is_callable($assertion)) {
-                if (!$assertion($identity)) {
-                    return false;
-                }
+                return (bool) $assertion($identity);
             } elseif ($assertion instanceof AssertionInterface) {
-                if (!$assertion->assert($identity)) {
-                    return false;
-                }
+                return (bool) $assertion->assert($identity);
             } else {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
