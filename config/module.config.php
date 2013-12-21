@@ -59,7 +59,7 @@ return [
     'view_manager' => [
         'template_map' => [
             'error/403'                             => __DIR__ . '/../view/error/403.phtml',
-            'zend-developer-tools/toolbar/zfc-rbac' => __DIR__ . '/../view/zend-developer-tools/toolbar-zfc-rbac.phtml'
+            'zend-developer-tools/toolbar/zfc-rbac' => __DIR__ . '/../view/zend-developer-tools/toolbar/zfc-rbac.phtml'
         ]
     ],
 
