@@ -70,12 +70,12 @@ class AuthorizationService
             $identity = $this->roleService->getIdentity();
 
             if (is_callable($assertion)) {
-                if (!$assertion($identity)) {
-                    return false;
+                if (true === $assertion($identity)) {
+                    return true;
                 }
             } elseif ($assertion instanceof AssertionInterface) {
-                if (!$assertion->assert($identity)) {
-                    return false;
+                if (true === $assertion->assert($identity)) {
+                    return true;
                 }
             } else {
                 throw new Exception\InvalidArgumentException(sprintf(
