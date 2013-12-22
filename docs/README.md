@@ -6,7 +6,7 @@ and extend ZfcRbac.
 If you are looking for some information that is not listed in the documentation, please open an issue!
 
 1. [Introduction](/docs/01. Introduction.md)
-   1. [Why should I use an authorization module?](/docs/01. Introduction.md##why-should-i-use-an-authorization-module)
+   1. [Why should I use an authorization module?](/docs/01. Introduction.md#why-should-i-use-an-authorization-module)
    2. [What is the Rbac model?](/docs/01. Introduction.md#what-is-the-rbac-model)
    3. [How can I integrate ZfcRbac into my application?](/docs/01. Introduction.md#how-can-i-integrate-zfcrbac-into-my-application)
 
