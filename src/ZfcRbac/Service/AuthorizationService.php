@@ -65,31 +65,38 @@ class AuthorizationService
             return false;
         }
 
-        // Check the assertion first
-        if (null !== $assertion) {
-            $identity = $this->roleService->getIdentity();
-
-            if (is_callable($assertion)) {
-                if (!$assertion($identity)) {
-                    return false;
-                }
-            } elseif ($assertion instanceof AssertionInterface) {
-                if (!$assertion->assert($identity)) {
-                    return false;
-                }
-            } else {
-                throw new Exception\InvalidArgumentException(sprintf(
-                    'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
-                    is_object($assertion) ? get_class($assertion) : gettype($assertion)
-                ));
+        /* @var \Rbac\Role\RoleInterface $role */
+        foreach ($roles as $role) {
+            // If we are granted, we also check the assertion as a second-pass
+            if ($this->rbac->isGranted($role, $permission)) {
+                return ($assertion) ? $this->assert($assertion) : true;
             }
         }
 
-        /* @var \Rbac\Role\RoleInterface $role */
-        foreach ($roles as $role) {
-            if ($this->rbac->isGranted($role, $permission)) {
+        return false;
+    }
+
+    /**
+     * @param  callable|AssertionInterface $assertion
+     * @return bool
+     */
+    protected function assert($assertion)
+    {
+        $identity = $this->roleService->getIdentity();
+
+        if (is_callable($assertion)) {
+            if ($assertion($identity)) {
                 return true;
             }
+        } elseif ($assertion instanceof AssertionInterface) {
+            if ($assertion->assert($identity)) {
+                return true;
+            }
+        } else {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
+                is_object($assertion) ? get_class($assertion) : gettype($assertion)
+            ));
         }
 
         return false;
