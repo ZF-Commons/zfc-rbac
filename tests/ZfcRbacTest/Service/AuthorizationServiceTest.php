@@ -125,12 +125,31 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $assertion));
     }
 
+    public function testDoNotCallAssertionIfThePermissionIsNotGranted()
+    {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $role->expects($this->once())->method('hasPermission')->will($this->returnValue(false));
+
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
+
+        $authorizationService = new AuthorizationService($roleService);
+        $test = $this;
+
+        $this->assertFalse($authorizationService->isGranted('foo',
+            function() use($test) {
+                $test->fail('Failed asserting that the callback will never be called.');
+            })
+        );
+    }
+
     public function testThrowExceptionForInvalidAssertion()
     {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $role->expects($this->once())->method('hasPermission')->will($this->returnValue(true));
+
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([
-            $this->getMock('Rbac\Role\RoleInterface')
-        ]));
+        $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $authorizationService = new AuthorizationService($roleService);
 
@@ -141,13 +160,14 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDynamicAssertions()
     {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $role->expects($this->exactly(2))->method('hasPermission')->will($this->returnValue(true));
+
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
 
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $roleService->expects($this->exactly(2))->method('getIdentity')->will($this->returnValue($identity));
-        $roleService->expects($this->exactly(2))->method('getIdentityRoles')->will($this->returnValue([
-            $this->getMock('Rbac\Role\RoleInterface')
-        ]));
+        $roleService->expects($this->exactly(2))->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $authorizationService = new AuthorizationService($roleService);
 
