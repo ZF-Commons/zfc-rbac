@@ -65,21 +65,23 @@ class AuthorizationService
             return false;
         }
 
-        $isGranted = false;
-
         /* @var \Rbac\Role\RoleInterface $role */
         foreach ($roles as $role) {
+            // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
-                $isGranted = true;
-                break;
+                return ($assertion) ? $this->assert($assertion) : true;
             }
         }
 
-        if (null === $assertion || !$isGranted) {
-            return $isGranted;
-        }
+        return false;
+    }
 
-        // If we are granted, we also check the assertion as a second-pass
+    /**
+     * @param  callable|AssertionInterface $assertion
+     * @return bool
+     */
+    protected function assert($assertion)
+    {
         $identity = $this->roleService->getIdentity();
 
         if (is_callable($assertion)) {
