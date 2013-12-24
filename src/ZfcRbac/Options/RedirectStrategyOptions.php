@@ -26,11 +26,18 @@ use Zend\Stdlib\AbstractOptions;
 class RedirectStrategyOptions extends AbstractOptions
 {
     /**
-     * The name of the route to redirect when a user is not authorized
+     * The name of the route to redirect when a user is connected and not authorized
      *
      * @var string
      */
-    protected $redirectToRoute = 'login';
+    protected $redirectToRouteConnected = 'home';
+
+    /**
+     * The name of the route to redirect when a user is disconnected and not authorized
+     *
+     * @var string
+     */
+    protected $redirectToRouteDisconnected = 'login';
 
     /**
      * Should the previous URI should be appended as a query param?
@@ -47,19 +54,35 @@ class RedirectStrategyOptions extends AbstractOptions
     protected $previousUriQueryKey = 'redirectTo';
 
     /**
-     * @param string $redirectToRoute
+     * @param string $redirectToRouteConnected
      */
-    public function setRedirectToRoute($redirectToRoute)
+    public function setRedirectToRouteConnected($redirectToRouteConnected)
     {
-        $this->redirectToRoute = (string) $redirectToRoute;
+        $this->redirectToRouteConnected = (string) $redirectToRouteConnected;
     }
 
     /**
      * @return string
      */
-    public function getRedirectToRoute()
+    public function getRedirectToRouteConnected()
     {
-        return $this->redirectToRoute;
+        return $this->redirectToRouteConnected;
+    }
+
+    /**
+     * @param string $redirectToRouteDisconnected
+     */
+    public function setRedirectToRouteDisconnected($redirectToRouteDisconnected)
+    {
+        $this->redirectToRouteDisconnected = (string) $redirectToRouteDisconnected;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectToRouteDisconnected()
+    {
+        return $this->redirectToRouteDisconnected;
     }
 
     /**

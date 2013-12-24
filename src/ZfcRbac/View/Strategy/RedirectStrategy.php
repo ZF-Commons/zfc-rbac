@@ -59,7 +59,13 @@ class RedirectStrategy extends AbstractStrategy
         }
 
         $router        = $event->getRouter();
-        $redirectRoute = $this->options->getRedirectToRoute();
+        $identity      = $event->getApplication()->getServiceManager()->get('ControllerPluginManager')->get('identity');
+
+        if ($identity()) {
+            $redirectRoute = $this->options->getRedirectToRouteConnected();
+        } else {
+            $redirectRoute = $this->options->getRedirectToRouteDisconnected();
+        }
 
         $uri = $router->assemble([], ['name' => $redirectRoute]);
 
