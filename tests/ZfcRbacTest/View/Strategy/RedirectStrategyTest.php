@@ -55,7 +55,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testCanRedirectWithoutPreviousUri()
     {
-        $response       = new HttpResponse();
+        $response = new HttpResponse();
 
         $router = new TreeRouteStack();
         $router->addRoute('login', [
@@ -96,7 +96,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testCanRedirectWhenConnected()
     {
-        $response       = new HttpResponse();
+        $response = new HttpResponse();
 
         $router = new TreeRouteStack();
         $router->addRoute('home', [
@@ -130,7 +130,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testCanRedirectWhenDisconnected()
     {
-        $response       = new HttpResponse();
+        $response = new HttpResponse();
 
         $router = new TreeRouteStack();
         $router->addRoute('login', [
