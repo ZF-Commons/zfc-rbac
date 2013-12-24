@@ -55,6 +55,7 @@ class RedirectStrategyOptions extends AbstractOptions
 
     /**
      * @param string $redirectToRouteConnected
+     * @return void
      */
     public function setRedirectToRouteConnected($redirectToRouteConnected)
     {
@@ -71,6 +72,7 @@ class RedirectStrategyOptions extends AbstractOptions
 
     /**
      * @param string $redirectToRouteDisconnected
+     * @return void
      */
     public function setRedirectToRouteDisconnected($redirectToRouteDisconnected)
     {
