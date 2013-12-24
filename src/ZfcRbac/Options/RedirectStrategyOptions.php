@@ -54,6 +54,15 @@ class RedirectStrategyOptions extends AbstractOptions
     protected $previousUriQueryKey = 'redirectTo';
 
     /**
+     * This setter prevent BC
+     * @param $redirectToRoute
+     */
+    public function setRedirectToRoute($redirectToRoute)
+    {
+        $this->setRedirectToRouteConnected($redirectToRoute);
+    }
+
+    /**
      * @param string $redirectToRouteConnected
      */
     public function setRedirectToRouteConnected($redirectToRouteConnected)
