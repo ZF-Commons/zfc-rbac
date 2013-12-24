@@ -24,6 +24,10 @@ ZfcRbac is an access control module for Zend Framework 2, based on the RBAC perm
 - [ZendDeveloperTools](https://github.com/zendframework/ZendDeveloperTools): if you want to have useful stats added to
 the Zend Developer toolbar.
 
+## Upgrade
+
+You can find an [upgrade guide](UPGRADE.md) to quickly upgrade your application from major versions of ZfcRbac.
+
 ## Installation
 
 ZfcRbac only officially supports installation through Composer. For Composer documentation, please refer to
