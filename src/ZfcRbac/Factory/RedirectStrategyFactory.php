@@ -34,7 +34,9 @@ class RedirectStrategyFactory implements FactoryInterface
     {
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        /** @var \Zend\Authentication\AuthenticationService $authenticationService */
+        $authenticationService = $serviceLocator->get('Zend\Authentication\AuthenticationService');
 
-        return new RedirectStrategy($moduleOptions->getRedirectStrategy());
+        return new RedirectStrategy($moduleOptions->getRedirectStrategy(), $authenticationService);
     }
 }
