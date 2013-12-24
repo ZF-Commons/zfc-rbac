@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\View\Strategy;
 
+use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception\UnauthorizedExceptionInterface;
@@ -34,13 +35,20 @@ class RedirectStrategy extends AbstractStrategy
     protected $options;
 
     /**
+     * @var AuthenticationService
+     */
+    protected $authenticationService;
+
+    /**
      * Constructor
      *
      * @param RedirectStrategyOptions $options
+     * @param AuthenticationService   $authenticationService
      */
-    public function __construct(RedirectStrategyOptions $options)
+    public function __construct(RedirectStrategyOptions $options, AuthenticationService $authenticationService)
     {
-        $this->options = $options;
+        $this->options               = $options;
+        $this->authenticationService = $authenticationService;
     }
 
     /**
@@ -58,8 +66,13 @@ class RedirectStrategy extends AbstractStrategy
             return;
         }
 
-        $router        = $event->getRouter();
-        $redirectRoute = $this->options->getRedirectToRoute();
+        $router = $event->getRouter();
+
+        if ($this->authenticationService->hasIdentity()) {
+            $redirectRoute = $this->options->getRedirectToRouteConnected();
+        } else {
+            $redirectRoute = $this->options->getRedirectToRouteDisconnected();
+        }
 
         $uri = $router->assemble([], ['name' => $redirectRoute]);
 

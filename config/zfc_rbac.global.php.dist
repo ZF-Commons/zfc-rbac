@@ -95,9 +95,14 @@ return [
          */
         'redirect_strategy' => [
             /**
-             * Set the route to redirect (of course, it must exist!)
+             * Set the route to redirect when user is connected (of course, it must exist!)
              */
-            // 'redirect_to_route' => 'login',
+            // 'redirect_to_route_connected' => 'home',
+
+            /**
+             * Set the route to redirect when user is disconnected (of course, it must exist!)
+             */
+            // 'redirect_to_route_disconnected' => 'login',
 
             /**
              * If a user is unauthorized and redirected to another route (login, for instance), should we

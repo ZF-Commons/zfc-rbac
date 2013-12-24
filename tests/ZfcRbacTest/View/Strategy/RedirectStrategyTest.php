@@ -18,7 +18,7 @@
 
 namespace ZfcRbacTest\View\Strategy;
 
-use Zend\Http\Request as HttpRequest;
+use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\TreeRouteStack;
@@ -34,7 +34,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testAttachToRightEvent()
     {
-        $strategyListener = new RedirectStrategy(new RedirectStrategyOptions());
+        $strategyListener = new RedirectStrategy(new RedirectStrategyOptions(), new AuthenticationService());
 
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
@@ -46,7 +46,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnNullIfNotRightException()
     {
-        $redirectStrategy = new RedirectStrategy(new RedirectStrategyOptions());
+        $redirectStrategy = new RedirectStrategy(new RedirectStrategyOptions(), new AuthenticationService());
         $event            = new MvcEvent();
         $event->setParam('exception', new \RuntimeException());
 
@@ -64,6 +64,12 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
                 'route' => '/login'
             ]
         ]);
+        $router->addRoute('home', [
+                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/home'
+                ]
+            ]);
 
         $mvcEvent = new MvcEvent();
         $mvcEvent->setParam('exception', new UnauthorizedException());
@@ -71,11 +77,15 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $mvcEvent->setRouter($router);
 
         $options = new RedirectStrategyOptions([
-            'redirect_to_route'   => 'login',
-            'append_previous_uri' => false
+            'redirect_to_route_connected'    => 'home',
+            'redirect_to_route_disconnected' => 'login',
+            'append_previous_uri'            => false
         ]);
 
-        $redirectStrategy = new RedirectStrategy($options);
+        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(false));
+
+        $redirectStrategy = new RedirectStrategy($options, $authenticationService);
 
         $redirectStrategy->onError($mvcEvent);
 
@@ -84,43 +94,71 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/login', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
 
-    public function testCanRedirectWithPreviousUri()
+    public function testCanRedirectWhenConnected()
     {
         $response = new HttpResponse();
 
         $router = new TreeRouteStack();
-        $router->addRoute('login', [
-            'type'    => 'Zend\Mvc\Router\Http\Literal',
-            'options' => [
-                'route' => '/login'
-            ]
-        ]);
-
-        $request = new HttpRequest();
-        $request->setUri('http://www.example.com/previous');
+        $router->addRoute('home', [
+                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/home'
+                ]
+            ]);
 
         $mvcEvent = new MvcEvent();
         $mvcEvent->setParam('exception', new UnauthorizedException());
-        $mvcEvent->setRequest($request);
         $mvcEvent->setResponse($response);
         $mvcEvent->setRouter($router);
 
         $options = new RedirectStrategyOptions([
-            'redirect_to_route'      => 'login',
-            'append_previous_uri'    => true,
-            'previous_uri_query_key' => 'redirectTo'
+            'redirect_to_route_connected'    => 'home',
+            'append_previous_uri'            => false
         ]);
 
-        $redirectStrategy = new RedirectStrategy($options);
+        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(true));
+
+        $redirectStrategy = new RedirectStrategy($options, $authenticationService);
 
         $redirectStrategy->onError($mvcEvent);
 
         $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
+        $this->assertEquals('/home', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
+    }
 
-        $this->assertEquals(
-            '/login?redirectTo=http://www.example.com/previous',
-            $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue()
-        );
+    public function testCanRedirectWhenDisconnected()
+    {
+        $response = new HttpResponse();
+
+        $router = new TreeRouteStack();
+        $router->addRoute('login', [
+                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/login'
+                ]
+            ]);
+
+        $mvcEvent = new MvcEvent();
+        $mvcEvent->setParam('exception', new UnauthorizedException());
+        $mvcEvent->setResponse($response);
+        $mvcEvent->setRouter($router);
+
+        $options = new RedirectStrategyOptions([
+            'redirect_to_route_disconnected' => 'login',
+            'append_previous_uri'            => false
+        ]);
+
+        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(false));
+
+        $redirectStrategy = new RedirectStrategy($options, $authenticationService);
+
+        $redirectStrategy->onError($mvcEvent);
+
+        $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
+        $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
+        $this->assertEquals('/login', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
 }
