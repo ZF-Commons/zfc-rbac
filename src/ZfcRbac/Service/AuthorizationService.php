@@ -79,26 +79,21 @@ class AuthorizationService
     /**
      * @param  callable|AssertionInterface $assertion
      * @return bool
+     * @throws Exception\InvalidArgumentException
      */
     protected function assert($assertion)
     {
         $identity = $this->roleService->getIdentity();
 
         if (is_callable($assertion)) {
-            if ($assertion($identity)) {
-                return true;
-            }
+            return $assertion($identity);
         } elseif ($assertion instanceof AssertionInterface) {
-            if ($assertion->assert($identity)) {
-                return true;
-            }
-        } else {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
-                is_object($assertion) ? get_class($assertion) : gettype($assertion)
-            ));
+            return $assertion->assert($identity);
         }
 
-        return false;
+        throw new Exception\InvalidArgumentException(sprintf(
+            'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
+            is_object($assertion) ? get_class($assertion) : gettype($assertion)
+        ));
     }
 }
