@@ -53,8 +53,8 @@ class RedirectStrategyOptionsTest extends \PHPUnit_Framework_TestCase
     public function testSettersAndGettersPreventBC()
     {
         $redirectStrategyOptions = new RedirectStrategyOptions([
-            'redirect_to_route'    => 'foo',
-            'redirect_to_route_disconnected' => 'bar',
+            'redirect_to_route_connected'    => 'foo',
+            'redirect_to_route'              => 'bar',
             'append_previous_uri'            => false,
             'previous_uri_query_key'         => 'redirect-to'
         ]);

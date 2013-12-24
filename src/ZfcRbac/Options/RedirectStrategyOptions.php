@@ -59,7 +59,7 @@ class RedirectStrategyOptions extends AbstractOptions
      */
     public function setRedirectToRoute($redirectToRoute)
     {
-        $this->setRedirectToRouteConnected($redirectToRoute);
+        $this->setRedirectToRouteDisconnected($redirectToRoute);
     }
 
     /**
