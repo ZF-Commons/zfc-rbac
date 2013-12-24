@@ -1,4 +1,6 @@
-# From v1 to v2
+# Upgrade guide
+
+## From v1 to v2
 
 Here are the major breaking changes from ZfcRbac 1 to ZfcRbac 2:
 
