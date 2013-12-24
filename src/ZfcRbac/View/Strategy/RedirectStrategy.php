@@ -68,7 +68,7 @@ class RedirectStrategy extends AbstractStrategy
 
         $router        = $event->getRouter();
 
-        if ($this->authenticationService->getIdentity()) {
+        if ($this->authenticationService->hasIdentity()) {
             $redirectRoute = $this->options->getRedirectToRouteConnected();
         } else {
             $redirectRoute = $this->options->getRedirectToRouteDisconnected();
