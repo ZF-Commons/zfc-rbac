@@ -51,7 +51,8 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
                 'template' => 'error/unauthorized'
             ],
             'redirect_strategy' => [
-                'redirect_to_route' => 'login'
+                'redirect_to_route_connected'    => 'home',
+                'redirect_to_route_disconnected' => 'login'
             ]
         ]);
 
