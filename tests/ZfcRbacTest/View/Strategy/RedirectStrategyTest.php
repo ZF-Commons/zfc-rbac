@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\View\Strategy;
 
 use Zend\Authentication\AuthenticationService;
+use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\TreeRouteStack;
@@ -53,7 +54,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($redirectStrategy->onError($event));
     }
 
-    public function testCanRedirectWithoutPreviousUri()
+    public function testCanRedirectWhenDisconnected()
     {
         $response = new HttpResponse();
 
@@ -64,12 +65,6 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
                 'route' => '/login'
             ]
         ]);
-        $router->addRoute('home', [
-                'type'    => 'Zend\Mvc\Router\Http\Literal',
-                'options' => [
-                    'route' => '/home'
-                ]
-            ]);
 
         $mvcEvent = new MvcEvent();
         $mvcEvent->setParam('exception', new UnauthorizedException());
@@ -77,7 +72,6 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $mvcEvent->setRouter($router);
 
         $options = new RedirectStrategyOptions([
-            'redirect_to_route_connected'    => 'home',
             'redirect_to_route_disconnected' => 'login',
             'append_previous_uri'            => false
         ]);
@@ -128,9 +122,12 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/home', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
 
-    public function testCanRedirectWhenDisconnected()
+    public function testCanAppendPreviousUri()
     {
         $response = new HttpResponse();
+
+        $request  = new HttpRequest();
+        $request->setUri('http://example.com');
 
         $router = new TreeRouteStack();
         $router->addRoute('login', [
@@ -143,11 +140,13 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $mvcEvent = new MvcEvent();
         $mvcEvent->setParam('exception', new UnauthorizedException());
         $mvcEvent->setResponse($response);
+        $mvcEvent->setRequest($request);
         $mvcEvent->setRouter($router);
 
         $options = new RedirectStrategyOptions([
             'redirect_to_route_disconnected' => 'login',
-            'append_previous_uri'            => false
+            'append_previous_uri'            => true,
+            'previous_uri_query_key'         => 'redirect-uri'
         ]);
 
         $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
@@ -159,6 +158,9 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
-        $this->assertEquals('/login', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
+        $this->assertEquals(
+            '/login?redirect-uri=http://example.com/',
+            $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue()
+        );
     }
 }
