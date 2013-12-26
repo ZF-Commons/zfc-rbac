@@ -55,7 +55,9 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     {
         $roles = $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
 
-        if (count($roles) === count($roleNames)) {
+        // We allow more roles to be loaded than asked (although this should not happen because
+        // role name should have a UNIQUE constraint in database... but just in case ;))
+        if (count($roles) >= count($roleNames)) {
             return $roles;
         }
 
