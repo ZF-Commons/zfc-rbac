@@ -33,6 +33,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('ZfcRbac\Identity\AuthenticationIdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
+        $this->assertEquals('allow', $moduleOptions->getProtectionPolicy());
         $this->assertInternalType('array', $moduleOptions->getGuards());
         $this->assertInternalType('array', $moduleOptions->getRoleProvider());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());

@@ -54,13 +54,13 @@ return [
          * As soon as one rule for either route or controller is specified, a guard will be automatically
          * created and will start to hook into the MVC loop.
          *
-         * If the protection policy is set to DENY (default), then any route/controller will be denied by
+         * If the protection policy is set to DENY, then any route/controller will be denied by
          * default UNLESS it is explicitly added as a rule. On the other hand, if it is set to ALLOW, then
          * not specified route/controller will be implicitly approved.
          *
          * DENY is the most secure way, but it is more work for the developer
          */
-        // 'protection_policy' => \ZfcRbac\Guard\GuardInterface::POLICY_DENY,
+        // 'protection_policy' => \ZfcRbac\Guard\GuardInterface::POLICY_ALLOW,
 
         /**
          * Configuration for role provider

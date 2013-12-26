@@ -53,7 +53,7 @@ class ModuleOptions extends AbstractOptions
      *
      * @var string
      */
-    protected $protectionPolicy = GuardInterface::POLICY_DENY;
+    protected $protectionPolicy = GuardInterface::POLICY_ALLOW;
 
     /**
      * A configuration for role provider

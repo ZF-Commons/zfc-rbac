@@ -13,3 +13,5 @@ be removed). Instead, roles now embed all the necessary information
 - The `redirect_to_route` option for the `RedirectStrategy` is gone. Instead, we now have two options:
 `redirect_to_route_connected` and `redirect_to_route_disconnected`. This solves an issue when people used to have
 a guard on `login` for non-authenticated users only, which leaded to circular redirections.
+- The default protection policy is now `POLICY_ALLOW`. `POLICY_DENY` was way too restrictive and annoying to
+work with by default.
