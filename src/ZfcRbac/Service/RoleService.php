@@ -99,7 +99,7 @@ class RoleService
     public function getIdentityRoles()
     {
         if (!$identity = $this->getIdentity()) {
-            return $this->convertRoles([$this->guestRole]);
+            return [$this->guestRole];
         }
 
         if (!$identity instanceof IdentityInterface) {
