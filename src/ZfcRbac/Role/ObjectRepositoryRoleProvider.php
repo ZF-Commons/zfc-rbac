@@ -19,6 +19,7 @@
 namespace ZfcRbac\Role;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use ZfcRbac\Exception\RoleNotFoundException;
 
 /**
  * Role provider that uses Doctrine object repository to fetch roles
@@ -52,6 +53,22 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     public function getRoles(array $roleNames)
     {
-        return $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
+        $roles = $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
+
+        // We allow more roles to be loaded than asked (although this should not happen because
+        // role name should have a UNIQUE constraint in database... but just in case ;))
+        if (count($roles) >= count($roleNames)) {
+            return $roles;
+        }
+
+        // We have roles that were asked but couldn't be found in database... problem!
+        foreach ($roles as &$role) {
+            $role = $role->getName();
+        }
+
+        throw new RoleNotFoundException(sprintf(
+            'Some roles were asked but could not be loaded from database: %s',
+            implode(', ', array_diff($roleNames, $roles))
+        ));
     }
 }
