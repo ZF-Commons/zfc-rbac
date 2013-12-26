@@ -106,6 +106,22 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('memberguest', $childRolesString);
     }
 
+    public function testThrowExceptionIfAskedRoleIsNotFound()
+    {
+        $this->serviceManager = ServiceManagerFactory::getServiceManager();
+
+        $objectManager                = $this->getObjectManager();
+        $objectRepository             = $objectManager->getRepository('ZfcRbacTest\Asset\FlatRole');
+        $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+
+        $this->setExpectedException(
+            'ZfcRbac\Exception\RoleNotFoundException',
+            'Some roles were asked but could not be loaded from database: guest, admin'
+        );
+
+        $objectRepositoryRoleProvider->getRoles(['guest', 'admin']);
+    }
+
     /**
      * @return \Doctrine\Common\Persistence\ObjectManager
      */
