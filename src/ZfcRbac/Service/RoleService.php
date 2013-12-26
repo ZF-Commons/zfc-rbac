@@ -154,6 +154,7 @@ class RoleService
             // If it's already a RoleInterface, nothing to do as a RoleInterface contains everything already
             if ($role instanceof RoleInterface) {
                 $collectedRoles[] = $role;
+                continue;
             }
 
             // Otherwise, it's a string and hence we need to collect it
