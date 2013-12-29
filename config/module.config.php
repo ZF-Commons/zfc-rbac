@@ -35,10 +35,6 @@ return [
             'ZfcRbac\Service\RoleService'                        => 'ZfcRbac\Factory\RoleServiceFactory',
             'ZfcRbac\View\Strategy\RedirectStrategy'             => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'         => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
-        ],
-        
-        'initializers' => [
-	        'ZfcRbac\Initializer\AuthorizationServiceInitializer'   
         ]
     ],
 

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -24,16 +24,13 @@ use ZfcRbac\Initializer\AuthorizationServiceInitializer;
  */
 class AuthorizationServiceInitializerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testInitializer()
     {
         $authServiceClassName   = 'ZfcRbac\Service\AuthorizationService';
         $initializer            = new AuthorizationServiceInitializer();
         $instance               = new AuthorizationAwareFake();
         $serviceLocator         = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $authorizationService   = $this->getMockBuilder($authServiceClassName)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $authorizationService   = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
         
         $serviceLocator->expects($this->once())
             ->method('get')
