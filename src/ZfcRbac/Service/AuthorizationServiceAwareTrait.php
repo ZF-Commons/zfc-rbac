@@ -18,32 +18,39 @@
 
 namespace ZfcRbac\Service;
 
+/**
+ * Makes a class AuthorizationService aware
+ * 
+ * @author      Aeneas Rekkas
+ * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
+ */
 trait AuthorizationServiceAwareTrait
 {
-
     /**
+     * The AuthorizationService
      *
      * @var AuthorizationService
      */
     protected $authorizationService;
 
     /**
-     *
-     * @return AuthorizationService $authorizationService
-     */
-    public function getAuthorizationService()
-    {
-        return $this->authorizationService;
-    }
-
-    /**
+     * Set the AuthorizationService
      *
      * @param AuthorizationService $authorizationService            
-     * @return self
+     * @return void
      */
     public function setAuthorizationService(AuthorizationService $authorizationService)
     {
         $this->authorizationService = $authorizationService;
-        return $this;
+    }
+
+    /**
+     * Return the AuthorizationService
+     *
+     * @return AuthorizationService
+     */
+    public function getAuthorizationService()
+    {
+        return $this->authorizationService;
     }
 }

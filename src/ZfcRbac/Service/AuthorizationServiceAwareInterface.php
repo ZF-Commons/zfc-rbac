@@ -17,18 +17,14 @@
  */
 namespace ZfcRbac\Service;
 
+/**
+ * @author      Aeneas Rekkas
+ * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
+ */
 interface AuthorizationServiceAwareInterface
 {
-
     /**
-     * Returns the AuthorizationService
-     *
-     * @return AuthorizationService $authorizationService
-     */
-    public function getAuthorizationService();
-
-    /**
-     * Sets the AuthorizationService
+     * Set the AuthorizationService
      * 
      * @param AuthorizationService $authorizationService            
      */
