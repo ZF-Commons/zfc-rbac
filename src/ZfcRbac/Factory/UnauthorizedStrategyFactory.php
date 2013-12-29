@@ -24,6 +24,9 @@ use ZfcRbac\View\Strategy\UnauthorizedStrategy;
 
 /**
  * Factory to create an unauthorized strategy
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class UnauthorizedStrategyFactory implements FactoryInterface
 {

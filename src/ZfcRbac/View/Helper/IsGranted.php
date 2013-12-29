@@ -23,6 +23,9 @@ use ZfcRbac\Service\AuthorizationService;
 
 /**
  * View helper that allows to test a permission in a view
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class IsGranted extends AbstractHelper
 {

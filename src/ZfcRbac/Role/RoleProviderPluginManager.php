@@ -25,6 +25,9 @@ use ZfcRbac\Exception;
  * Plugin manager to create role providers
  *
  * @method RoleProviderInterface get($name)
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RoleProviderPluginManager extends AbstractPluginManager
 {
