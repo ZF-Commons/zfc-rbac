@@ -22,6 +22,9 @@ use InvalidArgumentException as BaseInvalidArgumentException;
 
 /**
  * InvalidArgumentException
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class InvalidArgumentException extends BaseInvalidArgumentException implements ExceptionInterface
 {

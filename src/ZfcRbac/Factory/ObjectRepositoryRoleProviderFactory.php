@@ -26,6 +26,9 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
 /**
  * Factory used to create an object repository role provider
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class ObjectRepositoryRoleProviderFactory implements FactoryInterface, MutableCreationOptionsInterface
 {

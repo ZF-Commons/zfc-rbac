@@ -30,6 +30,9 @@ use Zend\Mvc\MvcEvent;
  * A guard can be used to block, for instance, a whole route hierarchy (all admin routes). However, only
  * using guards is not sufficient and rather limited, and you should protected your services using the
  * proper authorization service (see the doc for more details)
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 interface GuardInterface extends ListenerAggregateInterface
 {

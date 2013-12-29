@@ -22,6 +22,9 @@ use RuntimeException as BaseRuntimeException;
 
 /**
  * Exception that is thrown when a role cannot be found (for instance from a provider)
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RoleNotFoundException extends BaseRuntimeException implements ExceptionInterface
 {

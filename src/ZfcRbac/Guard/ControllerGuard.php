@@ -23,6 +23,9 @@ use ZfcRbac\Service\RoleService;
 
 /**
  * A controller guard can protect a controller and a set of actions
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class ControllerGuard extends AbstractGuard
 {

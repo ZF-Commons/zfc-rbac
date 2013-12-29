@@ -31,6 +31,9 @@ use ZfcRbac\Service\RoleService;
 
 /**
  * RbacCollector
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RbacCollector implements CollectorInterface, Serializable
 {

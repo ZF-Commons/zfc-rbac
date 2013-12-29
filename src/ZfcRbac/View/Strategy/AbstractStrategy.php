@@ -24,6 +24,9 @@ use Zend\Mvc\MvcEvent;
 
 /**
  * Abstract strategy for any unauthorized access
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 abstract class AbstractStrategy extends AbstractListenerAggregate
 {

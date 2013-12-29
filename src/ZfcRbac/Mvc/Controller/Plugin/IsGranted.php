@@ -23,6 +23,9 @@ use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Controller plugin that allows to test a permission in a controller
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class IsGranted extends AbstractPlugin
 {

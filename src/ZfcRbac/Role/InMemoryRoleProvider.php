@@ -33,8 +33,11 @@ use Rbac\Role\Role;
  *      ]
  *  ]
  *
- *  For maximum performance, this provider DOES NOT do a lot of type check, so you must closely
- *  follow the format :)
+ * For maximum performance, this provider DOES NOT do a lot of type check, so you must closely
+ * follow the format :)
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class InMemoryRoleProvider implements RoleProviderInterface
 {

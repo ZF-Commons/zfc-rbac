@@ -22,6 +22,9 @@ use RuntimeException as BaseRuntimeException;
 
 /**
  * RuntimeException
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RuntimeException extends BaseRuntimeException implements ExceptionInterface
 {

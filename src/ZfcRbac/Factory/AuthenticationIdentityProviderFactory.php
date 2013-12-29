@@ -24,6 +24,9 @@ use ZfcRbac\Identity\AuthenticationIdentityProvider;
 
 /**
  * Factory to create the authentication identity provider
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class AuthenticationIdentityProviderFactory implements FactoryInterface
 {

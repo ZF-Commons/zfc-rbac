@@ -25,6 +25,9 @@ use ZfcRbac\Exception;
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
  * granted a permission
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class AuthorizationService
 {
