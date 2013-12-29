@@ -15,23 +15,17 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace ZfcRbacTest\Service;
+namespace ZfcRbacTest\Initializer;
+
+use ZfcRbac\Service\AuthorizationServiceAwareInterface;
 
 /**
- * @covers \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * A fake implementation for AuthorizationServiceAwareInterface
+ * 
+ * @author      Aeneas Rekkas
+ * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
  */
-class AuthorizationServiceAwareTraitTest extends \PHPUnit_Framework_TestCase
+class AuthorizationAwareFake implements AuthorizationServiceAwareInterface
 {
-
-    public function testTrait()
-    {
-        $trait                  = $this->getObjectForTrait('ZfcRbac\Service\AuthorizationServiceAwareTrait');
-        $authorizationService   = $this->getMockBuilder('ZfcRbac\Service\AuthorizationService')
-            ->disableOriginalConstructor()
-            ->getMock();
-        
-        $trait->setAuthorizationService($authorizationService);
-        
-        $this->assertEquals($authorizationService, $trait->getAuthorizationService());
-    }
+    use \ZfcRbac\Service\AuthorizationServiceAwareTrait;
 }

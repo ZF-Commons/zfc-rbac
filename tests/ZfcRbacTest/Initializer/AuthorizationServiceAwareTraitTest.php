@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -15,23 +15,33 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace ZfcRbacTest\Service;
+namespace ZfcRbacTest\Initializer;
+
+use ZfcRbac\Initializer\AuthorizationServiceInitializer;
 
 /**
- * @covers \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * @covers \ZfcRbac\Initializer\AuthorizationServiceInitializer
  */
-class AuthorizationServiceAwareTraitTest extends \PHPUnit_Framework_TestCase
+class AuthorizationServiceInitializerTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testTrait()
+    public function testInitializer()
     {
-        $trait                  = $this->getObjectForTrait('ZfcRbac\Service\AuthorizationServiceAwareTrait');
-        $authorizationService   = $this->getMockBuilder('ZfcRbac\Service\AuthorizationService')
+        $authServiceClassName   = 'ZfcRbac\Service\AuthorizationService';
+        $initializer            = new AuthorizationServiceInitializer();
+        $instance               = new AuthorizationAwareFake();
+        $serviceLocator         = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $authorizationService   = $this->getMockBuilder($authServiceClassName)
             ->disableOriginalConstructor()
             ->getMock();
         
-        $trait->setAuthorizationService($authorizationService);
+        $serviceLocator->expects($this->once())
+            ->method('get')
+            ->with($authServiceClassName)
+            ->will($this->returnValue($authorizationService));
         
-        $this->assertEquals($authorizationService, $trait->getAuthorizationService());
+        $initializer->initialize($instance, $serviceLocator);
+        
+        $this->assertEquals($authorizationService, $instance->getAuthorizationService());
     }
 }

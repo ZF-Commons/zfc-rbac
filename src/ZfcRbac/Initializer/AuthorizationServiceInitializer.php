@@ -15,23 +15,28 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace ZfcRbacTest\Service;
+namespace ZfcRbac\Initializer;
+
+use Zend\ServiceManager\InitializerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationServiceAwareInterface;
 
 /**
- * @covers \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * Initializer for classes implementing AuthorizationServiceAwareInterface
+ *
+ * @author      Aeneas Rekkas
+ * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
  */
-class AuthorizationServiceAwareTraitTest extends \PHPUnit_Framework_TestCase
+class AuthorizationServiceInitializer implements InitializerInterface
 {
-
-    public function testTrait()
+    /**
+     * @see \Zend\ServiceManager\InitializerInterface::initialize()
+     */
+    public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
-        $trait                  = $this->getObjectForTrait('ZfcRbac\Service\AuthorizationServiceAwareTrait');
-        $authorizationService   = $this->getMockBuilder('ZfcRbac\Service\AuthorizationService')
-            ->disableOriginalConstructor()
-            ->getMock();
-        
-        $trait->setAuthorizationService($authorizationService);
-        
-        $this->assertEquals($authorizationService, $trait->getAuthorizationService());
+        if ($instance instanceof AuthorizationServiceAwareInterface) {
+            $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
+            $instance->setAuthorizationService($authorizationService);
+        }
     }
 }
