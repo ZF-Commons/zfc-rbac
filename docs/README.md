@@ -41,4 +41,4 @@ If you are looking for some information that is not listed in the documentation,
    5. [How to deal with roles with lot of permissions?](/docs/06. Cookbook.md#how-to-deal-with-roles-with-lot-of-permissions)
    6. [Using ZfcRbac and ZF2 Assetic](/docs/06. Cookbook.md#using-zfcrbac-and-zf2-assetic)
    7. [Using ZfcRbac and ZfcUser](/docs/06. Cookbook.md#using-zfcrbac-and-zfcuser)
-   8. [Using Initializers](/docs/06. Cookbook.md#using-initializers)
+   8. [Injecting the AuthorizationService](/docs/06. Cookbook.md#injecting-the-authorizationService)
