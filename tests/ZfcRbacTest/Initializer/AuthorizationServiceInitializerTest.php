@@ -20,7 +20,9 @@ namespace ZfcRbacTest\Initializer;
 use ZfcRbac\Initializer\AuthorizationServiceInitializer;
 
 /**
- * @covers \ZfcRbac\Initializer\AuthorizationServiceInitializer
+ * @covers  \ZfcRbac\Initializer\AuthorizationServiceInitializer
+ * @author  Aeneas Rekkas
+ * @license MIT License
  */
 class AuthorizationServiceInitializerTest extends \PHPUnit_Framework_TestCase
 {

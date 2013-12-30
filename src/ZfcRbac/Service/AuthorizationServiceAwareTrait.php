@@ -21,8 +21,8 @@ namespace ZfcRbac\Service;
 /**
  * Makes a class AuthorizationService aware
  * 
- * @author      Aeneas Rekkas
- * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
+ * @author  Aeneas Rekkas
+ * @license MIT License
  */
 trait AuthorizationServiceAwareTrait
 {

@@ -18,7 +18,9 @@
 namespace ZfcRbacTest\Service;
 
 /**
- * @covers \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * @covers  \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * @author  Aeneas Rekkas
+ * @license MIT License
  */
 class AuthorizationServiceAwareTraitTest extends \PHPUnit_Framework_TestCase
 {
