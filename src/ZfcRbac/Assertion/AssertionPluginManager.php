@@ -18,29 +18,44 @@
 
 namespace ZfcRbac\Assertion;
 
-use ZfcRbac\Identity\IdentityInterface;
+use Zend\ServiceManager\AbstractPluginManager;
+use ZfcRbac\Exception;
+use Zend\ServiceManager\ConfigInterface;
 
 /**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * Plugin manager to create assertions
+ * 
  * @author  Aeneas Rekkas
  * @licence MIT
+ *
+ * * @method GuardInterface get($name)
  */
-interface AssertionInterface
+class AssertionPluginManager extends AbstractPluginManager
 {
-    /**
-     * Assert if the identity has the permission
-     *
-     * @param  IdentityInterface|null $identity
-     * @return bool
-     */
-    public function assert(IdentityInterface $identity = null);
+    public function __construct(ConfigInterface $config = NULL, ModuleOptions $moduleOptions){
+        
+    }
     
     /**
-     * Set the context
-     * 
-     * @param mixed $context
+     * {@inheritDoc}
      */
-    public function setContext($context);
+    public function validatePlugin($plugin)
+    {
+        if ($plugin instanceof AssertionInterface) {
+            return; // we're okay
+        }
+    
+        throw new Exception\RuntimeException(sprintf(
+            'Guards must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
+            is_object($plugin) ? get_class($plugin) : gettype($plugin)
+        ));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected function canonicalizeName($name)
+    {
+        return $name;
+    }
 }
