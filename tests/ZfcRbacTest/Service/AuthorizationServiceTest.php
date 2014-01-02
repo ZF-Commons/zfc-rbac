@@ -146,15 +146,13 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
+        
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);;
+        $assertionPluginManager->expects($this->never())->method('get');
+        
+        $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, []);
 
-        $authorizationService = new AuthorizationService($roleService);
-        $test = $this;
-
-        $this->assertFalse($authorizationService->isGranted('foo',
-            function() use($test) {
-                $test->fail('Failed asserting that the callback will never be called.');
-            })
-        );
+        $this->assertFalse($authorizationService->isGranted('foo', false));
     }
 
     protected function deprecatedTestThrowExceptionForInvalidAssertion()
