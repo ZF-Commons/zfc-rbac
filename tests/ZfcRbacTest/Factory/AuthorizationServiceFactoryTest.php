@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\AuthorizationServiceFactory;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Factory\AuthorizationServiceFactory
@@ -32,6 +33,14 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(
             'ZfcRbac\Service\RoleService',
             $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
+        );
+        $serviceManager->setService(
+            'ZfcRbac\Assertion\AssertionPluginManager',
+            $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false)
+        );
+        $serviceManager->setService(
+            'ZfcRbac\Options\ModuleOptions',
+            new ModuleOptions([])
         );
 
         $factory              = new AuthorizationServiceFactory();

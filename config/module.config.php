@@ -27,6 +27,7 @@ return [
             'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
+            'ZfcRbac\Assertion\AssertionPluginManager'           => 'ZfcRbac\Factory\AssertionPluginManagerFactory',
             'ZfcRbac\Guard\GuardPluginManager'                   => 'ZfcRbac\Factory\GuardPluginManagerFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider'    => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
             'ZfcRbac\Options\ModuleOptions'                      => 'ZfcRbac\Factory\ModuleOptionsFactory',
@@ -81,6 +82,9 @@ return [
         'guard_manager' => [],
 
         // Role provider plugin manager
-        'role_provider_manager' => []
+        'role_provider_manager' => [],
+        
+        // Assertion plugin manager
+        'assertion_manager' => []
     ]
 ];

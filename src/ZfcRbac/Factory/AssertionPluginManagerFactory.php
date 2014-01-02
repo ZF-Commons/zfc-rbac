@@ -16,32 +16,32 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Asset;
+namespace ZfcRbac\Factory;
 
-use ZfcRbac\Assertion\AssertionInterface;
-use ZfcRbac\Identity\IdentityInterface;
+use Zend\ServiceManager\Config;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
 
-class SimpleAssertion implements AssertionInterface
+/**
+ * Factory to create a assertion plugin manager
+ * 
+ * @author  Aeneas Rekkas
+ * @licence MIT
+ */
+class AssertionPluginManagerFactory implements FactoryInterface
 {
     /**
-     * @var bool
-     */
-    protected $called = false;
-
-    /**
      * {@inheritDoc}
+     * @return AssertionPluginManager
      */
-    public function assert(IdentityInterface $identity = null, $context = null)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->called = true;
-        return $context;
-    }
+        $config = $serviceLocator->get('Config')['zfc_rbac']['assertion_manager'];
 
-    /**
-     * @return bool
-     */
-    public function getCalled()
-    {
-        return $this->called;
+        $pluginManager = new AssertionPluginManager(new Config($config));
+        $pluginManager->setServiceLocator($serviceLocator);
+
+        return $pluginManager;
     }
 }

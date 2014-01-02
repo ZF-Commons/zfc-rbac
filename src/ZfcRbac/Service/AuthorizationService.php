@@ -19,7 +19,6 @@
 namespace ZfcRbac\Service;
 
 use Rbac\Rbac;
-use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Assertion\AssertionPluginManager;
 
@@ -43,17 +42,23 @@ class AuthorizationService
      * @var AssertionPluginManager
      */
     protected $assertionPluginManager;
+    
+    /**
+     * @var array
+     */
+    protected $assertionsMap;
 
     /**
      * Constructor
      *
      * @param RoleService $roleService
      */
-    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager)
+    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager, array $assertionsMap = [])
     {
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
+        $this->assertionsMap          = $assertionsMap;
     }
 
     /**
@@ -75,14 +80,8 @@ class AuthorizationService
         /* @var \Rbac\Role\RoleInterface $role */
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
-            if ($this->rbac->isGranted($role, $permission)) {
-                $assertion = $this->assertionPluginManager->get($permission);
-                
-                if ($context !== null && $assertion === null) {
-                    throw new Exception\RuntimeException(sprintf('Context set but no assertion was found for permission "%s"', $permission));
-                }
-                
-                return ($assertion) ? $this->assert($assertion, $context) : true;
+            if ($this->rbac->isGranted($role, $permission)) {                
+                return $this->assert($permission, $context);
             }
         }
 
@@ -90,14 +89,23 @@ class AuthorizationService
     }
 
     /**
-     * @param  AssertionInterface $assertion
-     * @param  mixed|null         $context
+     * @param  string     $permission
+     * @param  mixed|null $context
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
-    protected function assert($assertion, $context = NULL)
+    protected function assert($permission, $context = null)
     {
-        $identity = $this->roleService->getIdentity();
+        $identity  = $this->roleService->getIdentity();
+        $assertion = array_key_exists($permission, $this->assertionsMap) ? $this->assertionsMap[$permission] : null;        
+        
+        if ($context !== null && $assertion === null) {
+            throw new Exception\RuntimeException(sprintf('Context set but no assertion was found for permission "%s".', $permission));
+        } elseif ($assertion === null) {
+            return true;
+        }
+        
+        $assertion = $this->assertionPluginManager->get($assertion);
 
         return $assertion->assert($identity, $context);
     }

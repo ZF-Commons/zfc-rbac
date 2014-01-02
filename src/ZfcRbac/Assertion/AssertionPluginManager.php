@@ -41,7 +41,7 @@ class AssertionPluginManager extends AbstractPluginManager
         }
     
         throw new Exception\RuntimeException(sprintf(
-            'Guards must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
+            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
             is_object($plugin) ? get_class($plugin) : gettype($plugin)
         ));
     }

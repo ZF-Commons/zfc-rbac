@@ -49,6 +49,13 @@ class ModuleOptions extends AbstractOptions
     protected $guards = [];
 
     /**
+     * Assertions
+     *
+     * @var array
+     */
+    protected $assertions = [];
+
+    /**
      * Protection policy for guards (can be "deny" or "allow")
      *
      * @var string
@@ -75,8 +82,8 @@ class ModuleOptions extends AbstractOptions
      * @var RedirectStrategyOptions|null
      */
     protected $redirectStrategy;
-
-    /**
+    
+	/**
      * Constructor
      *
      * {@inheritDoc}
@@ -106,6 +113,27 @@ class ModuleOptions extends AbstractOptions
     public function getIdentityProvider()
     {
         return $this->identityProvider;
+    }
+
+	/**
+	 * Set the assertions options
+	 * 
+     * @param array $assertions
+     * @return void
+     */
+    public function setAssertions (array $assertions)
+    {
+        $this->assertions = $assertions;
+    }
+
+    /**
+	 * Get the assertions options
+	 * 
+     * @return array $assertions
+     */
+    public function getAssertions ()
+    {
+        return $this->assertions;
     }
 
     /**
