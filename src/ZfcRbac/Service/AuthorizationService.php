@@ -53,8 +53,12 @@ class AuthorizationService
      *
      * @param RoleService $roleService
      */
-    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager, array $assertionsMap = [])
-    {
+    public function __construct
+    (
+        RoleService $roleService,
+        AssertionPluginManager $assertionPluginManager,
+        array $assertionsMap = []
+    ) {
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
@@ -80,7 +84,7 @@ class AuthorizationService
         /* @var \Rbac\Role\RoleInterface $role */
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
-            if ($this->rbac->isGranted($role, $permission)) {                
+            if ($this->rbac->isGranted($role, $permission)) {
                 return $this->assert($permission, $context);
             }
         }
@@ -97,10 +101,12 @@ class AuthorizationService
     protected function assert($permission, $context = null)
     {
         $identity  = $this->roleService->getIdentity();
-        $assertion = array_key_exists($permission, $this->assertionsMap) ? $this->assertionsMap[$permission] : null;        
+        $assertion = array_key_exists($permission, $this->assertionsMap) ? $this->assertionsMap[$permission] : null;
         
         if ($context !== null && $assertion === null) {
-            throw new Exception\RuntimeException(sprintf('Context set but no assertion was found for permission "%s".', $permission));
+            throw new Exception\RuntimeException(
+                sprintf('Context set but no assertion was found for permission "%s".', $permission)
+            );
         } elseif ($assertion === null) {
             return true;
         }

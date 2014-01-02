@@ -83,7 +83,7 @@ class ModuleOptions extends AbstractOptions
      */
     protected $redirectStrategy;
     
-	/**
+    /**
      * Constructor
      *
      * {@inheritDoc}
@@ -115,7 +115,7 @@ class ModuleOptions extends AbstractOptions
         return $this->identityProvider;
     }
 
-	/**
+    /**
 	 * Set the assertions options
 	 * 
      * @param array $assertions
