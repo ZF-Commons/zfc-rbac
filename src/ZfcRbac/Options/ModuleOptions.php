@@ -116,22 +116,22 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-	 * Set the assertions options
-	 * 
+     * Set the assertions options
+     * 
      * @param array $assertions
      * @return void
      */
-    public function setAssertions (array $assertions)
+    public function setAssertions(array $assertions)
     {
         $this->assertions = $assertions;
     }
 
     /**
-	 * Get the assertions options
-	 * 
+     * Get the assertions options
+     * 
      * @return array $assertions
      */
-    public function getAssertions ()
+    public function getAssertions()
     {
         return $this->assertions;
     }

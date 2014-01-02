@@ -53,8 +53,7 @@ class AuthorizationService
      *
      * @param RoleService $roleService
      */
-    public function __construct
-    (
+    public function __construct(
         RoleService $roleService,
         AssertionPluginManager $assertionPluginManager,
         array $assertionsMap = []
@@ -101,13 +100,9 @@ class AuthorizationService
     protected function assert($permission, $context = null)
     {
         $identity  = $this->roleService->getIdentity();
-        $assertion = array_key_exists($permission, $this->assertionsMap) ? $this->assertionsMap[$permission] : null;
+        $assertion = isset($this->assertionsMap[$permission]) ? $this->assertionsMap[$permission] : null;
         
-        if ($context !== null && $assertion === null) {
-            throw new Exception\RuntimeException(
-                sprintf('Context set but no assertion was found for permission "%s".', $permission)
-            );
-        } elseif ($assertion === null) {
+        if ($assertion === null) {
             return true;
         }
         
