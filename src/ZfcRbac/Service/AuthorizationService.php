@@ -59,8 +59,8 @@ class AuthorizationService
     /**
      * Check if the permission is granted to the current identity
      *
-     * @param  string $permission
-     * @param  mixed  $context
+     * @param  string     $permission
+     * @param  mixed|null $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
@@ -76,7 +76,13 @@ class AuthorizationService
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
-                return ($assertion) ? $this->assert($assertion) : true;
+                $assertion = $this->assertionPluginManager->get($permission);
+                
+                if ($context !== null && $assertion === null) {
+                    throw new Exception\RuntimeException(sprintf('Context set but no assertion was found for permission "%s"', $permission));
+                }
+                
+                return ($assertion) ? $this->assert($assertion, $context) : true;
             }
         }
 
@@ -84,23 +90,15 @@ class AuthorizationService
     }
 
     /**
-     * @param  callable|AssertionInterface $assertion
+     * @param  AssertionInterface $assertion
+     * @param  mixed|null         $context
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
-    protected function assert($assertion)
+    protected function assert($assertion, $context = NULL)
     {
         $identity = $this->roleService->getIdentity();
 
-        if (is_callable($assertion)) {
-            return $assertion($identity);
-        } elseif ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($identity);
-        }
-
-        throw new Exception\InvalidArgumentException(sprintf(
-            'Assertions must be callable or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
-            is_object($assertion) ? get_class($assertion) : gettype($assertion)
-        ));
+        return $assertion->assert($identity, $context);
     }
 }

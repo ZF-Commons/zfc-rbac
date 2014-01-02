@@ -20,7 +20,6 @@ namespace ZfcRbac\Assertion;
 
 use Zend\ServiceManager\AbstractPluginManager;
 use ZfcRbac\Exception;
-use Zend\ServiceManager\ConfigInterface;
 
 /**
  * Plugin manager to create assertions
@@ -32,10 +31,6 @@ use Zend\ServiceManager\ConfigInterface;
  */
 class AssertionPluginManager extends AbstractPluginManager
 {
-    public function __construct(ConfigInterface $config = NULL, ModuleOptions $moduleOptions){
-        
-    }
-    
     /**
      * {@inheritDoc}
      */

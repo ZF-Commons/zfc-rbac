@@ -33,14 +33,8 @@ interface AssertionInterface
      * Assert if the identity has the permission
      *
      * @param  IdentityInterface|null $identity
+     * @param  mixed|null             $context
      * @return bool
      */
-    public function assert(IdentityInterface $identity = null);
-    
-    /**
-     * Set the context
-     * 
-     * @param mixed $context
-     */
-    public function setContext($context);
+    public function assert(IdentityInterface $identity = null, $context = NULL);
 }
