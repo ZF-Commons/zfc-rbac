@@ -27,7 +27,7 @@ use ZfcRbac\Exception;
  * @author  Aeneas Rekkas
  * @licence MIT
  *
- * * @method AssertionInterface get($name)
+ * @method AssertionInterface get($name)
  */
 class AssertionPluginManager extends AbstractPluginManager
 {

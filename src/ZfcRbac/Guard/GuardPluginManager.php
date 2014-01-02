@@ -24,7 +24,7 @@ use ZfcRbac\Exception;
 /**
  * Plugin manager to create guards
  *
- * * @method GuardInterface get($name)
+ * @method GuardInterface get($name)
  */
 class GuardPluginManager extends AbstractPluginManager
 {
