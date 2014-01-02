@@ -67,8 +67,8 @@ class AuthorizationService
     /**
      * Check if the permission is granted to the current identity
      *
-     * @param  string     $permission
-     * @param  mixed|null $context
+     * @param  string $permission
+     * @param  mixed  $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
@@ -92,8 +92,8 @@ class AuthorizationService
     }
 
     /**
-     * @param  string     $permission
-     * @param  mixed|null $context
+     * @param  string $permission
+     * @param  mixed  $context
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
