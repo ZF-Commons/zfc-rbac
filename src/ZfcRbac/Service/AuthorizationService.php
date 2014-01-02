@@ -86,7 +86,8 @@ class AuthorizationService
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
-                return $this->assert($permission, $context);
+                $assertion = isset($this->assertionsMap[$permission]) ? $this->assertionsMap[$permission] : null;
+                return $assertion ? $this->assert($assertion, $context) : true;
             }
         }
 
@@ -94,20 +95,14 @@ class AuthorizationService
     }
 
     /**
-     * @param  string $permission
+     * @param  string $assertion
      * @param  mixed  $context
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
-    protected function assert($permission, $context = null)
+    protected function assert($assertion, $context = null)
     {
         $identity  = $this->roleService->getIdentity();
-        $assertion = isset($this->assertionsMap[$permission]) ? $this->assertionsMap[$permission] : null;
-        
-        if ($assertion === null) {
-            return true;
-        }
-        
         $assertion = $this->assertionPluginManager->get($assertion);
 
         return $assertion->assert($identity, $context);
