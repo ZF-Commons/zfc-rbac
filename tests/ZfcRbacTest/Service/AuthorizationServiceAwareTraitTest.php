@@ -18,14 +18,16 @@
 namespace ZfcRbacTest\Service;
 
 /**
- * @covers \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * @covers  \ZfcRbac\Service\AuthorizationServiceAwareTrait
+ * @author  Aeneas Rekkas
+ * @license MIT License
  */
 class AuthorizationServiceAwareTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testTrait()
     {
-        $trait                  = $this->getObjectForTrait('ZfcRbac\Service\AuthorizationServiceAwareTrait');
-        $authorizationService   = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $trait                = $this->getObjectForTrait('ZfcRbac\Service\AuthorizationServiceAwareTrait');
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
         
         $trait->setAuthorizationService($authorizationService);
         

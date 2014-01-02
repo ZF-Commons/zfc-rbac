@@ -25,6 +25,9 @@ use ZfcRbac\Guard\GuardPluginManager;
 
 /**
  * Factory to create a guard plugin manager
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class GuardPluginManagerFactory implements FactoryInterface
 {

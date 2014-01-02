@@ -20,17 +20,19 @@ namespace ZfcRbacTest\Initializer;
 use ZfcRbac\Initializer\AuthorizationServiceInitializer;
 
 /**
- * @covers \ZfcRbac\Initializer\AuthorizationServiceInitializer
+ * @covers  \ZfcRbac\Initializer\AuthorizationServiceInitializer
+ * @author  Aeneas Rekkas
+ * @license MIT License
  */
 class AuthorizationServiceInitializerTest extends \PHPUnit_Framework_TestCase
 {
     public function testInitializer()
     {
-        $authServiceClassName   = 'ZfcRbac\Service\AuthorizationService';
-        $initializer            = new AuthorizationServiceInitializer();
-        $instance               = new AuthorizationAwareFake();
-        $serviceLocator         = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $authorizationService   = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $authServiceClassName = 'ZfcRbac\Service\AuthorizationService';
+        $initializer          = new AuthorizationServiceInitializer();
+        $instance             = new AuthorizationAwareFake();
+        $serviceLocator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
         
         $serviceLocator->expects($this->once())
             ->method('get')

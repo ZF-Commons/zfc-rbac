@@ -22,10 +22,11 @@ use ZfcRbac\Service\AuthorizationServiceAwareInterface;
 /**
  * A fake implementation for AuthorizationServiceAwareInterface
  * 
- * @author      Aeneas Rekkas
- * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
+ * @author  Aeneas Rekkas
+ * @license MIT License
  */
 class AuthorizationAwareFake implements AuthorizationServiceAwareInterface
 {
+    
     use \ZfcRbac\Service\AuthorizationServiceAwareTrait;
 }

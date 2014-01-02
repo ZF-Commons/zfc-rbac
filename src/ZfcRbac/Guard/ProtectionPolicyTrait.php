@@ -20,6 +20,9 @@ namespace ZfcRbac\Guard;
 
 /**
  * Trait that is can be used for any guard that uses the protection policy pattern
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 trait ProtectionPolicyTrait
 {

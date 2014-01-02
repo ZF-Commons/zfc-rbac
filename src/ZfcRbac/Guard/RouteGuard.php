@@ -24,6 +24,9 @@ use ZfcRbac\Service\RoleService;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using simple wildcard pattern)
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RouteGuard extends AbstractGuard
 {

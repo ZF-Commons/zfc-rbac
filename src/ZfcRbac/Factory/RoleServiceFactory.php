@@ -24,6 +24,9 @@ use ZfcRbac\Service\RoleService;
 
 /**
  * Factory to create the role service
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RoleServiceFactory implements FactoryInterface
 {

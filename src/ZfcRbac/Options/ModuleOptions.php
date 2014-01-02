@@ -24,6 +24,9 @@ use ZfcRbac\Guard\GuardInterface;
 
 /**
  * Options for ZfcRbac module
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class ModuleOptions extends AbstractOptions
 {

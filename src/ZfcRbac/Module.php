@@ -24,6 +24,9 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 /**
  * Module class for ZfcRbac
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {

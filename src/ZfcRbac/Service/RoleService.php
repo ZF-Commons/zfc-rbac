@@ -29,6 +29,9 @@ use ZfcRbac\Role\RoleProviderInterface;
 
 /**
  * Role service
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class RoleService
 {

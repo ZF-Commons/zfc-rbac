@@ -25,6 +25,9 @@ use ZfcRbac\Guard\ControllerGuard;
 
 /**
  * Create a controller guard
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class ControllerGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
 {

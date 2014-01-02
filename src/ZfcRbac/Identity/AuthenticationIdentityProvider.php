@@ -23,6 +23,9 @@ use ZfcRbac\Exception;
 
 /**
  * This provider uses the Zend authentication service to fetch the identity
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
 class AuthenticationIdentityProvider implements IdentityProviderInterface
 {
