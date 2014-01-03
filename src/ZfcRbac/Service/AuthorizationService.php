@@ -76,7 +76,6 @@ class AuthorizationService
      * @param  string $permission
      * @param  mixed  $context
      * @return bool
-     * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
     public function isGranted($permission, $context = null)
     {
@@ -88,10 +87,10 @@ class AuthorizationService
      * Check if the permission is granted to the current identity.
      * You may explicitly pass an assertion without relying on assertion_map.
      * 
-     * @param string $permission
-     * @param string $assertion
-     * @param string $context
-     * @return boolean
+     * @param string                             $permission
+     * @param string|callable|AssertionInterface $assertion
+     * @param mixed                              $context
+     * @return bool
      */
     public function assertGranted($permission, $assertion = null, $context = null)
     {
@@ -114,9 +113,9 @@ class AuthorizationService
 
     /**
      * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed           $context
+     * @param  mixed                              $context
      * @return bool
-     * @throws Exception\InvalidArgumentException
+     * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
     protected function assert($assertion, $context = null)
     {
