@@ -79,7 +79,9 @@ class AuthorizationService
      */
     public function meets($permission, $context = null)
     {
-        $assertion = $this->moduleOptions->getAssertionFor($permission);
+        $assertionMap = $this->moduleOptions->getAssertionMap();
+        $assertion    = isset($assertionMap[$permission]) ? $assertionMap[$permission] : null;
+        
         return $this->isGranted($permission, $assertion, $context);
     }
 

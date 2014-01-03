@@ -85,7 +85,7 @@ class ModuleOptions extends AbstractOptions
      * @var RedirectStrategyOptions|null
      */
     protected $redirectStrategy;
-    
+
     /**
      * Constructor
      *
@@ -137,17 +137,6 @@ class ModuleOptions extends AbstractOptions
     public function getAssertionMap()
     {
         return $this->assertionMap;
-    }
-    
-    /**
-     * Get a permission's assertion
-     * 
-     * @param string $permission
-     * @return string|null
-     */
-    public function getAssertionFor($permission)
-    {
-        return isset($this->assertionMap[$permission]) ? $this->assertionMap[$permission] : null;
     }
 
     /**

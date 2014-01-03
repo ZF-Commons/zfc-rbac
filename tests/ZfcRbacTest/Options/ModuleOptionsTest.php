@@ -67,8 +67,6 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('deny', $moduleOptions->getProtectionPolicy());
         $this->assertEquals([], $moduleOptions->getRoleProvider());
         $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
-        $this->assertEquals('bar', $moduleOptions->getAssertionFor('foo'));
-        $this->assertEquals(null, $moduleOptions->getAssertionFor('nothing'));
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
     }

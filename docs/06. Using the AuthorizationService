@@ -1,0 +1,199 @@
+# Using the AuthorizationService
+
+This section will teach you how to use the AuthorizationService to it's full extend.
+
+## Injecting the AuthorizationService
+
+### Using initializers
+
+To automatically inject the authorization service into your classes, you can implement the
+`AuthorizationServiceAwareInterface` and use the trait, as shown below:
+
+```php
+namespace YourModule;
+
+use ZfcRbac\Service\AuthorizationServiceAwareInterface;
+use ZfcRbac\Service\AuthorizationServiceAwareTrait;
+
+class MyClass implements AuthorizationServiceAwareInterface
+{
+    use AuthorizationServiceAwareTrait;
+
+    public function doSomethingThatRequiresAuth()
+    {
+        if (! $this->getAuthorizationService()->isGranted('deletePost')) {
+            throw UnauthorizedException('You are not allowed !');
+        }
+
+        return true;
+    }
+}
+```
+
+Then, registers the initializer in your config (it is not by default):
+
+```php
+class Module
+{
+    // getAutoloaderConfig(), getConfig(), etc...
+
+    public function getServiceConfig()
+    {
+        return [
+			'initializers' => [
+			    'ZfcRbac\Initializer\AuthorizationServiceInitializer'
+			]
+        ];
+    }
+}
+```
+
+> While initializers allow rapid prototyping, it can leads to more fragile code. We'd suggest using factories.
+
+### Using Factories
+
+You can inject the AuthorizationService in your factories by using Zend's ServiceManager. The AuthorizationService
+is known to the ServiceManager as `'ZfcRbac\Service\AuthorizationService'`. Here is a classic example for injecting
+the AuthorizationService:
+
+*YourModule/Module.php*
+
+```php
+class Module
+{
+    // getAutoloaderConfig(), getConfig(), etc...
+
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                 'MyService' => function($sm) {
+                     $authService = $sm->get('ZfcRbac\Service\AuthorizationService')
+                     return new MyService($authService);
+                 }
+            ]
+        ];
+    }
+}
+```
+
+### Using Zend\DI
+
+DI is a great way for prototyping, getting results *fast* and maintaining a flexible structure. However it adds overhead and can get very slow. Unless you are using a compiler it is **not** recommended for production.
+Here's how you enable Zend\DI to inject the AuthorizationService in MyClass:
+
+*YourModule/Module.php*
+
+```php
+namespace YourModule;
+
+class Module
+{
+    // getAutoloaderConfig(), getConfig(), etc...
+
+    public function getConfig()
+    {
+        return [
+		    'di' => [
+		        'definition' => [
+		            'class' => [
+		                __NAMESPACE__ . '\MyClass' => [
+		                    'setAuthorizationService' => [
+		                        'required' => true
+		                    ]
+		                ]
+		            ]
+		        ]
+	        ]
+        ];
+    }
+}
+```
+
+## Permissions and Assertions
+
+Since you now know how to inject the AuthorizationService, let's use it!
+One of the great things the AuthorizationService brings, are **assertions**.
+Assertions get executed *if the identity in fact holds the permission you are requesting*.
+A common example is a blog post, which only the author can edit. In this case, you have a `post.edit` permission and run an assertion checking the author afterwards.
+
+### Defining assertions
+
+The AssertionPluginManager is a great way for you to use assertions and IOC. You can add new assertions quite easily by adding this to you `module.config.php`:
+
+```php
+return [
+    'zfc_rbac' => [
+        'assertion_manager' => [
+            'factories' => [
+                'MyAssertion' => 'MyAssertionFactory'
+            ]
+        ]
+    ]
+];
+```
+
+### Defining the assertion map
+
+The assertion map can automatically map permissions to assertions. This means, that everytime you check for a permission with an assertion map, you'll include the assertion in your check.
+You can define the assertion map by adding this to your `module.config.php`:
+
+```php
+return [
+    'zfc_rbac' => [
+        'assertion_map' => [
+            'myPermission' => 'myAssertion'
+        ]
+    ]
+];
+```
+
+Now, everytime you check for `myPermission`, `myAssertion` will be checked as well.
+
+## Using meets
+
+So let's check for a permission, shall we?
+
+```php
+$authorizationService->meets('myPermission', $context);
+```
+
+That was easy, wasn't it?
+`meets` checks if the current identity is granted the permission and additionally runs the assertion that is provided by the assertion map.
+
+## Using isGranted
+
+But what if you don't want to use the assertion map? That's quite easy as well!
+Here are four use cases on how you can work without the assertion map:
+
+No assertion:
+```php
+$authorizationService->isGranted('myPermission');
+```
+
+Callback assertion:
+```php
+$something = true;
+
+$authorizationService->isGranted(
+   'myPermission', 
+   function(IdentityInterface $identity, $context = true) use ($something) {
+      return $something === $context
+   }
+); // returns true, when the identity holds the permission `myPermission`
+```
+
+Object implementing `AssertionInterface`:
+```php
+$context = true;
+
+$authorizationService->isGranted('myPermission', new MyAssertion($foo, $bar), $context);
+```
+
+Using the AssertionPluginManager:
+```php
+$context = true;
+$authorizationService->isGranted('myPermission', 'MyAssertion', $context);
+```
+
+*Please note: The context parameter is for both `meets` and `isGranted` optional!*
