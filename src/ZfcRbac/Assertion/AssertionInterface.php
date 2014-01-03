@@ -36,5 +36,5 @@ interface AssertionInterface
      * @param  mixed                  $context
      * @return bool
      */
-    public function assert(IdentityInterface $identity = null, $context = null);
+    public function assert(IdentityInterface $identity = null);
 }
