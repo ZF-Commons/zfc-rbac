@@ -35,7 +35,7 @@ If you are looking for some information that is not listed in the documentation,
    
 6. [Using the AuthorizationService](/docs/06. Using the AuthorizationService.md)
    1. [Injecting the AuthorizationService](/docs/06. Using the AuthorizationService.md#injecting-the-authorizationservice)
-   2. [Injecting the AuthorizationService](/docs/06. Using the AuthorizationService.md#permissions-and-assertions)
+   2. [Permissions and Assertions](/docs/06. Using the AuthorizationService.md#permissions-and-assertions)
 
 7. [Cookbook](/docs/06. Cookbook.md)
    1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
