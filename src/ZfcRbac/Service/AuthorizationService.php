@@ -81,7 +81,7 @@ class AuthorizationService
     {
         $assertionMap = $this->moduleOptions->getAssertionMap();
         $assertion    = isset($assertionMap[$permission]) ? $assertionMap[$permission] : null;
-        
+
         return $this->isGranted($permission, $assertion, $context);
     }
 
@@ -121,7 +121,7 @@ class AuthorizationService
     protected function assert($assertion, $context = null)
     {
         $identity = $this->roleService->getIdentity();
-        
+
         if (is_callable($assertion)) {
             return $assertion($identity, $context);
         } elseif ($assertion instanceof AssertionInterface) {
@@ -130,7 +130,7 @@ class AuthorizationService
             $assertion = $this->assertionPluginManager->get($assertion);
             return $assertion->assert($identity, $context);
         }
-        
+
         throw new Exception\InvalidArgumentException(sprintf(
             'Assertion must be callable, string or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
             is_object($assertion) ? get_class($assertion) : gettype($assertion)
