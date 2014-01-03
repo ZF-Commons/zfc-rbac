@@ -42,12 +42,12 @@ class AuthorizationService
      * @var RoleService
      */
     protected $roleService;
-    
+
     /**
      * @var AssertionPluginManager
      */
     protected $assertionPluginManager;
-    
+
     /**
      * @var array
      */
@@ -70,29 +70,28 @@ class AuthorizationService
     }
 
     /**
-     * Check if the permission is granted to the current identity.
-     * Uses assertion_map to fetch an assertion.
+     * Check if the current identity meets the permission's requirements,
+     * including assertions provided by assertion_map
      *
      * @param  string $permission
      * @param  mixed  $context
      * @return bool
      */
-    public function isGranted($permission, $context = null)
+    public function meets($permission, $context = null)
     {
         $assertion = $this->moduleOptions->getAssertionFor($permission);
-        return $this->assertGranted($permission, $assertion, $context);
+        return $this->isGranted($permission, $assertion, $context);
     }
-    
+
     /**
-     * Check if the permission is granted to the current identity.
-     * You may explicitly pass an assertion without relying on assertion_map.
+     * Check if the permission is granted to the current identity
      * 
      * @param string                             $permission
      * @param string|callable|AssertionInterface $assertion
      * @param mixed                              $context
      * @return bool
      */
-    public function assertGranted($permission, $assertion = null, $context = null)
+    public function isGranted($permission, $assertion, $context = null)
     {
         $roles = $this->roleService->getIdentityRoles();
 
@@ -119,7 +118,7 @@ class AuthorizationService
      */
     protected function assert($assertion, $context = null)
     {
-        $identity  = $this->roleService->getIdentity();
+        $identity = $this->roleService->getIdentity();
         
         if (is_callable($assertion)) {
             return $assertion($identity, $context);

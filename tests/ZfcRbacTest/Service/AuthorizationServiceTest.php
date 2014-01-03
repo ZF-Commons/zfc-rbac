@@ -68,7 +68,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 false
             ],
 
-            // Simple is refused from dynamic assertion
+            // Simple is refused from assertion map
             [
                 'admin',
                 'delete',
@@ -76,12 +76,43 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 false
             ],
 
-            // Simple is accepted with dynamic assertion
+            // Simple is accepted from assertion map
             [
                 'admin',
                 'delete',
                 true,
                 true
+            ],
+
+            // Simple is refused from dynamic assertion
+            [
+                'admin',
+                'delete',
+                function($identity, $context){
+                    return false;
+                },
+                false,
+                'isGranted'
+            ],
+
+            // Simple is accepted from dynamic assertion
+            [
+                'admin',
+                'delete',
+                function($identity, $context){
+                    return true;
+                },
+                true,
+                'isGranted'
+            ],
+
+            // Simple is refused from assertion instance
+            [
+                'admin',
+                'delete',
+                new SimpleAssertion(),
+                false,
+                'isGranted'
             ],
 
             // Simple is refused from no role
@@ -97,7 +128,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider grantedProvider
      */
-    public function testGranted($role, $permission, $context = null, $isGranted)
+    public function testGranted($role, $permission, $context = null, $isGranted, $method = 'meets')
     {
         $roleConfig = [
             'admin' => [
@@ -140,7 +171,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
 
-        $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $context));
+        $this->assertEquals($isGranted, $authorizationService->$method($permission, $context));
     }
 
     public function testDoNotCallAssertionIfThePermissionIsNotGranted()
@@ -158,6 +189,56 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         
         $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
 
-        $this->assertFalse($authorizationService->isGranted('foo', false));
+        $this->assertFalse($authorizationService->meets('foo', false));
+    }
+
+    public function testThrowExceptionForInvalidAssertion()
+    {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $role->expects($this->once())->method('hasPermission')->will($this->returnValue(true));
+
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
+        
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $moduleOptions          = new ModuleOptions([]);
+        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
+
+        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
+
+        $authorizationService->isGranted('foo', new \stdClass());
+    }
+
+    public function testDynamicAssertions()
+    {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $role->expects($this->exactly(2))->method('hasPermission')->will($this->returnValue(true));
+
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->exactly(2))->method('getIdentity')->will($this->returnValue($identity));
+        $roleService->expects($this->exactly(2))->method('getIdentityRoles')->will($this->returnValue([$role]));
+        
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $moduleOptions          = new ModuleOptions([]);
+        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
+
+        // Using a callable
+        $called = false;
+        $this->assertFalse($authorizationService->isGranted('foo',
+                function(IdentityInterface $expectedIdentity = null) use($identity, &$called) {
+                    $this->assertSame($expectedIdentity, $identity);
+                    $called = true;
+
+                    return false;
+                })
+        );
+        $this->assertTrue($called);
+
+        // Using an assertion object
+        $assertion = new SimpleAssertion();
+        $this->assertFalse($authorizationService->isGranted('foo', $assertion, false));
+        $this->assertTrue($assertion->getCalled());
     }
 }
