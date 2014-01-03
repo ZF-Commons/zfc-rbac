@@ -45,6 +45,6 @@ class AuthorizationServiceFactory implements FactoryInterface
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
         
-        return new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions->getAssertions());
+        return new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
     }
 }

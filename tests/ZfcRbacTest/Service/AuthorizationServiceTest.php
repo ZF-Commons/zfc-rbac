@@ -26,6 +26,7 @@ use ZfcRbac\Service\RoleService;
 use ZfcRbacTest\Asset\SimpleAssertion;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use Zend\ServiceManager\Config;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -118,8 +119,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         
-        $assertionConfig = [
-            'delete' => 'ZfcRbacTest\Asset\SimpleAssertion'
+        $moduleOptionsConfig = [
+            'assertion_map' => [
+                'delete' => 'ZfcRbacTest\Asset\SimpleAssertion'
+            ]
         ];
 
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
@@ -133,8 +136,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig));
         
         $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
+        $moduleOptions          = new ModuleOptions($moduleOptionsConfig);
 
-        $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, $assertionConfig);
+        $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
 
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $context));
     }
@@ -150,7 +154,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
         $assertionPluginManager->expects($this->never())->method('get');
         
-        $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, []);
+        $moduleOptions = new ModuleOptions([]);
+        
+        $authorizationService = new AuthorizationService($roleService, $assertionPluginManager, $moduleOptions);
 
         $this->assertFalse($authorizationService->isGranted('foo', false));
     }

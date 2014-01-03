@@ -22,6 +22,7 @@ use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -50,7 +51,7 @@ class AuthorizationService
     /**
      * @var array
      */
-    protected $assertionsMap;
+    protected $moduleOptions;
 
     /**
      * Constructor
@@ -60,12 +61,12 @@ class AuthorizationService
     public function __construct(
         RoleService $roleService,
         AssertionPluginManager $assertionPluginManager,
-        array $assertionsMap = []
+        ModuleOptions $moduleOptions
     ) {
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
-        $this->assertionsMap          = $assertionsMap;
+        $this->moduleOptions          = $moduleOptions;
     }
 
     /**
@@ -88,7 +89,7 @@ class AuthorizationService
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
-                $assertion = isset($this->assertionsMap[$permission]) ? $this->assertionsMap[$permission] : null;
+                $assertion = $this->moduleOptions->getAssertionFor($permission);
                 return $assertion ? $this->assert($assertion, $context) : true;
             }
         }

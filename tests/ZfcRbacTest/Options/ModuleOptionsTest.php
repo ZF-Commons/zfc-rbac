@@ -36,7 +36,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('allow', $moduleOptions->getProtectionPolicy());
         $this->assertInternalType('array', $moduleOptions->getGuards());
         $this->assertInternalType('array', $moduleOptions->getRoleProvider());
-        $this->assertInternalType('array', $moduleOptions->getAssertions());
+        $this->assertInternalType('array', $moduleOptions->getAssertionMap());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
     }
@@ -49,7 +49,9 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'guards'                => [],
             'protection_policy'     => 'deny',
             'role_provider'         => [],
-            'assertions'            => [],
+            'assertion_map'            => [
+                'foo' => 'bar'
+            ],
             'unauthorized_strategy' => [
                 'template' => 'error/unauthorized'
             ],
@@ -64,7 +66,9 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $moduleOptions->getGuards());
         $this->assertEquals('deny', $moduleOptions->getProtectionPolicy());
         $this->assertEquals([], $moduleOptions->getRoleProvider());
-        $this->assertEquals([], $moduleOptions->getAssertions());
+        $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
+        $this->assertEquals('bar', $moduleOptions->getAssertionFor('foo'));
+        $this->assertEquals(null, $moduleOptions->getAssertionFor('nothing'));
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
     }
