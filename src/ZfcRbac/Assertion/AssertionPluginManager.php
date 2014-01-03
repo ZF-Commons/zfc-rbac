@@ -39,13 +39,13 @@ class AssertionPluginManager extends AbstractPluginManager
         if ($plugin instanceof AssertionInterface) {
             return; // we're okay
         }
-    
+
         throw new Exception\RuntimeException(sprintf(
             'Assertions must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
             is_object($plugin) ? get_class($plugin) : gettype($plugin)
         ));
     }
-    
+
     /**
      * {@inheritDoc}
      */
