@@ -20,6 +20,8 @@ namespace ZfcRbac\Service;
 
 use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AssertionInterface;
+use ZfcRbac\Exception;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -95,16 +97,27 @@ class AuthorizationService
     }
 
     /**
-     * @param  string $assertion
-     * @param  mixed  $context
+     * @param  string|callable|AssertionInterface $assertion
+     * @param  mixed           $context
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
     protected function assert($assertion, $context = null)
     {
         $identity  = $this->roleService->getIdentity();
-        $assertion = $this->assertionPluginManager->get($assertion);
-
-        return $assertion->assert($identity, $context);
+        
+        if (is_callable($assertion)) {
+            return $assertion($identity, $context);
+        } elseif ($assertion instanceof AssertionInterface) {
+            return $assertion->assert($identity, $context);
+        } elseif (is_string($assertion)) {
+            $assertion = $this->assertionPluginManager->get($assertion);
+            return $assertion->assert($identity, $context);
+        }
+        
+        throw new Exception\InvalidArgumentException(sprintf(
+            'Assertion must be callable, string or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
+            is_object($assertion) ? get_class($assertion) : gettype($assertion)
+        ));
     }
 }
