@@ -70,7 +70,8 @@ class AuthorizationService
     }
 
     /**
-     * Check if the permission is granted to the current identity
+     * Check if the permission is granted to the current identity.
+     * Uses assertion_map to fetch an assertion.
      *
      * @param  string $permission
      * @param  mixed  $context
@@ -78,6 +79,21 @@ class AuthorizationService
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
     public function isGranted($permission, $context = null)
+    {
+        $assertion = $this->moduleOptions->getAssertionFor($permission);
+        return $this->assertGranted($permission, $assertion, $context);
+    }
+    
+    /**
+     * Check if the permission is granted to the current identity.
+     * You may explicitly pass an assertion without relying on assertion_map.
+     * 
+     * @param string $permission
+     * @param string $assertion
+     * @param string $context
+     * @return boolean
+     */
+    public function assertGranted($permission, $assertion = null, $context = null)
     {
         $roles = $this->roleService->getIdentityRoles();
 
@@ -89,7 +105,6 @@ class AuthorizationService
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
-                $assertion = $this->moduleOptions->getAssertionFor($permission);
                 return $assertion ? $this->assert($assertion, $context) : true;
             }
         }
