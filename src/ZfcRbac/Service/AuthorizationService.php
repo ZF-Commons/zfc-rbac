@@ -22,7 +22,7 @@ use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
-use ZfcRbac\Options\ModuleOptions;
+use Rbac\Permission\PermissionInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -59,10 +59,7 @@ class AuthorizationService
      * @param RoleService            $roleService
      * @param AssertionPluginManager $assertionPluginManager
      */
-    public function __construct(
-        RoleService $roleService,
-        AssertionPluginManager $assertionPluginManager
-    ) {
+    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager) {
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
@@ -71,12 +68,13 @@ class AuthorizationService
     /**
      * Set an assertion
      * 
-     * @param string                             $permission
+     * @param string|PermissionInterface         $permission
      * @param string|callable|AssertionInterface $assertion
      * @return void
      */
     public function setAssertion($permission, $assertion)
     {
+        $permission = (string) $permission;
         $this->assertions[$permission] = $assertion;
     }
 
@@ -96,24 +94,26 @@ class AuthorizationService
     /**
      * Checks if a assertion exists
      * 
-     * @param string $permission
+     * @param string|PermissionInterface $permission
      * @return bool
      */
     public function hasAssertion($permission)
     {
+        $permission = (string) $permission;
         return isset($this->assertions[$permission]);
     }
 
     /**
      * Check if the permission is granted to the current identity
      * 
-     * @param string                             $permission
-     * @param mixed                              $context
+     * @param string|PermissionInterface $permission
+     * @param mixed                      $context
      * @return bool
      */
     public function isGranted($permission, $context = null)
     {
-        $roles = $this->roleService->getIdentityRoles();
+        $roles      = $this->roleService->getIdentityRoles();
+        $permission = (string) $permission;
 
         if (empty($roles)) {
             return false;
