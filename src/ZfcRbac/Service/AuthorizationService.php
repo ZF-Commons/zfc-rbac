@@ -51,49 +51,68 @@ class AuthorizationService
     /**
      * @var array
      */
-    protected $moduleOptions;
+    protected $assertions;
 
     /**
      * Constructor
      *
-     * @param RoleService $roleService
+     * @param RoleService            $roleService
+     * @param AssertionPluginManager $assertionPluginManager
      */
     public function __construct(
         RoleService $roleService,
-        AssertionPluginManager $assertionPluginManager,
-        ModuleOptions $moduleOptions
+        AssertionPluginManager $assertionPluginManager
     ) {
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
-        $this->moduleOptions          = $moduleOptions;
+        $this->assertions             = [];
     }
 
     /**
-     * Check if the current identity meets the permission's requirements,
-     * including assertions provided by assertion_map
-     *
-     * @param  string $permission
-     * @param  mixed  $context
+     * Set an assertion
+     * 
+     * @param string                             $permission
+     * @param string|callable|AssertionInterface $assertion
+     * @return void
+     */
+    public function setAssertion($permission, $assertion)
+    {
+        $this->assertions[$permission] = $assertion;
+    }
+
+    /**
+     * Set assertions
+     * 
+     * @param array $assertions
+     * @return void
+     */
+    public function setAssertions(array $assertions)
+    {
+        foreach($assertions as $permission => $assertion){
+            $this->setAssertion($permission, $assertion);
+        }
+    }
+
+    /**
+     * Checks if a assertion exists
+     * 
+     * @param string $permission
      * @return bool
      */
-    public function meets($permission, $context = null)
+    public function hasAssertion($permission)
     {
-        $assertionMap = $this->moduleOptions->getAssertionMap();
-        $assertion    = isset($assertionMap[$permission]) ? $assertionMap[$permission] : null;
-
-        return $this->isGranted($permission, $assertion, $context);
+        return isset($this->assertions[$permission]);
     }
 
     /**
      * Check if the permission is granted to the current identity
      * 
      * @param string                             $permission
-     * @param string|callable|AssertionInterface $assertion
      * @param mixed                              $context
      * @return bool
      */
-    public function isGranted($permission, $assertion, $context = null)
+    public function isGranted($permission, $context = null)
     {
         $roles = $this->roleService->getIdentityRoles();
 
@@ -105,6 +124,7 @@ class AuthorizationService
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
+                $assertion = $this->hasAssertion($permission) ? $this->assertions[$permission] : null;
                 return $assertion ? $this->assert($assertion, $context) : true;
             }
         }

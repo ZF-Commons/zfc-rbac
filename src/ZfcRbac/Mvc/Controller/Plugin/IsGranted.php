@@ -47,12 +47,12 @@ class IsGranted extends AbstractPlugin
     /**
      * Check against the given permission
      *
-     * @param  string                                              $permission
-     * @param  callable|\ZfcRbac\Assertion\AssertionInterface|null $assert
+     * @param  string $permission
+     * @param  mixed  $context
      * @return bool
      */
-    public function __invoke($permission, $assert = null)
+    public function __invoke($permission, $context = null)
     {
-        return $this->authorizationService->isGranted($permission, $assert);
+        return $this->authorizationService->isGranted($permission, $context);
     }
 }
