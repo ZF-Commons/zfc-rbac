@@ -156,7 +156,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($authorizationService->isGranted('foo', false));
     }
 
-    public function zestThrowExceptionForInvalidAssertion()
+    public function testThrowExceptionForInvalidAssertion()
     {
         $role = $this->getMock('Rbac\Role\RoleInterface');
         $role->expects($this->once())->method('hasPermission')->will($this->returnValue(true));
@@ -207,5 +207,21 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($authorizationService->isGranted('foo', false));
         $this->assertTrue($assertion->getCalled());
+    }
+
+    public function testAssertionMap()
+    {
+        $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager);
+
+        $authorizationService->setAssertions(['foo' => 'bar', 'bar' => 'foo']);
+
+        $this->assertTrue($authorizationService->hasAssertion('foo'));
+        $this->assertTrue($authorizationService->hasAssertion('bar'));
+
+        $authorizationService->setAssertion('bar', null);
+        
+        $this->assertFalse($authorizationService->hasAssertion('bar'));
     }
 }

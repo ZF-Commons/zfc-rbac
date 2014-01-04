@@ -51,7 +51,7 @@ class AuthorizationService
     /**
      * @var array
      */
-    protected $assertions;
+    protected $assertions = [];
 
     /**
      * Constructor
@@ -66,7 +66,6 @@ class AuthorizationService
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
-        $this->assertions             = [];
     }
 
     /**
