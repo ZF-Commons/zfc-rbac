@@ -19,10 +19,10 @@
 namespace ZfcRbac\Service;
 
 use Rbac\Rbac;
+use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
-use Rbac\Permission\PermissionInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -59,7 +59,8 @@ class AuthorizationService
      * @param RoleService            $roleService
      * @param AssertionPluginManager $assertionPluginManager
      */
-    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager) {
+    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager)
+    {
         $this->rbac                   = new Rbac();
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
@@ -74,8 +75,7 @@ class AuthorizationService
      */
     public function setAssertion($permission, $assertion)
     {
-        $permission = (string) $permission;
-        $this->assertions[$permission] = $assertion;
+        $this->assertions[(string) $permission] = $assertion;
     }
 
     /**
@@ -99,8 +99,7 @@ class AuthorizationService
      */
     public function hasAssertion($permission)
     {
-        $permission = (string) $permission;
-        return isset($this->assertions[$permission]);
+        return isset($this->assertions[(string) $permission]);
     }
 
     /**
@@ -112,8 +111,7 @@ class AuthorizationService
      */
     public function isGranted($permission, $context = null)
     {
-        $roles      = $this->roleService->getIdentityRoles();
-        $permission = (string) $permission;
+        $roles = $this->roleService->getIdentityRoles();
 
         if (empty($roles)) {
             return false;
@@ -123,7 +121,7 @@ class AuthorizationService
         foreach ($roles as $role) {
             // If we are granted, we also check the assertion as a second-pass
             if ($this->rbac->isGranted($role, $permission)) {
-                $assertion = $this->hasAssertion($permission) ? $this->assertions[$permission] : null;
+                $assertion = $this->hasAssertion($permission) ? $this->assertions[(string) $permission] : null;
                 return $assertion ? $this->assert($assertion, $context) : true;
             }
         }
