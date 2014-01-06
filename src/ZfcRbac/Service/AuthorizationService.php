@@ -86,9 +86,7 @@ class AuthorizationService
      */
     public function setAssertions(array $assertions)
     {
-        foreach ($assertions as $permission => $assertion) {
-            $this->setAssertion($permission, $assertion);
-        }
+        $this->assertions = $assertions;
     }
 
     /**
