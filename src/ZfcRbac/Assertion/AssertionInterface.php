@@ -24,6 +24,7 @@ use ZfcRbac\Identity\IdentityInterface;
  * Interface that you can implement for dynamic assertions
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  Aeneas Rekkas
  * @licence MIT
  */
 interface AssertionInterface
@@ -32,6 +33,7 @@ interface AssertionInterface
      * Assert if the identity has the permission
      *
      * @param  IdentityInterface|null $identity
+     * @param  mixed                  $context
      * @return bool
      */
     public function assert(IdentityInterface $identity = null);

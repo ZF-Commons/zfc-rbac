@@ -52,6 +52,13 @@ class ModuleOptions extends AbstractOptions
     protected $guards = [];
 
     /**
+     * Assertion map
+     *
+     * @var array
+     */
+    protected $assertionMap = [];
+
+    /**
      * Protection policy for guards (can be "deny" or "allow")
      *
      * @var string
@@ -112,9 +119,31 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
+     * Set the assertions options
+     * 
+     * @param array $assertionMap
+     * @return void
+     */
+    public function setAssertionMap(array $assertionMap)
+    {
+        $this->assertionMap = $assertionMap;
+    }
+
+    /**
+     * Get the assertions options
+     * 
+     * @return array
+     */
+    public function getAssertionMap()
+    {
+        return $this->assertionMap;
+    }
+
+    /**
      * Set the guest role (used when no identity is found)
      *
      * @param string $guestRole
+     * @return void
      */
     public function setGuestRole($guestRole)
     {

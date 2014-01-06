@@ -16,43 +16,41 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Mvc\Controller\Plugin;
+namespace ZfcRbac\Assertion;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use ZfcRbac\Service\AuthorizationService;
+use Zend\ServiceManager\AbstractPluginManager;
+use ZfcRbac\Exception;
 
 /**
- * Controller plugin that allows to test a permission in a controller
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * Plugin manager to create assertions
+ * 
+ * @author  Aeneas Rekkas
  * @licence MIT
+ *
+ * @method AssertionInterface get($name)
  */
-class IsGranted extends AbstractPlugin
+class AssertionPluginManager extends AbstractPluginManager
 {
     /**
-     * @var AuthorizationService
+     * {@inheritDoc}
      */
-    private $authorizationService;
-
-    /**
-     * Constructor
-     *
-     * @param AuthorizationService $authorizationService
-     */
-    public function __construct(AuthorizationService $authorizationService)
+    public function validatePlugin($plugin)
     {
-        $this->authorizationService = $authorizationService;
+        if ($plugin instanceof AssertionInterface) {
+            return; // we're okay
+        }
+
+        throw new Exception\RuntimeException(sprintf(
+            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
+            is_object($plugin) ? get_class($plugin) : gettype($plugin)
+        ));
     }
 
     /**
-     * Check against the given permission
-     *
-     * @param  string $permission
-     * @param  mixed  $context
-     * @return bool
+     * {@inheritDoc}
      */
-    public function __invoke($permission, $context = null)
+    protected function canonicalizeName($name)
     {
-        return $this->authorizationService->isGranted($permission, $context);
+        return $name;
     }
 }

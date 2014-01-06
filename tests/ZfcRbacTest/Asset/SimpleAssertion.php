@@ -31,10 +31,10 @@ class SimpleAssertion implements AssertionInterface
     /**
      * {@inheritDoc}
      */
-    public function assert(IdentityInterface $identity = null)
+    public function assert(IdentityInterface $identity = null, $context = false)
     {
-        $this->called = true;
-        return false;
+        $this->called = true;        
+        return $context;
     }
 
     /**

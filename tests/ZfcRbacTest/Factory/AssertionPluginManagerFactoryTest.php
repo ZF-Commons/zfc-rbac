@@ -16,43 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Mvc\Controller\Plugin;
+namespace ZfcRbacTest\Factory;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use ZfcRbac\Service\AuthorizationService;
+use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Factory\AssertionPluginManagerFactory;
 
 /**
- * Controller plugin that allows to test a permission in a controller
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @covers \ZfcRbac\Factory\AssertionPluginManagerFactory
  */
-class IsGranted extends AbstractPlugin
+class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * Constructor
-     *
-     * @param AuthorizationService $authorizationService
-     */
-    public function __construct(AuthorizationService $authorizationService)
+    public function testFactory()
     {
-        $this->authorizationService = $authorizationService;
-    }
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('Config', [
+            'zfc_rbac' => [
+                'assertion_manager' => []
+            ]
+        ]);
 
-    /**
-     * Check against the given permission
-     *
-     * @param  string $permission
-     * @param  mixed  $context
-     * @return bool
-     */
-    public function __invoke($permission, $context = null)
-    {
-        return $this->authorizationService->isGranted($permission, $context);
+        $factory       = new AssertionPluginManagerFactory();
+        $pluginManager = $factory->createService($serviceManager);
+
+        $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
+        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }
