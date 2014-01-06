@@ -33,9 +33,9 @@ If you are looking for some information that is not listed in the documentation,
    2. [Built-in strategies](/docs/05. Strategies.md#built-in-strategies)
    3. [Creating custom strategies](/docs/05. Strategies.md#creating-custom-strategies)
 
-6. [Using the AuthorizationService](/docs/06. Using the AuthorizationService.md)
-   1. [Injecting the AuthorizationService](/docs/06. Using the AuthorizationService.md#injecting-the-authorizationservice)
-   2. [Permissions and Assertions](/docs/06. Using the AuthorizationService.md#permissions-and-assertions)
+6. [Using the Authorization Service](/docs/06. Using the Authorization Service.md)
+   1. [Injecting the AuthorizationService](/docs/06. Using the Authorization Service.md#injecting-the-authorization-service)
+   2. [Permissions and Assertions](/docs/06. Using the Authorization Service.md#permissions-and-assertions)
 
 7. [Cookbook](/docs/06. Cookbook.md)
    1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
