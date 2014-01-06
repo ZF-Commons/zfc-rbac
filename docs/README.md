@@ -32,7 +32,7 @@ If you are looking for some information that is not listed in the documentation,
    1. [What are strategies?](/docs/05. Strategies.md#what-are-strategies)
    2. [Built-in strategies](/docs/05. Strategies.md#built-in-strategies)
    3. [Creating custom strategies](/docs/05. Strategies.md#creating-custom-strategies)
-   
+
 6. [Using the AuthorizationService](/docs/06. Using the AuthorizationService.md)
    1. [Injecting the AuthorizationService](/docs/06. Using the AuthorizationService.md#injecting-the-authorizationservice)
    2. [Permissions and Assertions](/docs/06. Using the AuthorizationService.md#permissions-and-assertions)
@@ -40,8 +40,7 @@ If you are looking for some information that is not listed in the documentation,
 7. [Cookbook](/docs/06. Cookbook.md)
    1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
    2. [Best practices](/docs/07. Cookbook.md#best-practices)
-   3. [Using dynamic assertions](/docs/07. Cookbook.md#using-dynamic-assertions)
-   4. [Using ZfcRbac with Doctrine ORM](/docs/07. Cookbook.md#using-zfcrbac-with-doctrine-orm)
-   5. [How to deal with roles with lot of permissions?](/docs/07. Cookbook.md#how-to-deal-with-roles-with-lot-of-permissions)
-   6. [Using ZfcRbac and ZF2 Assetic](/docs/07. Cookbook.md#using-zfcrbac-and-zf2-assetic)
-   7. [Using ZfcRbac and ZfcUser](/docs/07. Cookbook.md#using-zfcrbac-and-zfcuser)
+   3. [Using ZfcRbac with Doctrine ORM](/docs/07. Cookbook.md#using-zfcrbac-with-doctrine-orm)
+   4. [How to deal with roles with lot of permissions?](/docs/07. Cookbook.md#how-to-deal-with-roles-with-lot-of-permissions)
+   5. [Using ZfcRbac and ZF2 Assetic](/docs/07. Cookbook.md#using-zfcrbac-and-zf2-assetic)
+   6. [Using ZfcRbac and ZfcUser](/docs/07. Cookbook.md#using-zfcrbac-and-zfcuser)

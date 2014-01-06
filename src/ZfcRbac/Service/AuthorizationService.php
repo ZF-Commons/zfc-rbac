@@ -68,7 +68,7 @@ class AuthorizationService
 
     /**
      * Set an assertion
-     * 
+     *
      * @param string|PermissionInterface         $permission
      * @param string|callable|AssertionInterface $assertion
      * @return void
@@ -80,7 +80,7 @@ class AuthorizationService
 
     /**
      * Set assertions
-     * 
+     *
      * @param array $assertions
      * @return void
      */
@@ -91,7 +91,7 @@ class AuthorizationService
 
     /**
      * Checks if a assertion exists
-     * 
+     *
      * @param string|PermissionInterface $permission
      * @return bool
      */
@@ -102,7 +102,7 @@ class AuthorizationService
 
     /**
      * Check if the permission is granted to the current identity
-     * 
+     *
      * @param string|PermissionInterface $permission
      * @param mixed                      $context
      * @return bool
