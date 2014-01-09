@@ -23,6 +23,7 @@ use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
+use ZfcRbac\Identity\IdentityInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -101,6 +102,16 @@ class AuthorizationService
     }
 
     /**
+     * Get the current identity from the role service
+     *
+     * @return IdentityInterface|null
+     */
+    public function getIdentity()
+    {
+        return $this->roleService->getIdentity();
+    }
+
+    /**
      * Check if the permission is granted to the current identity
      *
      * @param string|PermissionInterface $permission
@@ -135,15 +146,14 @@ class AuthorizationService
      */
     protected function assert($assertion, $context = null)
     {
-        $identity = $this->roleService->getIdentity();
-
         if (is_callable($assertion)) {
-            return $assertion($identity, $context);
+            return $assertion($this, $context);
         } elseif ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($identity, $context);
+            return $assertion->assert($this, $context);
         } elseif (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
-            return $assertion->assert($identity, $context);
+
+            return $assertion->assert($this, $context);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(

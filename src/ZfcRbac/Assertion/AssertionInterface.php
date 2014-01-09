@@ -18,23 +18,24 @@
 
 namespace ZfcRbac\Assertion;
 
-use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Interface that you can implement for dynamic assertions
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @author  Aeneas Rekkas
+ * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
  * @licence MIT
  */
 interface AssertionInterface
 {
     /**
-     * Assert if the identity has the permission
+     * Check if this assertion is true
      *
-     * @param  IdentityInterface|null $identity
-     * @param  mixed                  $context
+     * @param  AuthorizationService $authorization
+     * @param  mixed                $context
      * @return bool
      */
-    public function assert(IdentityInterface $identity = null);
+    public function assert(AuthorizationService $authorization);
 }
