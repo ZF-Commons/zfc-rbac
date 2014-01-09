@@ -23,6 +23,7 @@ use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
+use ZfcRbac\Identity\IdentityInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -98,6 +99,16 @@ class AuthorizationService
     public function hasAssertion($permission)
     {
         return isset($this->assertions[(string) $permission]);
+    }
+
+    /**
+     * Get the current identity from the role service
+     *
+     * @return IdentityInterface|null
+     */
+    public function getIdentity()
+    {
+        return $this->roleService->getIdentity();
     }
 
     /**

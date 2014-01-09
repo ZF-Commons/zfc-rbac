@@ -190,7 +190,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         // Using a callable
         $called = false;
 
-        $authorizationService->setAssertion('foo', 
+        $authorizationService->setAssertion('foo',
             function(IdentityInterface $expectedIdentity = null) use($identity, &$called) {
                 $this->assertSame($expectedIdentity, $identity);
                 $called = true;
@@ -221,7 +221,22 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($authorizationService->hasAssertion('bar'));
 
         $authorizationService->setAssertion('bar', null);
-        
+
         $this->assertFalse($authorizationService->hasAssertion('bar'));
+    }
+
+    /**
+     * @covers ZfcRbac\Service\AuthorizationService::getIdentity
+     */
+    public function testGetIdentity()
+    {
+        $identity         = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $roleService      = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $assertionManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $authorization    = new AuthorizationService($roleService, $assertionManager);
+
+        $roleService->expects($this->once())->method('getIdentity')->will($this->returnValue($identity));
+
+        $this->assertSame($authorization->getIdentity(), $identity);
     }
 }
