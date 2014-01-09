@@ -146,15 +146,14 @@ class AuthorizationService
      */
     protected function assert($assertion, $context = null)
     {
-        $identity = $this->roleService->getIdentity();
-
         if (is_callable($assertion)) {
-            return $assertion($identity, $context);
+            return $assertion($this, $context);
         } elseif ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($identity, $context);
+            return $assertion->assert($this, $context);
         } elseif (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
-            return $assertion->assert($identity, $context);
+
+            return $assertion->assert($this, $context);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(

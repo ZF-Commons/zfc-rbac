@@ -18,7 +18,6 @@
 
 namespace ZfcRbacTest\Service;
 
-use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
@@ -178,10 +177,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $role = $this->getMock('Rbac\Role\RoleInterface');
         $role->expects($this->exactly(2))->method('hasPermission')->will($this->returnValue(true));
 
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $roleService->expects($this->exactly(2))->method('getIdentity')->will($this->returnValue($identity));
         $roleService->expects($this->exactly(2))->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
@@ -191,13 +187,15 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $called = false;
 
         $authorizationService->setAssertion('foo',
-            function(IdentityInterface $expectedIdentity = null) use($identity, &$called) {
-                $this->assertSame($expectedIdentity, $identity);
+            function(AuthorizationService $injectedService) use($authorizationService, &$called) {
+                $this->assertSame($injectedService, $authorizationService);
+
                 $called = true;
 
                 return false;
             }
         );
+
         $this->assertFalse($authorizationService->isGranted('foo'));
         $this->assertTrue($called);
 
