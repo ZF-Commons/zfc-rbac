@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Role;
 
 use Doctrine\ORM\Tools\SchemaTool;
+use Rbac\Traversal\RecursiveRoleIterator;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbacTest\Asset\FlatRole;
@@ -95,7 +96,11 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $roles[0]);
         $this->assertEquals('admin', $roles[0]->getName());
 
-        $iteratorIterator = new \RecursiveIteratorIterator($roles[0], \RecursiveIteratorIterator::SELF_FIRST);
+        $iteratorIterator = new \RecursiveIteratorIterator(
+            new RecursiveRoleIterator($roles[0]->getChildren()),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
         $childRolesString = '';
 
         foreach ($iteratorIterator as $childRole) {

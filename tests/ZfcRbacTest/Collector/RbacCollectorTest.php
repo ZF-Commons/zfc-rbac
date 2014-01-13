@@ -26,6 +26,7 @@ use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RoleService;
+use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 
 /**
  * @covers \ZfcRbac\Collector\RbacCollector
@@ -130,7 +131,7 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentity')
                          ->will($this->returnValue($identity));
 
-        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($dataToCollect['role_config']));
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($dataToCollect['role_config']), new RecursiveRoleIteratorStrategy());
 
         $serviceManager->expects($this->at(0))
                        ->method('get')

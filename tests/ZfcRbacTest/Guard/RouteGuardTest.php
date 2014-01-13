@@ -25,6 +25,7 @@ use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RoleService;
+use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 
 /**
  * @covers \ZfcRbac\Guard\AbstractGuard
@@ -378,7 +379,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                          ->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider($rolesConfig);
-        $roleService  = new RoleService($identityProvider, $roleProvider);
+        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new RouteGuard($roleService, $rules);
         $routeGuard->setProtectionPolicy($protectionPolicy);
@@ -411,7 +412,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                          ->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider(['member']);
-        $roleService  = new RoleService($identityProvider, $roleProvider);
+        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new RouteGuard($roleService, [
             'adminRoute' => 'member'
@@ -449,7 +450,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                          ->will($this->returnValue('member'));
 
         $roleProvider = new InMemoryRoleProvider(['member', 'guest']);
-        $roleService  = new RoleService($identityProvider, $roleProvider);
+        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new RouteGuard($roleService, [
             'adminRoute' => 'guest'
