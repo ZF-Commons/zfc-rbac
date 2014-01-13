@@ -57,12 +57,13 @@ class AuthorizationService
     /**
      * Constructor
      *
+     * @param Rbac                   $rbac
      * @param RoleService            $roleService
      * @param AssertionPluginManager $assertionPluginManager
      */
-    public function __construct(RoleService $roleService, AssertionPluginManager $assertionPluginManager)
+    public function __construct(Rbac $rbac, RoleService $roleService, AssertionPluginManager $assertionPluginManager)
     {
-        $this->rbac                   = new Rbac();
+        $this->rbac                   = $rbac;
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
     }
