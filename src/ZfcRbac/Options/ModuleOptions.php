@@ -18,9 +18,10 @@
 
 namespace ZfcRbac\Options;
 
-use Zend\Stdlib\AbstractOptions;
 use ZfcRbac\Exception;
 use ZfcRbac\Guard\GuardInterface;
+use Rbac\Traversal\Strategy\TraversalStrategyInterface;
+use Zend\Stdlib\AbstractOptions;
 
 /**
  * Options for ZfcRbac module
@@ -87,6 +88,13 @@ class ModuleOptions extends AbstractOptions
     protected $redirectStrategy;
 
     /**
+     * Traversal strategy to traverse roles
+     *
+     * @var TraversalStrategyInterface|string|null
+     */
+    protected $traversalStrategy;
+
+    /**
      * Constructor
      *
      * {@inheritDoc}
@@ -120,7 +128,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Set the assertions options
-     * 
+     *
      * @param array $assertionMap
      * @return void
      */
@@ -131,7 +139,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Get the assertions options
-     * 
+     *
      * @return array
      */
     public function getAssertionMap()
@@ -283,5 +291,38 @@ class ModuleOptions extends AbstractOptions
         }
 
         return $this->redirectStrategy;
+    }
+
+    /**
+     * Set the traversal strategy
+     *
+     * @param  TraversalStrategyInterface|string|null $traversalStrategy
+     * @throws Exception\InvalidArgumentException     When the provided traversal strategy
+     *                                                does not fit the expected type
+     */
+    public function setTraversalStrategy($traversalStrategy)
+    {
+        if (null !== $traversalStrategy
+            && !is_string($traversalStrategy)
+            && !$traversalStrategy instanceof TraversalStrategyInterface
+        ) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '$traversalStrategy must be either a string, a '
+                . 'Rbac\Traversal\Strategy\TraversalStrategyInterface instance or null, %s given',
+                is_object($traversalStrategy) ? get_class($traversalStrategy) : gettype($traversalStrategy)
+            ));
+        }
+
+        $this->traversalStrategy = $traversalStrategy;
+    }
+
+    /**
+     * Get the traversal strategy
+     *
+     * @return TraversalStrategyInterface|string|null
+     */
+    public function getTraversalStrategy()
+    {
+        return $this->traversalStrategy;
     }
 }
