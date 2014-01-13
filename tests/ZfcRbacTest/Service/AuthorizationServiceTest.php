@@ -18,6 +18,8 @@
 
 namespace ZfcRbacTest\Service;
 
+use Rbac\Rbac;
+use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
@@ -130,9 +132,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentity')
                          ->will($this->returnValue($identity));
 
+        $rbac                   = new Rbac(new RecursiveRoleIteratorStrategy());
         $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig));
         $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
-        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager);
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions($assertions);
 
@@ -142,7 +145,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     public function testDoNotCallAssertionIfThePermissionIsNotGranted()
     {
         $role = $this->getMock('Rbac\Role\RoleInterface');
-        $role->expects($this->once())->method('hasPermission')->will($this->returnValue(false));
+        $rbac = $this->getMock('Rbac\Rbac', [], [], '', false);
 
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
@@ -150,21 +153,23 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
         $assertionPluginManager->expects($this->never())->method('get');
 
-        $authorizationService = new AuthorizationService($roleService, $assertionPluginManager);
+        $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
-        $this->assertFalse($authorizationService->isGranted('foo', false));
+        $this->assertFalse($authorizationService->isGranted('foo'));
     }
 
     public function testThrowExceptionForInvalidAssertion()
     {
         $role = $this->getMock('Rbac\Role\RoleInterface');
-        $role->expects($this->once())->method('hasPermission')->will($this->returnValue(true));
+        $rbac = $this->getMock('Rbac\Rbac', [], [], '', false);
+
+        $rbac->expects($this->once())->method('isGranted')->will($this->returnValue(true));
 
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager);
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
 
@@ -175,13 +180,15 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     public function testDynamicAssertions()
     {
         $role = $this->getMock('Rbac\Role\RoleInterface');
-        $role->expects($this->exactly(2))->method('hasPermission')->will($this->returnValue(true));
+        $rbac = $this->getMock('Rbac\Rbac', [], [], '', false);
+
+        $rbac->expects($this->exactly(2))->method('isGranted')->will($this->returnValue(true));
 
         $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $roleService->expects($this->exactly(2))->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager);
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         // Using a callable
         $called = false;
@@ -209,9 +216,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testAssertionMap()
     {
+        $rbac                   = $this->getMock('Rbac\Rbac', [], [], '', false);
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $authorizationService   = new AuthorizationService($roleService, $assertionPluginManager);
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions(['foo' => 'bar', 'bar' => 'foo']);
 
@@ -228,10 +236,11 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIdentity()
     {
+        $rbac             = $this->getMock('Rbac\Rbac', [], [], '', false);
         $identity         = $this->getMock('ZfcRbac\Identity\IdentityInterface');
         $roleService      = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $assertionManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $authorization    = new AuthorizationService($roleService, $assertionManager);
+        $authorization    = new AuthorizationService($rbac, $roleService, $assertionManager);
 
         $roleService->expects($this->once())->method('getIdentity')->will($this->returnValue($identity));
 
