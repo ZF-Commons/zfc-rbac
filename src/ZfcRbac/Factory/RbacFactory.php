@@ -18,39 +18,29 @@
 
 namespace ZfcRbac\Factory;
 
+use Rbac\Rbac;
+use Rbac\Traversal\Strategy\GeneratorStrategy;
+use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
- * Factory to create the authorization service
- *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class AuthorizationServiceFactory implements FactoryInterface
+class RbacFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @return AuthorizationService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var \Rbac\Rbac $rbac */
-        $rbac = $serviceLocator->get('Rbac\Rbac');
+        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+            $traversalStrategy = new GeneratorStrategy();
+        } else {
+            $traversalStrategy = new RecursiveRoleIteratorStrategy();
+        }
 
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $serviceLocator->get('ZfcRbac\Service\RoleService');
-
-        /* @var \ZfcRbac\Assertion\AssertionPluginManager $assertionPluginManager */
-        $assertionPluginManager = $serviceLocator->get('ZfcRbac\Assertion\AssertionPluginManager');
-
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-
-        $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
-        $authorizationService->setAssertions($moduleOptions->getAssertionMap());
-
-        return $authorizationService;
+        return new Rbac($traversalStrategy);
     }
 }
