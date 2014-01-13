@@ -37,6 +37,7 @@ return [
             'ZfcRbac\View\Strategy\RedirectStrategy'             => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'         => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
             'Rbac\Traversal\Strategy\TraversalStrategyInterface' => 'ZfcRbac\Factory\TraversalStrategyFactory',
+            'Rbac\Rbac'                                          => 'ZfcRbac\Factory\RbacFactory',
         ]
     ],
 
