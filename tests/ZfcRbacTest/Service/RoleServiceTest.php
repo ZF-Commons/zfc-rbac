@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Service;
 
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RoleService;
+use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 
 /**
  * @covers \ZfcRbac\Service\RoleService
@@ -189,7 +190,7 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentity')
                          ->will($this->returnValue($identity));
 
-        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig));
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig), new RecursiveRoleIteratorStrategy());
 
         $this->assertEquals($doesMatch, $roleService->matchIdentityRoles($rolesToCheck));
     }
@@ -201,7 +202,12 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentity')
                          ->will($this->returnValue(null));
 
-        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider([]));
+        $roleService = new RoleService(
+            $identityProvider,
+            new InMemoryRoleProvider([]),
+            $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface')
+        );
+
         $roleService->setGuestRole('guest');
 
         $result = $roleService->getIdentityRoles();
@@ -224,7 +230,11 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                          ->method('getIdentity')
                          ->will($this->returnValue(new \stdClass()));
 
-        $roleService = new RoleService($identityProvider, $this->getMock('ZfcRbac\Role\RoleProviderInterface'));
+        $roleService = new RoleService(
+            $identityProvider,
+            $this->getMock('ZfcRbac\Role\RoleProviderInterface'),
+            $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface')
+        );
 
         $roleService->getIdentityRoles();
     }

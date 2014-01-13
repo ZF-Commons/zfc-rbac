@@ -26,6 +26,7 @@ use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Role\RoleProviderInterface;
+use Rbac\Traversal\Strategy\TraversalStrategyInterface;
 
 /**
  * Role service
@@ -46,6 +47,11 @@ class RoleService
     protected $roleProvider;
 
     /**
+     * @var TraversalStrategyInterface
+     */
+    protected $traversalStrategy;
+
+    /**
      * @var string
      */
     protected $guestRole = '';
@@ -53,13 +59,18 @@ class RoleService
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface $identityProvider
-     * @param RoleProviderInterface     $roleProvider
+     * @param IdentityProviderInterface  $identityProvider
+     * @param RoleProviderInterface      $roleProvider
+     * @param TraversalStrategyInterface $traversalStrategy
      */
-    public function __construct(IdentityProviderInterface $identityProvider, RoleProviderInterface $roleProvider)
-    {
-        $this->identityProvider = $identityProvider;
-        $this->roleProvider     = $roleProvider;
+    public function __construct(
+        IdentityProviderInterface $identityProvider,
+        RoleProviderInterface $roleProvider,
+        TraversalStrategyInterface $traversalStrategy
+    ) {
+        $this->identityProvider  = $identityProvider;
+        $this->roleProvider      = $roleProvider;
+        $this->traversalStrategy = $traversalStrategy;
     }
 
     /**
@@ -132,10 +143,15 @@ class RoleService
             return false;
         }
 
-        $roles         = $this->flattenRoles($roles);
+        $roleNames = [];
+
+        foreach ($roles as $role) {
+            $roleNames[] = $role instanceof RoleInterface ? $role->getName() : (string) $role;
+        }
+
         $identityRoles = $this->flattenRoles($identityRoles);
 
-        return count(array_intersect($roles, $identityRoles)) > 0;
+        return count(array_intersect($roleNames, $identityRoles)) > 0;
     }
 
     /**
@@ -184,20 +200,10 @@ class RoleService
     protected function flattenRoles(array $roles)
     {
         $roleNames = [];
+        $iterator  = $this->traversalStrategy->getRolesIterator($roles);
 
-        foreach ($roles as $role) {
-            $roleNames[] = $role instanceof RoleInterface ? $role->getName() : (string) $role;
-
-            if (!$role instanceof HierarchicalRoleInterface) {
-                continue;
-            }
-
-            $iterator = new RecursiveIteratorIterator($role, RecursiveIteratorIterator::SELF_FIRST);
-
-            /* @var RoleInterface $childRole */
-            foreach ($iterator as $childRole) {
-                $roleNames[] = $childRole->getName();
-            }
+        foreach ($iterator as $role) {
+            $roleNames[] = $role->getName();
         }
 
         return array_unique($roleNames);
