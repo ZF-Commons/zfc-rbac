@@ -149,10 +149,9 @@ class RoleService
             $roleNames[] = $role instanceof RoleInterface ? $role->getName() : (string) $role;
         }
 
-        $rolesToCheck  = array_unique($roleNames);
         $identityRoles = $this->flattenRoles($identityRoles);
 
-        return count(array_intersect($rolesToCheck, $identityRoles)) > 0;
+        return count(array_intersect($roleNames, $identityRoles)) > 0;
     }
 
     /**
