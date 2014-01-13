@@ -20,6 +20,7 @@ namespace ZfcRbacTest;
 
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbacTest\Util\ServiceManagerFactory;
+use stdClass;
 
 /**
  * @covers \ZfcRbac\Options\ModuleOptions
@@ -39,6 +40,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $moduleOptions->getAssertionMap());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
+        $this->assertNull($moduleOptions->getTraversalStrategy());
     }
 
     public function testSettersAndGetters()
@@ -58,7 +60,8 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             'redirect_strategy' => [
                 'redirect_to_route_connected'    => 'home',
                 'redirect_to_route_disconnected' => 'login'
-            ]
+            ],
+            'traversal_strategy' => 'MyTraversalStrategy',
         ]);
 
         $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
@@ -69,6 +72,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
         $this->assertInstanceOf('ZfcRbac\Options\UnauthorizedStrategyOptions', $moduleOptions->getUnauthorizedStrategy());
         $this->assertInstanceOf('ZfcRbac\Options\RedirectStrategyOptions', $moduleOptions->getRedirectStrategy());
+        $this->assertEquals('MyTraversalStrategy', $moduleOptions->getTraversalStrategy());
     }
 
     public function testThrowExceptionForInvalidProtectionPolicy()
@@ -85,5 +89,13 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
 
         $moduleOptions = new ModuleOptions();
         $moduleOptions->setRoleProvider(['foo', 'bar']);
+    }
+
+    public function testThrowExceptionForInvalidTraversalStrategy()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
+
+        $moduleOptions = new ModuleOptions();
+        $moduleOptions->setTraversalStrategy(new stdClass());
     }
 }

@@ -36,6 +36,7 @@ return [
             'ZfcRbac\Service\RoleService'                        => 'ZfcRbac\Factory\RoleServiceFactory',
             'ZfcRbac\View\Strategy\RedirectStrategy'             => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'         => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
+            'Rbac\Traversal\Strategy\TraversalStrategyInterface' => 'ZfcRbac\Factory\TraversalStrategyFactory',
         ]
     ],
 
@@ -83,7 +84,7 @@ return [
 
         // Role provider plugin manager
         'role_provider_manager' => [],
-        
+
         // Assertion plugin manager
         'assertion_manager' => []
     ]
