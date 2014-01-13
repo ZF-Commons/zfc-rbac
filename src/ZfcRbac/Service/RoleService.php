@@ -145,7 +145,7 @@ class RoleService
 
         $roleNames = [];
 
-        foreach ($roles as $roles) {
+        foreach ($roles as $role) {
             $roleNames[] = $role instanceof RoleInterface ? $role->getName() : (string) $role;
         }
 
