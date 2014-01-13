@@ -133,7 +133,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                          ->will($this->returnValue($identity));
 
         $rbac                   = new Rbac(new RecursiveRoleIteratorStrategy());
-        $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig));
+        $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig), $rbac->getTraversalStrategy());
         $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 

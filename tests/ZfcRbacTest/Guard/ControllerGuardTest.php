@@ -24,6 +24,7 @@ use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RoleService;
+use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 
 /**
  * @covers \ZfcRbac\Guard\AbstractGuard
@@ -424,7 +425,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                          ->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider($rolesConfig);
-        $roleService  = new RoleService($identityProvider, $roleProvider);
+        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $controllerGuard = new ControllerGuard($roleService, $rules);
         $controllerGuard->setProtectionPolicy($protectionPolicy);
@@ -461,7 +462,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
             'member'
         ]);
 
-        $roleService = new RoleService($identityProvider, $roleProvider);
+        $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new ControllerGuard($roleService, [[
             'controller' => 'MyController',
@@ -506,7 +507,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
             'member'
         ]);
 
-        $roleService = new RoleService($identityProvider, $roleProvider);
+        $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new ControllerGuard($roleService, [[
             'controller' => 'MyController',
