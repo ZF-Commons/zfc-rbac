@@ -20,7 +20,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Rbac\Permission\PermissionInterface;
 use Rbac\Role\HierarchicalRoleInterface;
-use RecursiveIterator;
 
 /**
  * @ORM\Entity
@@ -57,11 +56,6 @@ class HierarchicalRole implements HierarchicalRoleInterface
      * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", fetch="EAGER")
      */
     protected $permissions;
-
-    /**
-     * @var int
-     */
-    protected $index = 0;
 
     /**
      * Init the Doctrine collection
@@ -134,58 +128,12 @@ class HierarchicalRole implements HierarchicalRoleInterface
         return isset($this->permissions[(string) $permission]);
     }
 
-    /*
-     * --------------------------------------------------------------------------------
-     * RecursiveIterator implementation
-     * --------------------------------------------------------------------------------
-     */
-
-    /**
-     * {@inheritDoc}
-     */
-    public function current()
-    {
-        return $this->children[$this->index];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function next()
-    {
-        $this->index++;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function key()
-    {
-        return $this->index;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function valid()
-    {
-        return isset($this->children[$this->index]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function rewind()
-    {
-        $this->index = 0;
-    }
-
     /**
      * {@inheritDoc}
      */
     public function getChildren()
     {
-        return $this->children[$this->index];
+        return $this->children;
     }
 
     /**
@@ -193,6 +141,6 @@ class HierarchicalRole implements HierarchicalRoleInterface
      */
     public function hasChildren()
     {
-        return $this->valid() && $this->current() instanceof RecursiveIterator;
+        return !$this->children->isEmpty();
     }
 }
