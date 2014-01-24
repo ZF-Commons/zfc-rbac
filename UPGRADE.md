@@ -20,3 +20,4 @@ the AuthorizationService now has an assertion map, that allows to map an asserti
 inject dependencies into assertions, as well as making the use of assertions much more transparent.
 - [BC] Each assertions now receive the whole `AuthorizationService` instead of the current identity. This allows to
 support use cases where an assertion needs to check another permission.
+- [BC] Entity schema for hierarchical role have changed and no longer require to implement `RecursiveIterator`. Please have a look at the new schema in the `data` folder.
