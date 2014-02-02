@@ -131,10 +131,8 @@ class AuthorizationService
             return false;
         }
 
-        $permission = (string) $permission;
-
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[$permission], $context);
+            return $this->assert($this->assertions[(string) $permission], $context);
         }
 
         return true;
