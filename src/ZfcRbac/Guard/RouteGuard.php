@@ -69,14 +69,8 @@ class RouteGuard extends AbstractGuard
         $this->rules = [];
 
         foreach ($rules as $key => $value) {
-            if (is_int($key)) {
-                $routeRegex = $value;
-                $roles      = [];
-            } else {
-                $routeRegex = $key;
-                $roles      = (array) $value;
-            }
-
+            $routeRegex = $key;
+            $roles      = (array) $value;
             $this->rules[$routeRegex] = $roles;
         }
     }
