@@ -116,7 +116,7 @@ class RoleService
             return $this->convertRoles([$this->guestRole]);
         }
 
-        if (!$identity instanceof IdentityInterface) {
+        if (!$identity instanceof IdentityInterface && !method_exists($identity, 'getRoles')) {
             throw new Exception\RuntimeException(sprintf(
                 'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
                 is_object($identity) ? get_class($identity) : gettype($identity)
