@@ -89,7 +89,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
             // Block a route for everyone
             [
                 'rules' => [
-                    'route'
+                    'route' => []
                 ],
                 'expected' => [
                     'route' => []
