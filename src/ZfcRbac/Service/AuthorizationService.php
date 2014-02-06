@@ -127,14 +127,12 @@ class AuthorizationService
             return false;
         }
 
-        $permission = (string) $permission;
-
         if (!$this->rbac->isGranted($roles, $permission)) {
             return false;
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[$permission], $context);
+            return $this->assert($this->assertions[(string) $permission], $context);
         }
 
         return true;
