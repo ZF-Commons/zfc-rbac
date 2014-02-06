@@ -16,54 +16,19 @@
  * and is licensed under the MIT license.
  */
 
-use Doctrine\ORM\Mapping as ORM;
-use ZfcRbac\Permission\PermissionInterface;
+namespace ZfcRbac\Permission;
+
+use Rbac\Permission\PermissionInterface as BasePermissionInterface;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="permissions")
+ * Interface that permissions must implement to be used with the AuthorizationService
+ *
+ * Please note that currently the interface extends the one from RBAC, but starting in ZF3, the
+ * permission will be removed from RBAC component and moved here completely
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
-class Permission implements PermissionInterface
+interface PermissionInterface extends BasePermissionInterface
 {
-    /**
-     * @var int|null
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", length=128, unique=true)
-     */
-    protected $name;
-
-    /**
-     * Constructor
-     */
-    public function __construct($name)
-    {
-        $this->name  = (string) $name;
-    }
-
-    /**
-     * Get the permission identifier
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
-    {
-        return $this->name;
-    }
 }
