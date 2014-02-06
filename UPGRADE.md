@@ -1,5 +1,13 @@
 # Upgrade guide
 
+## From v2.0 to v2.1
+
+- [Potential BC] A potential BC have been introduced in v2.1 to respect interfaces of RBAC component more strictly.
+However there is great chance that you have nothing to do. Now, ZfcRbac no longer cast permissions to string before
+passing it to your "hasPermission" method in the Role entity. If you used to call `isGranted` using a string permission,
+like this: `isGranted('myPermission')`, then you have nothing to do. However, if you are passing a `PermissionInterface`
+object, you will now receive this object instead of a string. It's up to you to getting the name from your permission.
+
 ## From v1 to v2
 
 Here are the major breaking changes from ZfcRbac 1 to ZfcRbac 2:
