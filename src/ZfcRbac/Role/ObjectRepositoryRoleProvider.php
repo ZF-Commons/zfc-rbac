@@ -57,6 +57,16 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     }
 
     /**
+     * Clears the role cache
+     *
+     * @return void
+     */
+    public function clearRoleCache()
+    {
+        $this->roleCache = [];
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getRoles(array $roleNames)
