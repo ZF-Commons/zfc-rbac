@@ -42,7 +42,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     /**
      * @var array
      */
-    private $hotCache = [];
+    private $roleCache = [];
 
     /**
      * Constructor
@@ -63,8 +63,8 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     {
         $key = implode($roleNames);
 
-        if (isset($this->hotCache[$key])) {
-            return $this->hotCache[$key];
+        if (isset($this->roleCache[$key])) {
+            return $this->roleCache[$key];
         }
 
         $roles = $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
@@ -72,8 +72,8 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
         // We allow more roles to be loaded than asked (although this should not happen because
         // role name should have a UNIQUE constraint in database... but just in case ;))
         if (count($roles) >= count($roleNames)) {
-            $this->hotCache[$key] = $roles;
-            
+            $this->roleCache[$key] = $roles;
+
             return $roles;
         }
 
