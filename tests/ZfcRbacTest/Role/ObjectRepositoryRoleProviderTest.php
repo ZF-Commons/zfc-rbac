@@ -111,6 +111,19 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('memberguest', $childRolesString);
     }
 
+    public function testRoleCacheOnConsecutiveCalls()
+    {
+        $objectRepository = $this->getMock('Doctrine\ORM\EntityRepository', ['findBy'], [], '', false);
+        $memberRole       = new FlatRole('member');
+        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result           = [$memberRole];
+
+        $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
+
+        $this->assertEquals($result, $provider->getRoles(['member']));
+        $this->assertEquals($result, $provider->getRoles(['member']));
+    }
+
     public function testThrowExceptionIfAskedRoleIsNotFound()
     {
         $this->serviceManager = ServiceManagerFactory::getServiceManager();
