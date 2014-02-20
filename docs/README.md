@@ -1,4 +1,4 @@
-_Up-to-date with version 2.0.* of ZfcRbac_
+_Up-to-date with version 2.1.* of ZfcRbac_
 
 Welcome to the official ZfcRbac documentation. This documentation will help you to quickly understand how to use
 and extend ZfcRbac.
