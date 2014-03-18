@@ -12,13 +12,20 @@
             "name": "Kyle Spraggs",
             "email": "theman@spiffyjr.me",
             "homepage": "http://www.spiffyjr.me/"
+        },
+        {
+            "name": "Michaël Gallego",
+            "email": "mic.gallego@gmail.com",
+            "homepage": "http://www.michaelgallego.fr"
         }
     ],
     "require": {
         "php": ">=5.3.3",
+        "zendframework/zend-authentication": ">=2.1",
         "zendframework/zend-mvc": ">=2.1",
         "zendframework/zend-permissions-rbac": ">=2.1",
         "zendframework/zend-servicemanager": ">=2.1",
+        "zendframework/zend-session": ">=2.1",
         "zendframework/zend-view": ">=2.1"
     },
     "suggests": {
