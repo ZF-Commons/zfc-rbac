@@ -10,7 +10,7 @@ abstract class AbstractProvider implements ProviderInterface
      * Recursive function to add roles according to their parent role.
      *
      * @param Rbac $rbac
-     * @param $roles
+     * @param array $roles
      * @param int $parentName
      * @return void
      */
@@ -21,7 +21,8 @@ abstract class AbstractProvider implements ProviderInterface
         }
         foreach ((array) $roles[$parentName] as $role) {
             if ($parentName) {
-                $rbac->getRole($parentName)->addChild($role);
+                $childRole = $rbac->hasRole($role) ? $rbac->getRole($role) : $role;
+                $rbac->getRole($parentName)->addChild($childRole);
             } else {
                 $rbac->addRole($role);
             }
