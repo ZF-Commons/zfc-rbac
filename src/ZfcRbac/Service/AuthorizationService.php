@@ -32,7 +32,7 @@ use ZfcRbac\Identity\IdentityInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class AuthorizationService
+class AuthorizationService implements AuthorizationServiceInterface
 {
     /**
      * @var Rbac

@@ -15,19 +15,25 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
+
 namespace ZfcRbac\Service;
 
+use Rbac\Permission\PermissionInterface;
+
 /**
- * @author      Aeneas Rekkas
- * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
+ * Minimal interface for an authorization service
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
-interface AuthorizationServiceAwareInterface
+interface AuthorizationServiceInterface
 {
     /**
-     * Set the AuthorizationService
+     * Check if the permission is granted to the current identity
      *
-     * @param   AuthorizationServiceInterface $authorizationService
-     * @return  void
+     * @param string|PermissionInterface $permission
+     * @param mixed                      $context
+     * @return bool
      */
-    public function setAuthorizationService(AuthorizationServiceInterface $authorizationService);
+    public function isGranted($permission, $context = null);
 }

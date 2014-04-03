@@ -20,7 +20,7 @@ namespace ZfcRbac\Service;
 
 /**
  * Makes a class AuthorizationService aware
- * 
+ *
  * @author  Aeneas Rekkas
  * @license MIT License
  */
@@ -29,17 +29,17 @@ trait AuthorizationServiceAwareTrait
     /**
      * The AuthorizationService
      *
-     * @var AuthorizationService
+     * @var AuthorizationServiceInterface
      */
     protected $authorizationService;
 
     /**
      * Set the AuthorizationService
      *
-     * @param AuthorizationService $authorizationService            
+     * @param AuthorizationServiceInterface $authorizationService
      * @return void
      */
-    public function setAuthorizationService(AuthorizationService $authorizationService)
+    public function setAuthorizationService(AuthorizationServiceInterface $authorizationService)
     {
         $this->authorizationService = $authorizationService;
     }
@@ -47,7 +47,7 @@ trait AuthorizationServiceAwareTrait
     /**
      * Return the AuthorizationService
      *
-     * @return AuthorizationService
+     * @return AuthorizationServiceInterface
      */
     public function getAuthorizationService()
     {
