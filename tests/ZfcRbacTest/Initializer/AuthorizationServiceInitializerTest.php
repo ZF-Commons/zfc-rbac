@@ -32,7 +32,7 @@ class AuthorizationServiceInitializerTest extends \PHPUnit_Framework_TestCase
         $initializer          = new AuthorizationServiceInitializer();
         $instance             = new AuthorizationAwareFake();
         $serviceLocator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface');
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
 
         $serviceLocator->expects($this->once())
             ->method('get')
