@@ -1,5 +1,13 @@
 # Upgrade guide
 
+## From v2.1 to v2.2
+
+- [Potential BC] To simplify unit tests, we have introduced a new `AuthorizationServiceInterface` that the
+`AuthorizationService` now implements. We didn't touch any interface (such as `AssertionInterface`) that rely explicitly
+on typehinting the `AuthorizationService` to avoid big BC. However, we have updated the view helper and controller
+plugins to use the interface instead. This can lead to a BC if you created subclasses of those plugins (which is
+not a typical use case). If this is the case, just change `AuthorizationService` to `AuthorizationServiceInterface`.
+
 ## From v2.0 to v2.1
 
 - [Potential BC] A potential BC have been introduced in v2.1 to respect interfaces of RBAC component more strictly.

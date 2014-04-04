@@ -33,9 +33,11 @@ interface AssertionInterface
     /**
      * Check if this assertion is true
      *
-     * @param  AuthorizationService $authorization
+     * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
+     *
+     * @param  AuthorizationService $authorizationService
      * @param  mixed                $context
      * @return bool
      */
-    public function assert(AuthorizationService $authorization);
+    public function assert(AuthorizationService $authorizationService);
 }

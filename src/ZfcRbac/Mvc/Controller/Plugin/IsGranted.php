@@ -19,7 +19,7 @@
 namespace ZfcRbac\Mvc\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
  * Controller plugin that allows to test a permission in a controller
@@ -30,16 +30,16 @@ use ZfcRbac\Service\AuthorizationService;
 class IsGranted extends AbstractPlugin
 {
     /**
-     * @var AuthorizationService
+     * @var AuthorizationServiceInterface
      */
     private $authorizationService;
 
     /**
      * Constructor
      *
-     * @param AuthorizationService $authorizationService
+     * @param AuthorizationServiceInterface $authorizationService
      */
-    public function __construct(AuthorizationService $authorizationService)
+    public function __construct(AuthorizationServiceInterface $authorizationService)
     {
         $this->authorizationService = $authorizationService;
     }
