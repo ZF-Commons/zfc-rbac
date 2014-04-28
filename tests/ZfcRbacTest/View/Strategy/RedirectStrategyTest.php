@@ -121,6 +121,37 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals('/home', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
+	
+    public function testWontRedirectWhenConnectedAndOptionDisabled()
+    {
+        $response = new HttpResponse();
+
+        $router = new TreeRouteStack();
+        $router->addRoute('home', [
+                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/home'
+                ]
+            ]);
+
+        $mvcEvent = new MvcEvent();
+        $mvcEvent->setParam('exception', new UnauthorizedException());
+        $mvcEvent->setResponse($response);
+        $mvcEvent->setRouter($router);
+
+        $options = new RedirectStrategyOptions([
+            'redirect_when_connected' => false
+        ]);
+
+        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(true));
+
+        $redirectStrategy = new RedirectStrategy($options, $authenticationService);
+
+        $redirectStrategy->onError($mvcEvent);
+
+        $this->assertNotEquals(302, $mvcEvent->getResponse()->getStatusCode());
+    }
 
     public function testCanAppendPreviousUri()
     {

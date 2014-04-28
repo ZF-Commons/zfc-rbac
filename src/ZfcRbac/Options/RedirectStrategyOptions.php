@@ -29,6 +29,13 @@ use Zend\Stdlib\AbstractOptions;
 class RedirectStrategyOptions extends AbstractOptions
 {
     /**
+     * Should the user be redirected when connected and not authorized
+     *
+     * @var bool
+     */
+    protected $redirectWhenConnected = true;
+
+    /**
      * The name of the route to redirect when a user is connected and not authorized
      *
      * @var string
@@ -55,6 +62,23 @@ class RedirectStrategyOptions extends AbstractOptions
      * @var string
      */
     protected $previousUriQueryKey = 'redirectTo';
+
+    /**
+     * @param bool $redirectWhenConnected
+     * @return void
+     */
+    public function setRedirectWhenConnected($redirectWhenConnected)
+    {
+        $this->redirectWhenConnected = (bool) $redirectWhenConnected;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRedirectWhenConnected()
+    {
+        return $this->redirectWhenConnected;
+    }
 
     /**
      * @param string $redirectToRouteConnected
