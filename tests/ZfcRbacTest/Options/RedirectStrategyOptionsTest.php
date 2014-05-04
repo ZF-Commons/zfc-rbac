@@ -29,6 +29,7 @@ class RedirectStrategyOptionsTest extends \PHPUnit_Framework_TestCase
     {
         $redirectStrategyOptions = new RedirectStrategyOptions();
 
+        $this->assertTrue($redirectStrategyOptions->getRedirectWhenConnected());
         $this->assertEquals('login', $redirectStrategyOptions->getRedirectToRouteDisconnected());
         $this->assertEquals('home', $redirectStrategyOptions->getRedirectToRouteConnected());
         $this->assertTrue($redirectStrategyOptions->getAppendPreviousUri());
@@ -38,12 +39,14 @@ class RedirectStrategyOptionsTest extends \PHPUnit_Framework_TestCase
     public function testSettersAndGetters()
     {
         $redirectStrategyOptions = new RedirectStrategyOptions([
+            'redirect_when_connected'        => false,
             'redirect_to_route_connected'    => 'foo',
             'redirect_to_route_disconnected' => 'bar',
             'append_previous_uri'            => false,
             'previous_uri_query_key'         => 'redirect-to'
         ]);
 
+        $this->assertFalse($redirectStrategyOptions->getRedirectWhenConnected());
         $this->assertEquals('foo', $redirectStrategyOptions->getRedirectToRouteConnected());
         $this->assertEquals('bar', $redirectStrategyOptions->getRedirectToRouteDisconnected());
         $this->assertFalse($redirectStrategyOptions->getAppendPreviousUri());
