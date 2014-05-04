@@ -98,6 +98,7 @@ return [
              * Enable redirection when the user is connected
              */
             // 'redirect_when_connected' => true,
+
             /**
              * Set the route to redirect when user is connected (of course, it must exist!)
              */

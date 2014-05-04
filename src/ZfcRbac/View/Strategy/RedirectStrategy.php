@@ -75,6 +75,7 @@ class RedirectStrategy extends AbstractStrategy
             if (!$this->options->getRedirectWhenConnected()) {
                 return;
             }
+            
             $redirectRoute = $this->options->getRedirectToRouteConnected();
         } else {
             $redirectRoute = $this->options->getRedirectToRouteDisconnected();
