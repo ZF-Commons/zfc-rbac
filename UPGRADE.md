@@ -1,5 +1,9 @@
 # Upgrade guide
 
+## From v2.2 to v2.3
+
+- No BC
+
 ## From v2.1 to v2.2
 
 - [Potential BC] To simplify unit tests, we have introduced a new `AuthorizationServiceInterface` that the
