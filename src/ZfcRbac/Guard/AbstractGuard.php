@@ -65,7 +65,7 @@ abstract class AbstractGuard implements GuardInterface
         $event->setError(self::GUARD_UNAUTHORIZED);
         $event->setParam('exception', new Exception\UnauthorizedException(
             'You are not authorized to access this resource'
-        ));
+        ), 403);
 
         $event->stopPropagation(true);
 
