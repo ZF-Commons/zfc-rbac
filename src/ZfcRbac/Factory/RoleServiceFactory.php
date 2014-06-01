@@ -20,6 +20,7 @@ namespace ZfcRbac\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Service\RoleService;
 
 /**
@@ -43,6 +44,10 @@ class RoleServiceFactory implements FactoryInterface
         $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
 
         $roleProviderConfig = $moduleOptions->getRoleProvider();
+
+        if (empty($roleProviderConfig)) {
+            throw new RuntimeException('No role provider has been set for ZfcRbac');
+        }
 
         /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
         $pluginManager = $serviceLocator->get('ZfcRbac\Role\RoleProviderPluginManager');

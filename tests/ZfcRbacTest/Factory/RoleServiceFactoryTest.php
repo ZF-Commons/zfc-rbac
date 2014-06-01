@@ -62,4 +62,25 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertAttributeSame($traversalStrategy, 'traversalStrategy', $roleService);
     }
+
+    public function testThrowExceptionIfNoRoleProvider()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+
+        $options = new ModuleOptions([
+            'identity_provider' => 'ZfcRbac\Identity\AuthenticationProvider',
+            'guest_role'        => 'guest',
+            'role_provider'     => []
+        ]);
+
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
+        $serviceManager->setService(
+            'ZfcRbac\Identity\AuthenticationProvider',
+            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
+        );
+
+        $factory     = new RoleServiceFactory();
+        $roleService = $factory->createService($serviceManager);
+    }
 }
