@@ -25,9 +25,10 @@ use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Guard\RoutePermissionsGuard;
 
 /**
- * Create a route guard
+ * Create a route guard for checking permissions
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Lerouxw <jmleroux.pro@gmail.com>
  * @licence MIT
  */
 class RoutePermissionsGuardFactory implements FactoryInterface, MutableCreationOptionsInterface

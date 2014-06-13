@@ -24,7 +24,9 @@ use ZfcRbac\Service\RoleService;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using simple wildcard pattern)
+ *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @licence MIT
  */
 class RoutePermissionsGuard extends AbstractGuard
@@ -43,6 +45,10 @@ class RoutePermissionsGuard extends AbstractGuard
      */
     protected $rules = [];
 
+    /**
+     * @param AuthorizationService $roleService
+     * @param array $rules
+     */
     public function __construct(AuthorizationService $roleService, array $rules = [])
     {
         $this->roleService = $roleService;
@@ -51,6 +57,7 @@ class RoutePermissionsGuard extends AbstractGuard
 
     /**
      * Set the rules (it overrides any existing rules)
+     *
      * @param  array $rules
      * @return void
      */
@@ -59,11 +66,11 @@ class RoutePermissionsGuard extends AbstractGuard
         $this->rules = [];
         foreach ($rules as $key => $value) {
             if (is_int($key)) {
-                $routeRegex = $value;
+                $routeRegex  = $value;
                 $permissions = [];
             } else {
-                $routeRegex = $key;
-                $permissions = (array)$value;
+                $routeRegex  = $key;
+                $permissions = (array) $value;
             }
             $this->rules[$routeRegex] = $permissions;
         }
@@ -83,18 +90,22 @@ class RoutePermissionsGuard extends AbstractGuard
                 break;
             }
         }
+
         // If no rules apply, it is considered as granted or not based on the protection policy
         if (null === $allowedPermissions) {
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
+
         if (in_array('*', $allowedPermissions)) {
             return true;
         }
+
         foreach ($allowedPermissions as $permission) {
             if ($this->roleService->isGranted($permission)) {
                 return true;
             }
         }
+
         return false;
     }
 }
