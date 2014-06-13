@@ -35,9 +35,12 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
 {
     public function testAttachToRightEvent()
     {
-        $guard = new RoutePermissionsGuard($this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false));
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $eventManager->expects($this->once())->method('attach')->with(RouteGuard::EVENT_NAME);
+        $eventManager->expects($this->once())
+            ->method('attach')
+            ->with(RouteGuard::EVENT_NAME);
+
+        $guard = new RoutePermissionsGuard($this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false));
         $guard->attach($eventManager);
     }
 
@@ -266,62 +269,87 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $isGranted,
         $protectionPolicy
     ) {
-        $event = new MvcEvent();
         $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName($matchedRouteName);
+
+        $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
+
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
         $authorizationService->expects($this->any())
             ->method('isGranted')
             ->will($this->returnValueMap($identityPermissions));
+
         $routeGuard = new RoutePermissionsGuard($authorizationService, $rules);
         $routeGuard->setProtectionPolicy($protectionPolicy);
+
         $this->assertEquals($isGranted, $routeGuard->isGranted($event));
     }
 
     public function testProperlyFillEventOnAuthorization()
     {
-        $event = new MvcEvent();
-        $routeMatch = new RouteMatch([]);
-        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $application->expects($this->never())->method('getEventManager')->will($this->returnValue($eventManager));
+
+        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
+        $application->expects($this->never())
+            ->method('getEventManager')
+            ->will($this->returnValue($eventManager));
+
+        $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName('adminRoute');
+
+        $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
+
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
         $identity->expects($this->any())->method('getRoles')->will($this->returnValue(['member']));
+
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())->method('getIdentity')->will($this->returnValue($identity));
+
         $roleProvider = new InMemoryRoleProvider(['member']);
         $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+
         $routeGuard = new RouteGuard($roleService, [
             'adminRoute' => 'member'
         ]);
         $routeGuard->onResult($event);
+
         $this->assertEmpty($event->getError());
         $this->assertNull($event->getParam('exception'));
     }
 
     public function testProperlySetUnauthorizedAndTriggerEventOnUnauthorization()
     {
-        $event = new MvcEvent();
-        $routeMatch = new RouteMatch([]);
-        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $application->expects($this->once())->method('getEventManager')->will($this->returnValue($eventManager));
-        $eventManager->expects($this->once())->method('trigger')->with(MvcEvent::EVENT_DISPATCH_ERROR);
+        $eventManager->expects($this->once())
+            ->method('trigger')
+            ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+
+        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
+        $application->expects($this->once())
+            ->method('getEventManager')
+            ->will($this->returnValue($eventManager));
+
+        $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName('adminRoute');
+
+        $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
+
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())->method('getIdentityRoles')->will($this->returnValue('member'));
+
         $roleProvider = new InMemoryRoleProvider(['member', 'guest']);
         $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+
         $routeGuard = new RouteGuard($roleService, [
             'adminRoute' => 'guest'
         ]);
         $routeGuard->onResult($event);
+
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(RouteGuard::GUARD_UNAUTHORIZED, $event->getError());
         $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
