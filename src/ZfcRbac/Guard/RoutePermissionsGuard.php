@@ -19,7 +19,7 @@ namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using simple wildcard pattern)
@@ -35,7 +35,7 @@ class RoutePermissionsGuard extends AbstractGuard
     const EVENT_PRIORITY = -10;
 
     /**
-     * @var AuthorizationService
+     * @var AuthorizationServiceInterface
      */
     protected $authorizationService;
 
@@ -47,10 +47,10 @@ class RoutePermissionsGuard extends AbstractGuard
     protected $rules = [];
 
     /**
-     * @param AuthorizationService $authorizationService
+     * @param AuthorizationServiceInterface $authorizationService
      * @param array $rules
      */
-    public function __construct(AuthorizationService $authorizationService, array $rules = [])
+    public function __construct(AuthorizationServiceInterface $authorizationService, array $rules = [])
     {
         $this->authorizationService = $authorizationService;
         $this->setRules($rules);
