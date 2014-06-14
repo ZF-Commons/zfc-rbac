@@ -35,8 +35,9 @@ class GuardPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $factories = [
-        'ZfcRbac\Guard\ControllerGuard' => 'ZfcRbac\Factory\ControllerGuardFactory',
-        'ZfcRbac\Guard\RouteGuard'      => 'ZfcRbac\Factory\RouteGuardFactory'
+        'ZfcRbac\Guard\ControllerGuard'       => 'ZfcRbac\Factory\ControllerGuardFactory',
+        'ZfcRbac\Guard\RouteGuard'            => 'ZfcRbac\Factory\RouteGuardFactory',
+        'ZfcRbac\Guard\RoutePermissionsGuard' => 'ZfcRbac\Factory\RoutePermissionsGuardFactory',
     ];
 
     /**

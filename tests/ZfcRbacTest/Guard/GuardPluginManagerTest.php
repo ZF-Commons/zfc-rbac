@@ -37,6 +37,12 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
             [
+                'ZfcRbac\Guard\RoutePermissionsGuard',
+                [
+                    'post/delete' => 'post.delete'
+                ]
+            ],
+            [
                 'ZfcRbac\Guard\ControllerGuard',
                 [
                     [
@@ -59,6 +65,10 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(
             'ZfcRbac\Service\RoleService',
             $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
+        );
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
         $pluginManager = new GuardPluginManager();
