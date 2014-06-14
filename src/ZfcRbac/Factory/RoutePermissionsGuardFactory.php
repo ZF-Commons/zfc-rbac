@@ -47,7 +47,7 @@ class RoutePermissionsGuardFactory implements FactoryInterface, MutableCreationO
     }
 
     /**
-     * {@inheritDoc}
+     * @param \Zend\ServiceManager\AbstractPluginManager|ServiceLocatorInterface $serviceLocator
      * @return RouteGuard
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -57,10 +57,10 @@ class RoutePermissionsGuardFactory implements FactoryInterface, MutableCreationO
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
 
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
 
-        $routeGuard = new RoutePermissionsGuard($roleService, $this->options);
+        $routeGuard = new RoutePermissionsGuard($authorizationService, $this->options);
         $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;
