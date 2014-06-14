@@ -111,189 +111,189 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         return [
             // Assert basic one-to-one mapping with both policies
             [
-                'rules'               => ['adminRoute' => 'admin'],
+                'rules'               => ['adminRoute' => 'post.edit'],
                 'matchedRouteName'    => 'adminRoute',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['adminRoute' => 'admin'],
+                'rules'               => ['adminRoute' => 'post.edit'],
                 'matchedRouteName'    => 'adminRoute',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert that policy changes result for non-specified route guards
             [
-                'rules'               => ['route' => 'admin'],
+                'rules'               => ['route' => 'post.edit'],
                 'matchedRouteName'    => 'anotherRoute',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['route' => 'admin'],
+                'rules'               => ['route' => 'post.edit'],
                 'matchedRouteName'    => 'anotherRoute',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert that composed route work for both policies
             [
-                'rules'               => ['admin/dashboard' => 'admin'],
+                'rules'               => ['admin/dashboard' => 'post.edit'],
                 'matchedRouteName'    => 'admin/dashboard',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['admin/dashboard' => 'admin'],
+                'rules'               => ['admin/dashboard' => 'post.edit'],
                 'matchedRouteName'    => 'admin/dashboard',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert that wildcard route work for both policies
             [
-                'rules'               => ['admin/*' => 'admin'],
+                'rules'               => ['admin/*' => 'post.edit'],
                 'matchedRouteName'    => 'admin/dashboard',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['admin/*' => 'admin'],
+                'rules'               => ['admin/*' => 'post.edit'],
                 'matchedRouteName'    => 'admin/dashboard',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert that wildcard route does match (or not depending on the policy) if rules is after matched route name
             [
-                'rules'               => ['fooBar/*' => 'admin'],
+                'rules'               => ['fooBar/*' => 'post.edit'],
                 'matchedRouteName'    => 'admin/fooBar/baz',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['fooBar/*' => 'admin'],
+                'rules'               => ['fooBar/*' => 'post.edit'],
                 'matchedRouteName'    => 'admin/fooBar/baz',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert that it can grant access with multiple rules
             [
                 'rules'               => [
-                    'route1' => 'admin',
-                    'route2' => 'admin'
+                    'route1' => 'post.edit',
+                    'route2' => 'post.edit'
                 ],
                 'matchedRouteName'    => 'route1',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
                 'rules'               => [
-                    'route1' => 'admin',
-                    'route2' => 'admin'
+                    'route1' => 'post.edit',
+                    'route2' => 'post.edit'
                 ],
                 'matchedRouteName'    => 'route2',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
                 'rules'               => [
-                    'route1' => 'admin',
-                    'route2' => 'admin'
+                    'route1' => 'post.edit',
+                    'route2' => 'post.edit'
                 ],
                 'matchedRouteName'    => 'route1',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             [
                 'rules'               => [
-                    'route1' => 'admin',
-                    'route2' => 'admin'
+                    'route1' => 'post.edit',
+                    'route2' => 'post.edit'
                 ],
                 'matchedRouteName'    => 'route2',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert that it can grant/deny access with multiple rules based on the policy
             [
                 'rules'               => [
-                    'route1' => 'admin',
-                    'route2' => 'admin'
+                    'route1' => 'post.edit',
+                    'route2' => 'post.edit'
                 ],
                 'matchedRouteName'    => 'route3',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
                 'rules'               => [
-                    'route1' => 'admin',
-                    'route2' => 'admin'
+                    'route1' => 'post.edit',
+                    'route2' => 'post.edit'
                 ],
                 'matchedRouteName'    => 'route3',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert it can deny access if a permission does not have access
             [
-                'rules'               => ['route' => 'admin'],
+                'rules'               => ['route' => 'post.edit'],
                 'matchedRouteName'    => 'route',
                 'identityPermissions' => [
-                    ['admin', null, false],
-                    ['guest', null, true]
+                    ['post.edit', null, false],
+                    ['post.read', null, true]
                 ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['route' => 'admin'],
+                'rules'               => ['route' => 'post.edit'],
                 'matchedRouteName'    => 'route',
                 'identityPermissions' => [
-                    ['admin', null, false],
-                    ['guest', null, true]
+                    ['post.edit', null, false],
+                    ['post.read', null, true]
                 ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert it can deny access if one of a permission does not have access
             [
-                'rules'               => ['route' => ['admin', 'guest']],
+                'rules'               => ['route' => ['post.edit', 'post.read']],
                 'matchedRouteName'    => 'route',
                 'identityPermissions' => [
-                    ['admin', null, true],
-                    ['guest', null, true]
+                    ['post.edit', null, true],
+                    ['post.read', null, true]
                 ],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['route' => ['admin', 'guest']],
+                'rules'               => ['route' => ['post.edit', 'post.read']],
                 'matchedRouteName'    => 'route',
                 'identityPermissions' => [
-                    ['admin', null, true],
-                    ['guest', null, false]
+                    ['post.edit', null, true],
+                    ['post.read', null, false]
                 ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['route' => ['admin', 'guest']],
+                'rules'               => ['route' => ['post.edit', 'post.read']],
                 'matchedRouteName'    => 'route',
                 'identityPermissions' => [
-                    ['admin', null, false],
-                    ['guest', null, true]
+                    ['post.edit', null, false],
+                    ['post.read', null, true]
                 ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_ALLOW
@@ -302,29 +302,29 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
             [
                 'rules'               => ['home' => '*'],
                 'matchedRouteName'    => 'home',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
                 'rules'               => ['home' => '*'],
                 'matchedRouteName'    => 'home',
-                'identityPermissions' => [['admin', null, true]],
+                'identityPermissions' => [['post.edit', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
             // Assert wildcard wins all
             [
-                'rules'               => ['home' => ['*', 'admin']],
+                'rules'               => ['home' => ['*', 'post.edit']],
                 'matchedRouteName'    => 'home',
-                'identityPermissions' => [['admin', null, false]],
+                'identityPermissions' => [['post.edit', null, false]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'               => ['home' => ['*', 'admin']],
+                'rules'               => ['home' => ['*', 'post.edit']],
                 'matchedRouteName'    => 'home',
-                'identityPermissions' => [['admin', null, false]],
+                'identityPermissions' => [['post.edit', null, false]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
@@ -334,7 +334,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider routeDataProvider
      */
-    public function testRouteGranted(
+    public function testRoutePermissionGranted(
         array $rules,
         $matchedRouteName,
         array $identityPermissions,
