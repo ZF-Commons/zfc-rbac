@@ -99,8 +99,8 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
      */
     public function testRulesConversions(array $rules, array $expected)
     {
-        $roleService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
-        $routeGuard = new RoutePermissionsGuard($roleService, $rules);
+        $roleService  = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $routeGuard   = new RoutePermissionsGuard($roleService, $rules);
         $reflProperty = new \ReflectionProperty($routeGuard, 'rules');
         $reflProperty->setAccessible(true);
         $this->assertEquals($expected, $reflProperty->getValue($routeGuard));
@@ -200,7 +200,27 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
                     'route1' => 'admin',
                     'route2' => 'admin'
                 ],
+                'matchedRouteName'    => 'route2',
+                'identityPermissions' => [['admin', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    'route1' => 'admin',
+                    'route2' => 'admin'
+                ],
                 'matchedRouteName'    => 'route1',
+                'identityPermissions' => [['admin', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            [
+                'rules'               => [
+                    'route1' => 'admin',
+                    'route2' => 'admin'
+                ],
+                'matchedRouteName'    => 'route2',
                 'identityPermissions' => [['admin', null, true]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
@@ -230,16 +250,53 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
             [
                 'rules'               => ['route' => 'admin'],
                 'matchedRouteName'    => 'route',
-                'identityPermissions' => [['admin', null, false], ['guest', null, true]],
+                'identityPermissions' => [
+                    ['admin', null, false],
+                    ['guest', null, true]
+                ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
                 'rules'               => ['route' => 'admin'],
                 'matchedRouteName'    => 'route',
-                'identityPermissions' => [['admin', null, false], ['guest', null, true]],
+                'identityPermissions' => [
+                    ['admin', null, false],
+                    ['guest', null, true]
+                ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
+            ],
+            // Assert it can deny access if one of a permission does not have access
+            [
+                'rules'               => ['route' => ['admin', 'guest']],
+                'matchedRouteName'    => 'route',
+                'identityPermissions' => [
+                    ['admin', null, true],
+                    ['guest', null, true]
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => ['route' => ['admin', 'guest']],
+                'matchedRouteName'    => 'route',
+                'identityPermissions' => [
+                    ['admin', null, true],
+                    ['guest', null, false]
+                ],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => ['route' => ['admin', 'guest']],
+                'matchedRouteName'    => 'route',
+                'identityPermissions' => [
+                    ['admin', null, false],
+                    ['guest', null, true]
+                ],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             // Assert wildcard in permission
             [
@@ -253,6 +310,21 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
                 'rules'               => ['home' => '*'],
                 'matchedRouteName'    => 'home',
                 'identityPermissions' => [['admin', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            // Assert wildcard wins all
+            [
+                'rules'               => ['home' => ['*', 'admin']],
+                'matchedRouteName'    => 'home',
+                'identityPermissions' => [['admin', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => ['home' => ['*', 'admin']],
+                'matchedRouteName'    => 'home',
+                'identityPermissions' => [['admin', null, false]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
@@ -309,7 +381,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $identityProvider->expects($this->any())->method('getIdentity')->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider(['member']);
-        $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new RouteGuard($roleService, [
             'adminRoute' => 'member'
@@ -343,7 +415,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $identityProvider->expects($this->any())->method('getIdentityRoles')->will($this->returnValue('member'));
 
         $roleProvider = new InMemoryRoleProvider(['member', 'guest']);
-        $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
         $routeGuard = new RouteGuard($roleService, [
             'adminRoute' => 'guest'

@@ -102,11 +102,11 @@ class RoutePermissionsGuard extends AbstractGuard
         }
 
         foreach ($allowedPermissions as $permission) {
-            if ($this->authorizationService->isGranted($permission)) {
-                return true;
+            if (!$this->authorizationService->isGranted($permission)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 }
