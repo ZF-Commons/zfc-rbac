@@ -32,7 +32,7 @@ class RoutePermissionsGuard extends AbstractGuard
 {
     use ProtectionPolicyTrait;
 
-    const EVENT_PRIORITY = -10;
+    const EVENT_PRIORITY = -6;
 
     /**
      * @var AuthorizationServiceInterface

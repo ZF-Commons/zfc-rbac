@@ -23,9 +23,6 @@ use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Guard\RoutePermissionsGuard;
-use ZfcRbac\Role\InMemoryRoleProvider;
-use ZfcRbac\Service\RoleService;
-use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 
 /**
  * @covers \ZfcRbac\Guard\AbstractGuard
@@ -47,9 +44,10 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * We want to ensure an order for guards
      */
-    public function testAssertRouteGuardPriorityIsHigherThanControllerGuardPriority()
+    public function testAssertRoutePermissionsGuardPriorityRank()
     {
-        $this->assertTrue(RouteGuard::EVENT_PRIORITY > ControllerGuard::EVENT_PRIORITY);
+        $this->assertLessThan(RouteGuard::EVENT_PRIORITY, RoutePermissionsGuard::EVENT_PRIORITY);
+        $this->assertGreaterThan(ControllerGuard::EVENT_PRIORITY, RoutePermissionsGuard::EVENT_PRIORITY);
     }
 
     public function rulesConversionProvider()
@@ -374,17 +372,14 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
-        $identity->expects($this->any())->method('getRoles')->will($this->returnValue(['member']));
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $authorizationService->expects($this->once())
+            ->method('isGranted')
+            ->with('post.edit')
+            ->will($this->returnValue(true));
 
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())->method('getIdentity')->will($this->returnValue($identity));
-
-        $roleProvider = new InMemoryRoleProvider(['member']);
-        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
-
-        $routeGuard = new RouteGuard($roleService, [
-            'adminRoute' => 'member'
+        $routeGuard = new RoutePermissionsGuard($authorizationService, [
+            'adminRoute' => 'post.edit'
         ]);
         $routeGuard->onResult($event);
 
@@ -411,14 +406,14 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
-        $identityProvider->expects($this->any())->method('getIdentityRoles')->will($this->returnValue('member'));
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $authorizationService->expects($this->once())
+            ->method('isGranted')
+            ->with('post.edit')
+            ->will($this->returnValue(false));
 
-        $roleProvider = new InMemoryRoleProvider(['member', 'guest']);
-        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
-
-        $routeGuard = new RouteGuard($roleService, [
-            'adminRoute' => 'guest'
+        $routeGuard = new RoutePermissionsGuard($authorizationService, [
+            'adminRoute' => 'post.edit'
         ]);
         $routeGuard->onResult($event);
 
