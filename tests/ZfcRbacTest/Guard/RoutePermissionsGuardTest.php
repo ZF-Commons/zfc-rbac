@@ -44,7 +44,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * We want to ensure an order for guards
      */
-    public function testAssertRoutePermissionsGuardPriorityRank()
+    public function testAssertRoutePermissionsGuardPriority()
     {
         $this->assertLessThan(RouteGuard::EVENT_PRIORITY, RoutePermissionsGuard::EVENT_PRIORITY);
         $this->assertGreaterThan(ControllerGuard::EVENT_PRIORITY, RoutePermissionsGuard::EVENT_PRIORITY);
@@ -244,7 +244,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
-            // Assert it can deny access if a permission does not have access
+            // Assert it can deny access if the only permission does not have access
             [
                 'rules'               => ['route' => 'post.edit'],
                 'matchedRouteName'    => 'route',
@@ -265,7 +265,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
-            // Assert it can deny access if one of a permission does not have access
+            // Assert it can deny access if one of the permission does not have access
             [
                 'rules'               => ['route' => ['post.edit', 'post.read']],
                 'matchedRouteName'    => 'route',

@@ -23,6 +23,7 @@ use Zend\Mvc\Router\RouteMatch;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
+use ZfcRbac\Guard\RoutePermissionsGuard;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RoleService;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
@@ -48,9 +49,10 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * We want to ensure an order for guards
      */
-    public function testAssertRouteGuardPriorityIsHigherThanControllerGuardPriority()
+    public function testAssertRouteGuardPriority()
     {
-        $this->assertTrue(RouteGuard::EVENT_PRIORITY > ControllerGuard::EVENT_PRIORITY);
+        $this->assertGreaterThan(RoutePermissionsGuard::EVENT_PRIORITY, RouteGuard::EVENT_PRIORITY);
+        $this->assertGreaterThan(ControllerGuard::EVENT_PRIORITY, RouteGuard::EVENT_PRIORITY);
     }
 
     public function rulesConversionProvider()
