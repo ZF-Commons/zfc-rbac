@@ -1,4 +1,4 @@
-_Up-to-date with version 2.0.* of ZfcRbac_
+_Up-to-date with version 2.3.* of ZfcRbac_
 
 Welcome to the official ZfcRbac documentation. This documentation will help you to quickly understand how to use
 and extend ZfcRbac.
@@ -37,7 +37,7 @@ If you are looking for some information that is not listed in the documentation,
    1. [Injecting the AuthorizationService](/docs/06. Using the Authorization Service.md#injecting-the-authorization-service)
    2. [Permissions and Assertions](/docs/06. Using the Authorization Service.md#permissions-and-assertions)
 
-7. [Cookbook](/docs/06. Cookbook.md)
+7. [Cookbook](/docs/07. Cookbook.md)
    1. [A real world example](/docs/07. Cookbook.md#a-real-world-application)
    2. [Best practices](/docs/07. Cookbook.md#best-practices)
    3. [Using ZfcRbac with Doctrine ORM](/docs/07. Cookbook.md#using-zfcrbac-with-doctrine-orm)

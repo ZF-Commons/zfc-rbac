@@ -28,9 +28,9 @@ class AuthorizationServiceAwareTraitTest extends \PHPUnit_Framework_TestCase
     {
         $trait                = $this->getObjectForTrait('ZfcRbac\Service\AuthorizationServiceAwareTrait');
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
-        
+
         $trait->setAuthorizationService($authorizationService);
-        
+
         $this->assertEquals($authorizationService, $trait->getAuthorizationService());
     }
 }

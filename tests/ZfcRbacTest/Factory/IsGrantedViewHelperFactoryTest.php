@@ -36,7 +36,7 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
-            $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
+            $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface')
         );
 
         $factory   = new IsGrantedViewHelperFactory();
@@ -45,4 +45,3 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\View\Helper\IsGranted', $isGranted);
     }
 }
- 

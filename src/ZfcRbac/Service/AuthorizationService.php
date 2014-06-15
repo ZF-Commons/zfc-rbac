@@ -36,7 +36,7 @@ use ZfcRbac\Identity\IdentityInterface;
  * @author  Aeneas Rekkas
  * @licence MIT
  */
-class AuthorizationService
+class AuthorizationService implements AuthorizationServiceInterface
 {
     /**
      * @var Rbac
@@ -81,7 +81,7 @@ class AuthorizationService
      */
     public function setAssertion($permission, $assertion)
     {
-        $this->assertions[(string)$permission] = $assertion;
+        $this->assertions[(string) $permission] = $assertion;
     }
 
     /**
@@ -103,7 +103,7 @@ class AuthorizationService
      */
     public function hasAssertion($permission)
     {
-        return isset($this->assertions[(string)$permission]);
+        return isset($this->assertions[(string) $permission]);
     }
 
     /**
@@ -131,15 +131,13 @@ class AuthorizationService
             return false;
         }
 
-        $permission = (string)$permission;
-
         if (!$this->rbac->isGranted($roles, $permission)) {
             return false;
         }
 
         if ($this->hasAssertion($permission)) {
             $authorizationContext = new AuthorizationContext($permission, $context);
-            return $this->assert($this->assertions[$permission], $authorizationContext);
+            return $this->assert($this->assertions[(string) $permission], $authorizationContext);
         }
 
         return true;

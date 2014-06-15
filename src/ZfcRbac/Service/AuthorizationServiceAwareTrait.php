@@ -20,7 +20,7 @@ namespace ZfcRbac\Service;
 
 /**
  * Makes a class AuthorizationService aware
- * 
+ *
  * @author  Aeneas Rekkas
  * @license MIT License
  */
@@ -36,7 +36,9 @@ trait AuthorizationServiceAwareTrait
     /**
      * Set the AuthorizationService
      *
-     * @param AuthorizationService $authorizationService            
+     * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
+     *
+     * @param AuthorizationService $authorizationService
      * @return void
      */
     public function setAuthorizationService(AuthorizationService $authorizationService)

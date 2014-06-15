@@ -15,8 +15,10 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
+
 namespace ZfcRbac\Initializer;
 
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationServiceAwareInterface;
@@ -35,6 +37,10 @@ class AuthorizationServiceInitializer implements InitializerInterface
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
         if ($instance instanceof AuthorizationServiceAwareInterface) {
+            if ($serviceLocator instanceof AbstractPluginManager) {
+                $serviceLocator = $serviceLocator->getServiceLocator();
+            }
+            
             $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
             $instance->setAuthorizationService($authorizationService);
         }

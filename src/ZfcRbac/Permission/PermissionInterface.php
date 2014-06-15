@@ -15,21 +15,20 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace ZfcRbac\Service;
+
+namespace ZfcRbac\Permission;
+
+use Rbac\Permission\PermissionInterface as BasePermissionInterface;
 
 /**
- * @author      Aeneas Rekkas
- * @license     http://www.opensource.org/licenses/mit-license.html  MIT License
+ * Interface that permissions must implement to be used with the AuthorizationService
+ *
+ * Please note that currently the interface extends the one from RBAC, but starting in ZF3, the
+ * permission will be removed from RBAC component and moved here completely
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
-interface AuthorizationServiceAwareInterface
+interface PermissionInterface extends BasePermissionInterface
 {
-    /**
-     * Set the AuthorizationService
-     *
-     * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
-     *
-     * @param   AuthorizationService $authorizationService
-     * @return  void
-     */
-    public function setAuthorizationService(AuthorizationService $authorizationService);
 }

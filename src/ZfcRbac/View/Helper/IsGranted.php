@@ -19,7 +19,7 @@
 namespace ZfcRbac\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
  * View helper that allows to test a permission in a view
@@ -30,16 +30,16 @@ use ZfcRbac\Service\AuthorizationService;
 class IsGranted extends AbstractHelper
 {
     /**
-     * @var AuthorizationService
+     * @var AuthorizationServiceInterface
      */
     private $authorizationService;
 
     /**
      * Constructor
      *
-     * @param AuthorizationService $authorizationService
+     * @param AuthorizationServiceInterface $authorizationService
      */
-    public function __construct(AuthorizationService $authorizationService)
+    public function __construct(AuthorizationServiceInterface $authorizationService)
     {
         $this->authorizationService = $authorizationService;
     }

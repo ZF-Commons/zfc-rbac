@@ -17,7 +17,7 @@
  */
 
 use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
+use ZfcRbac\Permission\PermissionInterface;
 
 /**
  * @ORM\Entity
