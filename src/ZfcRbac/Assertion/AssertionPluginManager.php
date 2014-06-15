@@ -36,12 +36,13 @@ class AssertionPluginManager extends AbstractPluginManager
      */
     public function validatePlugin($plugin)
     {
-        if ($plugin instanceof AssertionInterface) {
+        if ($plugin instanceof AssertionInterface || $plugin instanceof ContextAwareAssertionInterface) {
             return; // we're okay
         }
 
         throw new Exception\RuntimeException(sprintf(
-            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
+            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface" or'
+            . '"ZfcRbac\Assertion\ContextAwareAssertionInterface", but "%s" was given',
             is_object($plugin) ? get_class($plugin) : gettype($plugin)
         ));
     }

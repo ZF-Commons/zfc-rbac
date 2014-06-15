@@ -16,25 +16,34 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest\Asset;
 
+use ZfcRbac\Assertion\AuthorizationContextInterface;
+use ZfcRbac\Assertion\ContextAwareAssertionInterface;
 use ZfcRbac\Service\AuthorizationServiceInterface;
 
-/**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Aeneas Rekkas
- * @licence MIT
- */
-interface ContextAwareAssertionInterface
+class SimpleContextAwareAssertion implements ContextAwareAssertionInterface
 {
     /**
-     * Check if this assertion is true
-     *
-     * @param AuthorizationServiceInterface $authorization
-     * @param AuthorizationContextInterface $context
-     *
+     * @var bool
+     */
+    protected $called = false;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function assert(AuthorizationServiceInterface $authorization, AuthorizationContextInterface $context)
+    {
+        $this->called = true;
+
+        return $context->getContext();
+    }
+
+    /**
      * @return bool
      */
-    public function assert(AuthorizationServiceInterface $authorization, AuthorizationContextInterface $context);
+    public function getCalled()
+    {
+        return $this->called;
+    }
 }

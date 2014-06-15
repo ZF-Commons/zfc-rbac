@@ -28,7 +28,10 @@ class AuthorizationContext implements AuthorizationContextInterface
      */
     protected $context;
 
-
+    /**
+     * @param string $permission
+     * @param mixed  $context
+     */
     public function __construct($permission, $context = null)
     {
         $this->permission = $permission;
@@ -36,6 +39,8 @@ class AuthorizationContext implements AuthorizationContextInterface
     }
 
     /**
+     * Get the permission
+     *
      * @return string
      */
     public function getPermission()
@@ -44,6 +49,8 @@ class AuthorizationContext implements AuthorizationContextInterface
     }
 
     /**
+     * Get the context
+     *
      * @return mixed
      */
     public function getContext()

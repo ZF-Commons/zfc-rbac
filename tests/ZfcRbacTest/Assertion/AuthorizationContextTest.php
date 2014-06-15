@@ -16,25 +16,20 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use ZfcRbac\Assertion\AuthorizationContext;
 
 /**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Aeneas Rekkas
- * @licence MIT
+ * @covers \ZfcRbac\Assertion\AuthorizationContext
  */
-interface ContextAwareAssertionInterface
+class AuthorizationContextTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Check if this assertion is true
-     *
-     * @param AuthorizationServiceInterface $authorization
-     * @param AuthorizationContextInterface $context
-     *
-     * @return bool
-     */
-    public function assert(AuthorizationServiceInterface $authorization, AuthorizationContextInterface $context);
+    public function testConstructor()
+    {
+        $context = new AuthorizationContext('foo', 'bar');
+
+        $this->assertSame('foo', $context->getPermission());
+        $this->assertSame('bar', $context->getContext());
+    }
 }
