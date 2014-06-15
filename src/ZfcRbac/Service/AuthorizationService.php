@@ -18,10 +18,13 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Rbac;
 use Rbac\Permission\PermissionInterface;
-use ZfcRbac\Assertion\AssertionPluginManager;
+use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AuthorizationContext;
+use ZfcRbac\Assertion\AuthorizationContextInterface;
+use ZfcRbac\Assertion\ContextAwareAssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 
@@ -30,6 +33,7 @@ use ZfcRbac\Identity\IdentityInterface;
  * granted a permission
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  Aeneas Rekkas
  * @licence MIT
  */
 class AuthorizationService
@@ -77,7 +81,7 @@ class AuthorizationService
      */
     public function setAssertion($permission, $assertion)
     {
-        $this->assertions[(string) $permission] = $assertion;
+        $this->assertions[(string)$permission] = $assertion;
     }
 
     /**
@@ -99,7 +103,7 @@ class AuthorizationService
      */
     public function hasAssertion($permission)
     {
-        return isset($this->assertions[(string) $permission]);
+        return isset($this->assertions[(string)$permission]);
     }
 
     /**
@@ -127,39 +131,45 @@ class AuthorizationService
             return false;
         }
 
-        $permission = (string) $permission;
+        $permission = (string)$permission;
 
         if (!$this->rbac->isGranted($roles, $permission)) {
             return false;
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[$permission], $context);
+            $authorizationContext = new AuthorizationContext($permission, $context);
+            return $this->assert($this->assertions[$permission], $authorizationContext);
         }
 
         return true;
     }
 
     /**
-     * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed                              $context
+     * @param  string|callable|AssertionInterface|ContextAwareAssertionInterface $assertion
+     * @param  AuthorizationContextInterface                                     $authorizationContext
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
-    protected function assert($assertion, $context = null)
+    protected function assert($assertion, AuthorizationContextInterface $authorizationContext = null)
     {
+        $context = $authorizationContext->getContext();
+
         if (is_callable($assertion)) {
             return $assertion($this, $context);
         } elseif ($assertion instanceof AssertionInterface) {
             return $assertion->assert($this, $context);
+        } elseif ($assertion instanceof ContextAwareAssertionInterface) {
+            return $assertion->assert($this, $authorizationContext);
         } elseif (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
 
-            return $assertion->assert($this, $context);
+            return $this->assert($assertion, $authorizationContext);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(
-            'Assertion must be callable, string or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
+            'Assertion must be callable, string, implement ZfcRbac\Assertion\AssertionInterface or'
+            . 'implement ZfcRbac\Assertion\ContextAwareAssertionInterface, "%s" given',
             is_object($assertion) ? get_class($assertion) : gettype($assertion)
         ));
     }
