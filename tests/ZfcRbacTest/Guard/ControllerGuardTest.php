@@ -282,6 +282,43 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
+            // Test roles prevails
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'roles'       => 'admin',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
+                    'admin'
+                ],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'roles'       => 'admin',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
+                    'admin'
+                ],
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
             // Test with multiple rules
             [
                 'rules'               => [
@@ -304,6 +341,54 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'identityRole'        => 'admin',
                 'identityPermissions' => [],
                 'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'read',
+                        'permissions' => 'post.read'
+                    ],
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'edit',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                    ['post.edit', null, true],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'read',
+                        'permissions' => 'post.read'
+                    ],
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'edit',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'read',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                    ['post.edit', null, true],
+                ],
+                'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
@@ -339,13 +424,11 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'controller'          => 'CommentController',
                 'action'              => 'edit',
-                'rolesConfig'         => [
-                    'member'
-                ],
+                'rolesConfig'         => ['member'],
                 'identityRole'        => 'member',
                 'identityPermissions' => [],
                 'isGranted'           => true,
-                'policy'              => GuardInterface::POLICY_ALLOW
+                'policy'              => GuardInterface::POLICY_ALLOW,
             ],
             [
                 'rules'               => [
@@ -356,13 +439,45 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'controller'          => 'CommentController',
                 'action'              => 'edit',
-                'rolesConfig'         => [
-                    'member'
-                ],
+                'rolesConfig'         => ['member'],
                 'identityRole'        => 'member',
                 'identityPermissions' => [],
                 'isGranted'           => false,
-                'policy'              => GuardInterface::POLICY_DENY
+                'policy'              => GuardInterface::POLICY_DENY,
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'permissions' => 'post.edit'
+                    ],
+                ],
+                'controller'          => 'CommentController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW,
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'permissions' => 'post.edit'
+                    ],
+                ],
+                'controller'          => 'CommentController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY,
             ],
             // Test assert policy can deny other actions from controller when only one is specified
             [
@@ -375,9 +490,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'controller'          => 'BlogController',
                 'action'              => 'read',
-                'rolesConfig'         => [
-                    'member'
-                ],
+                'rolesConfig'         => ['member'],
                 'identityRole'        => 'member',
                 'identityPermissions' => [],
                 'isGranted'           => true,
@@ -393,11 +506,27 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'controller'          => 'BlogController',
                 'action'              => 'read',
-                'rolesConfig'         => [
-                    'member'
-                ],
+                'rolesConfig'         => ['member'],
                 'identityRole'        => 'member',
                 'identityPermissions' => [],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'edit',
+                        'permissions' => 'post.edit'
+                    ],
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'read',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [
+                    ['post.edit', null, true],
+                ],
                 'isGranted'           => false,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
@@ -454,9 +583,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'controller'          => 'IndexController',
                 'action'              => 'index',
-                'rolesConfig'         => [
-                    'admin'
-                ],
+                'rolesConfig'         => ['admin'],
                 'identityRole'        => 'admin',
                 'identityPermissions' => [],
                 'isGranted'           => true,
@@ -471,11 +598,44 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'controller'          => 'IndexController',
                 'action'              => 'index',
-                'rolesConfig'         => [
-                    'admin'
-                ],
+                'rolesConfig'         => ['admin'],
                 'identityRole'        => 'admin',
                 'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            // Assert wildcard in permissions
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'IndexController',
+                        'permissions' => '*'
+                    ]
+                ],
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'IndexController',
+                        'permissions' => '*'
+                    ]
+                ],
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
