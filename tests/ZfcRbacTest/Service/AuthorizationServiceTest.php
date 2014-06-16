@@ -246,4 +246,51 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($authorization->getIdentity(), $identity);
     }
+
+    /**
+     * @covers ZfcRbac\Service\AuthorizationService::hasRole
+     */
+    public function testHasRole()
+    {
+        $roleConfig = [
+            'admin' => [
+                'children'    => ['member'],
+                'permissions' => ['delete']
+            ],
+            'member' => [
+                'children'    => ['guest'],
+                'permissions' => ['write']
+            ],
+            'guest' => [
+                'permissions' => ['read']
+            ]
+        ];
+
+        $identityRole = ['member'];
+
+        $assertionPluginConfig = [
+            'invokables' => [
+                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion'
+            ]
+        ];
+
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity->expects($this->any())
+            ->method('getRoles')
+            ->will($this->returnValue($identityRole));
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->any())
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
+
+        $rbac                   = new Rbac(new RecursiveRoleIteratorStrategy());
+        $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig), $rbac->getTraversalStrategy());
+        $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
+
+        $this->assertTrue($authorizationService->hasRole('member'));
+        $this->assertFalse($authorizationService->hasRole('admin'));
+        $this->assertTrue($authorizationService->hasRole('guest'));
+    }
 }

@@ -16,32 +16,30 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Service;
+namespace ZfcRbacTest\View\Helper;
 
-use Rbac\Permission\PermissionInterface;
+use ZfcRbac\View\Helper\HasRole;
 
 /**
- * Minimal interface for an authorization service
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @covers \ZfcRbac\View\Helper\IsGranted
  */
-interface AuthorizationServiceInterface
+class HasRoleTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Check if the permission is granted to the current identity
-     *
-     * @param string|PermissionInterface $permission
-     * @param mixed                      $context
-     * @return bool
-     */
-    public function isGranted($permission, $context = null);
+    public function testCallAuthorizationService()
+    {
+        $rolesConfig = [
+            ['member', true],
+            [['member'], true],
+        ];
 
-    /**
-     * Check if the current identity has some roles
-     *
-     * @param string|string[] $roleOrRoles
-     * @return bool
-     */
-    public function hasRole($roleOrRoles);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface');
+        $authorizationService->expects($this->any())
+            ->method('hasRole')
+            ->will($this->returnValueMap($rolesConfig));
+
+        $helper = new HasRole($authorizationService);
+
+        $this->assertTrue($helper('member'));
+        $this->assertTrue($helper(['member']));
+    }
 }

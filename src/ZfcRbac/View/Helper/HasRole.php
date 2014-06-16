@@ -16,32 +16,40 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Service;
+namespace ZfcRbac\View\Helper;
 
-use Rbac\Permission\PermissionInterface;
+use Zend\View\Helper\AbstractHelper;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
- * Minimal interface for an authorization service
+ * View helper that allows to test a role in a view
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @licence MIT
  */
-interface AuthorizationServiceInterface
+class HasRole extends AbstractHelper
 {
     /**
-     * Check if the permission is granted to the current identity
-     *
-     * @param string|PermissionInterface $permission
-     * @param mixed                      $context
-     * @return bool
+     * @var AuthorizationServiceInterface
      */
-    public function isGranted($permission, $context = null);
+    private $authorizationService;
 
     /**
-     * Check if the current identity has some roles
+     * Constructor
      *
+     * @param AuthorizationServiceInterface $authorizationService
+     */
+    public function __construct(AuthorizationServiceInterface $authorizationService)
+    {
+        $this->authorizationService = $authorizationService;
+    }
+
+    /**
      * @param string|string[] $roleOrRoles
      * @return bool
      */
-    public function hasRole($roleOrRoles);
+    public function __invoke($roleOrRoles)
+    {
+        return $this->authorizationService->hasRole($roleOrRoles);
+    }
 }

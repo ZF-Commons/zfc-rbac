@@ -20,6 +20,8 @@ namespace ZfcRbac\Service;
 
 use Rbac\Rbac;
 use Rbac\Permission\PermissionInterface;
+use Rbac\Role\HierarchicalRole;
+use Rbac\Role\RoleInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
@@ -57,8 +59,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Constructor
      *
-     * @param Rbac                   $rbac
-     * @param RoleService            $roleService
+     * @param Rbac $rbac
+     * @param RoleService $roleService
      * @param AssertionPluginManager $assertionPluginManager
      */
     public function __construct(Rbac $rbac, RoleService $roleService, AssertionPluginManager $assertionPluginManager)
@@ -71,13 +73,13 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Set an assertion
      *
-     * @param string|PermissionInterface         $permission
+     * @param string|PermissionInterface $permission
      * @param string|callable|AssertionInterface $assertion
      * @return void
      */
     public function setAssertion($permission, $assertion)
     {
-        $this->assertions[(string) $permission] = $assertion;
+        $this->assertions[(string)$permission] = $assertion;
     }
 
     /**
@@ -99,7 +101,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function hasAssertion($permission)
     {
-        return isset($this->assertions[(string) $permission]);
+        return isset($this->assertions[(string)$permission]);
     }
 
     /**
@@ -116,7 +118,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * Check if the permission is granted to the current identity
      *
      * @param string|PermissionInterface $permission
-     * @param mixed                      $context
+     * @param mixed $context
      * @return bool
      */
     public function isGranted($permission, $context = null)
@@ -132,15 +134,52 @@ class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[(string) $permission], $context);
+            return $this->assert($this->assertions[(string)$permission], $context);
         }
 
         return true;
     }
 
     /**
+     * Check if the current identity has some roles
+     *
+     * @param string|string[] $roleOrRoles
+     * @return bool
+     */
+    public function hasRole($roleOrRoles)
+    {
+        $roleOrRoles   = (array)$roleOrRoles;
+        $identityRoles = $this->roleService->getIdentityRoles();
+
+        if (empty($identityRoles)) {
+            return false;
+        }
+
+        return $this->searchRoleRecursively($roleOrRoles, $identityRoles);
+    }
+
+    /**
+     * @param string[] $roleOrRoles
+     * @param RoleInterface[] $identityRoles
+     * @return bool
+     */
+    private function searchRoleRecursively($roleOrRoles, $identityRoles)
+    {
+        foreach ($identityRoles as $identityRole) {
+            if (in_array($identityRole->getName(), $roleOrRoles)) {
+                return true;
+            }
+            if ($identityRole instanceof HierarchicalRole) {
+                return $this->searchRoleRecursively($roleOrRoles, $identityRole->getChildren());
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed                              $context
+     * @param  mixed $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */

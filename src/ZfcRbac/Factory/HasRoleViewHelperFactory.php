@@ -16,32 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Service;
+namespace ZfcRbac\Factory;
 
-use Rbac\Permission\PermissionInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\View\Helper\HasRole;
 
 /**
- * Minimal interface for an authorization service
+ * Create the HasRole view helper
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @licence MIT
  */
-interface AuthorizationServiceInterface
+class HasRoleViewHelperFactory implements FactoryInterface
 {
     /**
-     * Check if the permission is granted to the current identity
-     *
-     * @param string|PermissionInterface $permission
-     * @param mixed                      $context
-     * @return bool
+     * {@inheritDoc}
+     * @return HasRole
      */
-    public function isGranted($permission, $context = null);
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        $authorizationService = $serviceLocator->getServiceLocator()->get('ZfcRbac\Service\AuthorizationService');
 
-    /**
-     * Check if the current identity has some roles
-     *
-     * @param string|string[] $roleOrRoles
-     * @return bool
-     */
-    public function hasRole($roleOrRoles);
+        return new HasRole($authorizationService);
+    }
 }
