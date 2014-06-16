@@ -92,6 +92,7 @@ class RouteGuard extends AbstractGuard
     /**
      * @param string $key
      * @param string|array $value
+     * @throws \InvalidArgumentException
      * @return string[]
      */
     private function parseOneRule($key, $value)
@@ -104,6 +105,9 @@ class RouteGuard extends AbstractGuard
             $routePattern = $key;
             $roles        = [];
             $permissions  = [];
+            if (isset($value['roles']) && isset($value['permissions'])) {
+                throw new \InvalidArgumentException("You cannot use roles AND permissions for a route.");
+            }
             if (!isset($value['roles']) && !isset($value['permissions'])) {
                 $roles       = (array)$value;
                 $permissions = [];

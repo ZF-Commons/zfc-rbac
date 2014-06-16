@@ -136,13 +136,25 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
             [
                 'rules'    => [
                     'route' => [
-                        'roles'       => ['role1', 'role2'],
-                        'permissions' => ['read', 'edit']
+                        'roles' => ['role1', 'role2'],
                     ]
                 ],
                 'expected' => [
                     'route' => [
                         'roles'       => ['role1', 'role2'],
+                        'permissions' => []
+                    ]
+                ]
+            ],
+            [
+                'rules'    => [
+                    'route' => [
+                        'permissions' => ['read', 'edit']
+                    ]
+                ],
+                'expected' => [
+                    'route' => [
+                        'roles'       => [],
                         'permissions' => ['read', 'edit']
                     ]
                 ]
@@ -236,35 +248,6 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                 'rolesConfig'         => ['admin'],
                 'identityRole'        => 'admin',
                 'identityPermissions' => [['post.edit', null, true]],
-                'isGranted'           => true,
-                'policy'              => GuardInterface::POLICY_DENY
-            ],
-            // Assert that role check prevails
-            [
-                'rules'               => [
-                    'doubleRoute' => [
-                        'roles'       => ['admin'],
-                        'permissions' => ['post.edit']
-                    ],
-                ],
-                'matchedRouteName'    => 'doubleRoute',
-                'rolesConfig'         => ['admin', 'member'],
-                'identityRole'        => 'member',
-                'identityPermissions' => [['post.edit', null, true]],
-                'isGranted'           => false,
-                'policy'              => GuardInterface::POLICY_ALLOW
-            ],
-            [
-                'rules'               => [
-                    'doubleRoute' => [
-                        'roles'       => ['admin'],
-                        'permissions' => ['post.edit']
-                    ],
-                ],
-                'matchedRouteName'    => 'doubleRoute',
-                'rolesConfig'         => ['admin', 'member'],
-                'identityRole'        => 'admin',
-                'identityPermissions' => [['post.edit', null, false]],
                 'isGranted'           => true,
                 'policy'              => GuardInterface::POLICY_DENY
             ],
