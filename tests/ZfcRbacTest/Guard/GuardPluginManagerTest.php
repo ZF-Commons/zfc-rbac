@@ -51,7 +51,17 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
                         'roles'      => 'baz'
                     ]
                 ]
-            ]
+            ],
+            [
+                'ZfcRbac\Guard\ControllerPermissionsGuard',
+                [
+                    [
+                        'controller'  => 'Foo',
+                        'actions'     => 'bar',
+                        'permissions' => 'baz'
+                    ]
+                ]
+            ],
         ];
     }
 

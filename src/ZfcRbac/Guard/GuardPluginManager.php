@@ -27,6 +27,7 @@ use ZfcRbac\Exception;
  * @method GuardInterface get($name)
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @licence MIT
  */
 class GuardPluginManager extends AbstractPluginManager
@@ -35,9 +36,10 @@ class GuardPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $factories = [
-        'ZfcRbac\Guard\ControllerGuard'       => 'ZfcRbac\Factory\ControllerGuardFactory',
-        'ZfcRbac\Guard\RouteGuard'            => 'ZfcRbac\Factory\RouteGuardFactory',
-        'ZfcRbac\Guard\RoutePermissionsGuard' => 'ZfcRbac\Factory\RoutePermissionsGuardFactory',
+        'ZfcRbac\Guard\ControllerGuard'            => 'ZfcRbac\Factory\ControllerGuardFactory',
+        'ZfcRbac\Guard\ControllerPermissionsGuard' => 'ZfcRbac\Factory\ControllerPermissionsGuardFactory',
+        'ZfcRbac\Guard\RouteGuard'                 => 'ZfcRbac\Factory\RouteGuardFactory',
+        'ZfcRbac\Guard\RoutePermissionsGuard'      => 'ZfcRbac\Factory\RoutePermissionsGuardFactory',
     ];
 
     /**
