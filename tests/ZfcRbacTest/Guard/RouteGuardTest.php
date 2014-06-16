@@ -28,6 +28,8 @@ use ZfcRbac\Service\RoleService;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 
 /**
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @covers \ZfcRbac\Guard\AbstractGuard
  * @covers \ZfcRbac\Guard\RouteGuard
  */
@@ -35,12 +37,14 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
 {
     public function testAttachToRightEvent()
     {
-        $guard = new RouteGuard($this->getMock('ZfcRbac\Service\RoleService', [], [], '', false));
+        $roleService          = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $guard                = new RouteGuard($roleService, $authorizationService);
 
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
-                     ->method('attach')
-                     ->with(RouteGuard::EVENT_NAME);
+            ->method('attach')
+            ->with(RouteGuard::EVENT_NAME);
 
         $guard->attach($eventManager);
     }
@@ -50,7 +54,7 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssertRouteGuardPriorityIsHigherThanControllerGuardPriority()
     {
-        $this->assertTrue(RouteGuard::EVENT_PRIORITY > ControllerGuard::EVENT_PRIORITY);
+        $this->assertGreaterThan(ControllerGuard::EVENT_PRIORITY, RouteGuard::EVENT_PRIORITY);
     }
 
     public function rulesConversionProvider()
@@ -58,41 +62,89 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         return [
             // Simple string to array conversion
             [
-                'rules' => [
-                    'route' => 'role1'
-                ],
+                'rules'    => ['route' => 'role1'],
                 'expected' => [
-                    'route' => ['role1']
+                    'route' => [
+                        'roles'       => ['role1'],
+                        'permissions' => [],
+                    ]
                 ]
             ],
-
             // Array to array
             [
-                'rules' => [
+                'rules'    => [
                     'route' => ['role1', 'role2']
                 ],
                 'expected' => [
-                    'route' => ['role1', 'role2']
+                    'route' => [
+                        'roles'       => ['role1', 'role2'],
+                        'permissions' => [],
+                    ]
                 ]
             ],
-
             // Traversable to array
             [
-                'rules' => [
+                'rules'    => [
                     'route' => new \ArrayIterator(['role1', 'role2'])
                 ],
                 'expected' => [
-                    'route' => ['role1', 'role2']
+                    'route' => [
+                        'roles'       => ['role1', 'role2'],
+                        'permissions' => [],
+                    ]
                 ]
             ],
-
             // Block a route for everyone
             [
-                'rules' => [
-                    'route'
+                'rules'    => ['route'],
+                'expected' => [
+                    'route' => [
+                        'roles'       => [],
+                        'permissions' => [],
+                    ]
+                ]
+            ],
+            // roles key is set
+            [
+                'rules'    => [
+                    'route' => [
+                        'roles' => ['role1', 'role2']
+                    ]
                 ],
                 'expected' => [
-                    'route' => []
+                    'route' => [
+                        'roles'       => ['role1', 'role2'],
+                        'permissions' => [],
+                    ]
+                ]
+            ],
+            // permissions key is set
+            [
+                'rules'    => [
+                    'route' => [
+                        'permissions' => ['read', 'edit']
+                    ]
+                ],
+                'expected' => [
+                    'route' => [
+                        'roles'       => [],
+                        'permissions' => ['read', 'edit'],
+                    ]
+                ]
+            ],
+            // roles and permissions keys are set
+            [
+                'rules'    => [
+                    'route' => [
+                        'roles'       => ['role1', 'role2'],
+                        'permissions' => ['read', 'edit']
+                    ]
+                ],
+                'expected' => [
+                    'route' => [
+                        'roles'       => ['role1', 'role2'],
+                        'permissions' => ['read', 'edit']
+                    ]
                 ]
             ],
         ];
@@ -103,8 +155,9 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
      */
     public function testRulesConversions(array $rules, array $expected)
     {
-        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $routeGuard  = new RouteGuard($roleService, $rules);
+        $roleService          = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $routeGuard           = new RouteGuard($roleService, $authorizationService, $rules);
 
         $reflProperty = new \ReflectionProperty($routeGuard, 'rules');
         $reflProperty->setAccessible(true);
@@ -117,166 +170,282 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         return [
             // Assert basic one-to-one mapping with both policies
             [
-                'rules'            => ['adminRoute' => 'admin'],
-                'matchedRouteName' => 'adminRoute',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['adminRoute' => 'admin'],
+                'matchedRouteName'    => 'adminRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['adminRoute' => 'admin'],
-                'matchedRouteName' => 'adminRoute',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['adminRoute' => 'admin'],
+                'matchedRouteName'    => 'adminRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
+            [
+                'rules'               => [
+                    'adminRoute' => [
+                        'roles' => ['admin']
+                    ],
+                ],
+                'matchedRouteName'    => 'adminRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    'adminRoute' => [
+                        'roles' => ['admin']
+                    ],
+                ],
+                'matchedRouteName'    => 'adminRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            [
+                'rules'               => [
+                    'permissionRoute' => [
+                        'permissions' => ['post.edit']
+                    ],
+                ],
+                'matchedRouteName'    => 'permissionRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    'permissionRoute' => [
+                        'permissions' => ['post.edit']
+                    ],
+                ],
+                'matchedRouteName'    => 'permissionRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            // Assert that role check prevails
+            [
+                'rules'               => [
+                    'doubleRoute' => [
+                        'roles'       => ['admin'],
+                        'permissions' => ['post.edit']
+                    ],
+                ],
+                'matchedRouteName'    => 'doubleRoute',
+                'rolesConfig'         => ['admin', 'member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    'doubleRoute' => [
+                        'roles'       => ['admin'],
+                        'permissions' => ['post.edit']
+                    ],
+                ],
+                'matchedRouteName'    => 'doubleRoute',
+                'rolesConfig'         => ['admin', 'member'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
             // Assert that policy changes result for non-specified route guards
             [
-                'rules'            => ['route' => 'member'],
-                'matchedRouteName' => 'anotherRoute',
-                'rolesConfig'      => ['member'],
-                'identityRole'     => 'member',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['route' => 'member'],
+                'matchedRouteName'    => 'anotherRoute',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['route' => 'member'],
-                'matchedRouteName' => 'anotherRoute',
-                'rolesConfig'      => ['member'],
-                'identityRole'     => 'member',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['route' => 'member'],
+                'matchedRouteName'    => 'anotherRoute',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
+            [
+                'rules'               => [
+                    'permissionRoute' => [
+                        'permissions' => ['post.edit']
+                    ],
+                ],
+                'matchedRouteName'    => 'anotherRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    'permissionRoute' => [
+                        'permissions' => ['post.edit']
+                    ],
+                ],
+                'matchedRouteName'    => 'anotherRoute',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
             // Assert that composed route work for both policies
             [
-                'rules'            => ['admin/dashboard' => 'admin'],
-                'matchedRouteName' => 'admin/dashboard',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['admin/dashboard' => 'admin'],
+                'matchedRouteName'    => 'admin/dashboard',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['admin/dashboard' => 'admin'],
-                'matchedRouteName' => 'admin/dashboard',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['admin/dashboard' => 'admin'],
+                'matchedRouteName'    => 'admin/dashboard',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert that wildcard route work for both policies
             [
-                'rules'            => ['admin/*' => 'admin'],
-                'matchedRouteName' => 'admin/dashboard',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['admin/*' => 'admin'],
+                'matchedRouteName'    => 'admin/dashboard',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['admin/*' => 'admin'],
-                'matchedRouteName' => 'admin/dashboard',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['admin/*' => 'admin'],
+                'matchedRouteName'    => 'admin/dashboard',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
-            // Assert that wildcard route does match (or not depending on the policy) if rules is after matched route name
+            // Assert that wildcard route does match (or not depending on the policy)
+            // if rules is after matched route name
             [
-                'rules'            => ['fooBar/*' => 'admin'],
-                'matchedRouteName' => 'admin/fooBar/baz',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['fooBar/*' => 'admin'],
+                'matchedRouteName'    => 'admin/fooBar/baz',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['fooBar/*' => 'admin'],
-                'matchedRouteName' => 'admin/fooBar/baz',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['fooBar/*' => 'admin'],
+                'matchedRouteName'    => 'admin/fooBar/baz',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert that it can grant access with multiple rules
             [
-                'rules'            => [
+                'rules'               => [
                     'route1' => 'admin',
                     'route2' => 'admin'
                 ],
-                'matchedRouteName' => 'route1',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'matchedRouteName'    => 'route1',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => [
+                'rules'               => [
                     'route1' => 'admin',
                     'route2' => 'admin'
                 ],
-                'matchedRouteName' => 'route1',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_DENY
+                'matchedRouteName'    => 'route1',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert that it can grant/deny access with multiple rules based on the policy
             [
-                'rules'            => [
+                'rules'               => [
                     'route1' => 'admin',
                     'route2' => 'admin'
                 ],
-                'matchedRouteName' => 'route3',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'matchedRouteName'    => 'route3',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => [
+                'rules'               => [
                     'route1' => 'admin',
                     'route2' => 'admin'
                 ],
-                'matchedRouteName' => 'route3',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_DENY
+                'matchedRouteName'    => 'route3',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert it can deny access if a role does not have access
             [
-                'rules'            => ['route' => 'admin'],
-                'matchedRouteName' => 'route',
-                'rolesConfig'      => ['admin', 'guest'],
-                'identityRole'     => 'guest',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['route' => 'admin'],
+                'matchedRouteName'    => 'route',
+                'rolesConfig'         => ['admin', 'guest'],
+                'identityRole'        => 'guest',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['route' => 'admin'],
-                'matchedRouteName' => 'route',
-                'rolesConfig'      => ['admin', 'guest'],
-                'identityRole'     => 'guest',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['route' => 'admin'],
+                'matchedRouteName'    => 'route',
+                'rolesConfig'         => ['admin', 'guest'],
+                'identityRole'        => 'guest',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert it can grant access using child-parent relationship between roles
             [
-                'rules'            => ['home' => 'guest'],
-                'matchedRouteName' => 'home',
-                'rolesConfig'      => [
-                    'admin' => [
+                'rules'               => ['home' => 'guest'],
+                'matchedRouteName'    => 'home',
+                'rolesConfig'         => [
+                    'admin'  => [
                         'children' => ['member']
                     ],
                     'member' => [
@@ -284,15 +453,16 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                     ],
                     'guest'
                 ],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['home' => 'guest'],
-                'matchedRouteName' => 'home',
-                'rolesConfig'      => [
-                    'admin' => [
+                'rules'               => ['home' => 'guest'],
+                'matchedRouteName'    => 'home',
+                'rolesConfig'         => [
+                    'admin'  => [
                         'children' => ['member']
                     ],
                     'member' => [
@@ -300,55 +470,58 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                     ],
                     'guest'
                 ],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_DENY
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert it can deny access using child-parent relationship between roles (just to be sure)
             [
-                'rules'            => ['route' => 'admin'],
-                'matchedRouteName' => 'route',
-                'rolesToCreate'    => [
+                'rules'               => ['route' => 'admin'],
+                'matchedRouteName'    => 'route',
+                'rolesToCreate'       => [
                     'admin' => [
                         'children' => 'member'
                     ],
                     'member'
                 ],
-                'identityRole'     => 'member',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['route' => 'admin'],
-                'matchedRouteName' => 'route',
-                'rolesToCreate'    => [
+                'rules'               => ['route' => 'admin'],
+                'matchedRouteName'    => 'route',
+                'rolesToCreate'       => [
                     'admin' => [
                         'children' => 'member'
                     ],
                     'member'
                 ],
-                'identityRole'     => 'member',
-                'isGranted'        => false,
-                'policy'           => GuardInterface::POLICY_DENY
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert wildcard in role
             [
-                'rules'            => ['home' => '*'],
-                'matchedRouteName' => 'home',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_ALLOW
+                'rules'               => ['home' => '*'],
+                'matchedRouteName'    => 'home',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => ['home' => '*'],
-                'matchedRouteName' => 'home',
-                'rolesConfig'      => ['admin'],
-                'identityRole'     => 'admin',
-                'isGranted'        => true,
-                'policy'           => GuardInterface::POLICY_DENY
+                'rules'               => ['home' => '*'],
+                'matchedRouteName'    => 'home',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
         ];
     }
@@ -361,28 +534,34 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $matchedRouteName,
         array $rolesConfig,
         $identityRole,
+        $identityPermissions,
         $isGranted,
         $protectionPolicy
     ) {
-        $event      = new MvcEvent();
         $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName($matchedRouteName);
-
-        $event->setRouteMatch($routeMatch);
 
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
         $identity->expects($this->any())->method('getRoles')->will($this->returnValue($identityRole));
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider($rolesConfig);
         $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
-        $routeGuard = new RouteGuard($roleService, $rules);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $authorizationService->expects($this->any())
+            ->method('isGranted')
+            ->will($this->returnValueMap($identityPermissions));
+
+        $routeGuard = new RouteGuard($roleService, $authorizationService, $rules);
         $routeGuard->setProtectionPolicy($protectionPolicy);
+
+        $event = new MvcEvent();
+        $event->setRouteMatch($routeMatch);
 
         $this->assertEquals($isGranted, $routeGuard->isGranted($event));
     }
@@ -396,8 +575,8 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
 
         $application->expects($this->never())
-                    ->method('getEventManager')
-                    ->will($this->returnValue($eventManager));
+            ->method('getEventManager')
+            ->will($this->returnValue($eventManager));
 
         $routeMatch->setMatchedRouteName('adminRoute');
         $event->setRouteMatch($routeMatch);
@@ -408,13 +587,14 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
 
-        $roleProvider = new InMemoryRoleProvider(['member']);
-        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $roleProvider         = new InMemoryRoleProvider(['member']);
+        $roleService          = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
 
-        $routeGuard = new RouteGuard($roleService, [
+        $routeGuard = new RouteGuard($roleService, $authorizationService, [
             'adminRoute' => 'member'
         ]);
 
@@ -433,12 +613,12 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
 
         $application->expects($this->once())
-                    ->method('getEventManager')
-                    ->will($this->returnValue($eventManager));
+            ->method('getEventManager')
+            ->will($this->returnValue($eventManager));
 
         $eventManager->expects($this->once())
-                     ->method('trigger')
-                     ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+            ->method('trigger')
+            ->with(MvcEvent::EVENT_DISPATCH_ERROR);
 
         $routeMatch->setMatchedRouteName('adminRoute');
         $event->setRouteMatch($routeMatch);
@@ -446,13 +626,14 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentityRoles')
-                         ->will($this->returnValue('member'));
+            ->method('getIdentityRoles')
+            ->will($this->returnValue('member'));
 
-        $roleProvider = new InMemoryRoleProvider(['member', 'guest']);
-        $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $roleProvider         = new InMemoryRoleProvider(['member', 'guest']);
+        $roleService          = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
 
-        $routeGuard = new RouteGuard($roleService, [
+        $routeGuard = new RouteGuard($roleService, $authorizationService, [
             'adminRoute' => 'guest'
         ]);
 
