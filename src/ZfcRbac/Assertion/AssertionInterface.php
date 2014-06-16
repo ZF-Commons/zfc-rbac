@@ -26,6 +26,7 @@ use ZfcRbac\Service\AuthorizationService;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @author  Aeneas Rekkas
  * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
+ * @author  JM Leroux  <jmleroux.pro@gmail.com>
  * @licence MIT
  */
 interface AssertionInterface
@@ -36,8 +37,8 @@ interface AssertionInterface
      * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
      *
      * @param  AuthorizationService $authorizationService
-     * @param  mixed                $context
+     * @param  mixed|null           $context
      * @return bool
      */
-    public function assert(AuthorizationService $authorizationService);
+    public function assert(AuthorizationService $authorizationService, $context = null);
 }
