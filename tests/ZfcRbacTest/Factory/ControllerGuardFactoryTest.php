@@ -49,6 +49,10 @@ class ControllerGuardFactoryTest extends \PHPUnit_Framework_TestCase
             'ZfcRbac\Service\RoleService',
             $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
         );
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false)
+        );
 
         $pluginManager = new GuardPluginManager();
         $pluginManager->setServiceLocator($serviceManager);
