@@ -34,12 +34,14 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 {
     public function testAttachToRightEvent()
     {
-        $guard = new ControllerGuard($this->getMock('ZfcRbac\Service\RoleService', [], [], '', false));
+        $roleService          = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $guard                = new ControllerGuard($roleService, $authorizationService);
 
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
-                     ->method('attach')
-                     ->with(ControllerGuard::EVENT_NAME);
+            ->method('attach')
+            ->with(ControllerGuard::EVENT_NAME);
 
         $guard->attach($eventManager);
     }
@@ -49,14 +51,16 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         return [
             // Without actions
             [
-                'rules' => [
+                'rules'    => [
                     [
-                        'controller' => 'MyController',
-                        'roles'      => 'role1'
+                        'controller'  => 'MyController',
+                        'roles'       => 'role1',
+                        'permissions' => 'post.edit',
                     ],
                     [
-                        'controller' => 'MyController2',
-                        'roles'      => ['role2', 'role3']
+                        'controller'  => 'MyController2',
+                        'roles'       => ['role2', 'role3'],
+                        'permissions' => ['post.edit', 'post.delete'],
                     ],
                     new \ArrayIterator([
                         'controller' => 'MyController3',
@@ -64,15 +68,29 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     ])
                 ],
                 'expected' => [
-                    'mycontroller'  => [0 => ['role1']],
-                    'mycontroller2' => [0 => ['role2', 'role3']],
-                    'mycontroller3' => [0 => ['role4']]
+                    'mycontroller'  => [
+                        0 => [
+                            'roles'       => ['role1'],
+                            'permissions' => ['post.edit'],
+                        ]
+                    ],
+                    'mycontroller2' => [
+                        0 => [
+                            'roles'       => ['role2', 'role3'],
+                            'permissions' => ['post.edit', 'post.delete'],
+                        ]
+                    ],
+                    'mycontroller3' => [
+                        0 => [
+                            'roles'       => ['role4'],
+                            'permissions' => [],
+                        ]
+                    ]
                 ]
             ],
-
             // With one action
             [
-                'rules' => [
+                'rules'    => [
                     [
                         'controller' => 'MyController',
                         'actions'    => 'DELETE',
@@ -91,20 +109,28 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expected' => [
                     'mycontroller'  => [
-                        'delete' => ['role1']
+                        'delete' => [
+                            'roles'       => ['role1'],
+                            'permissions' => [],
+                        ],
                     ],
-                    'mycontroller2'  => [
-                        'delete' => ['role2']
+                    'mycontroller2' => [
+                        'delete' => [
+                            'roles'       => ['role2'],
+                            'permissions' => [],
+                        ],
                     ],
-                    'mycontroller3'  => [
-                        'delete' => ['role3']
+                    'mycontroller3' => [
+                        'delete' => [
+                            'roles'       => ['role3'],
+                            'permissions' => [],
+                        ],
                     ],
                 ]
             ],
-
             // With multiple actions
             [
-                'rules' => [
+                'rules'    => [
                     [
                         'controller' => 'MyController',
                         'actions'    => ['EDIT', 'delete'],
@@ -118,20 +144,31 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expected' => [
                     'mycontroller'  => [
-                        'edit'   => ['role1'],
-                        'delete' => ['role1']
+                        'edit'   => [
+                            'roles'       => ['role1'],
+                            'permissions' => [],
+                        ],
+                        'delete' => [
+                            'roles'       => ['role1'],
+                            'permissions' => [],
+                        ],
                     ],
-                    'mycontroller2'  => [
-                        'edit'   => ['role2'],
-                        'delete' => ['role2']
+                    'mycontroller2' => [
+                        'edit'   => [
+                            'roles'       => ['role2'],
+                            'permissions' => [],
+                        ],
+                        'delete' => [
+                            'roles'       => ['role2'],
+                            'permissions' => [],
+                        ],
                     ]
                 ]
             ],
-
             // Test that that if a rule is set globally to the controller, it does not override any
             // action specific rule that may have been specified before
             [
-                'rules' => [
+                'rules'    => [
                     [
                         'controller' => 'MyController',
                         'actions'    => ['edit'],
@@ -143,9 +180,15 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     ]
                 ],
                 'expected' => [
-                    'mycontroller'  => [
-                        'edit' => ['role1'],
-                        0      => ['role2']
+                    'mycontroller' => [
+                        'edit' => [
+                            'roles'       => ['role1'],
+                            'permissions' => [],
+                        ],
+                        0      => [
+                            'roles'       => ['role2'],
+                            'permissions' => [],
+                        ],
                     ]
                 ]
             ]
@@ -157,8 +200,9 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
      */
     public function testRulesConversions(array $rules, array $expected)
     {
-        $roleService     = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $controllerGuard = new ControllerGuard($roleService, $rules);
+        $roleService          = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $controllerGuard      = new ControllerGuard($roleService, $authorizationService, $rules);
 
         $reflProperty = new \ReflectionProperty($controllerGuard, 'rules');
         $reflProperty->setAccessible(true);
@@ -171,41 +215,113 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         return [
             // Test simple guard with both policies
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'roles'      => 'admin'
                     ]
                 ],
-                'controller'   => 'BlogController',
-                'action'       => 'edit',
-                'rolesConfig'  => [
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
                     'admin'
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_ALLOW
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'roles'      => 'admin'
                     ]
                 ],
-                'controller'   => 'BlogController',
-                'action'       => 'edit',
-                'rolesConfig'  => [
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
                     'admin'
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_DENY
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
+                    'admin'
+                ],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
+                    'admin'
+                ],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            // Test roles prevails
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'roles'       => 'admin',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
+                    'admin'
+                ],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [['post.edit', null, false]],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'roles'       => 'admin',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
+                    'admin'
+                ],
+                'identityRole'        => 'member',
+                'identityPermissions' => [['post.edit', null, true]],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
             // Test with multiple rules
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'actions'    => 'read',
@@ -217,17 +333,66 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                         'roles'      => 'admin'
                     ]
                 ],
-                'controller'   => 'BlogController',
-                'action'       => 'edit',
-                'rolesConfig'  => [
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
                     'admin'
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_ALLOW
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules' => [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'read',
+                        'permissions' => 'post.read'
+                    ],
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'edit',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                    ['post.edit', null, true],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'read',
+                        'permissions' => 'post.read'
+                    ],
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'edit',
+                        'permissions' => 'post.edit'
+                    ]
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'read',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                    ['post.edit', null, true],
+                ],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'actions'    => 'read',
@@ -239,160 +404,240 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                         'roles'      => 'admin'
                     ]
                 ],
-                'controller'   => 'BlogController',
-                'action'       => 'edit',
-                'rolesConfig'  => [
+                'controller'          => 'BlogController',
+                'action'              => 'edit',
+                'rolesConfig'         => [
                     'admin'
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_DENY
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert that policy can deny unspecified rules
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'roles'      => 'member'
                     ],
                 ],
-                'controller'   => 'CommentController',
-                'action'       => 'edit',
-                'rolesConfig'  => [
-                    'member'
-                ],
-                'identityRole' => 'member',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_ALLOW
+                'controller'          => 'CommentController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW,
             ],
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'roles'      => 'member'
                     ],
                 ],
-                'controller'   => 'CommentController',
-                'action'       => 'edit',
-                'rolesConfig'  => [
-                    'member'
-                ],
-                'identityRole' => 'member',
-                'isGranted'    => false,
-                'policy'       => GuardInterface::POLICY_DENY
+                'controller'          => 'CommentController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY,
             ],
-
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'permissions' => 'post.edit'
+                    ],
+                ],
+                'controller'          => 'CommentController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW,
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'permissions' => 'post.edit'
+                    ],
+                ],
+                'controller'          => 'CommentController',
+                'action'              => 'edit',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY,
+            ],
             // Test assert policy can deny other actions from controller when only one is specified
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'actions'    => 'edit',
                         'roles'      => 'member'
                     ],
                 ],
-                'controller'   => 'BlogController',
-                'action'       => 'read',
-                'rolesConfig'  => [
-                    'member'
-                ],
-                'identityRole' => 'member',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_ALLOW
+                'controller'          => 'BlogController',
+                'action'              => 'read',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'BlogController',
                         'actions'    => 'edit',
                         'roles'      => 'member'
                     ],
                 ],
-                'controller'   => 'BlogController',
-                'action'       => 'read',
-                'rolesConfig'  => [
-                    'member'
-                ],
-                'identityRole' => 'member',
-                'isGranted'    => false,
-                'policy'       => GuardInterface::POLICY_DENY
+                'controller'          => 'BlogController',
+                'action'              => 'read',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'BlogController',
+                        'actions'     => 'edit',
+                        'permissions' => 'post.edit'
+                    ],
+                ],
+                'controller'          => 'BlogController',
+                'action'              => 'read',
+                'rolesConfig'         => ['member'],
+                'identityRole'        => 'member',
+                'identityPermissions' => [
+                    ['post.edit', null, true],
+                ],
+                'isGranted'           => false,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
             // Assert it can uses parent-children relationship
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'IndexController',
                         'actions'    => 'index',
                         'roles'      => 'guest'
                     ]
                 ],
-                'controller'   => 'IndexController',
-                'action'       => 'index',
-                'rolesConfig'  => [
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => [
                     'admin' => [
                         'children' => ['guest']
                     ],
                     'guest'
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_ALLOW
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'IndexController',
                         'actions'    => 'index',
                         'roles'      => 'guest'
                     ]
                 ],
-                'controller'   => 'IndexController',
-                'action'       => 'index',
-                'rolesConfig'  => [
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => [
                     'admin' => [
                         'children' => ['guest']
                     ],
                     'guest'
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_DENY
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
-
             // Assert wildcard in roles
             [
-                'rules' => [
+                'rules'               => [
                     [
                         'controller' => 'IndexController',
                         'roles'      => '*'
                     ]
                 ],
-                'controller'   => 'IndexController',
-                'action'       => 'index',
-                'rolesConfig'  => [
-                    'admin'
-                ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_ALLOW
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
             ],
             [
-                'rules'            => [
+                'rules'               => [
                     [
                         'controller' => 'IndexController',
                         'roles'      => '*'
                     ]
                 ],
-                'controller'   => 'IndexController',
-                'action'       => 'index',
-                'rolesConfig'  => [
-                    'admin'
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
+            ],
+            // Assert wildcard in permissions
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'IndexController',
+                        'permissions' => '*'
+                    ]
                 ],
-                'identityRole' => 'admin',
-                'isGranted'    => true,
-                'policy'       => GuardInterface::POLICY_DENY
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules'               => [
+                    [
+                        'controller'  => 'IndexController',
+                        'permissions' => '*'
+                    ]
+                ],
+                'controller'          => 'IndexController',
+                'action'              => 'index',
+                'rolesConfig'         => ['admin'],
+                'identityRole'        => 'admin',
+                'identityPermissions' => [
+                    ['post.read', null, false],
+                ],
+                'isGranted'           => true,
+                'policy'              => GuardInterface::POLICY_DENY
             ],
         ];
     }
@@ -406,29 +651,35 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $action,
         array $rolesConfig,
         $identityRole,
+        $identityPermissions,
         $isGranted,
         $protectionPolicy
     ) {
-        $event      = new MvcEvent();
         $routeMatch = new RouteMatch([]);
         $routeMatch->setParam('controller', $controller);
         $routeMatch->setParam('action', $action);
-
-        $event->setRouteMatch($routeMatch);
 
         $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
         $identity->expects($this->any())->method('getRoles')->will($this->returnValue($identityRole));
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider($rolesConfig);
         $roleService  = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
 
-        $controllerGuard = new ControllerGuard($roleService, $rules);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
+        $authorizationService->expects($this->any())
+            ->method('isGranted')
+            ->will($this->returnValueMap($identityPermissions));
+
+        $controllerGuard = new ControllerGuard($roleService, $authorizationService, $rules);
         $controllerGuard->setProtectionPolicy($protectionPolicy);
+
+        $event = new MvcEvent();
+        $event->setRouteMatch($routeMatch);
 
         $this->assertEquals($isGranted, $controllerGuard->isGranted($event));
     }
@@ -442,8 +693,8 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
 
         $application->expects($this->never())
-                    ->method('getEventManager')
-                    ->will($this->returnValue($eventManager));
+            ->method('getEventManager')
+            ->will($this->returnValue($eventManager));
 
         $routeMatch->setParam('controller', 'MyController');
         $routeMatch->setParam('action', 'edit');
@@ -455,20 +706,23 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
 
         $roleProvider = new InMemoryRoleProvider([
             'member'
         ]);
 
-        $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $roleService          = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
 
-        $routeGuard = new ControllerGuard($roleService, [[
-            'controller' => 'MyController',
-            'actions'    => 'edit',
-            'roles'      => 'member'
-        ]]);
+        $routeGuard = new ControllerGuard($roleService, $authorizationService, [
+            [
+                'controller' => 'MyController',
+                'actions'    => 'edit',
+                'roles'      => 'member'
+            ]
+        ]);
 
         $routeGuard->onResult($event);
 
@@ -485,12 +739,12 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
 
         $application->expects($this->once())
-                    ->method('getEventManager')
-                    ->will($this->returnValue($eventManager));
+            ->method('getEventManager')
+            ->will($this->returnValue($eventManager));
 
         $eventManager->expects($this->once())
-                     ->method('trigger')
-                     ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+            ->method('trigger')
+            ->with(MvcEvent::EVENT_DISPATCH_ERROR);
 
         $routeMatch->setParam('controller', 'MyController');
         $routeMatch->setParam('action', 'delete');
@@ -500,20 +754,23 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentityRoles')
-                         ->will($this->returnValue('member'));
+            ->method('getIdentityRoles')
+            ->will($this->returnValue('member'));
 
         $roleProvider = new InMemoryRoleProvider([
             'member'
         ]);
 
-        $roleService = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $roleService          = new RoleService($identityProvider, $roleProvider, new RecursiveRoleIteratorStrategy());
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
 
-        $routeGuard = new ControllerGuard($roleService, [[
-            'controller' => 'MyController',
-            'actions'    => 'edit',
-            'roles'      => 'member'
-        ]]);
+        $routeGuard = new ControllerGuard($roleService, $authorizationService, [
+            [
+                'controller' => 'MyController',
+                'actions'    => 'edit',
+                'roles'      => 'member'
+            ]
+        ]);
 
         $routeGuard->onResult($event);
 

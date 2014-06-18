@@ -20,12 +20,14 @@ namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 use ZfcRbac\Service\RoleService;
 
 /**
  * A route guard can protect a route or a hierarchy of routes (using simple wildcard pattern)
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @licence MIT
  */
 class RouteGuard extends AbstractGuard
@@ -36,6 +38,11 @@ class RouteGuard extends AbstractGuard
      * @var RoleService
      */
     protected $roleService;
+
+    /**
+     * @var AuthorizationServiceInterface
+     */
+    protected $authorizationService;
 
     /**
      * Route guard rules
@@ -50,11 +57,16 @@ class RouteGuard extends AbstractGuard
      * Constructor
      *
      * @param RoleService $roleService
-     * @param array       $rules
+     * @param AuthorizationServiceInterface $authorizationService
+     * @param array $rules
      */
-    public function __construct(RoleService $roleService, array $rules = [])
-    {
+    public function __construct(
+        RoleService $roleService,
+        AuthorizationServiceInterface $authorizationService,
+        array $rules = []
+    ) {
         $this->roleService = $roleService;
+        $this->authorizationService = $authorizationService;
         $this->setRules($rules);
     }
 
@@ -69,16 +81,51 @@ class RouteGuard extends AbstractGuard
         $this->rules = [];
 
         foreach ($rules as $key => $value) {
-            if (is_int($key)) {
-                $routeRegex = $value;
-                $roles      = [];
-            } else {
-                $routeRegex = $key;
-                $roles      = (array) $value;
-            }
+            $result = $this->parseOneRule($key, $value);
 
-            $this->rules[$routeRegex] = $roles;
+            $routePattern                              = $result['routePattern'];
+            $this->rules[$routePattern]['roles']       = $result['roles'];
+            $this->rules[$routePattern]['permissions'] = $result['permissions'];
         }
+    }
+
+    /**
+     * @param string $key
+     * @param string|array $value
+     * @throws \InvalidArgumentException
+     * @return string[]
+     */
+    private function parseOneRule($key, $value)
+    {
+        if (is_int($key)) {
+            $routePattern = $value;
+            $roles        = [];
+            $permissions  = [];
+        } else {
+            $routePattern = $key;
+            $roles        = [];
+            $permissions  = [];
+            if (isset($value['roles']) && isset($value['permissions'])) {
+                throw new \InvalidArgumentException("You cannot use roles AND permissions for a route.");
+            }
+            if (!isset($value['roles']) && !isset($value['permissions'])) {
+                $roles       = (array)$value;
+                $permissions = [];
+            } else {
+                if (isset($value['roles'])) {
+                    $roles = (array)$value['roles'];
+                }
+                if (isset($value['permissions'])) {
+                    $permissions = (array)$value['permissions'];
+                }
+            }
+        }
+
+        return [
+            'routePattern' => $routePattern,
+            'roles'        => $roles,
+            'permissions'  => $permissions,
+        ];
     }
 
     /**
@@ -87,24 +134,72 @@ class RouteGuard extends AbstractGuard
     public function isGranted(MvcEvent $event)
     {
         $matchedRouteName = $event->getRouteMatch()->getMatchedRouteName();
-        $allowedRoles     = null;
+
+        // check roles first
+        $allowedRoles = $this->getAllowedRoles($matchedRouteName);
+
+        if (in_array('*', (array)$allowedRoles)) {
+            return true;
+        }
+
+        if (!empty($allowedRoles)) {
+            return $this->roleService->matchIdentityRoles($allowedRoles);
+        }
+
+        // if no roles in rule, check permissions
+        $allowedPermissions = $this->getAllowedPermissions($matchedRouteName);
+
+        // If no rules apply, it is considered as granted or not based on the protection policy
+        if (null === $allowedPermissions) {
+            return $this->protectionPolicy === self::POLICY_ALLOW;
+        }
+
+        if (in_array('*', (array)$allowedPermissions)) {
+            return true;
+        }
+
+        foreach ($allowedPermissions as $permission) {
+            if (!$this->authorizationService->isGranted($permission)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string $matchedRouteName
+     * @return array
+     */
+    private function getAllowedRoles($matchedRouteName)
+    {
+        $allowedRoles = null;
 
         foreach (array_keys($this->rules) as $routeRule) {
             if (fnmatch($routeRule, $matchedRouteName, FNM_CASEFOLD)) {
-                $allowedRoles = $this->rules[$routeRule];
+                $allowedRoles = $this->rules[$routeRule]['roles'];
                 break;
             }
         }
 
-        // If no rules apply, it is considered as granted or not based on the protection policy
-        if (null === $allowedRoles) {
-            return $this->protectionPolicy === self::POLICY_ALLOW;
+        return $allowedRoles;
+    }
+
+    /**
+     * @param string $matchedRouteName
+     * @return array
+     */
+    private function getAllowedPermissions($matchedRouteName)
+    {
+        $allowedPermissions = null;
+
+        foreach (array_keys($this->rules) as $routeRule) {
+            if (fnmatch($routeRule, $matchedRouteName, FNM_CASEFOLD)) {
+                $allowedPermissions = $this->rules[$routeRule]['permissions'];
+                break;
+            }
         }
 
-        if (in_array('*', $allowedRoles)) {
-            return true;
-        }
-
-        return $this->roleService->matchIdentityRoles($allowedRoles);
+        return $allowedPermissions;
     }
 }

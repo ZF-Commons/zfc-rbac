@@ -19,6 +19,7 @@
 namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 use ZfcRbac\Service\RoleService;
 
 /**
@@ -42,6 +43,11 @@ class ControllerGuard extends AbstractGuard
     protected $roleService;
 
     /**
+     * @var AuthorizationServiceInterface
+     */
+    protected $authorizationService;
+
+    /**
      * Controller guard rules
      *
      * @var array
@@ -52,11 +58,16 @@ class ControllerGuard extends AbstractGuard
      * Constructor
      *
      * @param RoleService $roleService
-     * @param array       $rules
+     * @param AuthorizationServiceInterface $authorizationService
+     * @param array $rules
      */
-    public function __construct(RoleService $roleService, array $rules = [])
-    {
-        $this->roleService = $roleService;
+    public function __construct(
+        RoleService $roleService,
+        AuthorizationServiceInterface $authorizationService,
+        array $rules = []
+    ) {
+        $this->roleService          = $roleService;
+        $this->authorizationService = $authorizationService;
         $this->setRules($rules);
     }
 
@@ -79,17 +90,20 @@ class ControllerGuard extends AbstractGuard
         $this->rules = [];
 
         foreach ($rules as $rule) {
-            $controller = strtolower($rule['controller']);
-            $actions    = isset($rule['actions']) ? (array) $rule['actions'] : [];
-            $roles      = (array) $rule['roles'];
+            $controller  = strtolower($rule['controller']);
+            $actions     = isset($rule['actions']) ? (array)$rule['actions'] : [];
+            $roles       = isset($rule['roles']) ? (array)$rule['roles'] : [];
+            $permissions = isset($rule['permissions']) ? (array)$rule['permissions'] : [];
 
             if (empty($actions)) {
-                $this->rules[$controller][0] = $roles;
+                $this->rules[$controller][0]['roles']       = $roles;
+                $this->rules[$controller][0]['permissions'] = $permissions;
                 continue;
             }
 
             foreach ($actions as $action) {
-                $this->rules[$controller][strtolower($action)] = $roles;
+                $this->rules[$controller][strtolower($action)]['roles']       = $roles;
+                $this->rules[$controller][strtolower($action)]['permissions'] = $permissions;
             }
         }
     }
@@ -113,17 +127,38 @@ class ControllerGuard extends AbstractGuard
         // if nothing is matched, we fallback to the protection policy logic
 
         if (isset($this->rules[$controller][$action])) {
-            $allowedRoles = $this->rules[$controller][$action];
+            $allowedRoles       = $this->rules[$controller][$action]['roles'];
+            $allowedPermissions = $this->rules[$controller][$action]['permissions'];
         } elseif (isset($this->rules[$controller][0])) {
-            $allowedRoles = $this->rules[$controller][0];
+            $allowedRoles       = $this->rules[$controller][0]['roles'];
+            $allowedPermissions = $this->rules[$controller][0]['permissions'];
         } else {
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
-        if (in_array('*', $allowedRoles)) {
+        if (in_array('*', (array)$allowedRoles)) {
             return true;
         }
 
-        return $this->roleService->matchIdentityRoles($allowedRoles);
+        if (!empty($allowedRoles)) {
+            return $this->roleService->matchIdentityRoles($allowedRoles);
+        }
+
+        // If no rules apply, it is considered as granted or not based on the protection policy
+        if (empty($allowedPermissions)) {
+            return $this->protectionPolicy === self::POLICY_ALLOW;
+        }
+
+        if (in_array('*', (array)$allowedPermissions)) {
+            return true;
+        }
+
+        foreach ($allowedPermissions as $permission) {
+            if (!$this->authorizationService->isGranted($permission)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

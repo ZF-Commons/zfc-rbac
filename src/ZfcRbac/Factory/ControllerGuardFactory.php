@@ -50,6 +50,7 @@ class ControllerGuardFactory implements FactoryInterface, MutableCreationOptions
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var \Zend\ServiceManager\ServiceManager $parentLocator */
         $parentLocator = $serviceLocator->getServiceLocator();
 
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
@@ -58,7 +59,10 @@ class ControllerGuardFactory implements FactoryInterface, MutableCreationOptions
         /* @var \ZfcRbac\Service\RoleService $roleService */
         $roleService = $parentLocator->get('ZfcRbac\Service\RoleService');
 
-        $controllerGuard = new ControllerGuard($roleService, $this->options);
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
+
+        $controllerGuard = new ControllerGuard($roleService, $authorizationService, $this->options);
         $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $controllerGuard;
