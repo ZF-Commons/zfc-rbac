@@ -16,42 +16,34 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest\Asset;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use ZfcRbac\Exception;
+use ZfcRbac\Assertion\AuthorizationContextInterface;
+use ZfcRbac\Assertion\ContextAwareAssertionInterface;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
-/**
- * Plugin manager to create assertions
- * 
- * @author  Aeneas Rekkas
- * @licence MIT
- *
- * @method AssertionInterface get($name)
- */
-class AssertionPluginManager extends AbstractPluginManager
+class SimpleContextAwareAssertion implements ContextAwareAssertionInterface
 {
+    /**
+     * @var bool
+     */
+    protected $called = false;
+
     /**
      * {@inheritDoc}
      */
-    public function validatePlugin($plugin)
+    public function assert(AuthorizationServiceInterface $authorization, AuthorizationContextInterface $context)
     {
-        if ($plugin instanceof AssertionInterface || $plugin instanceof ContextAwareAssertionInterface) {
-            return; // we're okay
-        }
+        $this->called = true;
 
-        throw new Exception\RuntimeException(sprintf(
-            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface" or'
-            . '"ZfcRbac\Assertion\ContextAwareAssertionInterface", but "%s" was given',
-            is_object($plugin) ? get_class($plugin) : gettype($plugin)
-        ));
+        return $context->getContext();
     }
 
     /**
-     * {@inheritDoc}
+     * @return bool
      */
-    protected function canonicalizeName($name)
+    public function getCalled()
     {
-        return $name;
+        return $this->called;
     }
 }

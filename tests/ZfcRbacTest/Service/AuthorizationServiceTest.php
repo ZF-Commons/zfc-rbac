@@ -89,6 +89,28 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
 
+            // Simple is refused from assertion map using ContextAwareAssertionInterface
+            [
+                'admin',
+                'delete',
+                false,
+                false,
+                [
+                    'delete' => 'ZfcRbacTest\Asset\SimpleContextAwareAssertion'
+                ]
+            ],
+
+            // Simple is accepted from assertion map
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => 'ZfcRbacTest\Asset\SimpleContextAwareAssertion'
+                ]
+            ],
+
             // Simple is refused from no role
             [
                 [],
@@ -120,7 +142,8 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $assertionPluginConfig = [
             'invokables' => [
-                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                'ZfcRbacTest\Asset\SimpleAssertion'             => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'ZfcRbacTest\Asset\SimpleContextAwareAssertion' => 'ZfcRbacTest\Asset\SimpleContextAwareAssertion'
             ]
         ];
 

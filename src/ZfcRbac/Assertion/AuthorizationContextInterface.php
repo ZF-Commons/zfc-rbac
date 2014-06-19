@@ -18,40 +18,21 @@
 
 namespace ZfcRbac\Assertion;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use ZfcRbac\Exception;
-
 /**
- * Plugin manager to create assertions
- * 
+ * Interface that you can implement for assertion context classes
+ *
  * @author  Aeneas Rekkas
  * @licence MIT
- *
- * @method AssertionInterface get($name)
  */
-class AssertionPluginManager extends AbstractPluginManager
+interface AuthorizationContextInterface
 {
     /**
-     * {@inheritDoc}
+     * @return string
      */
-    public function validatePlugin($plugin)
-    {
-        if ($plugin instanceof AssertionInterface || $plugin instanceof ContextAwareAssertionInterface) {
-            return; // we're okay
-        }
-
-        throw new Exception\RuntimeException(sprintf(
-            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface" or'
-            . '"ZfcRbac\Assertion\ContextAwareAssertionInterface", but "%s" was given',
-            is_object($plugin) ? get_class($plugin) : gettype($plugin)
-        ));
-    }
+    public function getPermission();
 
     /**
-     * {@inheritDoc}
+     * @return mixed
      */
-    protected function canonicalizeName($name)
-    {
-        return $name;
-    }
+    public function getContext();
 }
