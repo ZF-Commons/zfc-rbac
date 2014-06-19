@@ -22,7 +22,7 @@ use ZfcRbacTest\Initializer\AuthorizationAwareFake;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
- * @covers  \ZfcRbac\Initializer\AuthorizationServiceInitializer
+ * @covers  \ZfcRbac\Factory\AuthorizationServiceDelegatorFactory
  * @author  Jean-Marie Leroux <jmleroux.pro@gmail.com>
  * @license MIT License
  */
