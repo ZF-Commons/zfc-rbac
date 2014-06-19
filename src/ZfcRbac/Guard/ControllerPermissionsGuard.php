@@ -53,7 +53,7 @@ class ControllerPermissionsGuard extends AbstractGuard
      * Constructor
      *
      * @param AuthorizationServiceInterface $authorizationService
-     * @param array $rules
+     * @param array                         $rules
      */
     public function __construct(AuthorizationServiceInterface $authorizationService, array $rules = [])
     {
@@ -80,9 +80,9 @@ class ControllerPermissionsGuard extends AbstractGuard
         $this->rules = [];
 
         foreach ($rules as $rule) {
-            $controller = strtolower($rule['controller']);
-            $actions    = isset($rule['actions']) ? (array) $rule['actions'] : [];
-            $permissions = (array) $rule['permissions'];
+            $controller  = strtolower($rule['controller']);
+            $actions     = isset($rule['actions']) ? (array)$rule['actions'] : [];
+            $permissions = (array)$rule['permissions'];
 
             if (empty($actions)) {
                 $this->rules[$controller][0] = $permissions;
