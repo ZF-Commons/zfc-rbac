@@ -20,6 +20,7 @@ return [
     'service_manager' => [
         'invokables' => [
             'ZfcRbac\Collector\RbacCollector' => 'ZfcRbac\Collector\RbacCollector',
+            'ZfcRbac\Factory\AuthorizationServiceDelegator' => 'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory',
         ],
 
         'factories' => [
@@ -37,7 +38,7 @@ return [
             'ZfcRbac\Service\RoleService'                     => 'ZfcRbac\Factory\RoleServiceFactory',
             'ZfcRbac\View\Strategy\RedirectStrategy'          => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'      => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
-        ]
+        ],
     ],
 
     'view_helpers' => [
