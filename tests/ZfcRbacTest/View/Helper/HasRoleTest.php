@@ -32,9 +32,9 @@ class HasRoleTest extends \PHPUnit_Framework_TestCase
             [['member'], true],
         ];
 
-        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface');
+        $authorizationService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $authorizationService->expects($this->any())
-            ->method('hasRole')
+            ->method('matchIdentityRoles')
             ->will($this->returnValueMap($rolesConfig));
 
         $helper = new HasRole($authorizationService);

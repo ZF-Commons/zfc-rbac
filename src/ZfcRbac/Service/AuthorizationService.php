@@ -141,43 +141,6 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * Check if the current identity has some roles
-     *
-     * @param string|string[] $roleOrRoles
-     * @return bool
-     */
-    public function hasRole($roleOrRoles)
-    {
-        $roleOrRoles   = (array)$roleOrRoles;
-        $identityRoles = $this->roleService->getIdentityRoles();
-
-        if (empty($identityRoles)) {
-            return false;
-        }
-
-        return $this->searchRoleRecursively($roleOrRoles, $identityRoles);
-    }
-
-    /**
-     * @param string[] $roleOrRoles
-     * @param RoleInterface[] $identityRoles
-     * @return bool
-     */
-    private function searchRoleRecursively($roleOrRoles, $identityRoles)
-    {
-        foreach ($identityRoles as $identityRole) {
-            if (in_array($identityRole->getName(), $roleOrRoles)) {
-                return true;
-            }
-            if ($identityRole instanceof HierarchicalRole) {
-                return $this->searchRoleRecursively($roleOrRoles, $identityRole->getChildren());
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param  string|callable|AssertionInterface $assertion
      * @param  mixed $context
      * @return bool

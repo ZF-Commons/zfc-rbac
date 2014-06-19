@@ -36,12 +36,4 @@ interface AuthorizationServiceInterface
      * @return bool
      */
     public function isGranted($permission, $context = null);
-
-    /**
-     * Check if the current identity has some roles
-     *
-     * @param string|string[] $roleOrRoles
-     * @return bool
-     */
-    public function hasRole($roleOrRoles);
 }

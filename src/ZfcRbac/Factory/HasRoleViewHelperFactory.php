@@ -20,6 +20,7 @@ namespace ZfcRbac\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\RoleService;
 use ZfcRbac\View\Helper\HasRole;
 
 /**
@@ -36,9 +37,9 @@ class HasRoleViewHelperFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $serviceLocator->getServiceLocator()->get('ZfcRbac\Service\AuthorizationService');
+        /* @var RoleService $roleService */
+        $roleService = $serviceLocator->getServiceLocator()->get('ZfcRbac\Service\RoleService');
 
-        return new HasRole($authorizationService);
+        return new HasRole($roleService);
     }
 }

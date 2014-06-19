@@ -19,7 +19,7 @@
 namespace ZfcRbac\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use ZfcRbac\Service\RoleService;
 
 /**
  * View helper that allows to test a role in a view
@@ -30,18 +30,18 @@ use ZfcRbac\Service\AuthorizationServiceInterface;
 class HasRole extends AbstractHelper
 {
     /**
-     * @var AuthorizationServiceInterface
+     * @var RoleService
      */
-    private $authorizationService;
+    private $roleService;
 
     /**
      * Constructor
      *
-     * @param AuthorizationServiceInterface $authorizationService
+     * @param RoleService $roleService
      */
-    public function __construct(AuthorizationServiceInterface $authorizationService)
+    public function __construct(RoleService $roleService)
     {
-        $this->authorizationService = $authorizationService;
+        $this->roleService = $roleService;
     }
 
     /**
@@ -50,6 +50,6 @@ class HasRole extends AbstractHelper
      */
     public function __invoke($roleOrRoles)
     {
-        return $this->authorizationService->hasRole($roleOrRoles);
+        return $this->roleService->matchIdentityRoles((array)$roleOrRoles);
     }
 }
