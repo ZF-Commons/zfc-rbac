@@ -22,6 +22,7 @@ use Rbac\Rbac;
 use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
+use ZfcRbac\Assertion\AuthorizationContext;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 
@@ -53,6 +54,11 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @var array
      */
     protected $assertions = [];
+
+    /**
+     * @var string
+     */
+    protected $contextClass = 'ZfcRbac\Assertion\AuthorizationContainer';
 
     /**
      * Constructor
@@ -132,7 +138,8 @@ class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[(string) $permission], $context);
+            $contextContainer = new AuthorizationContext($permission, $context);
+            return $this->assert($this->assertions[(string) $permission], $contextContainer);
         }
 
         return true;
@@ -140,11 +147,11 @@ class AuthorizationService implements AuthorizationServiceInterface
 
     /**
      * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed                              $context
+     * @param  AuthorizationContext               $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
-    protected function assert($assertion, $context = null)
+    protected function assert($assertion, AuthorizationContext $context)
     {
         if (is_callable($assertion)) {
             return $assertion($this, $context);

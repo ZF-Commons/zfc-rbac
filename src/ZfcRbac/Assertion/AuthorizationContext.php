@@ -18,24 +18,51 @@
 
 namespace ZfcRbac\Assertion;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
-
 /**
- * Interface that you can implement for dynamic assertions
+ * A default implementation for AuthorizationContextInterface
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
  * @licence MIT
  */
-interface AssertionInterface
+class AuthorizationContext
 {
     /**
-     * Check if this assertion is true
-     *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  AuthorizationContext          $context
-     * @return bool
+     * @var string
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, AuthorizationContext $context);
+    protected $permission;
+
+    /**
+     * @var mixed
+     */
+    protected $context;
+
+    /**
+     * @param string $permission
+     * @param mixed  $context
+     */
+    public function __construct($permission, $context = null)
+    {
+        $this->permission = $permission;
+        $this->context    = $context;
+    }
+
+    /**
+     * Get the permission
+     *
+     * @return string
+     */
+    public function getPermission()
+    {
+        return $this->permission;
+    }
+
+    /**
+     * Get the context
+     *
+     * @return mixed
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
 }
