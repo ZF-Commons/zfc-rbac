@@ -56,11 +56,6 @@ class AuthorizationService implements AuthorizationServiceInterface
     protected $assertions = [];
 
     /**
-     * @var string
-     */
-    protected $contextClass = 'ZfcRbac\Assertion\AuthorizationContainer';
-
-    /**
      * Constructor
      *
      * @param Rbac                   $rbac
