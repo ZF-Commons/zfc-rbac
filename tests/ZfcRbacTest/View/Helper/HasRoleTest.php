@@ -18,13 +18,28 @@
 
 namespace ZfcRbacTest\View\Helper;
 
+use Zend\View\HelperPluginManager;
 use ZfcRbac\View\Helper\HasRole;
+use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
  * @covers \ZfcRbac\View\Helper\IsGranted
  */
 class HasRoleTest extends \PHPUnit_Framework_TestCase
 {
+    public function testHelperIsRegistered()
+    {
+        $serviceManager = ServiceManagerFactory::getServiceManager();
+        $config = $serviceManager->get('Config');
+        $this->assertArrayHasKey('view_helpers', $config);
+        $viewHelpersConfig = $config['view_helpers'];
+        $this->assertEquals('ZfcRbac\View\Helper\HasRole', $viewHelpersConfig['aliases']['hasRole']);
+        $this->assertEquals(
+            'ZfcRbac\Factory\HasRoleViewHelperFactory',
+            $viewHelpersConfig['factories']['ZfcRbac\View\Helper\HasRole']
+        );
+    }
+
     public function testCallAuthorizationService()
     {
         $rolesConfig = [

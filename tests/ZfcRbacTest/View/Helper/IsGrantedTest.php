@@ -19,12 +19,26 @@
 namespace ZfcRbacTest\View\Helper;
 
 use ZfcRbac\View\Helper\IsGranted;
+use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
  * @covers \ZfcRbac\View\Helper\IsGranted
  */
 class IsGrantedTest extends \PHPUnit_Framework_TestCase
 {
+    public function testHelperIsRegistered()
+    {
+        $serviceManager = ServiceManagerFactory::getServiceManager();
+        $config = $serviceManager->get('Config');
+        $this->assertArrayHasKey('view_helpers', $config);
+        $viewHelpersConfig = $config['view_helpers'];
+        $this->assertEquals('ZfcRbac\View\Helper\IsGranted', $viewHelpersConfig['aliases']['isGranted']);
+        $this->assertEquals(
+            'ZfcRbac\Factory\IsGrantedViewHelperFactory',
+            $viewHelpersConfig['factories']['ZfcRbac\View\Helper\IsGranted']
+        );
+    }
+
     public function testCallAuthorizationService()
     {
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface');
