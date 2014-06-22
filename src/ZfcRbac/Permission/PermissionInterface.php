@@ -18,17 +18,21 @@
 
 namespace ZfcRbac\Permission;
 
-use Rbac\Permission\PermissionInterface as BasePermissionInterface;
-
 /**
  * Interface that permissions must implement to be used with the AuthorizationService
- *
- * Please note that currently the interface extends the one from RBAC, but starting in ZF3, the
- * permission will be removed from RBAC component and moved here completely
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-interface PermissionInterface extends BasePermissionInterface
+interface PermissionInterface
 {
+    /**
+     * Get the permission name
+     *
+     * You really must return the name of the permission as internally, the casting to string is used
+     * as an optimization to avoid type checkings
+     *
+     * @return string
+     */
+    public function __toString();
 }
