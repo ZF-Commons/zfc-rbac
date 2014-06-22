@@ -18,12 +18,11 @@
 
 namespace ZfcRbacTest\View\Helper;
 
-use Zend\View\HelperPluginManager;
 use ZfcRbac\View\Helper\HasRole;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
- * @covers \ZfcRbac\View\Helper\IsGranted
+ * @covers \ZfcRbac\View\Helper\HasRole
  */
 class HasRoleTest extends \PHPUnit_Framework_TestCase
 {
