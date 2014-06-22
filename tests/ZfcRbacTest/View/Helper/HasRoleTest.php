@@ -18,13 +18,13 @@
 
 namespace ZfcRbacTest\View\Helper;
 
-use ZfcRbac\View\Helper\IsGranted;
+use ZfcRbac\View\Helper\HasRole;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 /**
- * @covers \ZfcRbac\View\Helper\IsGranted
+ * @covers \ZfcRbac\View\Helper\HasRole
  */
-class IsGrantedTest extends \PHPUnit_Framework_TestCase
+class HasRoleTest extends \PHPUnit_Framework_TestCase
 {
     public function testHelperIsRegistered()
     {
@@ -32,24 +32,28 @@ class IsGrantedTest extends \PHPUnit_Framework_TestCase
         $config = $serviceManager->get('Config');
         $this->assertArrayHasKey('view_helpers', $config);
         $viewHelpersConfig = $config['view_helpers'];
-        $this->assertEquals('ZfcRbac\View\Helper\IsGranted', $viewHelpersConfig['aliases']['isGranted']);
+        $this->assertEquals('ZfcRbac\View\Helper\HasRole', $viewHelpersConfig['aliases']['hasRole']);
         $this->assertEquals(
-            'ZfcRbac\Factory\IsGrantedViewHelperFactory',
-            $viewHelpersConfig['factories']['ZfcRbac\View\Helper\IsGranted']
+            'ZfcRbac\Factory\HasRoleViewHelperFactory',
+            $viewHelpersConfig['factories']['ZfcRbac\View\Helper\HasRole']
         );
     }
 
     public function testCallAuthorizationService()
     {
-        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface');
+        $rolesConfig = [
+            ['member', true],
+            [['member'], true],
+        ];
 
-        $authorizationService->expects($this->once())
-                             ->method('isGranted')
-                             ->with('edit')
-                             ->will($this->returnValue(true));
+        $authorizationService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $authorizationService->expects($this->any())
+            ->method('matchIdentityRoles')
+            ->will($this->returnValueMap($rolesConfig));
 
-        $helper = new IsGranted($authorizationService);
+        $helper = new HasRole($authorizationService);
 
-        $this->assertTrue($helper('edit'));
+        $this->assertTrue($helper('member'));
+        $this->assertTrue($helper(['member']));
     }
 }
