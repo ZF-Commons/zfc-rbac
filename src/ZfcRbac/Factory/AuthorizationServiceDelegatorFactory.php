@@ -21,6 +21,7 @@ namespace ZfcRbac\Factory;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\DelegatorFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Service\AuthorizationServiceAwareInterface;
 
 /**
@@ -35,14 +36,16 @@ class AuthorizationServiceDelegatorFactory implements DelegatorFactoryInterface
     {
         $instanceToDecorate = call_user_func($callback);
 
-        if ($instanceToDecorate instanceof AuthorizationServiceAwareInterface) {
-            if ($serviceLocator instanceof AbstractPluginManager) {
-                $serviceLocator = $serviceLocator->getServiceLocator();
-            }
-
-            $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
-            $instanceToDecorate->setAuthorizationService($authorizationService);
+        if (!$instanceToDecorate instanceof AuthorizationServiceAwareInterface) {
+            throw new RuntimeException("The service $requestedName must implement AuthorizationServiceAwareInterface.");
         }
+
+        if ($serviceLocator instanceof AbstractPluginManager) {
+            $serviceLocator = $serviceLocator->getServiceLocator();
+        }
+
+        $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
+        $instanceToDecorate->setAuthorizationService($authorizationService);
 
         return $instanceToDecorate;
     }

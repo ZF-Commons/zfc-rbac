@@ -88,10 +88,41 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->addDelegator(
             'ZfcRbacTest\AuthorizationAware',
-            'ZfcRbac\Factory\AuthorizationServiceDelegator'
+            'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
         );
 
         $decoratedInstance = $serviceManager->get('ZfcRbacTest\AuthorizationAware');
         $this->assertEquals($authorizationService, $decoratedInstance->getAuthorizationService());
+    }
+
+    public function testDelegatorThrowExceptionWhenBadInterface()
+    {
+        $serviceManager = ServiceManagerFactory::getServiceManager();
+
+        $serviceManager->setAllowOverride(true);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $authorizationService
+        );
+        $serviceManager->setAllowOverride(false);
+
+        $serviceManager->setFactory(
+            'ZfcRbacTest\AuthorizationAware',
+            function () {
+                return new \StdClass();
+            }
+        );
+
+        $serviceManager->addDelegator(
+            'ZfcRbacTest\AuthorizationAware',
+            'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
+        );
+
+        $this->setExpectedException(
+            'ZfcRbac\Exception\RuntimeException',
+            'The service ZfcRbacTest\AuthorizationAware must implement AuthorizationServiceAwareInterface.'
+        );
+        $serviceManager->get('ZfcRbacTest\AuthorizationAware');
     }
 }

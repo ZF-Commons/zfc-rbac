@@ -20,7 +20,6 @@ return [
     'service_manager' => [
         'invokables' => [
             'ZfcRbac\Collector\RbacCollector' => 'ZfcRbac\Collector\RbacCollector',
-            'ZfcRbac\Factory\AuthorizationServiceDelegator' => 'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory',
         ],
 
         'factories' => [
