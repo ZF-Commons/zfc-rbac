@@ -42,10 +42,12 @@ return [
 
     'view_helpers' => [
         'factories' => [
-            'ZfcRbac\View\Helper\IsGranted' => 'ZfcRbac\Factory\IsGrantedViewHelperFactory'
+            'ZfcRbac\View\Helper\IsGranted' => 'ZfcRbac\Factory\IsGrantedViewHelperFactory',
+            'ZfcRbac\View\Helper\HasRole'   => 'ZfcRbac\Factory\HasRoleViewHelperFactory'
         ],
         'aliases' => [
-            'isGranted' => 'ZfcRbac\View\Helper\IsGranted'
+            'isGranted' => 'ZfcRbac\View\Helper\IsGranted',
+            'hasRole'   => 'ZfcRbac\View\Helper\HasRole'
         ]
     ],
 
