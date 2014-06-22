@@ -35,10 +35,18 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
                 'ZfcRbac\Guard\RouteGuard' => [
                     'admin/*' => 'role1'
                 ],
+                'ZfcRbac\Guard\RoutePermissionsGuard' => [
+                    'admin/post' => 'post.manage'
+                ],
                 'ZfcRbac\Guard\ControllerGuard' => [[
                     'controller' => 'MyController',
                     'actions'    => ['index', 'edit'],
                     'roles'      => ['role']
+                ]],
+                'ZfcRbac\Guard\ControllerPermissionsGuard' => [[
+                    'controller'  => 'PostController',
+                    'actions'     => ['index', 'edit'],
+                    'permissions' => ['post.read']
                 ]]
             ]
         ]);
@@ -52,6 +60,10 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
             'ZfcRbac\Service\RoleService',
             $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
         );
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false)
+        );
 
         $pluginManager->setServiceLocator($serviceManager);
 
@@ -60,9 +72,11 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInternalType('array', $guards);
 
-        $this->assertCount(2, $guards);
+        $this->assertCount(4, $guards);
         $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $guards[0]);
-        $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $guards[1]);
+        $this->assertInstanceOf('ZfcRbac\Guard\RoutePermissionsGuard', $guards[1]);
+        $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $guards[2]);
+        $this->assertInstanceOf('ZfcRbac\Guard\ControllerPermissionsGuard', $guards[3]);
     }
 
     public function testReturnArrayIfNoConfig()
