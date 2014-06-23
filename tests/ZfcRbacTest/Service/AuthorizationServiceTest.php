@@ -102,10 +102,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider grantedProvider
      */
-    public function testGranted($role, $permission, $context = null, $isGranted, $assertions = array())
+    public function testGranted($role, $permission, $context, $isGranted, $assertions = array())
     {
         $roleConfig = [
-            'admin' => [
+            'admin'  => [
                 'children'    => ['member'],
                 'permissions' => ['delete']
             ],
@@ -113,7 +113,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 'children'    => ['guest'],
                 'permissions' => ['write']
             ],
-            'guest' => [
+            'guest'  => [
                 'permissions' => ['read']
             ]
         ];
@@ -129,11 +129,15 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
 
         $rbac                   = new Rbac(new RecursiveRoleIteratorStrategy());
-        $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig), $rbac->getTraversalStrategy());
+        $roleService            = new RoleService(
+            $identityProvider,
+            new InMemoryRoleProvider($roleConfig),
+            $rbac->getTraversalStrategy()
+        );
         $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
@@ -193,8 +197,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         // Using a callable
         $called = false;
 
-        $authorizationService->setAssertion('foo',
-            function(AuthorizationService $injectedService) use($authorizationService, &$called) {
+        $authorizationService->setAssertion(
+            'foo',
+            function (AuthorizationService $injectedService) use ($authorizationService, &$called) {
                 $this->assertSame($injectedService, $authorizationService);
 
                 $called = true;
