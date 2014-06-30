@@ -56,7 +56,7 @@ class UnauthorizedStrategy extends AbstractStrategy
     public function onError(MvcEvent $event)
     {
         // Do nothing if no error or if response is not HTTP response
-        if (!($exception = $event->getParam('exception') instanceof UnauthorizedExceptionInterface)
+        if (!($event->getParam('exception') instanceof UnauthorizedExceptionInterface)
             || ($event->getResult() instanceof HttpResponse)
             || !($event->getResponse() instanceof HttpResponse)
         ) {
