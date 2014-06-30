@@ -63,8 +63,8 @@ class RedirectStrategy extends AbstractStrategy
     {
         // Do nothing if no error or if response is not HTTP response
         if (!($exception = $event->getParam('exception') instanceof UnauthorizedExceptionInterface)
-            || ($result = $event->getResult() instanceof HttpResponse)
-            || !($response = $event->getResponse() instanceof HttpResponse)
+            || ($event->getResult() instanceof HttpResponse)
+            || !($event->getResponse() instanceof HttpResponse)
         ) {
             return;
         }
