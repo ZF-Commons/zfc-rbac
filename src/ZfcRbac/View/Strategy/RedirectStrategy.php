@@ -62,9 +62,9 @@ class RedirectStrategy extends AbstractStrategy
     public function onError(MvcEvent $event)
     {
         // Do nothing if no error or if response is not HTTP response
-        if (!($exception = $event->getParam('exception') instanceof UnauthorizedExceptionInterface)
-            || ($result = $event->getResult() instanceof HttpResponse)
-            || !($response = $event->getResponse() instanceof HttpResponse)
+        if (!($event->getParam('exception') instanceof UnauthorizedExceptionInterface)
+            || ($event->getResult() instanceof HttpResponse)
+            || !($event->getResponse() instanceof HttpResponse)
         ) {
             return;
         }
