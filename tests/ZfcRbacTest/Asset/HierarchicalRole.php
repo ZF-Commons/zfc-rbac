@@ -20,8 +20,8 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
 use Rbac\Role\HierarchicalRole as BaseHierarchicalRole;
+use ZfcRbac\Permission\PermissionInterface;
 
 /**
  * @ORM\Entity

@@ -19,11 +19,11 @@
 namespace ZfcRbac\Service;
 
 use Rbac\Rbac;
-use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Permission\PermissionInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is

@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Permission\PermissionInterface;
+use ZfcRbac\Permission\PermissionInterface;
 
 /**
  * Minimal interface for an authorization service
