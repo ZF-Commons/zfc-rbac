@@ -23,6 +23,7 @@ use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
+use ZfcRbacTest\Asset\AssertionTestAssertion;
 use ZfcRbacTest\Asset\SimpleAssertion;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use Zend\ServiceManager\Config;
@@ -163,6 +164,43 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->setAssertions($assertions);
 
         $this->assertEquals($isGranted, $authorizationService->isGranted($permission, $context));
+    }
+
+    public function testIsAssertionContextObjectCreatedProperly()
+    {
+        $permission = 'read';
+        $context    = 'context';
+        $assertion  = new AssertionTestAssertion();
+        $role       = 'guest';
+
+        $roleConfig = [
+            $role => [
+                'permissions' => [$permission]
+            ]
+        ];
+
+        $assertions = [
+            $permission => $assertion
+        ];
+
+        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity->expects($this->once())->method('getRoles')->will($this->returnValue((array)$role));
+
+        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider->expects($this->any())->method('getIdentity')->will($this->returnValue($identity));
+
+        $rbac                   = new Rbac(new RecursiveRoleIteratorStrategy());
+        $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig), $rbac->getTraversalStrategy(
+        ));
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager');
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
+
+        $authorizationService->setAssertions($assertions);
+
+        $this->assertEquals(true, $authorizationService->isGranted($permission, $context));
+        $this->assertSame($authorizationService, $assertion->getAuthorizationService());
+        $this->assertEquals($permission, $assertion->getContext()->getPermission());
+        $this->assertEquals($context, $assertion->getContext()->getContext());
     }
 
     public function testDoNotCallAssertionIfThePermissionIsNotGranted()
