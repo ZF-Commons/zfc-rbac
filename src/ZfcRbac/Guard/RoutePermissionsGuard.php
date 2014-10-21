@@ -104,14 +104,14 @@ class RoutePermissionsGuard extends AbstractGuard
         $condition   = isset($allowedPermissions['condition']) ? $allowedPermissions['condition'] : GuardInterface::CONDITION_AND;
 
         foreach ($permissions as $permission) {
-            if ($condition == GuardInterface::CONDITION_OR && $this->authorizationService->isGranted($permission)) {
+            if ($condition === GuardInterface::CONDITION_OR && $this->authorizationService->isGranted($permission)) {
                 return true;
-            } elseif ($condition == GuardInterface::CONDITION_AND && !$this->authorizationService->isGranted($permission)) {
+            } elseif ($condition === GuardInterface::CONDITION_AND && !$this->authorizationService->isGranted($permission)) {
                 return false;
             }
         }
 
-        if ($condition == GuardInterface::CONDITION_OR) {
+        if ($condition === GuardInterface::CONDITION_OR) {
             return false;
         }
 
