@@ -38,15 +38,15 @@ class RedirectStrategy extends AbstractStrategy
     protected $options;
 
     /**
-     * @var AuthenticationService
+     * @var AuthenticationServiceInterface
      */
     protected $authenticationService;
 
     /**
      * Constructor
      *
-     * @param RedirectStrategyOptions $options
-     * @param AuthenticationService   $authenticationService
+     * @param RedirectStrategyOptions        $options
+     * @param AuthenticationServiceInterface $authenticationService
      */
     public function __construct(RedirectStrategyOptions $options, AuthenticationServiceInterface $authenticationService)
     {
