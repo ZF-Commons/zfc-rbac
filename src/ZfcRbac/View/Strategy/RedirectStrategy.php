@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\View\Strategy;
 
-use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\AuthenticationServiceInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use ZfcRbac\Exception\UnauthorizedExceptionInterface;
@@ -48,7 +48,7 @@ class RedirectStrategy extends AbstractStrategy
      * @param RedirectStrategyOptions $options
      * @param AuthenticationService   $authenticationService
      */
-    public function __construct(RedirectStrategyOptions $options, AuthenticationService $authenticationService)
+    public function __construct(RedirectStrategyOptions $options, AuthenticationServiceInterface $authenticationService)
     {
         $this->options               = $options;
         $this->authenticationService = $authenticationService;
