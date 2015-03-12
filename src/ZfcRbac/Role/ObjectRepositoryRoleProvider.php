@@ -81,7 +81,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->in($this->roleNameProperty, $roleNames));
 
-        $roles = $this->selectable->matching($criteria);
+        $roles = $this->selectable->matching($criteria)->toArray();
 
         // We allow more roles to be loaded than asked (although this should not happen because
         // role name should have a UNIQUE constraint in database... but just in case ;))
