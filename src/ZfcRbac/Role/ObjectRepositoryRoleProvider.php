@@ -18,11 +18,12 @@
 
 namespace ZfcRbac\Role;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Selectable;
 use ZfcRbac\Exception\RoleNotFoundException;
 
 /**
- * Role provider that uses Doctrine object repository to fetch roles
+ * Role provider that uses Doctrine selectable to fetch roles
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
@@ -30,9 +31,9 @@ use ZfcRbac\Exception\RoleNotFoundException;
 class ObjectRepositoryRoleProvider implements RoleProviderInterface
 {
     /**
-     * @var ObjectRepository
+     * @var Selectable
      */
-    private $objectRepository;
+    private $selectable;
 
     /**
      * @var string
@@ -47,12 +48,12 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     /**
      * Constructor
      *
-     * @param ObjectRepository $objectRepository
-     * @param string           $roleNameProperty
+     * @param Selectable $selectable
+     * @param string     $roleNameProperty
      */
-    public function __construct(ObjectRepository $objectRepository, $roleNameProperty)
+    public function __construct(Selectable $selectable, $roleNameProperty)
     {
-        $this->objectRepository = $objectRepository;
+        $this->selectable       = $selectable;
         $this->roleNameProperty = $roleNameProperty;
     }
 
@@ -77,7 +78,10 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
             return $this->roleCache[$key];
         }
 
-        $roles = $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->in($this->roleNameProperty, $roleNames));
+
+        $roles = $this->selectable->matching($criteria);
 
         // We allow more roles to be loaded than asked (although this should not happen because
         // role name should have a UNIQUE constraint in database... but just in case ;))
