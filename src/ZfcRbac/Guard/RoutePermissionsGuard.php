@@ -108,22 +108,29 @@ class RoutePermissionsGuard extends AbstractGuard
             ? $allowedPermissions['condition']
             : GuardInterface::CONDITION_AND;
 
-        foreach ($permissions as $permission) {
-            if ($condition === GuardInterface::CONDITION_OR
-                && $this->authorizationService->isGranted($permission)
-            ) {
-                return true;
-            } elseif ($condition === GuardInterface::CONDITION_AND
-                      && !$this->authorizationService->isGranted($permission)
-            ) {
-                return false;
+        if (GuardInterface::CONDITION_AND === $condition) {
+            foreach ($permissions as $permission) {
+                if (!$this->authorizationService->isGranted($permission)) {
+                    return false;
+                }
             }
-        }
-
-        if ($condition === GuardInterface::CONDITION_OR) {
+        
+            return true;
+        }    
+        
+        if (GuardInterface::CONDITION_OR === $condition) {
+            foreach ($permissions as $permission) {
+                if ($this->authorizationService->isGranted($permission)) {
+                    return true;
+                }
+            }
+        
             return false;
-        }
-
-        return true;
+        }    
+        
+        throw new InvalidArgumentException(sprintf(
+            'Condition must be either "AND" or "OR", %s given',
+            is_object($condition) ? get_class($condition) : gettype($condition)
+        ));
     }
 }
