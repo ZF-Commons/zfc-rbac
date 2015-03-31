@@ -18,6 +18,7 @@
 namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
+use ZfcRbac\Exception\InvalidArgumentException;
 use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
