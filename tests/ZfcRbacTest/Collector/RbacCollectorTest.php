@@ -246,7 +246,7 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
             ->method('getIdentity')
             ->will($this->returnValue($identity));
 
-        $roleProvider = $this->getMock(RoleProviderInterface::class);
+        $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
 
         $roleService = new RoleService($identityProvider,
             $roleProvider,
