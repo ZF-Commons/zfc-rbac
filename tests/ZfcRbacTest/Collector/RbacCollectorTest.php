@@ -29,6 +29,8 @@ use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Service\RoleService;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
+use ZfcRbacTest\Asset\MockRoleWithPermissionMethod;
+use ZfcRbacTest\Asset\MockRoleWithPermissionProperty;
 
 /**
  * @covers \ZfcRbac\Collector\RbacCollector
@@ -269,35 +271,4 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         return $collector->getCollection();
     }
 
-}
-
-class MockRoleWithPermissionProperty implements RoleInterface
-{
-    private $permissions = ['permission-property-a', 'permission-property-b'];
-
-    public function getName()
-    {
-        return 'role-with-permission-property';
-    }
-    public function hasPermission($permission)
-    {
-        return false;
-    }
-}
-
-class MockRoleWithPermissionMethod implements RoleInterface
-{
-    public function getPermissions()
-    {
-        return ['permission-method-a', 'permission-method-b'];
-    }
-
-    public function getName()
-    {
-        return 'role-with-permission-method';
-    }
-    public function hasPermission($permission)
-    {
-        return false;
-    }
 }
