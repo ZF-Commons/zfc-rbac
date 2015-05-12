@@ -46,11 +46,6 @@ class RbacCollector implements CollectorInterface, Serializable
     /**
      * @var array
      */
-    protected $collection = [];
-
-    /**
-     * @var array
-     */
     protected $collectedGuards = [];
 
     /**
@@ -209,7 +204,12 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function getCollection()
     {
-        return $this->collection;
+        return [
+            'guards'      => $this->collectedGuards,
+            'roles'       => $this->collectedRoles,
+            'permissions' => $this->collectedPermissions,
+            'options'     => $this->collectedOptions
+        ];
     }
 
     /**
@@ -217,12 +217,7 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function serialize()
     {
-        return serialize([
-            'guards'      => $this->collectedGuards,
-            'roles'       => $this->collectedRoles,
-            'permissions' => $this->collectedPermissions,
-            'options'     => $this->collectedOptions
-        ]);
+        return serialize($this->getCollection());
     }
 
     /**
