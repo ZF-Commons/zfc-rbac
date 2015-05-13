@@ -180,7 +180,6 @@ class RbacCollector implements CollectorInterface, Serializable
         if (method_exists($role, 'getPermissions')) {
             $permissions = $role->getPermissions();
         } else {
-
             // Gather the permissions for the given role. We have to use reflection as
             // the RoleInterface does not have "getPermissions" method
             $reflectionProperty = new ReflectionProperty($role, 'permissions');
@@ -226,13 +225,13 @@ class RbacCollector implements CollectorInterface, Serializable
     public function unserialize($serialized)
     {
         $collection = unserialize($serialized);
-	if (!is_array($collection)) {
-		throw new InvalidArgumentException(__METHOD__ . ": Unserialized data should be an array.");
-	} 
+        if (!is_array($collection)) {
+            throw new InvalidArgumentException(__METHOD__ . ": Unserialized data should be an array.");
+        }
         $this->collectedGuards = $collection['guards'];
         $this->collectedRoles  = $collection['roles'];
         $this->collectedPermissions =  $collection['permissions'];
-        $this->collectedOptions = $collection['options']; 
+        $this->collectedOptions = $collection['options'];
 
     }
 }
