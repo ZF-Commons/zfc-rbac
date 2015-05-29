@@ -84,7 +84,7 @@ class RoleService
     }
 
     /**
-     * Set the identity provider
+     * Set the role provider
      *
      * @param RoleProviderInterface $roleProvider
      */
