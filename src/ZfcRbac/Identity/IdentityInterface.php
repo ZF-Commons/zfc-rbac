@@ -29,7 +29,8 @@ interface IdentityInterface
     /**
      * Get the list of roles of this identity
      *
+     * @param  string $context Optional context for determining roles returned, eg. project name as context
      * @return string[]|\Rbac\Role\RoleInterface[]
      */
-    public function getRoles();
+    public function getRoles($context = null);
 }

@@ -121,7 +121,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function isGranted($permission, $context = null)
     {
-        $roles = $this->roleService->getIdentityRoles();
+        $roles = $this->roleService->getIdentityRoles($context);
 
         if (empty($roles)) {
             return false;

@@ -107,10 +107,11 @@ class RoleService
     /**
      * Get the identity roles from the current identity, applying some more logic
      *
+     * @param  string $context Optional context for determining roles returned, eg. project name as context
      * @return RoleInterface[]
      * @throws Exception\RuntimeException
      */
-    public function getIdentityRoles()
+    public function getIdentityRoles($context = null)
     {
         if (!$identity = $this->getIdentity()) {
             return $this->convertRoles([$this->guestRole]);
@@ -123,7 +124,7 @@ class RoleService
             ));
         }
 
-        return $this->convertRoles($identity->getRoles());
+        return $this->convertRoles($identity->getRoles($context));
     }
 
     /**
