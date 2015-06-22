@@ -111,6 +111,12 @@ class RbacCollector implements CollectorInterface, Serializable
         $this->collectOptions($options);
         $this->collectGuards($options->getGuards());
         $this->collectIdentityRolesAndPermissions($roleService);
+        $this->collection = [
+            'guards'      => $this->collectedGuards,
+            'roles'       => $this->collectedRoles,
+            'permissions' => $this->collectedPermissions,
+            'options'     => $this->collectedOptions
+        ];
     }
 
     /**
@@ -181,12 +187,17 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     private function collectPermissions(RoleInterface $role)
     {
-        // Gather the permissions for the given role. We have to use reflection as
-        // the RoleInterface does not have "getPermissions" method
-        $reflectionProperty = new ReflectionProperty($role, 'permissions');
-        $reflectionProperty->setAccessible(true);
+        if (method_exists($role, 'getPermissions')) {
+            $permissions = $role->getPermissions();
+        } else {
 
-        $permissions = $reflectionProperty->getValue($role);
+            // Gather the permissions for the given role. We have to use reflection as
+            // the RoleInterface does not have "getPermissions" method
+            $reflectionProperty = new ReflectionProperty($role, 'permissions');
+            $reflectionProperty->setAccessible(true);
+
+            $permissions = $reflectionProperty->getValue($role);
+        }
 
         if ($permissions instanceof Traversable) {
             $permissions = iterator_to_array($permissions);
@@ -212,12 +223,7 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function serialize()
     {
-        return serialize([
-            'guards'      => $this->collectedGuards,
-            'roles'       => $this->collectedRoles,
-            'permissions' => $this->collectedPermissions,
-            'options'     => $this->collectedOptions
-        ]);
+        return serialize($this->collection);
     }
 
     /**

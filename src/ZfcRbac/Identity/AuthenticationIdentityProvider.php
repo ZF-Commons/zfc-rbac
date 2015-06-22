@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Identity;
 
-use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\AuthenticationServiceInterface;
 use ZfcRbac\Exception;
 
 /**
@@ -30,16 +30,16 @@ use ZfcRbac\Exception;
 class AuthenticationIdentityProvider implements IdentityProviderInterface
 {
     /**
-     * @var AuthenticationService
+     * @var AuthenticationServiceInterface
      */
     protected $authenticationService;
 
     /**
      * Constructor
      *
-     * @param AuthenticationService $authenticationService
+     * @param AuthenticationServiceInterface $authenticationService
      */
-    public function __construct(AuthenticationService $authenticationService)
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
         $this->authenticationService = $authenticationService;
     }
