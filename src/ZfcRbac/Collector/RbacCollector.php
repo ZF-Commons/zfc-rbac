@@ -111,6 +111,12 @@ class RbacCollector implements CollectorInterface, Serializable
         $this->collectOptions($options);
         $this->collectGuards($options->getGuards());
         $this->collectIdentityRolesAndPermissions($roleService);
+        $this->collection = [
+            'guards'      => $this->collectedGuards,
+            'roles'       => $this->collectedRoles,
+            'permissions' => $this->collectedPermissions,
+            'options'     => $this->collectedOptions
+        ];
     }
 
     /**
@@ -217,12 +223,7 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function serialize()
     {
-        return serialize([
-            'guards'      => $this->collectedGuards,
-            'roles'       => $this->collectedRoles,
-            'permissions' => $this->collectedPermissions,
-            'options'     => $this->collectedOptions
-        ]);
+        return serialize($this->collection);
     }
 
     /**
