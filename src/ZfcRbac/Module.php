@@ -21,6 +21,7 @@ namespace ZfcRbac;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\Http\PhpEnvironment\Request as HttpRequest;
 
 /**
  * Module class for ZfcRbac
@@ -37,6 +38,11 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
     {
         /* @var \Zend\Mvc\Application $application */
         $application    = $event->getTarget();
+
+        // Register guards only for http requests
+        if (!($application->getRequest() instanceof HttpRequest)){
+            return;
+        }
         $serviceManager = $application->getServiceManager();
         $eventManager   = $application->getEventManager();
 
