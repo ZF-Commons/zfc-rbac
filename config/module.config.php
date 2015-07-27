@@ -35,6 +35,7 @@ return [
             'ZfcRbac\Role\RoleProviderPluginManager'          => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
             'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory',
             'ZfcRbac\Service\RoleService'                     => 'ZfcRbac\Factory\RoleServiceFactory',
+            'ZfcRbac\Service\PermissionService'               => 'ZfcRbac\Factory\PermissionServiceFactory',
             'ZfcRbac\View\Strategy\RedirectStrategy'          => 'ZfcRbac\Factory\RedirectStrategyFactory',
             'ZfcRbac\View\Strategy\UnauthorizedStrategy'      => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
         ],
