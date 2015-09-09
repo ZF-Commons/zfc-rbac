@@ -65,6 +65,7 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $unserialized = [
             'guards'      => ['foo' => 'bar'],
             'roles'       => ['foo' => 'bar'],
+            'permissions' => ['foo' => 'bar'],
             'options'     => ['foo' => 'bar']
         ];
         $serialized   = serialize($unserialized);
@@ -77,7 +78,20 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['foo' => 'bar'], $collection['guards']);
         $this->assertSame(['foo' => 'bar'], $collection['roles']);
         $this->assertSame(['foo' => 'bar'], $collection['options']);
+        $this->assertSame(['foo' => 'bar'], $collection['permissions']);
     }
+
+    public function testUnserializeThrowsInvalidArgumentException()
+    {
+        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
+        $collector    = new RbacCollector();
+        $unserialized = 'not_an_array';
+        $serialized   = serialize($unserialized);
+
+        $collector->unserialize($serialized);
+
+    }
+
 
     public function testCollectNothingIfNoApplicationIsSet()
     {
@@ -250,9 +264,11 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
 
         $roleProvider = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
 
-        $roleService = new RoleService($identityProvider,
+        $roleService = new RoleService(
+            $identityProvider,
             $roleProvider,
-            new RecursiveRoleIteratorStrategy());
+            new RecursiveRoleIteratorStrategy()
+        );
 
         $serviceManager->expects($this->at(0))
             ->method('get')
@@ -270,5 +286,4 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $collector->unserialize($collector->serialize());
         return $collector->getCollection();
     }
-
 }

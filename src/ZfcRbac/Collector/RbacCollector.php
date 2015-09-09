@@ -29,6 +29,7 @@ use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\CollectorInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\RoleService;
+use ZfcRbac\Exception\InvalidArgumentException;
 
 /**
  * RbacCollector
@@ -42,11 +43,6 @@ class RbacCollector implements CollectorInterface, Serializable
      * Collector priority
      */
     const PRIORITY = -100;
-
-    /**
-     * @var array
-     */
-    protected $collection = [];
 
     /**
      * @var array
@@ -184,7 +180,6 @@ class RbacCollector implements CollectorInterface, Serializable
         if (method_exists($role, 'getPermissions')) {
             $permissions = $role->getPermissions();
         } else {
-
             // Gather the permissions for the given role. We have to use reflection as
             // the RoleInterface does not have "getPermissions" method
             $reflectionProperty = new ReflectionProperty($role, 'permissions');
@@ -209,20 +204,19 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function getCollection()
     {
-        return $this->collection;
+        return [
+            'guards'      => $this->collectedGuards,
+            'roles'       => $this->collectedRoles,
+            'permissions' => $this->collectedPermissions,
+            'options'     => $this->collectedOptions
+        ];
     }
-
     /**
      * {@inheritDoc}
      */
     public function serialize()
     {
-        return serialize([
-            'guards'      => $this->collectedGuards,
-            'roles'       => $this->collectedRoles,
-            'permissions' => $this->collectedPermissions,
-            'options'     => $this->collectedOptions
-        ]);
+        return serialize($this->getCollection());
     }
 
     /**
@@ -230,6 +224,14 @@ class RbacCollector implements CollectorInterface, Serializable
      */
     public function unserialize($serialized)
     {
-        $this->collection = unserialize($serialized);
+        $collection = unserialize($serialized);
+        if (!is_array($collection)) {
+            throw new InvalidArgumentException(__METHOD__ . ": Unserialized data should be an array.");
+        }
+        $this->collectedGuards = $collection['guards'];
+        $this->collectedRoles  = $collection['roles'];
+        $this->collectedPermissions =  $collection['permissions'];
+        $this->collectedOptions = $collection['options'];
+
     }
 }
