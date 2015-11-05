@@ -58,13 +58,6 @@ class ModuleOptions extends AbstractOptions
     protected $assertionMap = [];
 
     /**
-     * Protection policy for guards (can be "deny" or "allow")
-     *
-     * @var string
-     */
-    protected $protectionPolicy = GuardInterface::POLICY_ALLOW;
-
-    /**
      * A configuration for role provider
      *
      * @var array

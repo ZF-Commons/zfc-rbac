@@ -18,14 +18,7 @@
 
 return [
     'service_manager' => [
-        'invokables' => [
-            'ZfcRbac\Collector\RbacCollector' => 'ZfcRbac\Collector\RbacCollector',
-        ],
-
         'factories' => [
-            /* Factories that do not map to a class */
-            'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
-
             /* Factories that map to a class */
             'Rbac\Rbac'                                       => 'ZfcRbac\Factory\RbacFactory',
             'ZfcRbac\Assertion\AssertionPluginManager'        => 'ZfcRbac\Factory\AssertionPluginManagerFactory',
