@@ -18,8 +18,6 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Permission\PermissionInterface;
-
 /**
  * Minimal interface for an authorization service
  *
@@ -31,8 +29,8 @@ interface AuthorizationServiceInterface
     /**
      * Check if the permission is granted to the current identity
      *
-     * @param string|PermissionInterface $permission
-     * @param mixed                      $context
+     * @param  string $permission
+     * @param  mixed  $context
      * @return bool
      */
     public function isGranted($permission, $context = null);

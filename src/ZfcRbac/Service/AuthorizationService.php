@@ -19,7 +19,6 @@
 namespace ZfcRbac\Service;
 
 use Rbac\Rbac;
-use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
@@ -71,7 +70,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Set an assertion
      *
-     * @param string|PermissionInterface         $permission
+     * @param string                             $permission
      * @param string|callable|AssertionInterface $assertion
      * @return void
      */
@@ -94,7 +93,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Checks if a assertion exists
      *
-     * @param string|PermissionInterface $permission
+     * @param  string $permission
      * @return bool
      */
     public function hasAssertion($permission)
@@ -115,8 +114,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Check if the permission is granted to the current identity
      *
-     * @param string|PermissionInterface $permission
-     * @param mixed                      $context
+     * @param  string $permission
+     * @param  mixed  $context
      * @return bool
      */
     public function isGranted($permission, $context = null)

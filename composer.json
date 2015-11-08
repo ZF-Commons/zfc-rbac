@@ -26,11 +26,12 @@
       "email": "jmleroux.pro@gmail.com"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
     "php": ">=5.5",
     "zendframework/zend-mvc": "~2.2",
     "zendframework/zend-servicemanager": "~2.2",
-    "zfr/rbac": "~1.2"
+    "zfr/rbac": "dev-master"
   },
   "require-dev": {
     "zendframework/zendframework": "~2.2",
