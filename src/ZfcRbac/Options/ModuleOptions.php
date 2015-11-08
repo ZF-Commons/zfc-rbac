@@ -65,20 +65,6 @@ class ModuleOptions extends AbstractOptions
     protected $roleProvider = [];
 
     /**
-     * Options for the unauthorized strategy
-     *
-     * @var UnauthorizedStrategyOptions|null
-     */
-    protected $unauthorizedStrategy;
-
-    /**
-     * Options for the redirect strategy
-     *
-     * @var RedirectStrategyOptions|null
-     */
-    protected $redirectStrategy;
-
-    /**
      * Constructor
      *
      * {@inheritDoc}
