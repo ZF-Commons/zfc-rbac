@@ -16,7 +16,7 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Factory;
+namespace ZfcRbac\Container;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

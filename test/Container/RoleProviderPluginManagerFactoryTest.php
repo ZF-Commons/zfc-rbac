@@ -16,32 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Factory;
+namespace ZfcRbacTest\Container;
 
-use Zend\ServiceManager\Config;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Factory\RoleProviderPluginManagerFactory;
 
 /**
- * Factory to create a role provider plugin manager
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @covers \ZfcRbac\Factory\RoleProviderPluginManagerFactory
  */
-class RoleProviderPluginManagerFactory implements FactoryInterface
+class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * {@inheritDoc}
-     * @return RoleProviderPluginManager
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function testFactory()
     {
-        $config = $serviceLocator->get('Config')['zfc_rbac']['role_provider_manager'];
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('Config', [
+            'zfc_rbac' => [
+                'role_provider_manager' => []
+            ]
+        ]);
 
-        $pluginManager = new RoleProviderPluginManager(new Config($config));
-        $pluginManager->setServiceLocator($serviceLocator);
+        $factory       = new RoleProviderPluginManagerFactory();
+        $pluginManager = $factory->createService($serviceManager);
 
-        return $pluginManager;
+        $this->assertInstanceOf('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
+        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }

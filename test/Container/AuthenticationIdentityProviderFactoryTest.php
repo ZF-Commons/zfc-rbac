@@ -16,24 +16,27 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\RbacFactory;
+use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
 
 /**
- * @covers ZfcRbac\Factory\RbacFactory
+ * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
  */
-class RbacFactoryTest extends \PHPUnit_Framework_TestCase
+class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCanCreateFromFactory()
+    public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $factory        = new RbacFactory();
+        $serviceManager->setService(
+            'Zend\Authentication\AuthenticationService',
+            $this->getMock('Zend\Authentication\AuthenticationService')
+        );
 
-        $rbac = $factory->createService($serviceManager);
+        $factory                = new AuthenticationIdentityProviderFactory();
+        $authenticationProvider = $factory->createService($serviceManager);
 
-        $this->assertInstanceOf('Rbac\Rbac', $rbac);
-        $this->assertInstanceOf('Rbac\Traversal\Strategy\TraversalStrategyInterface', $rbac->getTraversalStrategy());
+        $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
     }
 }

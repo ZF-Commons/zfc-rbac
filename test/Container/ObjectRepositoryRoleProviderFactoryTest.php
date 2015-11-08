@@ -16,7 +16,7 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceManager;

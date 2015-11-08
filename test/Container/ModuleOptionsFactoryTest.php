@@ -16,29 +16,27 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\RoleProviderPluginManagerFactory;
+use ZfcRbac\Factory\ModuleOptionsFactory;
 
 /**
- * @covers \ZfcRbac\Factory\RoleProviderPluginManagerFactory
+ * @covers \ZfcRbac\Factory\ModuleOptionsFactory
  */
-class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
+        $config = ['zfc_rbac' => []];
+
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', [
-            'zfc_rbac' => [
-                'role_provider_manager' => []
-            ]
-        ]);
+        $serviceManager->setService('Config', $config);
 
-        $factory       = new RoleProviderPluginManagerFactory();
-        $pluginManager = $factory->createService($serviceManager);
+        $factory = new ModuleOptionsFactory();
+        $options = $factory->createService($serviceManager);
 
-        $this->assertInstanceOf('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
+        $this->assertInstanceOf('ZfcRbac\Options\ModuleOptions', $options);
     }
 }
+ 

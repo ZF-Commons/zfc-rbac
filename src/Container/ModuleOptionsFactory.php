@@ -16,27 +16,25 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
+use Interop\Container\ContainerInterface;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
- * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
+ * Factory for the module options
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
  */
-class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsFactory
 {
-    public function testFactory()
+    /**
+     * @param  ContainerInterface $container
+     * @return ModuleOptions
+     */
+    public function createService(ContainerInterface $container)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
-        );
-
-        $factory                = new AuthenticationIdentityProviderFactory();
-        $authenticationProvider = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
+        return new ModuleOptions($container->get('config')['zfc_rbac']);
     }
 }

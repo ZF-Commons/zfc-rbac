@@ -16,27 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\ModuleOptionsFactory;
+use ZfcRbac\Factory\AssertionPluginManagerFactory;
 
 /**
- * @covers \ZfcRbac\Factory\ModuleOptionsFactory
+ * @covers \ZfcRbac\Factory\AssertionPluginManagerFactory
  */
-class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $config = ['zfc_rbac' => []];
-
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', $config);
+        $serviceManager->setService('Config', [
+            'zfc_rbac' => [
+                'assertion_manager' => []
+            ]
+        ]);
 
-        $factory = new ModuleOptionsFactory();
-        $options = $factory->createService($serviceManager);
+        $factory       = new AssertionPluginManagerFactory();
+        $pluginManager = $factory->createService($serviceManager);
 
-        $this->assertInstanceOf('ZfcRbac\Options\ModuleOptions', $options);
+        $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
+        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }
- 

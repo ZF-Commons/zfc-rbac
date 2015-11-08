@@ -16,41 +16,32 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Factory;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Config;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * Factory to create the authorization service
+ * Factory to create a role provider plugin manager
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class AuthorizationServiceFactory implements FactoryInterface
+class RoleProviderPluginManagerFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @return AuthorizationService
+     * @return RoleProviderPluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var \Rbac\Rbac $rbac */
-        $rbac = $serviceLocator->get('Rbac\Rbac');
+        $config = $serviceLocator->get('Config')['zfc_rbac']['role_provider_manager'];
 
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $serviceLocator->get('ZfcRbac\Service\RoleService');
+        $pluginManager = new RoleProviderPluginManager(new Config($config));
+        $pluginManager->setServiceLocator($serviceLocator);
 
-        /* @var \ZfcRbac\Assertion\AssertionPluginManager $assertionPluginManager */
-        $assertionPluginManager = $serviceLocator->get('ZfcRbac\Assertion\AssertionPluginManager');
-
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-
-        $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
-        $authorizationService->setAssertions($moduleOptions->getAssertionMap());
-
-        return $authorizationService;
+        return $pluginManager;
     }
 }

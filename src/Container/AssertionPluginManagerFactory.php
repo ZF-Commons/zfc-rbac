@@ -16,29 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AssertionPluginManagerFactory;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\AssertionPluginManagerFactory
+ * Factory to create a assertion plugin manager
+ * 
+ * @author  Aeneas Rekkas
+ * @licence MIT
  */
-class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerFactory implements FactoryInterface
 {
-    public function testFactory()
+    /**
+     * @param  ContainerInterface $container
+     * @return AssertionPluginManager
+     */
+    public function __invoke(ContainerInterface $container)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', [
-            'zfc_rbac' => [
-                'assertion_manager' => []
-            ]
-        ]);
+        $config        = $container->get('config')['zfc_rbac']['assertion_manager'];
+        $pluginManager = new AssertionPluginManager($config);
 
-        $factory       = new AssertionPluginManagerFactory();
-        $pluginManager = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
+        return $pluginManager;
     }
 }
