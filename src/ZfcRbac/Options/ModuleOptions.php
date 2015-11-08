@@ -20,7 +20,6 @@ namespace ZfcRbac\Options;
 
 use Zend\Stdlib\AbstractOptions;
 use ZfcRbac\Exception;
-use ZfcRbac\Guard\GuardInterface;
 
 /**
  * Options for ZfcRbac module
@@ -59,32 +58,11 @@ class ModuleOptions extends AbstractOptions
     protected $assertionMap = [];
 
     /**
-     * Protection policy for guards (can be "deny" or "allow")
-     *
-     * @var string
-     */
-    protected $protectionPolicy = GuardInterface::POLICY_ALLOW;
-
-    /**
      * A configuration for role provider
      *
      * @var array
      */
     protected $roleProvider = [];
-
-    /**
-     * Options for the unauthorized strategy
-     *
-     * @var UnauthorizedStrategyOptions|null
-     */
-    protected $unauthorizedStrategy;
-
-    /**
-     * Options for the redirect strategy
-     *
-     * @var RedirectStrategyOptions|null
-     */
-    protected $redirectStrategy;
 
     /**
      * Constructor
@@ -161,56 +139,6 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     * Set the guards options
-     *
-     * @param  array $guards
-     * @return void
-     */
-    public function setGuards(array $guards)
-    {
-        $this->guards = $guards;
-    }
-
-    /**
-     * Get the guards options
-     *
-     * @return array
-     */
-    public function getGuards()
-    {
-        return $this->guards;
-    }
-
-    /**
-     * Set the protection policy for guards
-     *
-     * @param  string $protectionPolicy
-     * @throws Exception\RuntimeException
-     * @return void
-     */
-    public function setProtectionPolicy($protectionPolicy)
-    {
-        if ($protectionPolicy !== GuardInterface::POLICY_ALLOW && $protectionPolicy !== GuardInterface::POLICY_DENY) {
-            throw new Exception\RuntimeException(sprintf(
-                'An invalid protection policy was set. Can only be "deny" or "allow", "%s" given',
-                $protectionPolicy
-            ));
-        }
-
-        $this->protectionPolicy = (string) $protectionPolicy;
-    }
-
-    /**
-     * Get the protection policy for guards
-     *
-     * @return string
-     */
-    public function getProtectionPolicy()
-    {
-        return $this->protectionPolicy;
-    }
-
-    /**
      * Set the configuration for the role provider
      *
      * @param  array $roleProvider
@@ -235,53 +163,5 @@ class ModuleOptions extends AbstractOptions
     public function getRoleProvider()
     {
         return $this->roleProvider;
-    }
-
-    /**
-     * Set the unauthorized strategy options
-     *
-     * @param array $unauthorizedStrategy
-     */
-    public function setUnauthorizedStrategy(array $unauthorizedStrategy)
-    {
-        $this->unauthorizedStrategy = new UnauthorizedStrategyOptions($unauthorizedStrategy);
-    }
-
-    /**
-     * Get the unauthorized strategy options
-     *
-     * @return UnauthorizedStrategyOptions
-     */
-    public function getUnauthorizedStrategy()
-    {
-        if (null === $this->unauthorizedStrategy) {
-            $this->unauthorizedStrategy = new UnauthorizedStrategyOptions();
-        }
-
-        return $this->unauthorizedStrategy;
-    }
-
-    /**
-     * Set the redirect strategy options
-     *
-     * @param array $redirectStrategy
-     */
-    public function setRedirectStrategy(array $redirectStrategy)
-    {
-        $this->redirectStrategy = new RedirectStrategyOptions($redirectStrategy);
-    }
-
-    /**
-     * Get the redirect strategy options
-     *
-     * @return RedirectStrategyOptions
-     */
-    public function getRedirectStrategy()
-    {
-        if (null === $this->redirectStrategy) {
-            $this->redirectStrategy = new RedirectStrategyOptions();
-        }
-
-        return $this->redirectStrategy;
     }
 }

@@ -35,12 +35,6 @@ class RbacFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $traversalStrategy = new GeneratorStrategy();
-        } else {
-            $traversalStrategy = new RecursiveRoleIteratorStrategy();
-        }
-
-        return new Rbac($traversalStrategy);
+        return new Rbac(new GeneratorStrategy());
     }
 }
