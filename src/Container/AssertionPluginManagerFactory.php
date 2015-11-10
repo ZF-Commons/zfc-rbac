@@ -31,13 +31,15 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 class AssertionPluginManagerFactory implements FactoryInterface
 {
     /**
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
      * @return AssertionPluginManager
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config        = $container->get('config')['zfc_rbac']['assertion_manager'];
-        $pluginManager = new AssertionPluginManager($config);
+        $pluginManager = new AssertionPluginManager($container, $config);
 
         return $pluginManager;
     }

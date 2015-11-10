@@ -19,10 +19,10 @@
 namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\ModuleOptionsFactory;
+use ZfcRbac\Container\ModuleOptionsFactory;
 
 /**
- * @covers \ZfcRbac\Factory\ModuleOptionsFactory
+ * @covers \ZfcRbac\Container\ModuleOptionsFactory
  */
 class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,10 +31,10 @@ class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
         $config = ['zfc_rbac' => []];
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', $config);
+        $serviceManager->setService('config', $config);
 
         $factory = new ModuleOptionsFactory();
-        $options = $factory->createService($serviceManager);
+        $options = $factory($serviceManager, 'requestedName');
 
         $this->assertInstanceOf('ZfcRbac\Options\ModuleOptions', $options);
     }

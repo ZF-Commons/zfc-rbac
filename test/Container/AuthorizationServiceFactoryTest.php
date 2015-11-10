@@ -19,11 +19,11 @@
 namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthorizationServiceFactory;
+use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
- * @covers \ZfcRbac\Factory\AuthorizationServiceFactory
+ * @covers \ZfcRbac\Container\AuthorizationServiceFactory
  */
 class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,7 +47,7 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory              = new AuthorizationServiceFactory();
-        $authorizationService = $factory->createService($serviceManager);
+        $authorizationService = $factory($serviceManager, 'requestedName');
 
         $this->assertInstanceOf('ZfcRbac\Service\AuthorizationService', $authorizationService);
     }

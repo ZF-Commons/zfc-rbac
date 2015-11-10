@@ -19,26 +19,32 @@
 namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AssertionPluginManagerFactory;
+use ZfcRbac\Container\AssertionPluginManagerFactory;
 
 /**
- * @covers \ZfcRbac\Factory\AssertionPluginManagerFactory
+ * @covers \ZfcRbac\Container\AssertionPluginManagerFactory
  */
 class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', [
+        $serviceManager->setService('config', [
             'zfc_rbac' => [
                 'assertion_manager' => []
             ]
         ]);
 
         $factory       = new AssertionPluginManagerFactory();
-        $pluginManager = $factory->createService($serviceManager);
+        $pluginManager = $factory($serviceManager, 'requestedName');
 
         $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
+
+        # @todo remove after review
+        #
+        # This seems not possible anymore as getServiceLocator has been removed and a creation context it now passed
+        # to the factory
+        #
+        # $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }
