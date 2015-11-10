@@ -19,6 +19,7 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
+use Rbac\Rbac;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Options\ModuleOptions;
@@ -39,8 +40,8 @@ class AuthorizationServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /* @var \Rbac\Rbac $rbac */
-        $rbac = $container->get(\Rbac\Rbac::class);
+        /* @var Rbac $rbac */
+        $rbac = $container->get(Rbac::class);
 
         /* @var RoleService $roleService */
         $roleService = $container->get(RoleService::class);
