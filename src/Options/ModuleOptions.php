@@ -98,7 +98,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Set the assertions options
-     * 
+     *
      * @param array $assertionMap
      * @return void
      */
@@ -109,7 +109,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Get the assertions options
-     * 
+     *
      * @return array
      */
     public function getAssertionMap()

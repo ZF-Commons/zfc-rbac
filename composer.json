@@ -30,6 +30,7 @@
   "require": {
     "php": ">=5.5",
     "zendframework/zend-servicemanager": "dev-develop",
+    "zendframework/zend-stdlib": "dev-develop",
     "zfr/rbac": "~2.0"
   },
   "require-dev": {

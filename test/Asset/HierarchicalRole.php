@@ -19,9 +19,11 @@
 namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Rbac\Permission\PermissionInterface;
 use Rbac\Role\HierarchicalRole as BaseHierarchicalRole;
+use Rbac\Role\RoleInterface;
 
 /**
  * @ORM\Entity
@@ -46,14 +48,14 @@ class HierarchicalRole extends BaseHierarchicalRole
     protected $name;
 
     /**
-     * @var \Rbac\Role\RoleInterface[]|\Doctrine\Common\Collections\Collection
+     * @var RoleInterface[]|Collection
      *
      * @ORM\ManyToMany(targetEntity="HierarchicalRole")
      */
     protected $children;
 
     /**
-     * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
+     * @var PermissionInterface[]|Collection
      *
      * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", fetch="EAGER")
      */
@@ -61,6 +63,8 @@ class HierarchicalRole extends BaseHierarchicalRole
 
     /**
      * Init the Doctrine collection
+     *
+     * @param string $name
      */
     public function __construct($name)
     {

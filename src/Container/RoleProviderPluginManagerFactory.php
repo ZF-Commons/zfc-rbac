@@ -18,9 +18,8 @@
 
 namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\Config;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -35,12 +34,10 @@ class RoleProviderPluginManagerFactory implements FactoryInterface
      * {@inheritDoc}
      * @return RoleProviderPluginManager
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('Config')['zfc_rbac']['role_provider_manager'];
-
-        $pluginManager = new RoleProviderPluginManager(new Config($config));
-        $pluginManager->setServiceLocator($serviceLocator);
+        $config        = $container->get('config')['zfc_rbac']['role_provider_manager'];
+        $pluginManager = new RoleProviderPluginManager($container, $config);
 
         return $pluginManager;
     }

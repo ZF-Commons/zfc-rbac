@@ -18,40 +18,39 @@
 
 namespace ZfcRbacTest\Container;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Exception\RuntimeException;
+use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory
+ * @covers \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory
  */
 class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactoryUsingObjectRepository()
     {
-        $pluginManager  = new RoleProviderPluginManager();
         $serviceManager = new ServiceManager();
-
-        $pluginManager->setServiceLocator($serviceManager);
+        $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
             'object_repository'  => 'RoleObjectRepository'
         ];
 
-        $serviceManager->setService('RoleObjectRepository', $this->getMock('Doctrine\Common\Persistence\ObjectRepository'));
+        $serviceManager->setService('RoleObjectRepository', $this->getMock(ObjectRepository::class));
 
-        $roleProvider = $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', $options);
-        $this->assertInstanceOf('ZfcRbac\Role\ObjectRepositoryRoleProvider', $roleProvider);
+        $roleProvider = $pluginManager->get(ObjectRepositoryRoleProvider::class, $options);
+        $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
     public function testFactoryUsingObjectManager()
     {
-        $pluginManager  = new RoleProviderPluginManager();
         $serviceManager = new ServiceManager();
-
-        $pluginManager->setServiceLocator($serviceManager);
+        $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
@@ -59,16 +58,16 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             'class_name'         => 'Role'
         ];
 
-        $objectManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
+        $objectManager = $this->getMock(ObjectManager::class);
         $objectManager->expects($this->once())
                       ->method('getRepository')
                       ->with($options['class_name'])
-                      ->will($this->returnValue($this->getMock('Doctrine\Common\Persistence\ObjectRepository')));
+                      ->will($this->returnValue($this->getMock(ObjectRepository::class)));
 
         $serviceManager->setService('ObjectManager', $objectManager);
 
-        $roleProvider = $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', $options);
-        $this->assertInstanceOf('ZfcRbac\Role\ObjectRepositoryRoleProvider', $roleProvider);
+        $roleProvider = $pluginManager->get(ObjectRepositoryRoleProvider::class, $options);
+        $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
     /**
@@ -77,11 +76,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     public function testThrowExceptionIfNoRoleNamePropertyIsSet()
     {
         try {
-            $pluginManager  = new RoleProviderPluginManager();
             $serviceManager = new ServiceManager();
+            $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
-            $pluginManager->setServiceLocator($serviceManager);
-            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', []);
+            $pluginManager->get(ObjectRepositoryRoleProvider::class, []);
         } catch (ServiceNotCreatedException $smException) {
             while ($e = $smException->getPrevious()) {
                 if ($e instanceof RuntimeException) {
@@ -102,11 +100,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
     {
         try {
-            $pluginManager  = new RoleProviderPluginManager();
             $serviceManager = new ServiceManager();
+            $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
-            $pluginManager->setServiceLocator($serviceManager);
-            $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', [
+            $pluginManager->get(ObjectRepositoryRoleProvider::class, [
                 'role_name_property' => 'name'
             ]);
         } catch (ServiceNotCreatedException $smException) {

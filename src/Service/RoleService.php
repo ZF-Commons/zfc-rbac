@@ -51,8 +51,8 @@ class RoleService
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface  $identityProvider
-     * @param RoleProviderInterface      $roleProvider
+     * @param IdentityProviderInterface $identityProvider
+     * @param RoleProviderInterface     $roleProvider
      */
     public function __construct(IdentityProviderInterface $identityProvider, RoleProviderInterface $roleProvider)
     {

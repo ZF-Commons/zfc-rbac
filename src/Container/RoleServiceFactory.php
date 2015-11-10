@@ -18,9 +18,13 @@
 
 namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\Exception\RuntimeException;
+use ZfcRbac\Identity\IdentityProviderInterface;
+use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Role\RoleProviderInterface;
+use ZfcRbac\Role\RoleProviderPluginManager;
 use ZfcRbac\Service\RoleService;
 
 /**
@@ -35,13 +39,13 @@ class RoleServiceFactory implements FactoryInterface
      * {@inheritDoc}
      * @return RoleService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        /* @var ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get(ModuleOptions::class);
 
-        /* @var \ZfcRbac\Identity\IdentityProviderInterface $identityProvider */
-        $identityProvider = $serviceLocator->get($moduleOptions->getIdentityProvider());
+        /* @var IdentityProviderInterface $identityProvider */
+        $identityProvider = $container->get($moduleOptions->getIdentityProvider());
 
         $roleProviderConfig = $moduleOptions->getRoleProvider();
 
@@ -49,14 +53,14 @@ class RoleServiceFactory implements FactoryInterface
             throw new RuntimeException('No role provider has been set for ZfcRbac');
         }
 
-        /* @var \ZfcRbac\Role\RoleProviderPluginManager $pluginManager */
-        $pluginManager = $serviceLocator->get('ZfcRbac\Role\RoleProviderPluginManager');
+        /* @var RoleProviderPluginManager $pluginManager */
+        $pluginManager = $container->get(RoleProviderPluginManager::class);
 
-        /* @var \ZfcRbac\Role\RoleProviderInterface $roleProvider */
+        /* @var RoleProviderInterface $roleProvider */
         $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
 
         /* @var \Rbac\Traversal\Strategy\TraversalStrategyInterface $traversalStrategy */
-        $traversalStrategy = $serviceLocator->get('Rbac\Rbac')->getTraversalStrategy();
+        $traversalStrategy = $container->get(\Rbac\Rbac::class)->getTraversalStrategy();
 
         $roleService = new RoleService($identityProvider, $roleProvider, $traversalStrategy);
         $roleService->setGuestRole($moduleOptions->getGuestRole());
