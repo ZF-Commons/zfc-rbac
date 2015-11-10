@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AssertionPluginManagerFactory;
 
 /**
@@ -38,7 +39,7 @@ class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $factory       = new AssertionPluginManagerFactory();
         $pluginManager = $factory($serviceManager, 'requestedName');
 
-        $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
+        $this->assertInstanceOf(AssertionPluginManager::class, $pluginManager);
 
         # @todo remove after review
         #

@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleProviderPluginManagerFactory;
+use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
  * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
@@ -38,7 +39,7 @@ class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $factory       = new RoleProviderPluginManagerFactory();
         $pluginManager = $factory($serviceManager, 'requestedName');
 
-        $this->assertInstanceOf('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
+        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
 
         # @todo remove after review
         #

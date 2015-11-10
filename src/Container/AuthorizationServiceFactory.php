@@ -20,7 +20,10 @@ namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 
 /**
  * Factory to create the authorization service
@@ -37,16 +40,16 @@ class AuthorizationServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /* @var \Rbac\Rbac $rbac */
-        $rbac = $container->get('Rbac\Rbac');
+        $rbac = $container->get(\Rbac\Rbac::class);
 
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $container->get('ZfcRbac\Service\RoleService');
+        /* @var RoleService $roleService */
+        $roleService = $container->get(RoleService::class);
 
-        /* @var \ZfcRbac\Assertion\AssertionPluginManager $assertionPluginManager */
-        $assertionPluginManager = $container->get('ZfcRbac\Assertion\AssertionPluginManager');
+        /* @var AssertionPluginManager $assertionPluginManager */
+        $assertionPluginManager = $container->get(AssertionPluginManager::class);
 
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
+        /* @var ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get(ModuleOptions::class);
 
         $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
         $authorizationService->setAssertions($moduleOptions->getAssertionMap());

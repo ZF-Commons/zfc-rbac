@@ -20,6 +20,7 @@ namespace ZfcRbac\Role;
 
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 use ZfcRbac\Exception;
 
 /**
@@ -36,8 +37,8 @@ class RoleProviderPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $factories = [
-        'ZfcRbac\Role\InMemoryRoleProvider'         => InvokableFactory::class,
-        'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Container\ObjectRepositoryRoleProviderFactory'
+        InMemoryRoleProvider::class         => InvokableFactory::class,
+        ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class
     ];
 
     /**

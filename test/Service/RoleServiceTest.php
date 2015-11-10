@@ -18,9 +18,14 @@
 
 namespace ZfcRbacTest\Service;
 
-use ZfcRbac\Role\InMemoryRoleProvider;
-use ZfcRbac\Service\RoleService;
+use Rbac\Role\RoleInterface;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
+use Rbac\Traversal\Strategy\TraversalStrategyInterface;
+use ZfcRbac\Exception\RuntimeException;
+use ZfcRbac\Identity\IdentityProviderInterface;
+use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Role\RoleProviderInterface;
+use ZfcRbac\Service\RoleService;
 
 /**
  * @covers \ZfcRbac\Service\RoleService
@@ -32,17 +37,17 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
         return [
             // No identity role
             [
-                'rolesConfig' => [],
+                'rolesConfig'   => [],
                 'identityRoles' => [],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'member'
                 ],
-                'doesMatch' => false
+                'doesMatch'     => false
             ],
 
             // Simple
             [
-                'rolesConfig' => [
+                'rolesConfig'   => [
                     'member' => [
                         'children' => ['guest']
                     ],
@@ -51,13 +56,13 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                 'identityRoles' => [
                     'guest'
                 ],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'member'
                 ],
-                'doesMatch' => false
+                'doesMatch'     => false
             ],
             [
-                'rolesConfig' => [
+                'rolesConfig'   => [
                     'member' => [
                         'children' => ['guest']
                     ],
@@ -66,22 +71,22 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                 'identityRoles' => [
                     'member'
                 ],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'member'
                 ],
-                'doesMatch' => true
+                'doesMatch'     => true
             ],
 
             // Complex role inheritance
             [
-                'rolesConfig' => [
-                    'admin' => [
+                'rolesConfig'   => [
+                    'admin'     => [
                         'children' => ['moderator']
                     ],
                     'moderator' => [
                         'children' => ['member']
                     ],
-                    'member' => [
+                    'member'    => [
                         'children' => ['guest']
                     ],
                     'guest'
@@ -90,20 +95,20 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                     'member',
                     'moderator'
                 ],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'admin'
                 ],
-                'doesMatch' => false
+                'doesMatch'     => false
             ],
             [
-                'rolesConfig' => [
-                    'admin' => [
+                'rolesConfig'   => [
+                    'admin'     => [
                         'children' => ['moderator']
                     ],
                     'moderator' => [
                         'children' => ['member']
                     ],
-                    'member' => [
+                    'member'    => [
                         'children' => ['guest']
                     ],
                     'guest'
@@ -112,26 +117,26 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                     'member',
                     'admin'
                 ],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'moderator'
                 ],
-                'doesMatch' => true
+                'doesMatch'     => true
             ],
 
             // Complex role inheritance and multiple check
             [
-                'rolesConfig' => [
-                    'sysadmin' => [
+                'rolesConfig'   => [
+                    'sysadmin'  => [
                         'children' => ['siteadmin', 'admin']
                     ],
                     'siteadmin',
-                    'admin' => [
+                    'admin'     => [
                         'children' => ['moderator']
                     ],
                     'moderator' => [
                         'children' => ['member']
                     ],
-                    'member' => [
+                    'member'    => [
                         'children' => ['guest']
                     ],
                     'guest'
@@ -140,25 +145,25 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                     'member',
                     'moderator'
                 ],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'admin',
                     'sysadmin'
                 ],
-                'doesMatch' => false
+                'doesMatch'     => false
             ],
             [
-                'rolesConfig' => [
-                    'sysadmin' => [
+                'rolesConfig'   => [
+                    'sysadmin'  => [
                         'children' => ['siteadmin', 'admin']
                     ],
                     'siteadmin',
-                    'admin' => [
+                    'admin'     => [
                         'children' => ['moderator']
                     ],
                     'moderator' => [
                         'children' => ['member']
                     ],
-                    'member' => [
+                    'member'    => [
                         'children' => ['guest']
                     ],
                     'guest'
@@ -167,12 +172,12 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
                     'moderator',
                     'admin'
                 ],
-                'rolesToCheck' => [
+                'rolesToCheck'  => [
                     'sysadmin',
                     'siteadmin',
                     'member'
                 ],
-                'doesMatch' => true
+                'doesMatch'     => true
             ]
         ];
     }
@@ -182,30 +187,31 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testMatchIdentityRoles(array $rolesConfig, array $identityRoles, array $rolesToCheck, $doesMatch)
     {
-        $identity = $this->getMock('ZfcRbac\Identity\IdentityInterface');
+        $identity = $this->getMock(\ZfcRbac\Identity\IdentityInterface::class);
         $identity->expects($this->once())->method('getRoles')->will($this->returnValue($identityRoles));
 
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider = $this->getMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue($identity));
+            ->method('getIdentity')
+            ->will($this->returnValue($identity));
 
-        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig), new RecursiveRoleIteratorStrategy());
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig),
+            new RecursiveRoleIteratorStrategy());
 
         $this->assertEquals($doesMatch, $roleService->matchIdentityRoles($rolesToCheck));
     }
 
     public function testReturnGuestRoleIfNoIdentityIsFound()
     {
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider = $this->getMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue(null));
+            ->method('getIdentity')
+            ->will($this->returnValue(null));
 
         $roleService = new RoleService(
             $identityProvider,
             new InMemoryRoleProvider([]),
-            $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface')
+            $this->getMock(TraversalStrategyInterface::class)
         );
 
         $roleService->setGuestRole('guest');
@@ -214,26 +220,26 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertCount(1, $result);
-        $this->assertInstanceOf('Rbac\Role\RoleInterface', $result[0]);
+        $this->assertInstanceOf(RoleInterface::class, $result[0]);
         $this->assertEquals('guest', $result[0]->getName());
     }
 
     public function testThrowExceptionIfIdentityIsWrongType()
     {
         $this->setExpectedException(
-            'ZfcRbac\Exception\RuntimeException',
+            RuntimeException::class,
             'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "stdClass" given'
         );
 
-        $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
+        $identityProvider = $this->getMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
-                         ->method('getIdentity')
-                         ->will($this->returnValue(new \stdClass()));
+            ->method('getIdentity')
+            ->will($this->returnValue(new \stdClass()));
 
         $roleService = new RoleService(
             $identityProvider,
-            $this->getMock('ZfcRbac\Role\RoleProviderInterface'),
-            $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface')
+            $this->getMock(RoleProviderInterface::class),
+            $this->getMock(TraversalStrategyInterface::class)
         );
 
         $roleService->getIdentityRoles();

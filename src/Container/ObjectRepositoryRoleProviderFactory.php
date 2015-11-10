@@ -18,10 +18,10 @@
 
 namespace ZfcRbac\Container;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
@@ -46,14 +46,14 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
         }
 
         if (isset($options['object_repository'])) {
-            /* @var \Doctrine\Common\Persistence\ObjectRepository $objectRepository */
+            /* @var ObjectRepository $objectRepository */
             $objectRepository = $container->get($options['object_repository']);
 
             return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);
         }
 
         if (isset($options['object_manager']) && isset($options['class_name'])) {
-            /* @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
+            /* @var ObjectManager $objectManager */
             $objectManager    = $container->get($options['object_manager']);
             $objectRepository = $objectManager->getRepository($options['class_name']);
 

@@ -18,7 +18,12 @@
 
 namespace ZfcRbacTest\Role;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\SchemaTool;
+use Rbac\Role\HierarchicalRoleInterface;
+use Rbac\Role\RoleInterface;
 use Rbac\Traversal\RecursiveRoleIterator;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -50,7 +55,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
         $objectManager->flush();
 
-        $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\FlatRole');
+        $objectRepository = $objectManager->getRepository(FlatRole::class);
 
         $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
 
@@ -60,7 +65,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $roles);
         $this->assertInternalType('array', $roles);
 
-        $this->assertInstanceOf('Rbac\Role\RoleInterface', $roles[0]);
+        $this->assertInstanceOf(RoleInterface::class, $roles[0]);
         $this->assertEquals('admin', $roles[0]->getName());
     }
 
@@ -83,7 +88,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
         $objectManager->flush();
 
-        $objectRepository = $objectManager->getRepository('ZfcRbacTest\Asset\HierarchicalRole');
+        $objectRepository = $objectManager->getRepository(HierarchicalRole::class);
 
         $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
 
@@ -93,7 +98,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $roles);
         $this->assertInternalType('array', $roles);
 
-        $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $roles[0]);
+        $this->assertInstanceOf(HierarchicalRoleInterface::class, $roles[0]);
         $this->assertEquals('admin', $roles[0]->getName());
 
         $iteratorIterator = new \RecursiveIteratorIterator(
@@ -104,7 +109,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $childRolesString = '';
 
         foreach ($iteratorIterator as $childRole) {
-            $this->assertInstanceOf('Rbac\Role\HierarchicalRoleInterface', $childRole);
+            $this->assertInstanceOf(HierarchicalRoleInterface::class, $childRole);
             $childRolesString .= $childRole->getName();
         }
 
@@ -113,7 +118,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testRoleCacheOnConsecutiveCalls()
     {
-        $objectRepository = $this->getMock('Doctrine\ORM\EntityRepository', ['findBy'], [], '', false);
+        $objectRepository = $this->getMock(EntityRepository::class, ['findBy'], [], '', false);
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -126,7 +131,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testClearRoleCache()
     {
-        $objectRepository = $this->getMock('Doctrine\ORM\EntityRepository', ['findBy'], [], '', false);
+        $objectRepository = $this->getMock(EntityRepository::class, ['findBy'], [], '', false);
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -143,7 +148,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->serviceManager = ServiceManagerFactory::getServiceManager();
 
         $objectManager                = $this->getObjectManager();
-        $objectRepository             = $objectManager->getRepository('ZfcRbacTest\Asset\FlatRole');
+        $objectRepository             = $objectManager->getRepository(\ZfcRbacTest\Asset\FlatRole::class);
         $objectRepositoryRoleProvider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
 
         $this->setExpectedException(
@@ -155,12 +160,12 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectManager
+     * @return ObjectManager
      */
     private function getObjectManager()
     {
-        /* @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $this->serviceManager->get('Doctrine\\ORM\\EntityManager');
+        /* @var $entityManager EntityManager */
+        $entityManager = $this->serviceManager->get(EntityManager::class);
         $schemaTool    = new SchemaTool($entityManager);
         $schemaTool->dropDatabase();
         $schemaTool->createSchema($entityManager->getMetadataFactory()->getAllMetadata());

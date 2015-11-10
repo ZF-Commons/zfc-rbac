@@ -18,6 +18,8 @@
 
 namespace ZfcRbac\Role;
 
+use Rbac\Role\RoleInterface;
+
 /**
  * A role provider is an object that collect roles from string and convert them to RoleInterface instances
  *
@@ -33,7 +35,7 @@ interface RoleProviderInterface
      * Get the roles from the provider
      *
      * @param  string[] $roleNames
-     * @return \Rbac\Role\RoleInterface[]
+     * @return RoleInterface[]
      */
     public function getRoles(array $roleNames);
 }
