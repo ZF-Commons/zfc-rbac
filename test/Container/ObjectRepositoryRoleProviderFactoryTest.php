@@ -27,7 +27,7 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory
+ * @covers \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory
  */
 class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCase
 {
