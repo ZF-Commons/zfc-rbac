@@ -16,27 +16,31 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
+ * Factory to create a assertion plugin manager
+ * 
+ * @author  Aeneas Rekkas
+ * @licence MIT
  */
-class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerFactory implements FactoryInterface
 {
-    public function testFactory()
+    /**
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
+     * @return AssertionPluginManager
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
-        );
+        $config        = $container->get('config')['zfc_rbac']['assertion_manager'];
+        $pluginManager = new AssertionPluginManager($container, $config);
 
-        $factory                = new AuthenticationIdentityProviderFactory();
-        $authenticationProvider = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ZfcRbac\Identity\AuthenticationIdentityProvider', $authenticationProvider);
+        return $pluginManager;
     }
 }

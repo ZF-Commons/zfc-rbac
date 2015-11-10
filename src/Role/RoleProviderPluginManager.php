@@ -19,6 +19,8 @@
 namespace ZfcRbac\Role;
 
 use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\Factory\InvokableFactory;
+use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 use ZfcRbac\Exception;
 
 /**
@@ -34,15 +36,9 @@ class RoleProviderPluginManager extends AbstractPluginManager
     /**
      * @var array
      */
-    protected $invokableClasses = [
-        'ZfcRbac\Role\InMemoryRoleProvider' => 'ZfcRbac\Role\InMemoryRoleProvider'
-    ];
-
-    /**
-     * @var array
-     */
     protected $factories = [
-        'ZfcRbac\Role\ObjectRepositoryRoleProvider' => 'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory'
+        InMemoryRoleProvider::class         => InvokableFactory::class,
+        ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class
     ];
 
     /**
@@ -58,13 +54,5 @@ class RoleProviderPluginManager extends AbstractPluginManager
             'Role provider must implement "ZfcRbac\Role\RoleProviderInterface", but "%s" was given',
             is_object($plugin) ? get_class($plugin) : gettype($plugin)
         ));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function canonicalizeName($name)
-    {
-        return $name;
     }
 }

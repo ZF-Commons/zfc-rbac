@@ -16,11 +16,15 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Factory;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Rbac\Rbac;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 
 /**
  * Factory to create the authorization service
@@ -34,19 +38,19 @@ class AuthorizationServiceFactory implements FactoryInterface
      * {@inheritDoc}
      * @return AuthorizationService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /* @var \Rbac\Rbac $rbac */
-        $rbac = $serviceLocator->get('Rbac\Rbac');
+        /* @var Rbac $rbac */
+        $rbac = $container->get(Rbac::class);
 
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $serviceLocator->get('ZfcRbac\Service\RoleService');
+        /* @var RoleService $roleService */
+        $roleService = $container->get(RoleService::class);
 
-        /* @var \ZfcRbac\Assertion\AssertionPluginManager $assertionPluginManager */
-        $assertionPluginManager = $serviceLocator->get('ZfcRbac\Assertion\AssertionPluginManager');
+        /* @var AssertionPluginManager $assertionPluginManager */
+        $assertionPluginManager = $container->get(AssertionPluginManager::class);
 
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        /* @var ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get(ModuleOptions::class);
 
         $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
         $authorizationService->setAssertions($moduleOptions->getAssertionMap());

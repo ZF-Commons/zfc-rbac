@@ -16,14 +16,17 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AuthorizationServiceFactory;
+use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 
 /**
- * @covers \ZfcRbac\Factory\AuthorizationServiceFactory
+ * @covers \ZfcRbac\Container\AuthorizationServiceFactory
  */
 class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,24 +34,24 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $serviceManager->setService('Rbac\Rbac', $this->getMock('Rbac\Rbac', [], [], '', false));
+        $serviceManager->setService(\Rbac\Rbac::class, $this->getMock(\Rbac\Rbac::class, [], [], '', false));
 
         $serviceManager->setService(
-            'ZfcRbac\Service\RoleService',
-            $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
+            RoleService::class,
+            $this->getMock(RoleService::class, [], [], '', false)
         );
         $serviceManager->setService(
-            'ZfcRbac\Assertion\AssertionPluginManager',
-            $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false)
+            AssertionPluginManager::class,
+            $this->getMock(AssertionPluginManager::class, [], [], '', false)
         );
         $serviceManager->setService(
-            'ZfcRbac\Options\ModuleOptions',
+            ModuleOptions::class,
             new ModuleOptions([])
         );
 
         $factory              = new AuthorizationServiceFactory();
-        $authorizationService = $factory->createService($serviceManager);
+        $authorizationService = $factory($serviceManager, 'requestedName');
 
-        $this->assertInstanceOf('ZfcRbac\Service\AuthorizationService', $authorizationService);
+        $this->assertInstanceOf(AuthorizationService::class, $authorizationService);
     }
 }

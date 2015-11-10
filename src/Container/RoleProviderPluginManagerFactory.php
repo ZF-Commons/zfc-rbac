@@ -16,26 +16,29 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Factory;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Options\ModuleOptions;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * Factory for the module options
+ * Factory to create a role provider plugin manager
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ModuleOptionsFactory implements FactoryInterface
+class RoleProviderPluginManagerFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @return ModuleOptions
+     * @return RoleProviderPluginManager
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new ModuleOptions($serviceLocator->get('Config')['zfc_rbac']);
+        $config        = $container->get('config')['zfc_rbac']['role_provider_manager'];
+        $pluginManager = new RoleProviderPluginManager($container, $config);
+
+        return $pluginManager;
     }
 }

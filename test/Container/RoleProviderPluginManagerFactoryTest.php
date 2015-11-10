@@ -16,29 +16,36 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\AssertionPluginManagerFactory;
+use ZfcRbac\Container\RoleProviderPluginManagerFactory;
+use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
- * @covers \ZfcRbac\Factory\AssertionPluginManagerFactory
+ * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
  */
-class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', [
+        $serviceManager->setService('config', [
             'zfc_rbac' => [
-                'assertion_manager' => []
+                'role_provider_manager' => []
             ]
         ]);
 
-        $factory       = new AssertionPluginManagerFactory();
-        $pluginManager = $factory->createService($serviceManager);
+        $factory       = new RoleProviderPluginManagerFactory();
+        $pluginManager = $factory($serviceManager, 'requestedName');
 
-        $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
+        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
+
+        # @todo remove after review
+        #
+        # This seems not possible anymore as getServiceLocator has been removed and a creation context it now passed
+        # to the factory
+        #
+        # $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }

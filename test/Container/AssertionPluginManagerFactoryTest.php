@@ -16,24 +16,36 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
+namespace ZfcRbacTest\Container;
 
 use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\RbacFactory;
+use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Container\AssertionPluginManagerFactory;
 
 /**
- * @covers ZfcRbac\Factory\RbacFactory
+ * @covers \ZfcRbac\Container\AssertionPluginManagerFactory
  */
-class RbacFactoryTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCanCreateFromFactory()
+    public function testFactory()
     {
         $serviceManager = new ServiceManager();
-        $factory        = new RbacFactory();
+        $serviceManager->setService('config', [
+            'zfc_rbac' => [
+                'assertion_manager' => []
+            ]
+        ]);
 
-        $rbac = $factory->createService($serviceManager);
+        $factory       = new AssertionPluginManagerFactory();
+        $pluginManager = $factory($serviceManager, 'requestedName');
 
-        $this->assertInstanceOf('Rbac\Rbac', $rbac);
-        $this->assertInstanceOf('Rbac\Traversal\Strategy\TraversalStrategyInterface', $rbac->getTraversalStrategy());
+        $this->assertInstanceOf(AssertionPluginManager::class, $pluginManager);
+
+        # @todo remove after review
+        #
+        # This seems not possible anymore as getServiceLocator has been removed and a creation context it now passed
+        # to the factory
+        #
+        # $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }
