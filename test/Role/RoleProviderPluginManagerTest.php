@@ -40,9 +40,10 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
     public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
     {
         $this->setExpectedException(RuntimeException::class);
+        $containerMock = $this->getMock(ContainerInterface::class);
+        $pluginManager = new RoleProviderPluginManager($containerMock);
 
-        $pluginManager = new RoleProviderPluginManager();
-        $pluginManager->get('stdClass', []);
+        $plugin = new \stdClass();
+        $pluginManager->validatePlugin($plugin);
     }
 }
- 
