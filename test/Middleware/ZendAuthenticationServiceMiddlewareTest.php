@@ -31,7 +31,11 @@ use ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware;
  *
  * Following these rules :
  *  - When an identity attribute is already present on the request do *not* override it.
- *  - When an identity is not present from its source
+ *  - When an identity is not present from its provider do *not* set the identity attribute.
+ *
+ * Special attention :
+ *
+ *  - Such middleware should check for the callable $next and if present call it.
  *
  * @covers \ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware
  */
