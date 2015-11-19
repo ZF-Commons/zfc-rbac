@@ -67,7 +67,7 @@ class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCas
         $response      = new Response();
 
         $authServiceMock = $this->getMock(AuthenticationService::class);
-        $authServiceMock->expects($this->once())->method('hasIdentity')->will($this->returnValue(true));
+        $authServiceMock->expects($this->never())->method('hasIdentity');
         $authServiceMock->expects($this->never())->method('getIdentity');
 
         $next = function ($request, $response, $error = false) use ($identity, $attributeName) {
@@ -89,7 +89,7 @@ class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCas
         $response      = new Response();
 
         $authServiceMock = $this->getMock(AuthenticationService::class);
-        $authServiceMock->expects($this->once())->method('hasIdentity')->will($this->returnValue(false));
+        $authServiceMock->expects($this->never())->method('getIdentity');
         $authServiceMock->expects($this->never())->method('getIdentity');
 
         $next = function ($request, $response, $error = false) use ($identity, $attributeName) {

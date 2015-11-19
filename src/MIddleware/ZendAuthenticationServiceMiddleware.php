@@ -38,7 +38,7 @@ class ZendAuthenticationServiceMiddleware implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        if ($this->authService->hasIdentity() && $request->getAttribute($this->attributeName) === null) {
+        if ($request->getAttribute($this->attributeName) === null && $this->authService->hasIdentity()) {
             $identity = $this->authService->getIdentity();
             $request  = $request->withAttribute($this->attributeName, $identity);
         }
