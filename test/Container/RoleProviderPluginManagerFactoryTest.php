@@ -40,12 +40,5 @@ class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = $factory($serviceManager, 'requestedName');
 
         $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
-
-        # @todo remove after review
-        #
-        # This seems not possible anymore as getServiceLocator has been removed and a creation context it now passed
-        # to the factory
-        #
-        # $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }
