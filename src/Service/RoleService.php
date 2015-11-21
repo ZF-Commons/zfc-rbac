@@ -92,7 +92,7 @@ class RoleService
      */
     public function getIdentityRoles($identity)
     {
-        if ($identity === null) {
+        if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
         }
 
