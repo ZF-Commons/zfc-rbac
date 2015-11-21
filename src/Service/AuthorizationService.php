@@ -110,13 +110,7 @@ class AuthorizationService implements AuthorizationServiceInterface
         return $this->roleService->getIdentity();
     }
 
-    /**
-     * Check if the permission is granted to the current identity
-     *
-     * @param         $identity
-     * @param  string $permission
-     * @param  mixed  $context
-     * @return bool
+     * @inheritdoc
      */
     public function isGranted($identity, $permission, $context = null)
     {
