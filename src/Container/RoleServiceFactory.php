@@ -44,9 +44,6 @@ class RoleServiceFactory implements FactoryInterface
         /* @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
 
-        /* @var IdentityProviderInterface $identityProvider */
-        $identityProvider = $container->get($moduleOptions->getIdentityProvider());
-
         $roleProviderConfig = $moduleOptions->getRoleProvider();
 
         if (empty($roleProviderConfig)) {
@@ -59,10 +56,7 @@ class RoleServiceFactory implements FactoryInterface
         /* @var RoleProviderInterface $roleProvider */
         $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
 
-        /* @var \Rbac\Traversal\Strategy\TraversalStrategyInterface $traversalStrategy */
-        $traversalStrategy = $container->get(\Rbac\Rbac::class)->getTraversalStrategy();
-
-        $roleService = new RoleService($identityProvider, $roleProvider, $traversalStrategy);
+        $roleService = new RoleService($roleProvider);
         $roleService->setGuestRole($moduleOptions->getGuestRole());
 
         return $roleService;
