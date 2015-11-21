@@ -22,7 +22,6 @@ use Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Exception;
-use ZfcRbac\Identity\IdentityInterface;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -114,13 +113,14 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Check if the permission is granted to the current identity
      *
+     * @param         $identity
      * @param  string $permission
      * @param  mixed  $context
      * @return bool
      */
-    public function isGranted($permission, $context = null)
+    public function isGranted($identity, $permission, $context = null)
     {
-        $roles = $this->roleService->getIdentityRoles();
+        $roles = $this->roleService->getIdentityRoles($identity);
 
         if (empty($roles)) {
             return false;

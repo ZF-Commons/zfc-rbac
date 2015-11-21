@@ -29,9 +29,9 @@ interface AuthorizationServiceInterface
     /**
      * Check if the permission is granted to the current identity
      *
-     * @param  string $permission
-     * @param  mixed  $context
-     * @return bool
+     * @param       $identity
+     * @param       $permission
+     * @param mixed $context
      */
-    public function isGranted($permission, $context = null);
+    public function isGranted($identity, $permission, $context = null);
 }
