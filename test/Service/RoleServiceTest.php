@@ -205,22 +205,18 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($doesMatch, $roleService->matchIdentityRoles($rolesToCheck));
     }
 
-    public function testReturnGuestRoleIfNoIdentityIsFound()
+    public function testReturnGuestRoleIfNoIdentityIsGiven()
     {
         $identityProvider = $this->getMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
             ->method('getIdentity')
             ->will($this->returnValue(null));
 
-        $roleService = new RoleService(
-            $identityProvider,
-            new InMemoryRoleProvider([]),
-            $this->getMock(TraversalStrategyInterface::class)
-        );
+        $roleService = new RoleService(new InMemoryRoleProvider([]));
 
         $roleService->setGuestRole('guest');
 
-        $result = $roleService->getIdentityRoles();
+        $result = $roleService->getIdentityRoles(null);
 
         $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertCount(1, $result);
@@ -235,17 +231,8 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
             'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "stdClass" given'
         );
 
-        $identityProvider = $this->getMock(IdentityProviderInterface::class);
-        $identityProvider->expects($this->any())
-            ->method('getIdentity')
-            ->will($this->returnValue(new \stdClass()));
+        $roleService = new RoleService($this->getMock(RoleProviderInterface::class));
 
-        $roleService = new RoleService(
-            $identityProvider,
-            $this->getMock(RoleProviderInterface::class),
-            $this->getMock(TraversalStrategyInterface::class)
-        );
-
-        $roleService->getIdentityRoles();
+        $roleService->getIdentityRoles(new \stdClass());
     }
 }
