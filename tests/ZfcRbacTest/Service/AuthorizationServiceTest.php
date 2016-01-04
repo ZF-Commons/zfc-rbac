@@ -78,17 +78,120 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
 
-            // Simple is accepted from assertion map
+            // Simple is accepted with empty assertions
             [
                 'admin',
                 'delete',
                 true,
                 true,
                 [
-                    'delete' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                    'delete' => []
+                ]
+            ],
+            // Simple is accepted from assertion map multiple
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'assertions' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map multiple
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'assertions' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                    ]
                 ]
             ],
 
+            // Simple is refused from assertion map with multiple assertions default condition
+            [
+                'admin',
+                'delete',
+                null,
+                false,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                        ]
+                    ]
+                ]
+            ],
+            // Simple is refused from assertion map with multiple assertions, condition AND
+            [
+                'admin',
+                'delete',
+                null,
+                false,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                        ],
+                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_AND
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map with multiple assertions, condition OR
+            [
+                'admin',
+                'delete',
+                null,
+                true,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                        ],
+                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_OR
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map with multiple assertions, condition AND
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                            'ZfcRbacTest\Asset\SimpleAssertion'
+                        ],
+                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_AND
+                    ]
+                ]
+            ],
+            // Simple is refused from assertion map with multiple assertions, condition OR
+            [
+                'admin',
+                'delete',
+                false,
+                false,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleFalseAssertion',
+                            'ZfcRbacTest\Asset\SimpleAssertion'
+                        ],
+                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_OR
+                    ]
+                ]
+            ],
             // Simple is refused from no role
             [
                 [],
@@ -120,7 +223,9 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $assertionPluginConfig = [
             'invokables' => [
-                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'ZfcRbacTest\Asset\SimpleTrueAssertion' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                'ZfcRbacTest\Asset\SimpleFalseAssertion' => 'ZfcRbacTest\Asset\SimpleFalseAssertion'
             ]
         ];
 
@@ -236,6 +341,24 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($authorizationService->hasAssertion('bar'));
     }
 
+    public function testThrowExceptionForInvalidAssertionCondition()
+    {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $rbac = $this->getMock('Rbac\Rbac', [], [], '', false);
+
+        $rbac->expects($this->once())->method('isGranted')->will($this->returnValue(true));
+
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
+
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
+
+        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
+
+        $authorizationService->setAssertion('foo', ['assertions' => 'bar', 'condition' => new \stdClass()]);
+        $authorizationService->isGranted('foo');
+    }
     /**
      * @covers ZfcRbac\Service\AuthorizationService::getIdentity
      */

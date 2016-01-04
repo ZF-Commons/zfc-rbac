@@ -16,35 +16,33 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest\Asset;
 
+use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Service\AuthorizationService;
 
-/**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
- */
-interface AssertionInterface
+class SimpleTrueAssertion implements AssertionInterface
 {
-
     /**
-     * Condition constants
+     * @var bool
      */
-    const CONDITION_OR  = 'OR';
-    const CONDITION_AND = 'AND';
+    protected $called = false;
 
     /**
-     * Check if this assertion is true
-     *
-     * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
-     *
-     * @param  AuthorizationService $authorizationService
-     * @param  mixed                $context
+     * {@inheritDoc}
+     */
+    public function assert(AuthorizationService $authorization, $context = null)
+    {
+        $this->called = true;
+
+        return true;
+    }
+
+    /**
      * @return bool
      */
-    public function assert(AuthorizationService $authorizationService);
+    public function getCalled()
+    {
+        return $this->called;
+    }
 }
