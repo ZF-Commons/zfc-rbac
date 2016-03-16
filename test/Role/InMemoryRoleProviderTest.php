@@ -64,5 +64,8 @@ class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('guest', $guestRole->getName());
         $this->assertFalse($guestRole->hasPermission('write'));
         $this->assertFalse($guestRole->hasPermission('delete'));
+
+        $this->assertTrue($adminRole->getChildren()['member'] === $memberRole);
+        $this->assertTrue($memberRole->getChildren()['guest'] === $guestRole);
     }
 }
