@@ -106,6 +106,12 @@ class InMemoryRoleProvider implements RoleProviderInterface
             } else {
                 $role = new Role($roleName);
             }
+
+            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+            foreach ($permissions as $permission) {
+                $role->addPermission($permission);
+            }
+
         }
 
         $this->roles[$roleName] = $role;
