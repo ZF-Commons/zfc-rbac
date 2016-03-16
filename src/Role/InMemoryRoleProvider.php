@@ -81,7 +81,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
      * Get role by role name
      *
      * @param $roleName
-     * @return RoleInterface[]
+     * @return RoleInterface
      */
     protected function getRole($roleName)
     {
