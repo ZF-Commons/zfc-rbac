@@ -26,29 +26,26 @@
       "email": "jmleroux.pro@gmail.com"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
-    "php": ">=5.4",
-    "zendframework/zend-mvc": "~2.2",
-    "zendframework/zend-servicemanager": "~2.2",
-    "zfr/rbac": "~1.2"
+    "php": ">=5.5",
+    "zendframework/zend-servicemanager": "dev-develop",
+    "zendframework/zend-stdlib": "dev-develop",
+    "zfr/rbac": "~2.0"
   },
   "require-dev": {
-    "zendframework/zendframework": "~2.2",
-    "zendframework/zend-developer-tools": "dev-master",
-    "phpunit/phpunit": "~3.7",
-    "squizlabs/php_codesniffer": "1.4.*",
-    "satooshi/php-coveralls": "~0.6",
-    "doctrine/common": "~2.4",
-    "doctrine/doctrine-module": "~0.8",
-    "doctrine/doctrine-orm-module": "~0.8"
-  },
-  "suggest": {
-    "zendframework/zend-developer-tools": "if you want to show information about the roles",
-    "doctrine/doctrine-module": "if you want to use Doctrine role provider"
+    "phpunit/phpunit": "~4.0",
+    "squizlabs/php_codesniffer": "1.5.*",
+    "doctrine/common": "~2.4"
   },
   "autoload": {
-    "psr-0": {
+    "psr-4": {
       "ZfcRbac\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ZfcRbacTest\\": "test/"
     }
   },
   "extra": {
