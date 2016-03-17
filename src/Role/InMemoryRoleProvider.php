@@ -92,26 +92,26 @@ class InMemoryRoleProvider implements RoleProviderInterface
         // If no config, we create a simple role with no permission
         if (!isset($this->rolesConfig[$roleName])) {
             $role = new Role($roleName);
+            $this->roles[$roleName] = $role;
+            return $role;
+        }
+
+        $roleConfig = $this->rolesConfig[$roleName];
+
+        if (isset($roleConfig['children'])) {
+            $role = new HierarchicalRole($roleName);
+            $childRoles = (array)$roleConfig['children'];
+            foreach ($childRoles as $childRole) {
+                $childRole = $this->getRole($childRole);
+                $role->addChild($childRole);
+            }
         } else {
+            $role = new Role($roleName);
+        }
 
-            $roleConfig = $this->rolesConfig[$roleName];
-
-            if (isset($roleConfig['children'])) {
-                $role = new HierarchicalRole($roleName);
-                $childRoles = (array)$roleConfig['children'];
-                foreach ($childRoles as $childRole) {
-                    $childRole = $this->getRole($childRole);
-                    $role->addChild($childRole);
-                }
-            } else {
-                $role = new Role($roleName);
-            }
-
-            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
-            foreach ($permissions as $permission) {
-                $role->addPermission($permission);
-            }
-
+        $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+        foreach ($permissions as $permission) {
+            $role->addPermission($permission);
         }
 
         $this->roles[$roleName] = $role;
