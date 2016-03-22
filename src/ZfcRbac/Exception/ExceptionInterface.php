@@ -22,7 +22,7 @@ namespace ZfcRbac\Exception;
  * Base exception interface for ZfcRbac
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface ExceptionInterface
 {

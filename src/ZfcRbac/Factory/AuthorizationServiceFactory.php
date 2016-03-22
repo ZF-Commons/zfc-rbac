@@ -26,7 +26,7 @@ use ZfcRbac\Service\AuthorizationService;
  * Factory to create the authorization service
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class AuthorizationServiceFactory implements FactoryInterface
 {

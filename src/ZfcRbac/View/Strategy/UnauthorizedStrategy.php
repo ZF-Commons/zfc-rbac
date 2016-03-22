@@ -29,7 +29,7 @@ use ZfcRbac\Options\UnauthorizedStrategyOptions;
  * This strategy renders a specific template when a user is unauthorized
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class UnauthorizedStrategy extends AbstractStrategy
 {

@@ -28,7 +28,7 @@ use ZfcRbac\Options\RedirectStrategyOptions;
  * This strategy redirects to another route when a user is unauthorized
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RedirectStrategy extends AbstractStrategy
 {

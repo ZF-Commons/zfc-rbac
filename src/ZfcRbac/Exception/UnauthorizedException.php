@@ -24,7 +24,7 @@ use RuntimeException as BaseRuntimeException;
  * Unauthorized exception
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class UnauthorizedException extends BaseRuntimeException implements UnauthorizedExceptionInterface
 {

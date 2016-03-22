@@ -32,7 +32,7 @@ use Zend\Mvc\MvcEvent;
  * proper authorization service (see the doc for more details)
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface GuardInterface extends ListenerAggregateInterface
 {

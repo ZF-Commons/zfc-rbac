@@ -27,7 +27,7 @@ use ZfcRbac\Exception;
  * Abstract guard that hook on the MVC workflow
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 abstract class AbstractGuard implements GuardInterface
 {

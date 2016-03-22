@@ -27,7 +27,7 @@ use ZfcRbac\Guard\RouteGuard;
  * Create a route guard
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RouteGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
 {

@@ -22,7 +22,7 @@ namespace ZfcRbac\Identity;
  * Interface for an identity
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface IdentityInterface
 {

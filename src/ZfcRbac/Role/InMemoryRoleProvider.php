@@ -37,7 +37,7 @@ use Rbac\Role\Role;
  * follow the format :)
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class InMemoryRoleProvider implements RoleProviderInterface
 {

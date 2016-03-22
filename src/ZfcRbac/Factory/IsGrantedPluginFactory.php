@@ -26,7 +26,7 @@ use ZfcRbac\Mvc\Controller\Plugin\IsGranted;
  * Create the IsGranted controller plugin
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class IsGrantedPluginFactory implements FactoryInterface
 {
