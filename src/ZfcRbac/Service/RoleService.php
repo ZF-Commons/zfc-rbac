@@ -32,7 +32,7 @@ use Rbac\Traversal\Strategy\TraversalStrategyInterface;
  * Role service
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RoleService
 {

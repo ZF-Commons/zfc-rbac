@@ -22,7 +22,7 @@ namespace ZfcRbac\Identity;
  * An identity provider is an object that returns an object that implement ZfcRbac\Identity\IdentityInterface
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface IdentityProviderInterface
 {

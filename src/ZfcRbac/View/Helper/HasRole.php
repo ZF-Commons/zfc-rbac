@@ -25,7 +25,7 @@ use ZfcRbac\Service\RoleService;
  * View helper that allows to test a role in a view
  *
  * @author  JM Leroux <jmleroux.pro@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class HasRole extends AbstractHelper
 {

@@ -26,7 +26,7 @@ use ZfcRbac\View\Helper\IsGranted;
  * Create the IsGranted view helper
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class IsGrantedViewHelperFactory implements FactoryInterface
 {

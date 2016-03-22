@@ -26,7 +26,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RbacFactory implements FactoryInterface
 {

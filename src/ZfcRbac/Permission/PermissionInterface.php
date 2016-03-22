@@ -27,7 +27,7 @@ use Rbac\Permission\PermissionInterface as BasePermissionInterface;
  * permission will be removed from RBAC component and moved here completely
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface PermissionInterface extends BasePermissionInterface
 {

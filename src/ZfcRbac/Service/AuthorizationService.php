@@ -30,7 +30,7 @@ use ZfcRbac\Identity\IdentityInterface;
  * granted a permission
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class AuthorizationService implements AuthorizationServiceInterface
 {

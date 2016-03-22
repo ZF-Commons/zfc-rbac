@@ -27,7 +27,7 @@ use ZfcRbac\View\Helper\HasRole;
  * Create the HasRole view helper
  *
  * @author  JM Leroux <jmleroux.pro@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class HasRoleViewHelperFactory implements FactoryInterface
 {
