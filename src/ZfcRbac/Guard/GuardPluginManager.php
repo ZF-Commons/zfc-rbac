@@ -27,12 +27,8 @@ use ZfcRbac\Exception;
  * @method GuardInterface get($name)
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
-<<<<<<< b459677bbe1c328d819969eed3fe7df68cb1112b
  * @author  JM Leroux <jmleroux.pro@gmail.com>
  * @license MIT
-=======
- * @license MIT
->>>>>>> changes "@license" with "@license"
  */
 class GuardPluginManager extends AbstractPluginManager
 {
