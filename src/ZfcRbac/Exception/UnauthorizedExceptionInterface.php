@@ -22,7 +22,7 @@ namespace ZfcRbac\Exception;
  * Interface for an unauthorized exception
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface UnauthorizedExceptionInterface extends ExceptionInterface
 {

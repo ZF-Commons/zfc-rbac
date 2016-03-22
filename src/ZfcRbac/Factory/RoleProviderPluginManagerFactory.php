@@ -27,7 +27,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  * Factory to create a role provider plugin manager
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RoleProviderPluginManagerFactory implements FactoryInterface
 {

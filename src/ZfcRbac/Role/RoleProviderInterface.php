@@ -25,7 +25,7 @@ namespace ZfcRbac\Role;
  * or from memory
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface RoleProviderInterface
 {

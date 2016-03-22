@@ -29,7 +29,7 @@ use ZfcRbac\Guard\RoutePermissionsGuard;
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RoutePermissionsGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
 {

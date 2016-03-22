@@ -26,7 +26,7 @@ use ZfcRbac\Options\ModuleOptions;
  * Factory for the module options
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class ModuleOptionsFactory implements FactoryInterface
 {

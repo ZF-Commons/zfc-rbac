@@ -25,7 +25,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Create a list of guards
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class GuardsFactory implements FactoryInterface
 {

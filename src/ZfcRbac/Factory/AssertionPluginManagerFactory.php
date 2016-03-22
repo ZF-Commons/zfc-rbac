@@ -27,7 +27,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
  * Factory to create a assertion plugin manager
  * 
  * @author  Aeneas Rekkas
- * @licence MIT
+ * @license MIT
  */
 class AssertionPluginManagerFactory implements FactoryInterface
 {

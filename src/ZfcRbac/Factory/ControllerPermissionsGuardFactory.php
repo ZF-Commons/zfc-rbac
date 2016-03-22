@@ -28,7 +28,7 @@ use ZfcRbac\Guard\RouteGuard;
  * Create a controller guard for checking permissions
  *
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class ControllerPermissionsGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
 {

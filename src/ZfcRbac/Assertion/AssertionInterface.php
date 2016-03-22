@@ -26,7 +26,7 @@ use ZfcRbac\Service\AuthorizationService;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @author  Aeneas Rekkas
  * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @license MIT
  */
 interface AssertionInterface
 {

@@ -25,7 +25,7 @@ use ZfcRbac\Exception;
  * Plugin manager to create assertions
  * 
  * @author  Aeneas Rekkas
- * @licence MIT
+ * @license MIT
  *
  * @method AssertionInterface get($name)
  */
