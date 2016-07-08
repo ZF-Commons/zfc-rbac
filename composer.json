@@ -34,18 +34,18 @@
   },
   "require-dev": {
     "zendframework/zend-authentication": "~2.2",
-    "zendframework/zend-developer-tools": "dev-master",
+    "zendframework/zend-developer-tools": "~1.1",
     "zendframework/zend-log": "~2.2",
     "zendframework/zend-http": "~2.2",
     "zendframework/zend-i18n": "~2.2",
     "zendframework/zend-serializer": "~2.2",
     "zendframework/zend-view": "~2.2",
-    "phpunit/phpunit": "~3.7",
+    "phpunit/phpunit": "~4.8",
     "squizlabs/php_codesniffer": "1.4.*",
     "satooshi/php-coveralls": "~0.6",
     "doctrine/common": "~2.4",
-    "doctrine/doctrine-module": "~0.8",
-    "doctrine/doctrine-orm-module": "~0.8"
+    "doctrine/doctrine-module": "~1.1",
+    "doctrine/doctrine-orm-module": "~0.11"
   },
   "suggest": {
     "zendframework/zend-developer-tools": "if you want to show information about the roles",
