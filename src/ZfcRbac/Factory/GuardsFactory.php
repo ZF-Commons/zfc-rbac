@@ -18,6 +18,10 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -30,13 +34,15 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class GuardsFactory implements FactoryInterface
 {
     /**
-     * {@inheritDoc}
-     * @return \ZfcRbac\Guard\GuardInterface[]|array
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return array
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /* @var \ZfcRbac\Options\ModuleOptions $options */
-        $options       = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
+        $options       = $container->get('ZfcRbac\Options\ModuleOptions');
         $guardsOptions = $options->getGuards();
 
         if (empty($guardsOptions)) {
@@ -44,7 +50,7 @@ class GuardsFactory implements FactoryInterface
         }
 
         /* @var \ZfcRbac\Guard\GuardPluginManager $pluginManager */
-        $pluginManager = $serviceLocator->get('ZfcRbac\Guard\GuardPluginManager');
+        $pluginManager = $container->get('ZfcRbac\Guard\GuardPluginManager');
         $guards        = [];
 
         foreach ($guardsOptions as $type => $options) {
@@ -52,5 +58,14 @@ class GuardsFactory implements FactoryInterface
         }
 
         return $guards;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return \ZfcRbac\Guard\GuardInterface[]|array
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, GuardInterface::class);
     }
 }

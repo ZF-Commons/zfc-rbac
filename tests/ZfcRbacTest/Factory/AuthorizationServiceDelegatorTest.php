@@ -87,7 +87,7 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $serviceManager->addDelegator(
-            'ZfcRbacTest\AuthorizationAware',
+            'ZfcRbacTest\Initializer\AuthorizationAwareFake',
             'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
         );
 
@@ -120,9 +120,10 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(
-            'ZfcRbac\Exception\RuntimeException',
+            'Zend\ServiceManager\Exception\ServiceNotCreatedException',
             'The service ZfcRbacTest\AuthorizationAware must implement AuthorizationServiceAwareInterface.'
         );
+
         $serviceManager->get('ZfcRbacTest\AuthorizationAware');
     }
 }

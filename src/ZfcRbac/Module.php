@@ -45,7 +45,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
 
         // Register listeners, if any
         foreach ($guards as $guard) {
-            $eventManager->attachAggregate($guard);
+            $guard->attach($eventManager);
         }
     }
 

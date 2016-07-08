@@ -18,7 +18,11 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Config;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
@@ -32,16 +36,24 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 class AssertionPluginManagerFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return AssertionPluginManager
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config')['zfc_rbac']['assertion_manager'];
+
+        return new AssertionPluginManager($container, $config);
+    }
+
+    /**
      * {@inheritDoc}
      * @return AssertionPluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config')['zfc_rbac']['assertion_manager'];
-
-        $pluginManager = new AssertionPluginManager(new Config($config));
-        $pluginManager->setServiceLocator($serviceLocator);
-
-        return $pluginManager;
+        return $this($serviceLocator, AssertionPluginManager::class);
     }
 }

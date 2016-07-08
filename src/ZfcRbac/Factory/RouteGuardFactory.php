@@ -18,8 +18,11 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 
@@ -29,20 +32,28 @@ use ZfcRbac\Guard\RouteGuard;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class RouteGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
+class RouteGuardFactory implements FactoryInterface
 {
     /**
-     * @var array
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array $options
+     * @return RouteGuard
      */
-    protected $options = [];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setCreationOptions(array $options)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = [])
     {
-        $this->options = $options;
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
+
+        /* @var \ZfcRbac\Service\RoleService $roleService */
+        $roleService = $container->get('ZfcRbac\Service\RoleService');
+
+        $routeGuard = new RouteGuard($roleService, $options);
+        $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
+
+        return $routeGuard;
     }
+
 
     /**
      * {@inheritDoc}
@@ -50,17 +61,6 @@ class RouteGuardFactory implements FactoryInterface, MutableCreationOptionsInter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $parentLocator = $serviceLocator->getServiceLocator();
-
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
-
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $parentLocator->get('ZfcRbac\Service\RoleService');
-
-        $routeGuard = new RouteGuard($roleService, $this->options);
-        $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
-
-        return $routeGuard;
+        return $this($serviceLocator, RouteGuard::class);
     }
 }

@@ -46,9 +46,9 @@ abstract class AbstractGuard implements GuardInterface
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = self::EVENT_PRIORITY)
     {
-        $this->listeners[] = $events->attach(static::EVENT_NAME, [$this, 'onResult'], static::EVENT_PRIORITY);
+        $this->listeners[] = $events->attach(static::EVENT_NAME, [$this, 'onResult'], $priority);
     }
 
     /**

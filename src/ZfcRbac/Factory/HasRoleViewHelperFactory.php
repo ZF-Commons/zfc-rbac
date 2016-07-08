@@ -18,6 +18,10 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\RoleService;
@@ -32,14 +36,25 @@ use ZfcRbac\View\Helper\HasRole;
 class HasRoleViewHelperFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return HasRole
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        /* @var RoleService $roleService */
+        $roleService = $container->get('ZfcRbac\Service\RoleService');
+
+        return new HasRole($roleService);
+    }
+
+    /**
      * {@inheritDoc}
      * @return HasRole
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var RoleService $roleService */
-        $roleService = $serviceLocator->getServiceLocator()->get('ZfcRbac\Service\RoleService');
-
-        return new HasRole($roleService);
+        return $this($serviceLocator, HasRole::class);
     }
 }

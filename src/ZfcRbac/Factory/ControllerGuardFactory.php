@@ -18,8 +18,8 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\ControllerGuard;
 
@@ -29,20 +29,26 @@ use ZfcRbac\Guard\ControllerGuard;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class ControllerGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
+class ControllerGuardFactory implements FactoryInterface
 {
     /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
      * {@inheritDoc}
+     * @return ControllerGuard
      */
-    public function setCreationOptions(array $options)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = [])
     {
-        $this->options = $options;
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
+
+        /* @var \ZfcRbac\Service\RoleService $roleService */
+        $roleService = $container->get('ZfcRbac\Service\RoleService');
+
+        $controllerGuard = new ControllerGuard($roleService, $options);
+        $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
+
+        return $controllerGuard;
     }
+
 
     /**
      * {@inheritDoc}
@@ -50,17 +56,6 @@ class ControllerGuardFactory implements FactoryInterface, MutableCreationOptions
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $parentLocator = $serviceLocator->getServiceLocator();
-
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
-
-        /* @var \ZfcRbac\Service\RoleService $roleService */
-        $roleService = $parentLocator->get('ZfcRbac\Service\RoleService');
-
-        $controllerGuard = new ControllerGuard($roleService, $this->options);
-        $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
-
-        return $controllerGuard;
+        return $this($serviceLocator, ControllerGuard::class);
     }
 }

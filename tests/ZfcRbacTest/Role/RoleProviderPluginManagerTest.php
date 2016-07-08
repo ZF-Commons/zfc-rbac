@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Role;
 
+use Interop\Container\ContainerInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -28,16 +29,16 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
     public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
     {
         $pluginMock    = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
-        $pluginManager = new RoleProviderPluginManager();
+        $pluginManager = new RoleProviderPluginManager($this->getMock(ContainerInterface::class));
 
-        $this->assertNull($pluginManager->validatePlugin($pluginMock));
+        $this->assertNull($pluginManager->validate($pluginMock));
     }
 
     public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
     {
         $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
 
-        $pluginManager  = new RoleProviderPluginManager();
+        $pluginManager  = new RoleProviderPluginManager($this->getMock(ContainerInterface::class));
         $pluginManager->get('stdClass', []);
     }
 }

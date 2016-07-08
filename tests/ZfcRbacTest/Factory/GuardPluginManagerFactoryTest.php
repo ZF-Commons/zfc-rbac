@@ -39,6 +39,5 @@ class GuardPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\GuardPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }

@@ -31,8 +31,7 @@ class HasRoleViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $pluginManager  = new HelperPluginManager();
-        $pluginManager->setServiceLocator($serviceManager);
+        $pluginManager  = new HelperPluginManager($serviceManager);
 
         $serviceManager->setService(
             'ZfcRbac\Service\RoleService',
@@ -40,7 +39,7 @@ class HasRoleViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory   = new HasRoleViewHelperFactory();
-        $viewHelper = $factory->createService($pluginManager);
+        $viewHelper = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\View\Helper\HasRole', $viewHelper);
     }

@@ -39,6 +39,5 @@ class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }

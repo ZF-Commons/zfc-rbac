@@ -39,6 +39,5 @@ class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Assertion\AssertionPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
     }
 }
