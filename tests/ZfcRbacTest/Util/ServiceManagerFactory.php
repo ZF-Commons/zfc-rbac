@@ -61,7 +61,9 @@ abstract class ServiceManagerFactory
         $config = $config ?: static::getApplicationConfig();
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ApplicationConfig', $config);
-        $serviceManagerConfig = new ServiceManagerConfig();
+        $serviceManagerConfig = new ServiceManagerConfig(
+            isset($config['service_manager']) ? $config['service_manager'] : []
+        );
         $serviceManagerConfig->configureServiceManager($serviceManager);
         $serviceManager->setAllowOverride(true);
 
