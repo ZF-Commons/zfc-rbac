@@ -40,7 +40,7 @@ class AuthorizationServiceInitializer implements InitializerInterface
     {
         if ($instance instanceof AuthorizationServiceAwareInterface) {
             if ($container instanceof AbstractPluginManager) {
-                $serviceLocator = $container->getServiceLocator();
+                $container = $container->getServiceLocator();
             }
 
             $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');

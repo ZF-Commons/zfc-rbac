@@ -68,6 +68,7 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider guardProvider
+     * @group by
      */
     public function testCanCreateDefaultGuards($type, $options)
     {

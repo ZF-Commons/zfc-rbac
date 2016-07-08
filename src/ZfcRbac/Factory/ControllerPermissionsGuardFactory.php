@@ -19,10 +19,7 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\ControllerPermissionsGuard;
-use ZfcRbac\Guard\RouteGuard;
 
 /**
  * Create a controller guard for checking permissions
@@ -30,35 +27,40 @@ use ZfcRbac\Guard\RouteGuard;
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
  * @license MIT
  */
-class ControllerPermissionsGuardFactory implements FactoryInterface
+class ControllerPermissionsGuardFactory
 {
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
+    /**
      * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array $options
      * @return ControllerPermissionsGuard
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = [])
+    public function __invoke(ContainerInterface $container)
     {
+        if (method_exists($container, 'getServiceLocator')) {
+            $container = $container->getServiceLocator();
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
 
-        $guard = new ControllerPermissionsGuard($authorizationService, $options);
+        $guard = new ControllerPermissionsGuard($authorizationService, $this->options);
         $guard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $guard;
-    }
-
-
-    /**
-     * @param \Zend\ServiceManager\AbstractPluginManager|ServiceLocatorInterface $serviceLocator
-     * @return RouteGuard
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, ControllerPermissionsGuard::class);
     }
 }

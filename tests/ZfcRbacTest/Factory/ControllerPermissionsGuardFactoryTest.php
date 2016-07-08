@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\ControllerPermissionsGuardFactory;
+use ZfcRbac\Guard\ControllerPermissionsGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\GuardPluginManager;
 use ZfcRbac\Options\ModuleOptions;
@@ -53,7 +54,7 @@ class ControllerPermissionsGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = new GuardPluginManager($serviceManager);
 
         $factory    = new ControllerPermissionsGuardFactory();
-        $guard = $factory->createService($serviceManager);
+        $guard = $factory($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\ControllerPermissionsGuard', $guard);
         $this->assertEquals(GuardInterface::POLICY_ALLOW, $guard->getProtectionPolicy());

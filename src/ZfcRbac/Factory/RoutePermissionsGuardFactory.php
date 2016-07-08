@@ -19,10 +19,6 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Guard\RoutePermissionsGuard;
@@ -34,23 +30,38 @@ use ZfcRbac\Guard\RoutePermissionsGuard;
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
  * @license MIT
  */
-class RoutePermissionsGuardFactory implements FactoryInterface
+class RoutePermissionsGuardFactory
 {
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
+    /**
      * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array $options
      * @return RoutePermissionsGuard
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = [])
+    public function __invoke(ContainerInterface $container)
     {
+        if (method_exists($container, 'getServiceLocator')) {
+            $container = $container->getServiceLocator();
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
 
-        $routeGuard = new RoutePermissionsGuard($authorizationService, $options);
+        $routeGuard = new RoutePermissionsGuard($authorizationService, $this->options);
         $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;

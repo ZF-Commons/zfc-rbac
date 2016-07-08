@@ -35,20 +35,35 @@ use ZfcRbac\Guard\RouteGuard;
 class RouteGuardFactory implements FactoryInterface
 {
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
+    /**
      * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array $options
      * @return RouteGuard
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = [])
+    public function __invoke(ContainerInterface $container)
     {
+        if (method_exists($container, 'getServiceLocator')) {
+            $container = $container->getServiceLocator();
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\RoleService $roleService */
         $roleService = $container->get('ZfcRbac\Service\RoleService');
 
-        $routeGuard = new RouteGuard($roleService, $options);
+        $routeGuard = new RouteGuard($roleService, $this->options);
         $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;

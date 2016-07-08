@@ -19,7 +19,6 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\ControllerGuard;
 
@@ -29,21 +28,38 @@ use ZfcRbac\Guard\ControllerGuard;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class ControllerGuardFactory implements FactoryInterface
+class ControllerGuardFactory
 {
+    /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
     /**
      * {@inheritDoc}
      * @return ControllerGuard
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = [])
+    public function __invoke(ContainerInterface $container)
     {
+        if (method_exists($container, 'getServiceLocator')) {
+            $container = $container->getServiceLocator();
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\RoleService $roleService */
         $roleService = $container->get('ZfcRbac\Service\RoleService');
 
-        $controllerGuard = new ControllerGuard($roleService, $options);
+        $controllerGuard = new ControllerGuard($roleService, $this->options);
         $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $controllerGuard;

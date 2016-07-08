@@ -19,7 +19,6 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -30,35 +29,46 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class ObjectRepositoryRoleProviderFactory implements FactoryInterface
+class ObjectRepositoryRoleProviderFactory
 {
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $this->options;
+    }
+
+    /**
      * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
      * @return ObjectRepositoryRoleProvider
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container)
     {
         $objectRepository = null;
 
-        if (!isset($options['role_name_property'])) {
+        if (!isset($this->options['role_name_property'])) {
             throw new Exception\RuntimeException('The "role_name_property" option is missing');
         }
 
-        if (isset($options['object_repository'])) {
+        if (isset($this->options['object_repository'])) {
             /* @var \Doctrine\Common\Persistence\ObjectRepository $objectRepository */
-            $objectRepository = $container->get($options['object_repository']);
+            $objectRepository = $container->get($this->options['object_repository']);
 
-            return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);
+            return new ObjectRepositoryRoleProvider($objectRepository, $this->options['role_name_property']);
         }
 
-        if (isset($options['object_manager']) && isset($options['class_name'])) {
+        if (isset($this->options['object_manager']) && isset($this->options['class_name'])) {
             /* @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
-            $objectManager    = $container->get($options['object_manager']);
-            $objectRepository = $objectManager->getRepository($options['class_name']);
+            $objectManager    = $container->get($this->options['object_manager']);
+            $objectRepository = $objectManager->getRepository($this->options['class_name']);
 
-            return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);
+            return new ObjectRepositoryRoleProvider($objectRepository, $this->options['role_name_property']);
         }
 
         throw new Exception\RuntimeException(
