@@ -49,7 +49,7 @@ class ControllerGuardFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        if (method_exists($container, 'getServiceLocator')) {
+        if (! method_exists($container, 'build')) { // servicemanager v3
             $container = $container->getServiceLocator();
         }
 

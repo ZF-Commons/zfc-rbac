@@ -19,10 +19,6 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 
@@ -32,7 +28,7 @@ use ZfcRbac\Guard\RouteGuard;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class RouteGuardFactory implements FactoryInterface
+class RouteGuardFactory
 {
     /**
      * @var array
@@ -53,7 +49,7 @@ class RouteGuardFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container)
     {
-        if (method_exists($container, 'getServiceLocator')) {
+        if (! method_exists($container, 'build')) { // servicemanager v3
             $container = $container->getServiceLocator();
         }
 

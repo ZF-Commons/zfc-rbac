@@ -129,7 +129,7 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
             $serviceManager->get('ZfcRbacTest\AuthorizationAware');
         } catch (\Exception $e) {
             $thrown = true;
-            $this->assertEquals('The service ZfcRbacTest\AuthorizationAware must implement AuthorizationServiceAwareInterface.', $e->getMessage());
+            $this->assertStringEndsWith('The service ZfcRbacTest\AuthorizationAware must implement AuthorizationServiceAwareInterface.', $e->getMessage());
             if ($e->getPrevious()) {
                 $this->assertInstanceOf('ZfcRbac\Exception\RuntimeException', $e->getPrevious());
             }

@@ -46,10 +46,11 @@ class ControllerPermissionsGuardFactory
      * @param ContainerInterface $container
      * @return ControllerPermissionsGuard
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $resolvedName = ControllerPermissionsGuard::class, $options = [])
     {
-        if (method_exists($container, 'getServiceLocator')) {
+        if (! method_exists($container, 'build')) { // servicemanager v3
             $container = $container->getServiceLocator();
+            $options = $this->options;
         }
 
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
@@ -58,7 +59,7 @@ class ControllerPermissionsGuardFactory
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
 
-        $guard = new ControllerPermissionsGuard($authorizationService, $this->options);
+        $guard = new ControllerPermissionsGuard($authorizationService, $options);
         $guard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $guard;
