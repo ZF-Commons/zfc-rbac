@@ -53,9 +53,14 @@ class ControllerGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = new GuardPluginManager($serviceManager);
 
         $factory         = new ControllerGuardFactory();
-        $controllerGuard = $factory->createService($pluginManager);
 
-        $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $controllerGuard);
-        $this->assertEquals(GuardInterface::POLICY_ALLOW, $controllerGuard->getProtectionPolicy());
+        if (method_exists($serviceManager, 'build')) { // servicemanager v3
+            $guard = $factory->createService($serviceManager);
+        } else {
+            $guard = $factory->createService($pluginManager);
+        }
+
+        $this->assertInstanceOf('ZfcRbac\Guard\ControllerGuard', $guard);
+        $this->assertEquals(GuardInterface::POLICY_ALLOW, $guard->getProtectionPolicy());
     }
 }
