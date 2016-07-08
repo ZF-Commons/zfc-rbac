@@ -46,8 +46,11 @@ class ControllerPermissionsGuardFactory
      * @param ContainerInterface $container
      * @return ControllerPermissionsGuard
      */
-    public function __invoke(ContainerInterface $container, $resolvedName = ControllerPermissionsGuard::class, $options = [])
-    {
+    public function __invoke(
+        ContainerInterface $container,
+        $resolvedName = ControllerPermissionsGuard::class,
+        $options = []
+    ) {
         if (! method_exists($container, 'build')) { // servicemanager v3
             $container = $container->getServiceLocator();
             $options = $this->options;
