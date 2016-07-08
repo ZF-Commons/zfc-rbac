@@ -51,6 +51,7 @@ class ObjectRepositoryRoleProviderFactory
     public function __invoke(ContainerInterface $container, $resolvedName, $options)
     {
         if (! method_exists($container, 'build')) { // servicemanager v3
+            $container = $container->getServiceLocator();
             $options = $this->options;
         }
 

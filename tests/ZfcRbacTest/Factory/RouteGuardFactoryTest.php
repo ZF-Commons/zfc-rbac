@@ -53,7 +53,7 @@ class RouteGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $pluginManager = new GuardPluginManager($serviceManager);
 
         $factory    = new RouteGuardFactory();
-        $routeGuard = $factory->createService($serviceManager);
+        $routeGuard = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $routeGuard);
         $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());
