@@ -29,7 +29,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
  * Factory to create a assertion plugin manager
- * 
+ *
  * @author  Aeneas Rekkas
  * @license MIT
  */
