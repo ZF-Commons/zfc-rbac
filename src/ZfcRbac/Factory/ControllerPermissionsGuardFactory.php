@@ -54,10 +54,16 @@ class ControllerPermissionsGuardFactory implements FactoryInterface
 
     /**
      * @param ContainerInterface $container
+     * @param string $resolvedName
+     * @param array|null $options
      * @return ControllerPermissionsGuard
      */
     public function __invoke(ContainerInterface $container, $resolvedName, array $options = null)
     {
+        if (null === $options) {
+            $options = [];
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
@@ -76,8 +82,6 @@ class ControllerPermissionsGuardFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $parentLocator = $serviceLocator->getServiceLocator();
-
-        return $this($parentLocator, ControllerPermissionsGuard::class, $this->options);
+        return $this($serviceLocator, ControllerPermissionsGuard::class, $this->options);
     }
 }

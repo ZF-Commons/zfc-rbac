@@ -19,7 +19,6 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;

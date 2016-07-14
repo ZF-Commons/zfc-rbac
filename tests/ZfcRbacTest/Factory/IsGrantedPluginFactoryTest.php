@@ -31,16 +31,22 @@ class IsGrantedPluginFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $pluginManager  = new PluginManager();
-        $pluginManager->setServiceLocator($serviceManager);
+        $pluginManager  = new PluginManager($serviceManager);
+        $pluginManager->configure([
+            'factories' => [
+                'ZfcRbac\Mvc\Controller\Plugin\IsGranted' => 'ZfcRbac\Factory\IsGrantedPluginFactory'
+            ],
+            'aliases' => [
+                'isGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted'
+            ]
+        ]);
 
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
             $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface')
         );
 
-        $factory   = new IsGrantedPluginFactory();
-        $isGranted = $factory->createService($pluginManager);
+        $isGranted = $pluginManager->get('isGranted');
 
         $this->assertInstanceOf('ZfcRbac\Mvc\Controller\Plugin\IsGranted', $isGranted);
     }

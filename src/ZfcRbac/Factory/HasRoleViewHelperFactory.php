@@ -55,6 +55,6 @@ class HasRoleViewHelperFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator->getServiceLocator(), HasRole::class);
+        return $this($serviceLocator, HasRole::class);
     }
 }

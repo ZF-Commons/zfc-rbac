@@ -53,11 +53,17 @@ class ControllerGuardFactory implements FactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
      * @return ControllerGuard
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        if (null === $options) {
+            $options = [];
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
@@ -77,6 +83,6 @@ class ControllerGuardFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator->getServiceLocator(), ControllerGuard::class, $this->options);
+        return $this($serviceLocator, ControllerGuard::class, $this->options);
     }
 }

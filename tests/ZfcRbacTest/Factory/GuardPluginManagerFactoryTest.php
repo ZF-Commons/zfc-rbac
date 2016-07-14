@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\GuardPluginManagerFactory;
+use ZfcRbac\Guard\GuardPluginManager;
 
 /**
  * @covers \ZfcRbac\Factory\GuardPluginManagerFactory
@@ -34,11 +35,10 @@ class GuardPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
                 'guard_manager' => []
             ]
         ]);
+        $serviceManager->setFactory(GuardPluginManager::class, GuardPluginManagerFactory::class);
 
-        $factory       = new GuardPluginManagerFactory();
-        $pluginManager = $factory->createService($serviceManager);
+        $pluginManager = $serviceManager->get(GuardPluginManager::class);
 
-        $this->assertInstanceOf('ZfcRbac\Guard\GuardPluginManager', $pluginManager);
-        $this->assertSame($serviceManager, $pluginManager->getServiceLocator());
+        $this->assertInstanceOf(GuardPluginManager::class, $pluginManager);
     }
 }

@@ -42,7 +42,7 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
-        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', new RoleProviderPluginManager());
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', new RoleProviderPluginManager($serviceManager));
         $serviceManager->setService(
             'ZfcRbac\Identity\AuthenticationProvider',
             $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')

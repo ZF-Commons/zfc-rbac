@@ -60,6 +60,10 @@ class RouteGuardFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        if (null === $options) {
+            $options = [];
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 

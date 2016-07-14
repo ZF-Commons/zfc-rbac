@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Service;
 
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
+use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
@@ -138,7 +139,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
             new InMemoryRoleProvider($roleConfig),
             $rbac->getTraversalStrategy()
         );
-        $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions($assertions);
