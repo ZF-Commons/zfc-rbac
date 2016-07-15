@@ -52,7 +52,8 @@ class ControllerPermissionsGuardFactoryTest extends \PHPUnit_Framework_TestCase
 
         $pluginManager = new GuardPluginManager($serviceManager);
 
-        $guard = $pluginManager->get('ZfcRbac\Guard\ControllerPermissionsGuard');
+        $factory    = new ControllerPermissionsGuardFactory();
+        $guard = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\ControllerPermissionsGuard', $guard);
         $this->assertEquals(GuardInterface::POLICY_ALLOW, $guard->getProtectionPolicy());

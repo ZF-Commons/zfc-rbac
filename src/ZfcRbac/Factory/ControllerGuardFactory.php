@@ -83,6 +83,6 @@ class ControllerGuardFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, ControllerGuard::class, $this->options);
+        return $this($serviceLocator->getServiceLocator(), ControllerGuard::class, $this->options);
     }
 }

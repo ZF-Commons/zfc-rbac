@@ -35,9 +35,9 @@ class GuardPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
                 'guard_manager' => []
             ]
         ]);
-        $serviceManager->setFactory(GuardPluginManager::class, GuardPluginManagerFactory::class);
 
-        $pluginManager = $serviceManager->get(GuardPluginManager::class);
+        $factory       = new GuardPluginManagerFactory();
+        $pluginManager = $factory->createService($serviceManager);
 
         $this->assertInstanceOf(GuardPluginManager::class, $pluginManager);
     }

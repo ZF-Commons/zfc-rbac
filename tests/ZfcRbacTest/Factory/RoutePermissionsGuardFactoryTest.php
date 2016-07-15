@@ -52,7 +52,8 @@ class RoutePermissionsGuardFactoryTest extends \PHPUnit_Framework_TestCase
 
         $pluginManager = new GuardPluginManager($serviceManager);
 
-        $routeGuard = $pluginManager->get('ZfcRbac\Guard\RoutePermissionsGuard');
+        $factory    = new RoutePermissionsGuardFactory();
+        $routeGuard = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\RoutePermissionsGuard', $routeGuard);
         $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());

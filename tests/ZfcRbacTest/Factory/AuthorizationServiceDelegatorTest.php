@@ -17,6 +17,8 @@
  */
 namespace ZfcRbacTest\Factory;
 
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Factory\AuthorizationServiceDelegatorFactory;
 use ZfcRbacTest\Initializer\AuthorizationAwareFake;
 use ZfcRbacTest\Util\ServiceManagerFactory;
@@ -32,19 +34,18 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
     {
         $authServiceClassName = 'ZfcRbac\Service\AuthorizationService';
         $delegator            = new AuthorizationServiceDelegatorFactory();
-        $serviceLocator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $serviceLocator       = $this->prophesize(ContainerInterface::class);
+        $serviceLocator->willImplement(ServiceLocatorInterface::class);
+
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
 
         $callback = function () {
             return new AuthorizationAwareFake();
         };
 
-        $serviceLocator->expects($this->once())
-            ->method('get')
-            ->with($authServiceClassName)
-            ->will($this->returnValue($authorizationService));
+        $serviceLocator->get($authServiceClassName)->willReturn($authorizationService)->shouldBeCalled();
 
-        $decoratedInstance = $delegator->createDelegatorWithName($serviceLocator, 'name', 'requestedName', $callback);
+        $decoratedInstance = $delegator->createDelegatorWithName($serviceLocator->reveal(), 'name', 'requestedName', $callback);
 
         $this->assertEquals($authorizationService, $decoratedInstance->getAuthorizationService());
     }
@@ -88,11 +89,6 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->addDelegator(
             'ZfcRbacTest\AuthorizationAware',
-            'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
-        );
-
-        $serviceManager->addDelegator(
-            'ZfcRbacTest\Initializer\AuthorizationAwareFake',
             'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
         );
 

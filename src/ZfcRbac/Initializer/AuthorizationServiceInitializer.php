@@ -39,10 +39,6 @@ class AuthorizationServiceInitializer implements InitializerInterface
     public function __invoke(ContainerInterface $container, $instance)
     {
         if ($instance instanceof AuthorizationServiceAwareInterface) {
-            if ($container instanceof AbstractPluginManager) {
-                $container = $container->getServiceLocator();
-            }
-
             $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
             $instance->setAuthorizationService($authorizationService);
         }
