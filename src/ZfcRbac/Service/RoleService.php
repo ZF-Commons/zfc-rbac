@@ -18,9 +18,7 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Role\HierarchicalRoleInterface;
 use Rbac\Role\RoleInterface;
-use RecursiveIteratorIterator;
 use Traversable;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;

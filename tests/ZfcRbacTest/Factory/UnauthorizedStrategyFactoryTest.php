@@ -45,4 +45,3 @@ class UnauthorizedStrategyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\View\Strategy\UnauthorizedStrategy', $unauthorizedStrategy);
     }
 }
- 

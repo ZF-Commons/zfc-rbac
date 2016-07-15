@@ -26,7 +26,6 @@ use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
 use ZfcRbacTest\Asset\SimpleAssertion;
 use ZfcRbac\Assertion\AssertionPluginManager;
-use Zend\ServiceManager\Config;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -103,7 +102,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider grantedProvider
      */
-    public function testGranted($role, $permission, $context, $isGranted, $assertions = array())
+    public function testGranted($role, $permission, $context, $isGranted, $assertions = [])
     {
         $roleConfig = [
             'admin'  => [

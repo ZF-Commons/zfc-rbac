@@ -53,4 +53,3 @@ class RedirectStrategyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\View\Strategy\RedirectStrategy', $redirectStrategy);
     }
 }
- 

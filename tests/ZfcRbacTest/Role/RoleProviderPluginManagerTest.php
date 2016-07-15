@@ -42,4 +42,3 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
         $pluginManager->get('stdClass', []);
     }
 }
- 

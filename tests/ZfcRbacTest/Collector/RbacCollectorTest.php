@@ -20,13 +20,11 @@ namespace ZfcRbacTest\Collector;
 
 use Rbac\Role\RoleInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Rbac\Rbac;
 use Zend\Permissions\Rbac\Role;
 use ZfcRbac\Collector\RbacCollector;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\InMemoryRoleProvider;
-use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Service\RoleService;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 use ZfcRbacTest\Asset\MockRoleWithPermissionMethod;
@@ -89,7 +87,6 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
         $serialized   = serialize($unserialized);
 
         $collector->unserialize($serialized);
-
     }
 
 

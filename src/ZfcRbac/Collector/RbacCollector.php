@@ -232,6 +232,5 @@ class RbacCollector implements CollectorInterface, Serializable
         $this->collectedRoles  = $collection['roles'];
         $this->collectedPermissions =  $collection['permissions'];
         $this->collectedOptions = $collection['options'];
-
     }
 }

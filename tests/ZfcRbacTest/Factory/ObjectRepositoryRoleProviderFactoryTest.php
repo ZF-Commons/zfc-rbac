@@ -104,7 +104,6 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
                 'role_name_property' => 'name'
             ]);
         } catch (ServiceNotCreatedException $smException) {
-
             while ($e = $smException->getPrevious()) {
                 if ($e instanceof RuntimeException) {
                     return true;
