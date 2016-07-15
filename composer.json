@@ -47,7 +47,7 @@
     "satooshi/php-coveralls": "~0.6",
     "doctrine/common": "~2.4",
     "doctrine/doctrine-module": "~1.1",
-    "doctrine/doctrine-orm-module": "~0.11"
+    "doctrine/doctrine-orm-module": "^1.0"
   },
   "suggest": {
     "zendframework/zend-developer-tools": "if you want to show information about the roles",
