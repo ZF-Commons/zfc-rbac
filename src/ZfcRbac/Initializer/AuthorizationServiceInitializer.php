@@ -48,6 +48,10 @@ class AuthorizationServiceInitializer implements InitializerInterface
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
+        if ($serviceLocator instanceof AbstractPluginManager) {
+            $serviceLocator = $serviceLocator->getServiceLocator();
+        }
+
         $this($serviceLocator, $instance);
     }
 }
