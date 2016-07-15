@@ -100,9 +100,6 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($authorizationService, $decoratedInstance->getAuthorizationService());
     }
 
-    /**
-     * @group by
-     */
     public function testAuthorizationServiceIsInjectedWithDelegatorV3()
     {
         $serviceManager = ServiceManagerFactory::getServiceManager();
