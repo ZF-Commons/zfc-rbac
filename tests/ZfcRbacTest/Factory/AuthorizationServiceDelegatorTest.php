@@ -34,8 +34,8 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
     {
         $authServiceClassName = 'ZfcRbac\Service\AuthorizationService';
         $delegator            = new AuthorizationServiceDelegatorFactory();
-        $serviceLocator       = $this->prophesize(ContainerInterface::class);
-        $serviceLocator->willImplement(ServiceLocatorInterface::class);
+        $serviceLocator       = $this->prophesize(ServiceLocatorInterface::class);
+        $serviceLocator->willImplement(ContainerInterface::class);
 
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
 
@@ -74,6 +74,10 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = ServiceManagerFactory::getServiceManager();
 
+        if (method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+        }
+
         $serviceManager->setAllowOverride(true);
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
         $serviceManager->setService(
@@ -89,6 +93,39 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->addDelegator(
             'ZfcRbacTest\AuthorizationAware',
+            'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
+        );
+
+        $decoratedInstance = $serviceManager->get('ZfcRbacTest\AuthorizationAware');
+        $this->assertEquals($authorizationService, $decoratedInstance->getAuthorizationService());
+    }
+
+    /**
+     * @group by
+     */
+    public function testAuthorizationServiceIsInjectedWithDelegatorV3()
+    {
+        $serviceManager = ServiceManagerFactory::getServiceManager();
+
+        if (! method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+        }
+
+        $serviceManager->setAllowOverride(true);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $authorizationService
+        );
+        $serviceManager->setAllowOverride(false);
+
+        $serviceManager->setInvokableClass(
+            'ZfcRbacTest\AuthorizationAware',
+            'ZfcRbacTest\Initializer\AuthorizationAwareFake'
+        );
+
+        $serviceManager->addDelegator(
+            'ZfcRbacTest\Initializer\AuthorizationAwareFake',
             'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
         );
 
