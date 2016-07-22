@@ -19,7 +19,7 @@
 namespace ZfcRbacTest\Guard;
 
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Router\RouteMatch;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
@@ -439,12 +439,13 @@ class RouteGuardTest extends \PHPUnit_Framework_TestCase
                     ->will($this->returnValue($eventManager));
 
         $eventManager->expects($this->once())
-                     ->method('trigger')
-                     ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+            ->method('triggerEvent')
+            ->with($event);
 
         $routeMatch->setMatchedRouteName('adminRoute');
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
+        $event->setTarget($application);
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())

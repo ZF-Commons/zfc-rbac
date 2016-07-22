@@ -18,7 +18,7 @@
 namespace ZfcRbacTest\Guard;
 
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Router\RouteMatch;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\RouteGuard;
@@ -410,9 +410,6 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
     public function testProperlySetUnauthorizedAndTriggerEventOnUnauthorization()
     {
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $eventManager->expects($this->once())
-            ->method('trigger')
-            ->with(MvcEvent::EVENT_DISPATCH_ERROR);
 
         $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $application->expects($this->once())
@@ -425,6 +422,11 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
+        $event->setTarget($application);
+
+        $eventManager->expects($this->once())
+            ->method('triggerEvent')
+            ->with($event);
 
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
         $authorizationService->expects($this->once())

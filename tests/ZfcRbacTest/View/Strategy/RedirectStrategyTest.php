@@ -22,7 +22,7 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Router\Http\TreeRouteStack;
 use ZfcRbac\Exception\UnauthorizedException;
 use ZfcRbac\Options\RedirectStrategyOptions;
 use ZfcRbac\View\Strategy\RedirectStrategy;
