@@ -18,6 +18,7 @@
 namespace ZfcRbacTest\Guard;
 
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
 use Zend\Router\RouteMatch;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
@@ -359,7 +360,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $isGranted,
         $protectionPolicy
     ) {
-        $routeMatch = new RouteMatch([]);
+        $routeMatch = $this->createRouteMatch();
         $routeMatch->setMatchedRouteName($matchedRouteName);
 
         $event = new MvcEvent();
@@ -385,7 +386,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
             ->method('getEventManager')
             ->will($this->returnValue($eventManager));
 
-        $routeMatch = new RouteMatch([]);
+        $routeMatch = $this->createRouteMatch();
         $routeMatch->setMatchedRouteName('adminRoute');
 
         $event = new MvcEvent();
@@ -416,7 +417,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
             ->method('getEventManager')
             ->will($this->returnValue($eventManager));
 
-        $routeMatch = new RouteMatch([]);
+        $routeMatch = $this->createRouteMatch();
         $routeMatch->setMatchedRouteName('adminRoute');
 
         $event = new MvcEvent();
@@ -442,5 +443,11 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(RouteGuard::GUARD_UNAUTHORIZED, $event->getError());
         $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
+    }
+
+    public function createRouteMatch(array $params = [])
+    {
+        $class = class_exists(V2RouteMatch::class) ? V2RouteMatch::class : RouteMatch::class;
+        return new $class($params);
     }
 }
