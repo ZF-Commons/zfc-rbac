@@ -19,8 +19,7 @@
 namespace ZfcRbacTest\Guard;
 
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
-use Zend\Router\RouteMatch;
+use Zend\Mvc\Router\RouteMatch;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
@@ -411,10 +410,9 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $protectionPolicy
     ) {
         $event      = new MvcEvent();
-        $routeMatch = $this->createRouteMatch([
-            'controller' => $controller,
-            'action' => $action,
-        ]);
+        $routeMatch = new RouteMatch([]);
+        $routeMatch->setParam('controller', $controller);
+        $routeMatch->setParam('action', $action);
 
         $event->setRouteMatch($routeMatch);
 
@@ -438,10 +436,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
     public function testProperlyFillEventOnAuthorization()
     {
         $event      = new MvcEvent();
-        $routeMatch = $this->createRouteMatch([
-            'controller' => 'MyController',
-            'action' => 'edit',
-        ]);
+        $routeMatch = new RouteMatch([]);
 
         $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
@@ -450,6 +445,8 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     ->method('getEventManager')
                     ->will($this->returnValue($eventManager));
 
+        $routeMatch->setParam('controller', 'MyController');
+        $routeMatch->setParam('action', 'edit');
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
@@ -482,10 +479,7 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
     public function testProperlySetUnauthorizedAndTriggerEventOnUnauthorization()
     {
         $event      = new MvcEvent();
-        $routeMatch = $this->createRouteMatch([
-            'controller' => 'MyController',
-            'action' => 'delete',
-        ]);
+        $routeMatch = new RouteMatch([]);
 
         $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
@@ -495,12 +489,14 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     ->will($this->returnValue($eventManager));
 
         $eventManager->expects($this->once())
-                     ->method('triggerEvent')
-                     ->with($event);
+                     ->method('trigger')
+                     ->with(MvcEvent::EVENT_DISPATCH_ERROR);
+
+        $routeMatch->setParam('controller', 'MyController');
+        $routeMatch->setParam('action', 'delete');
 
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
-        $event->setTarget($application);
 
         $identityProvider = $this->getMock('ZfcRbac\Identity\IdentityProviderInterface');
         $identityProvider->expects($this->any())
@@ -524,11 +520,5 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($event->propagationIsStopped());
         $this->assertEquals(ControllerGuard::GUARD_UNAUTHORIZED, $event->getError());
         $this->assertInstanceOf('ZfcRbac\Exception\UnauthorizedException', $event->getParam('exception'));
-    }
-
-    public function createRouteMatch(array $params = [])
-    {
-        $class = class_exists(V2RouteMatch::class) ? V2RouteMatch::class : RouteMatch::class;
-        return new $class($params);
     }
 }
