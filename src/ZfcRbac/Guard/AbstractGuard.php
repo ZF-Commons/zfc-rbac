@@ -69,10 +69,8 @@ abstract class AbstractGuard implements GuardInterface
         ));
 
         $event->stopPropagation(true);
-
-        $application  = $event->getApplication();
-        $eventManager = $application->getEventManager();
-
-        $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+        $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+        $target  = $event->getTarget();
+        $target->getEventManager()->triggerEvent($event);
     }
 }
