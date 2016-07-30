@@ -19,6 +19,7 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Guard\RoutePermissionsGuard;
@@ -30,7 +31,7 @@ use ZfcRbac\Guard\RoutePermissionsGuard;
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
  * @license MIT
  */
-class RoutePermissionsGuardFactory
+class RoutePermissionsGuardFactory implements FactoryInterface
 {
     /**
      * @var array
@@ -42,19 +43,25 @@ class RoutePermissionsGuardFactory
      */
     public function __construct(array $options = [])
     {
+        $this->setCreationOptions($options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
         $this->options = $options;
     }
 
     /**
      * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
      * @return RoutePermissionsGuard
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (! method_exists($container, 'build')) { // servicemanager v3
-            $container = $container->getServiceLocator();
-        }
-
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
@@ -73,6 +80,6 @@ class RoutePermissionsGuardFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, RoutePermissionsGuard::class);
+        return $this($serviceLocator->getServiceLocator(), RoutePermissionsGuard::class);
     }
 }

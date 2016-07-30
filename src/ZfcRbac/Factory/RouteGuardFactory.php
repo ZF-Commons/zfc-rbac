@@ -19,6 +19,7 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 
@@ -28,7 +29,7 @@ use ZfcRbac\Guard\RouteGuard;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class RouteGuardFactory
+class RouteGuardFactory implements FactoryInterface
 {
     /**
      * @var array
@@ -40,26 +41,32 @@ class RouteGuardFactory
      */
     public function __construct(array $options = [])
     {
+        $this->setCreationOptions($options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
         $this->options = $options;
     }
 
     /**
      * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
      * @return RouteGuard
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (! method_exists($container, 'build')) { // servicemanager v3
-            $container = $container->getServiceLocator();
-        }
-
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\RoleService $roleService */
         $roleService = $container->get('ZfcRbac\Service\RoleService');
 
-        $routeGuard = new RouteGuard($roleService, $this->options);
+        $routeGuard = new RouteGuard($roleService, $options);
         $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;
@@ -72,6 +79,6 @@ class RouteGuardFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, RouteGuard::class);
+        return $this($serviceLocator->getServiceLocator(), RouteGuard::class, $this->options);
     }
 }

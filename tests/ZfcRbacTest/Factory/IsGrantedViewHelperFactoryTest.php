@@ -39,7 +39,7 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory   = new IsGrantedViewHelperFactory();
-        $isGranted = $factory->createService($serviceManager);
+        $isGranted = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\View\Helper\IsGranted', $isGranted);
     }

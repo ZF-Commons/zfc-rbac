@@ -54,6 +54,6 @@ class IsGrantedPluginFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, IsGranted::class);
+        return $this($serviceLocator->getServiceLocator(), IsGranted::class);
     }
 }

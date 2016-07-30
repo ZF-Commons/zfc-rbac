@@ -19,6 +19,7 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -29,7 +30,7 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class ObjectRepositoryRoleProviderFactory
+class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 {
     /**
      * @var array
@@ -41,20 +42,25 @@ class ObjectRepositoryRoleProviderFactory
      */
     public function __construct(array $options = [])
     {
+        $this->setCreationOptions($options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
         $this->options = $options;
     }
 
     /**
      * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
      * @return ObjectRepositoryRoleProvider
      */
-    public function __invoke(ContainerInterface $container, $resolvedName, $options)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (! method_exists($container, 'build')) { // servicemanager v3
-            $container = $container->getServiceLocator();
-            $options = $this->options;
-        }
-
         $objectRepository = null;
 
         if (!isset($options['role_name_property'])) {
@@ -88,6 +94,6 @@ class ObjectRepositoryRoleProviderFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, ObjectRepositoryRoleProvider::class);
+        return $this($serviceLocator->getServiceLocator(), ObjectRepositoryRoleProvider::class, $this->options);
     }
 }

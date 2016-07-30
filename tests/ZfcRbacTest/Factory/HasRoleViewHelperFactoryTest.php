@@ -39,7 +39,7 @@ class HasRoleViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory   = new HasRoleViewHelperFactory();
-        $viewHelper = $factory->createService($serviceManager);
+        $viewHelper = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\View\Helper\HasRole', $viewHelper);
     }

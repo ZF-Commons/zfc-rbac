@@ -28,6 +28,9 @@ use ZfcRbac\Options\ModuleOptions;
  */
 class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group by
+     */
     public function testFactory()
     {
         $moduleOptions = new ModuleOptions([

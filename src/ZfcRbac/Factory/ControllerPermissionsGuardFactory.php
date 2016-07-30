@@ -19,6 +19,8 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\ControllerPermissionsGuard;
 
 /**
@@ -27,7 +29,7 @@ use ZfcRbac\Guard\ControllerPermissionsGuard;
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
  * @license MIT
  */
-class ControllerPermissionsGuardFactory
+class ControllerPermissionsGuardFactory implements FactoryInterface
 {
     /**
      * @var array
@@ -39,6 +41,14 @@ class ControllerPermissionsGuardFactory
      */
     public function __construct(array $options = [])
     {
+        $this->setCreationOptions($options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
         $this->options = $options;
     }
 
@@ -46,16 +56,8 @@ class ControllerPermissionsGuardFactory
      * @param ContainerInterface $container
      * @return ControllerPermissionsGuard
      */
-    public function __invoke(
-        ContainerInterface $container,
-        $resolvedName = ControllerPermissionsGuard::class,
-        $options = []
-    ) {
-        if (! method_exists($container, 'build')) { // servicemanager v3
-            $container = $container->getServiceLocator();
-            $options = $this->options;
-        }
-
+    public function __invoke(ContainerInterface $container, $resolvedName, array $options = null)
+    {
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
@@ -66,5 +68,16 @@ class ControllerPermissionsGuardFactory
         $guard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $guard;
+    }
+
+    /**
+     * @param \Zend\ServiceManager\AbstractPluginManager|ServiceLocatorInterface $serviceLocator
+     * @return ControllerPermissionsGuard
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $parentLocator = $serviceLocator->getServiceLocator();
+
+        return $this($parentLocator, ControllerPermissionsGuard::class, $this->options);
     }
 }

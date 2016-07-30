@@ -19,6 +19,7 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\ControllerGuard;
 
@@ -28,7 +29,7 @@ use ZfcRbac\Guard\ControllerGuard;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class ControllerGuardFactory
+class ControllerGuardFactory implements FactoryInterface
 {
     /**
      * @var array
@@ -40,6 +41,14 @@ class ControllerGuardFactory
      */
     public function __construct(array $options = [])
     {
+        $this->setCreationOptions($options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
         $this->options = $options;
     }
 
@@ -47,19 +56,15 @@ class ControllerGuardFactory
      * {@inheritDoc}
      * @return ControllerGuard
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        if (! method_exists($container, 'build')) { // servicemanager v3
-            $container = $container->getServiceLocator();
-        }
-
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\RoleService $roleService */
         $roleService = $container->get('ZfcRbac\Service\RoleService');
 
-        $controllerGuard = new ControllerGuard($roleService, $this->options);
+        $controllerGuard = new ControllerGuard($roleService, $options);
         $controllerGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $controllerGuard;
@@ -72,6 +77,6 @@ class ControllerGuardFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator, ControllerGuard::class);
+        return $this($serviceLocator->getServiceLocator(), ControllerGuard::class, $this->options);
     }
 }

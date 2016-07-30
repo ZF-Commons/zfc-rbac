@@ -30,8 +30,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
 {
     public function testFactoryUsingObjectRepository()
     {
+        $pluginManager  = new RoleProviderPluginManager();
         $serviceManager = new ServiceManager();
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
+
+        $pluginManager->setServiceLocator($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
@@ -46,8 +48,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
 
     public function testFactoryUsingObjectManager()
     {
+        $pluginManager  = new RoleProviderPluginManager();
         $serviceManager = new ServiceManager();
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
+
+        $pluginManager->setServiceLocator($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
@@ -73,9 +77,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     public function testThrowExceptionIfNoRoleNamePropertyIsSet()
     {
         try {
+            $pluginManager  = new RoleProviderPluginManager();
             $serviceManager = new ServiceManager();
-            $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
+            $pluginManager->setServiceLocator($serviceManager);
             $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', []);
         } catch (ServiceNotCreatedException $smException) {
             while ($e = $smException->getPrevious()) {
@@ -97,9 +102,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
     {
         try {
+            $pluginManager  = new RoleProviderPluginManager();
             $serviceManager = new ServiceManager();
-            $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
+            $pluginManager->setServiceLocator($serviceManager);
             $pluginManager->get('ZfcRbac\Role\ObjectRepositoryRoleProvider', [
                 'role_name_property' => 'name'
             ]);

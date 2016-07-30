@@ -50,16 +50,11 @@ class RoutePermissionsGuardFactoryTest extends \PHPUnit_Framework_TestCase
             $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
-        $pluginManager = new GuardPluginManager($serviceManager);
+        $pluginManager = new GuardPluginManager();
+        $pluginManager->setServiceLocator($serviceManager);
 
         $factory    = new RoutePermissionsGuardFactory();
-
-        if (method_exists($serviceManager, 'build')) { // servicemanager v3
-            $routeGuard = $factory->createService($serviceManager);
-        } else {
-            $routeGuard = $factory->createService($pluginManager);
-        }
-
+        $routeGuard = $factory->createService($pluginManager);
 
         $this->assertInstanceOf('ZfcRbac\Guard\RoutePermissionsGuard', $routeGuard);
         $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());

@@ -59,12 +59,12 @@ abstract class ServiceManagerFactory
     public static function getServiceManager(array $config = null)
     {
         $config = $config ?: static::getApplicationConfig();
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('ApplicationConfig', $config);
-        $serviceManagerConfig = new ServiceManagerConfig(
-            isset($config['service_manager']) ? $config['service_manager'] : []
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(
+                isset($config['service_manager']) ? $config['service_manager'] : []
+            )
         );
-        $serviceManagerConfig->configureServiceManager($serviceManager);
+        $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->setAllowOverride(true);
 
         /* @var $moduleManager \Zend\ModuleManager\ModuleManagerInterface */
