@@ -18,20 +18,23 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\TraversalStrategyInterface;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleServiceFactory;
 use ZfcRbac\Exception\RuntimeException;
-use ZfcRbac\Identity\AuthenticationProvider;
+use ZfcRbac\Identity\AuthenticationIdentityProvider;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Service\RoleService;
 
 /**
  * @covers \ZfcRbac\Container\RoleServiceFactory
  */
-class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class RoleServiceFactoryTest extends TestCase
 {
     /**
      * @markTestSkipped skipped
@@ -42,26 +45,28 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
             'Seems Rbac\Traversal\Strategy\TraversalStrategyInterface has been removed. Not sure what this does.'
         );
 
-        $options = new ModuleOptions([
-            'identity_provider'    => AuthenticationProvider::class,
-            'guest_role'           => 'guest',
-            'role_provider'        => [
-                \ZfcRbac\Role\InMemoryRoleProvider::class => [
-                    'foo'
+        $options = new ModuleOptions(
+            [
+                'identity_provider' => AuthenticationIdentityProvider::class,
+                'guest_role'        => 'guest',
+                'role_provider'     => [
+                    InMemoryRoleProvider::class => [
+                        'foo'
+                    ]
                 ]
             ]
-        ]);
+        );
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(ModuleOptions::class, $options);
         $serviceManager->setService(RoleProviderPluginManager::class, new RoleProviderPluginManager($serviceManager));
         $serviceManager->setService(
-            AuthenticationProvider::class,
-            $this->getMock(IdentityProviderInterface::class)
+            AuthenticationIdentityProvider::class,
+            $this->createMock(IdentityProviderInterface::class)
         );
 
-        $traversalStrategy = $this->getMock(TraversalStrategyInterface::class);
-        $rbac              = $this->getMock(Rbac::class, [], [], '', false);
+        $traversalStrategy = $this->createMock(TraversalStrategyInterface::class);
+        $rbac              = $this->createMock(Rbac::class);
 
         $rbac->expects($this->once())->method('getTraversalStrategy')->will($this->returnValue($traversalStrategy));
 
@@ -70,26 +75,28 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $factory     = new RoleServiceFactory();
         $roleService = $factory($serviceManager, 'requestedName');
 
-        $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
+        $this->assertInstanceOf(RoleService::class, $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertAttributeSame($traversalStrategy, 'traversalStrategy', $roleService);
     }
 
     public function testThrowExceptionIfNoRoleProvider()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
-        $options = new ModuleOptions([
-            'identity_provider' => AuthenticationProvider::class,
-            'guest_role'        => 'guest',
-            'role_provider'     => []
-        ]);
+        $options = new ModuleOptions(
+            [
+                'identity_provider' => AuthenticationIdentityProvider::class,
+                'guest_role'        => 'guest',
+                'role_provider'     => []
+            ]
+        );
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(ModuleOptions::class, $options);
         $serviceManager->setService(
-            AuthenticationProvider::class,
-            $this->getMock(IdentityProviderInterface::class)
+            AuthenticationIdentityProvider::class,
+            $this->createMock(IdentityProviderInterface::class)
         );
 
         $factory     = new RoleServiceFactory();

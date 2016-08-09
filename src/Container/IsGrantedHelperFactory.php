@@ -16,43 +16,37 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
+namespace ZfcRbac\Container;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Factory\InvokableFactory;
-use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
-use ZfcRbac\Exception;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Helper\IsGranted;
 
 /**
- * Plugin manager to create role providers
- *
- * @method RoleProviderInterface get($name)
+ * Create the IsGranted view helper
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
-class RoleProviderPluginManager extends AbstractPluginManager
+class IsGrantedHelperFactory
 {
     /**
-     * @var array
+     * Create an object
+     *
+     * @param  ContainerInterface $container
+     * @return IsGranted
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
-    protected $factories = [
-        InMemoryRoleProvider::class         => InvokableFactory::class,
-        ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class
-    ];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function validate($plugin)
+    public function __invoke(ContainerInterface $container): IsGranted
     {
-        if ($plugin instanceof RoleProviderInterface) {
-            return; // we're okay
-        }
+        $authorizationService = $container->get(AuthorizationService::class);
 
-        throw new Exception\RuntimeException(sprintf(
-            'Role provider must implement "ZfcRbac\Role\RoleProviderInterface", but "%s" was given',
-            is_object($plugin) ? get_class($plugin) : gettype($plugin)
-        ));
+        return new IsGranted($authorizationService);
     }
 }

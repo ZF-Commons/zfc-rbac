@@ -16,30 +16,42 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Container;
+namespace ZfcRbac\Helper;
 
-use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Container\RoleProviderPluginManagerFactory;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
- * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
+ * Helper class that allows to test a permission
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @license MIT
  */
-class RoleProviderPluginManagerFactoryTest extends TestCase
+class IsGranted
 {
-    public function testFactory()
+    /**
+     * @var AuthorizationServiceInterface
+     */
+    private $authorizationService;
+
+    /**
+     * Constructor
+     *
+     * @param AuthorizationServiceInterface $authorizationService
+     */
+    public function __construct(AuthorizationServiceInterface $authorizationService)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', [
-            'zfc_rbac' => [
-                'role_provider_manager' => []
-            ]
-        ]);
+        $this->authorizationService = $authorizationService;
+    }
 
-        $factory       = new RoleProviderPluginManagerFactory();
-        $pluginManager = $factory($serviceManager, 'requestedName');
-
-        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
+    /**
+     * Check against the given permission
+     *
+     * @param  string $permission
+     * @param  mixed  $context
+     * @return bool
+     */
+    public function __invoke($permission, $context = null)
+    {
+        return $this->authorizationService->isGranted($permission, $context);
     }
 }

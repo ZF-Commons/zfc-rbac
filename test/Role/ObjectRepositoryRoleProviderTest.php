@@ -19,18 +19,19 @@
 namespace ZfcRbacTest\Role;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbacTest\Asset\FlatRole;
 
 /**
  * @covers \ZfcRbac\Role\ObjectRepositoryRoleProvider
  */
-class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderTest extends TestCase
 {
 
     public function testObjectRepositoryProviderGetRoles()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->createMock(ObjectRepository::class);
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -42,7 +43,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testRoleCacheOnConsecutiveCalls()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->createMock(ObjectRepository::class);
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -56,7 +57,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testClearRoleCache()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->createMock(ObjectRepository::class);
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -71,7 +72,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowExceptionIfAskedRoleIsNotFound()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->createMock(ObjectRepository::class);
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];

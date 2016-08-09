@@ -16,30 +16,39 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Container;
+namespace ZfcRbac\Helper;
 
-use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Container\RoleProviderPluginManagerFactory;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Service\RoleService;
 
 /**
- * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
+ * View helper that allows to test a role in a view
+ *
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
+ * @license MIT
  */
-class RoleProviderPluginManagerFactoryTest extends TestCase
+class HasRole
 {
-    public function testFactory()
+    /**
+     * @var RoleService
+     */
+    private $roleService;
+
+    /**
+     * Constructor
+     *
+     * @param RoleService $roleService
+     */
+    public function __construct(RoleService $roleService)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', [
-            'zfc_rbac' => [
-                'role_provider_manager' => []
-            ]
-        ]);
+        $this->roleService = $roleService;
+    }
 
-        $factory       = new RoleProviderPluginManagerFactory();
-        $pluginManager = $factory($serviceManager, 'requestedName');
-
-        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
+    /**
+     * @param string|string[] $roleOrRoles
+     * @return bool
+     */
+    public function __invoke($roleOrRoles)
+    {
+        return $this->roleService->matchIdentityRoles((array)$roleOrRoles);
     }
 }

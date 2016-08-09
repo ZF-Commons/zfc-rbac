@@ -18,6 +18,8 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
+use Rbac\Rbac;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AuthorizationServiceFactory;
@@ -28,21 +30,21 @@ use ZfcRbac\Service\RoleService;
 /**
  * @covers \ZfcRbac\Container\AuthorizationServiceFactory
  */
-class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class AuthorizationServiceFactoryTest extends TestCase
 {
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
 
-        $serviceManager->setService(\Rbac\Rbac::class, $this->getMock(\Rbac\Rbac::class, [], [], '', false));
+        $serviceManager->setService(Rbac::class, $this->createMock(Rbac::class));
 
         $serviceManager->setService(
             RoleService::class,
-            $this->getMock(RoleService::class, [], [], '', false)
+            $this->createMock(RoleService::class)
         );
         $serviceManager->setService(
             AssertionPluginManager::class,
-            $this->getMock(AssertionPluginManager::class, [], [], '', false)
+            $this->createMock(AssertionPluginManager::class)
         );
         $serviceManager->setService(
             ModuleOptions::class,

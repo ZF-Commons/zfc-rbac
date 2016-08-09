@@ -18,9 +18,8 @@
 
 namespace ZfcRbacTest\Service;
 
+use PHPUnit\Framework\TestCase;
 use Rbac\Role\RoleInterface;
-use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
-use Rbac\Traversal\Strategy\TraversalStrategyInterface;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
@@ -30,7 +29,7 @@ use ZfcRbac\Service\RoleService;
 /**
  * @covers \ZfcRbac\Service\RoleService
  */
-class RoleServiceTest extends \PHPUnit_Framework_TestCase
+class RoleServiceTest extends TestCase
 {
     public function roleProvider()
     {
@@ -184,6 +183,10 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider roleProvider
+     * @param array $rolesConfig
+     * @param array $identityRoles
+     * @param array $rolesToCheck
+     * @param       $doesMatch
      */
     public function testMatchIdentityRoles(array $rolesConfig, array $identityRoles, array $rolesToCheck, $doesMatch)
     {
@@ -191,32 +194,27 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
             'Seems Rbac\Traversal\Strategy\TraversalStrategyInterface has been removed.'
         );
 
-        $identity = $this->getMock(\ZfcRbac\Identity\IdentityInterface::class);
+        $identity = $this->createMock(\ZfcRbac\Identity\IdentityInterface::class);
         $identity->expects($this->once())->method('getRoles')->will($this->returnValue($identityRoles));
 
-        $identityProvider = $this->getMock(IdentityProviderInterface::class);
+        $identityProvider = $this->createMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
             ->method('getIdentity')
             ->will($this->returnValue($identity));
 
-        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig),
-            new RecursiveRoleIteratorStrategy());
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig));
 
         $this->assertEquals($doesMatch, $roleService->matchIdentityRoles($rolesToCheck));
     }
 
     public function testReturnGuestRoleIfNoIdentityIsFound()
     {
-        $identityProvider = $this->getMock(IdentityProviderInterface::class);
+        $identityProvider = $this->createMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
             ->method('getIdentity')
             ->will($this->returnValue(null));
 
-        $roleService = new RoleService(
-            $identityProvider,
-            new InMemoryRoleProvider([]),
-            $this->getMock(TraversalStrategyInterface::class)
-        );
+        $roleService = new RoleService($identityProvider, new InMemoryRoleProvider([]));
 
         $roleService->setGuestRole('guest');
 
@@ -230,21 +228,17 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowExceptionIfIdentityIsWrongType()
     {
-        $this->setExpectedException(
+        $this->expectException(
             RuntimeException::class,
             'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "stdClass" given'
         );
 
-        $identityProvider = $this->getMock(IdentityProviderInterface::class);
+        $identityProvider = $this->createMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
             ->method('getIdentity')
             ->will($this->returnValue(new \stdClass()));
 
-        $roleService = new RoleService(
-            $identityProvider,
-            $this->getMock(RoleProviderInterface::class),
-            $this->getMock(TraversalStrategyInterface::class)
-        );
+        $roleService = new RoleService($identityProvider, $this->createMock(RoleProviderInterface::class));
 
         $roleService->getIdentityRoles();
     }

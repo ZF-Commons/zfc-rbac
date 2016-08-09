@@ -16,30 +16,38 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Container;
+namespace ZfcRbac\Identity;
 
-use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Container\RoleProviderPluginManagerFactory;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
- * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
+ * This provider uses the Zend authentication service to fetch the identity
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @license MIT
  */
-class RoleProviderPluginManagerFactoryTest extends TestCase
+class AuthenticationIdentityProvider implements IdentityProviderInterface
 {
-    public function testFactory()
+    /**
+     * @var AuthenticationServiceInterface
+     */
+    protected $authenticationService;
+
+    /**
+     * Constructor
+     *
+     * @param AuthenticationServiceInterface $authenticationService
+     */
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', [
-            'zfc_rbac' => [
-                'role_provider_manager' => []
-            ]
-        ]);
+        $this->authenticationService = $authenticationService;
+    }
 
-        $factory       = new RoleProviderPluginManagerFactory();
-        $pluginManager = $factory($serviceManager, 'requestedName');
-
-        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
+    /**
+     * {@inheritDoc}
+     */
+    public function getIdentity()
+    {
+        return $this->authenticationService->getIdentity();
     }
 }
