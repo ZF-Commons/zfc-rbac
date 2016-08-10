@@ -16,26 +16,42 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbac\Helper;
 
 use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
- * Interface that you can implement for dynamic assertions
+ * Helper class that allows to test a permission
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @license MIT
  */
-interface AssertionInterface
+class IsGranted
 {
     /**
-     * Check if this assertion is true
+     * @var AuthorizationServiceInterface
+     */
+    private $authorizationService;
+
+    /**
+     * Constructor
      *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
+     * @param AuthorizationServiceInterface $authorizationService
+     */
+    public function __construct(AuthorizationServiceInterface $authorizationService)
+    {
+        $this->authorizationService = $authorizationService;
+    }
+
+    /**
+     * Check against the given permission
+     *
+     * @param  string $permission
+     * @param  mixed  $context
      * @return bool
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    public function __invoke($permission, $context = null)
+    {
+        return $this->authorizationService->isGranted($permission, $context);
+    }
 }

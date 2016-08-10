@@ -18,24 +18,25 @@
 
 namespace ZfcRbacTest\Middleware;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware;
-use ZfcRbac\Middleware\ZendAuthenticationServiceMiddlewareFactory;
+use ZfcRbac\Container\ZendAuthenticationServiceMiddlewareFactory;
 
 /**
- * @covers \ZfcRbac\Middleware\ZendAuthenticationServiceMiddlewareFactory
+ * @covers \ZfcRbac\Container\ZendAuthenticationServiceMiddlewareFactory
  */
-class ZendAuthenticationServiceMiddlewareFactoryTest extends \PHPUnit_Framework_TestCase
+class ZendAuthenticationServiceMiddlewareFactoryTest extends TestCase
 {
     public function testFactory()
     {
-        $serviceMock    = $this->getMock(AuthenticationService::class);
+        $serviceMock    = $this->createMock(AuthenticationService::class);
         $serviceManager = new ServiceManager();
         $serviceManager->setService(AuthenticationService::class, $serviceMock);
 
         $factory = new ZendAuthenticationServiceMiddlewareFactory();
-        $service = $factory($serviceManager, 'requestedName');
+        $service = $factory($serviceManager);
 
         $this->assertInstanceOf(ZendAuthenticationServiceMiddleware::class, $service);
     }

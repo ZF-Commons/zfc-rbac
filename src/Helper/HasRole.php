@@ -16,26 +16,39 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbac\Helper;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use ZfcRbac\Service\RoleService;
 
 /**
- * Interface that you can implement for dynamic assertions
+ * View helper that allows to test a role in a view
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
+ * @license MIT
  */
-interface AssertionInterface
+class HasRole
 {
     /**
-     * Check if this assertion is true
+     * @var RoleService
+     */
+    private $roleService;
+
+    /**
+     * Constructor
      *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
+     * @param RoleService $roleService
+     */
+    public function __construct(RoleService $roleService)
+    {
+        $this->roleService = $roleService;
+    }
+
+    /**
+     * @param string|string[] $roleOrRoles
      * @return bool
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    public function __invoke($roleOrRoles)
+    {
+        return $this->roleService->matchIdentityRoles((array)$roleOrRoles);
+    }
 }

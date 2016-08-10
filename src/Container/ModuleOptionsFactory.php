@@ -19,7 +19,6 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
@@ -28,13 +27,13 @@ use ZfcRbac\Options\ModuleOptions;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ModuleOptionsFactory implements FactoryInterface
+class ModuleOptionsFactory
 {
     /**
      * @param  ContainerInterface $container
      * @return ModuleOptions
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container)
     {
         return new ModuleOptions($container->get('config')['zfc_rbac']);
     }

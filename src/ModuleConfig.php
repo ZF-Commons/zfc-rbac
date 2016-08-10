@@ -16,26 +16,25 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
-
-use ZfcRbac\Service\AuthorizationServiceInterface;
+namespace ZfcRbac;
 
 /**
- * Interface that you can implement for dynamic assertions
+ * Class ModuleConfig
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
+ * @author  Florent Blaison <florent.blaison@gmail.com>
  * @licence MIT
  */
-interface AssertionInterface
+class ModuleConfig
 {
     /**
-     * Check if this assertion is true
-     *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
-     * @return bool
+     * @return array
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    public function __invoke(): array
+    {
+        $config = [];
+        $config = array_merge_recursive($config, require __DIR__ . '/../config/config.global.php');
+        $config = array_merge_recursive($config, require __DIR__ . '/../config/dependencies.global.php');
+
+        return $config;
+    }
 }

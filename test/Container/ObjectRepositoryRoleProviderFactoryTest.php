@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Container;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Exception\RuntimeException;
@@ -29,7 +30,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory
  */
-class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 {
     public function testFactoryUsingObjectRepository()
     {
@@ -41,7 +42,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             'object_repository'  => 'RoleObjectRepository'
         ];
 
-        $serviceManager->setService('RoleObjectRepository', $this->getMock(ObjectRepository::class));
+        $serviceManager->setService('RoleObjectRepository', $this->createMock(ObjectRepository::class));
 
         $roleProvider = $pluginManager->get(ObjectRepositoryRoleProvider::class, $options);
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
@@ -58,11 +59,11 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             'class_name'         => 'Role'
         ];
 
-        $objectManager = $this->getMock(ObjectManager::class);
+        $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects($this->once())
                       ->method('getRepository')
                       ->with($options['class_name'])
-                      ->will($this->returnValue($this->getMock(ObjectRepository::class)));
+                      ->will($this->returnValue($this->createMock(ObjectRepository::class)));
 
         $serviceManager->setService('ObjectManager', $objectManager);
 

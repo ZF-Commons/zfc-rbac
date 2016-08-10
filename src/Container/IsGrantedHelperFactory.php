@@ -16,26 +16,37 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbac\Container;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Helper\IsGranted;
 
 /**
- * Interface that you can implement for dynamic assertions
+ * Create the IsGranted view helper
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @license MIT
  */
-interface AssertionInterface
+class IsGrantedHelperFactory
 {
     /**
-     * Check if this assertion is true
+     * Create an object
      *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
-     * @return bool
+     * @param  ContainerInterface $container
+     * @return IsGranted
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    public function __invoke(ContainerInterface $container): IsGranted
+    {
+        $authorizationService = $container->get(AuthorizationService::class);
+
+        return new IsGranted($authorizationService);
+    }
 }

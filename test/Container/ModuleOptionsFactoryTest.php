@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\ModuleOptionsFactory;
 use ZfcRbac\Options\ModuleOptions;
@@ -25,7 +26,7 @@ use ZfcRbac\Options\ModuleOptions;
 /**
  * @covers \ZfcRbac\Container\ModuleOptionsFactory
  */
-class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsFactoryTest extends TestCase
 {
     public function testFactory()
     {

@@ -16,26 +16,37 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbac\Container;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use ZfcRbac\Service\RoleService;
+use ZfcRbac\Helper\HasRole;
 
 /**
- * Interface that you can implement for dynamic assertions
+ * Create the HasRole view helper
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @author  JM Leroux <jmleroux.pro@gmail.com>
+ * @license MIT
  */
-interface AssertionInterface
+class HasRoleHelperFactory
 {
     /**
-     * Check if this assertion is true
+     * Create an object
      *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
-     * @return bool
+     * @param  ContainerInterface $container
+     * @return HasRole
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    public function __invoke(ContainerInterface $container): HasRole
+    {
+        $roleService = $container->get(RoleService::class);
+
+        return new HasRole($roleService);
+    }
 }

@@ -18,13 +18,14 @@
 
 namespace ZfcRbacTest\Role;
 
+use PHPUnit\Framework\TestCase;
 use Rbac\Role\HierarchicalRoleInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
 
 /**
  * @covers \ZfcRbac\Role\InMemoryRoleProvider
  */
-class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
+class InMemoryRoleProviderTest extends TestCase
 {
     public function testInMemoryProvider()
     {

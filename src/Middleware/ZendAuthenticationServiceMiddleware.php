@@ -23,6 +23,7 @@ class ZendAuthenticationServiceMiddleware implements MiddlewareInterface
      * ZendAuthenticationServiceMiddleware constructor.
      *
      * @param AuthenticationService $authService
+     * @param string                $attributeName
      */
     public function __construct(AuthenticationService $authService, $attributeName = 'identity')
     {

@@ -1,14 +1,15 @@
 <?php
 
-namespace ZfcRbac\Middleware;
+namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
 use Zend\Authentication\AuthenticationService;
+use ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware;
 
 /**
  * Class ZendAuthenticationServiceMiddlewareFactory
  *
- * @package ZfcRbac\Middleware
+ * @package ZfcRbac\Container
  * @todo    pull (tbd) configuration options from container and inject
  */
 class ZendAuthenticationServiceMiddlewareFactory

@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Middleware;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Authentication\AuthenticationService;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
@@ -39,7 +40,7 @@ use ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware;
  *
  * @covers \ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware
  */
-class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCase
+class ZendAuthenticationServiceMiddlewareTest extends TestCase
 {
     public function testProviderHasIdentityAndRequestDoesNotHaveIdentityAttribute()
     {
@@ -48,7 +49,7 @@ class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCas
         $request       = new ServerRequest();
         $response      = new Response();
 
-        $authServiceMock = $this->getMock(AuthenticationService::class);
+        $authServiceMock = $this->createMock(AuthenticationService::class);
         $authServiceMock->expects($this->once())->method('hasIdentity')->will($this->returnValue(true));
         $authServiceMock->expects($this->once())->method('getIdentity')->will($this->returnValue($identity));
 
@@ -70,7 +71,7 @@ class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCas
         $request       = $request->withAttribute($attributeName, $identity);
         $response      = new Response();
 
-        $authServiceMock = $this->getMock(AuthenticationService::class);
+        $authServiceMock = $this->createMock(AuthenticationService::class);
         $authServiceMock->expects($this->never())->method('hasIdentity');
         $authServiceMock->expects($this->never())->method('getIdentity');
 
@@ -92,7 +93,7 @@ class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCas
         $request       = $request->withAttribute($attributeName, $identity);
         $response      = new Response();
 
-        $authServiceMock = $this->getMock(AuthenticationService::class);
+        $authServiceMock = $this->createMock(AuthenticationService::class);
         $authServiceMock->expects($this->never())->method('getIdentity');
         $authServiceMock->expects($this->never())->method('getIdentity');
 
@@ -114,7 +115,7 @@ class ZendAuthenticationServiceMiddlewareTest extends \PHPUnit_Framework_TestCas
         $request       = $request->withAttribute($attributeName, $identity);
         $response      = new Response();
 
-        $authServiceMock = $this->getMock(AuthenticationService::class);
+        $authServiceMock = $this->createMock(AuthenticationService::class);
         $authServiceMock->expects($this->once())->method('hasIdentity')->will($this->returnValue(false));
         $authServiceMock->expects($this->never())->method('getIdentity');
 

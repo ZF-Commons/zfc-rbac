@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleProviderPluginManagerFactory;
 use ZfcRbac\Role\RoleProviderPluginManager;
@@ -25,7 +26,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
  */
-class RoleProviderPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class RoleProviderPluginManagerFactoryTest extends TestCase
 {
     public function testFactory()
     {
