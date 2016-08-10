@@ -41,10 +41,6 @@ class RoleServiceFactoryTest extends TestCase
      */
     public function testFactory()
     {
-        $this->markTestSkipped(
-            'Seems Rbac\Traversal\Strategy\TraversalStrategyInterface has been removed. Not sure what this does.'
-        );
-
         $options = new ModuleOptions(
             [
                 'identity_provider' => AuthenticationIdentityProvider::class,
@@ -65,19 +61,12 @@ class RoleServiceFactoryTest extends TestCase
             $this->createMock(IdentityProviderInterface::class)
         );
 
-        $traversalStrategy = $this->createMock(TraversalStrategyInterface::class);
-        $rbac              = $this->createMock(Rbac::class);
-
-        $rbac->expects($this->once())->method('getTraversalStrategy')->will($this->returnValue($traversalStrategy));
-
-        $serviceManager->setService(Rbac::class, $rbac);
-
         $factory     = new RoleServiceFactory();
+        /** @var RoleService $roleService */
         $roleService = $factory($serviceManager, 'requestedName');
 
         $this->assertInstanceOf(RoleService::class, $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
-        $this->assertAttributeSame($traversalStrategy, 'traversalStrategy', $roleService);
     }
 
     public function testThrowExceptionIfNoRoleProvider()

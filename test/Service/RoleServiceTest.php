@@ -21,6 +21,7 @@ namespace ZfcRbacTest\Service;
 use PHPUnit\Framework\TestCase;
 use Rbac\Role\RoleInterface;
 use ZfcRbac\Exception\RuntimeException;
+use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Role\RoleProviderInterface;
@@ -190,17 +191,13 @@ class RoleServiceTest extends TestCase
      */
     public function testMatchIdentityRoles(array $rolesConfig, array $identityRoles, array $rolesToCheck, $doesMatch)
     {
-        $this->markTestSkipped(
-            'Seems Rbac\Traversal\Strategy\TraversalStrategyInterface has been removed.'
-        );
-
-        $identity = $this->createMock(\ZfcRbac\Identity\IdentityInterface::class);
+        $identity = $this->createMock(IdentityInterface::class);
         $identity->expects($this->once())->method('getRoles')->will($this->returnValue($identityRoles));
 
         $identityProvider = $this->createMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
-            ->method('getIdentity')
-            ->will($this->returnValue($identity));
+                         ->method('getIdentity')
+                         ->will($this->returnValue($identity));
 
         $roleService = new RoleService($identityProvider, new InMemoryRoleProvider($rolesConfig));
 
@@ -211,8 +208,8 @@ class RoleServiceTest extends TestCase
     {
         $identityProvider = $this->createMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
-            ->method('getIdentity')
-            ->will($this->returnValue(null));
+                         ->method('getIdentity')
+                         ->will($this->returnValue(null));
 
         $roleService = new RoleService($identityProvider, new InMemoryRoleProvider([]));
 
@@ -228,15 +225,15 @@ class RoleServiceTest extends TestCase
 
     public function testThrowExceptionIfIdentityIsWrongType()
     {
-        $this->expectException(
-            RuntimeException::class,
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
             'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "stdClass" given'
         );
 
         $identityProvider = $this->createMock(IdentityProviderInterface::class);
         $identityProvider->expects($this->any())
-            ->method('getIdentity')
-            ->will($this->returnValue(new \stdClass()));
+                         ->method('getIdentity')
+                         ->will($this->returnValue(new \stdClass()));
 
         $roleService = new RoleService($identityProvider, $this->createMock(RoleProviderInterface::class));
 

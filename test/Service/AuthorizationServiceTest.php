@@ -21,7 +21,7 @@ namespace ZfcRbacTest\Service;
 use PHPUnit\Framework\TestCase;
 use Rbac\Rbac;
 use Rbac\Role\RoleInterface;
-use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
+use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
@@ -29,7 +29,6 @@ use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
 use ZfcRbacTest\Asset\SimpleAssertion;
 use ZfcRbac\Assertion\AssertionPluginManager;
-use Zend\ServiceManager\Config;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -113,10 +112,6 @@ class AuthorizationServiceTest extends TestCase
      */
     public function testGranted($role, $permission, $context, $isGranted, $assertions = array())
     {
-        $this->markTestSkipped(
-            'Seems Rbac\Traversal\Strategy\TraversalStrategyInterface has been removed.'
-        );
-
         $roleConfig = [
             'admin'  => [
                 'children'    => ['member'],
@@ -137,6 +132,8 @@ class AuthorizationServiceTest extends TestCase
             ]
         ];
 
+        $serviceManager = new ServiceManager();
+
         $identity = $this->createMock(IdentityInterface::class);
         $identity->expects($this->once())->method('getRoles')->will($this->returnValue((array) $role));
 
@@ -145,13 +142,9 @@ class AuthorizationServiceTest extends TestCase
             ->method('getIdentity')
             ->will($this->returnValue($identity));
 
-        $rbac                   = new Rbac(new RecursiveRoleIteratorStrategy());
-        $roleService            = new RoleService(
-            $identityProvider,
-            new InMemoryRoleProvider($roleConfig),
-            $rbac->getTraversalStrategy()
-        );
-        $assertionPluginManager = new AssertionPluginManager(new Config($assertionPluginConfig));
+        $rbac                   = new Rbac();
+        $roleService            = new RoleService($identityProvider, new InMemoryRoleProvider($roleConfig));
+        $assertionPluginManager = new AssertionPluginManager($serviceManager, $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions($assertions);
@@ -188,7 +181,7 @@ class AuthorizationServiceTest extends TestCase
         $assertionPluginManager = $this->createMock(AssertionPluginManager::class);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
-        $this->setExpectedException(\ZfcRbac\Exception\InvalidArgumentException::class);
+        $this->expectException(\ZfcRbac\Exception\InvalidArgumentException::class);
 
         $authorizationService->setAssertion('foo', new \stdClass());
         $authorizationService->isGranted('foo');
