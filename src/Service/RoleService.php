@@ -164,10 +164,9 @@ class RoleService
         $identityRolesString = [];
         foreach ($identityRoles as $identityRole) {
             if ($identityRole instanceof RoleInterface) {
-                $identityRolesString[] = $identityRole->getName();
-            } else {
-                $identityRolesString[] = (string) $identityRole;
+                $identityRole = $identityRole->getName();
             }
+            $identityRolesString[] = (string) $identityRole;
         }
 
         return count(array_intersect($roleNames, $identityRolesString)) > 0;
