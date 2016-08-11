@@ -62,13 +62,17 @@ class RoutePermissionsGuardFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        if (null === $options) {
+            $options = [];
+        }
+
         /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
 
         /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
         $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
 
-        $routeGuard = new RoutePermissionsGuard($authorizationService, $this->options);
+        $routeGuard = new RoutePermissionsGuard($authorizationService, $options);
         $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
 
         return $routeGuard;
@@ -80,6 +84,6 @@ class RoutePermissionsGuardFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($serviceLocator->getServiceLocator(), RoutePermissionsGuard::class);
+        return $this($serviceLocator->getServiceLocator(), RoutePermissionsGuard::class, $this->options);
     }
 }
