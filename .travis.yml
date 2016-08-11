@@ -24,4 +24,4 @@ notifications:
 
 matrix:
   allow_failures:
-    - php: hhv
+    - php: hhvm
