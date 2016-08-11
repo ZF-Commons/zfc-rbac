@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Service;
 
+use Rbac\Role\HierarchicalRoleInterface;
 use Rbac\Role\RoleInterface;
 use Traversable;
 use ZfcRbac\Exception;
@@ -88,7 +89,7 @@ class RoleService
      */
     public function setGuestRole($guestRole)
     {
-        $this->guestRole = (string) $guestRole;
+        $this->guestRole = (string)$guestRole;
     }
 
     /**
@@ -124,13 +125,51 @@ class RoleService
         }
 
         if (!$identity instanceof IdentityInterface) {
-            throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
-                is_object($identity) ? get_class($identity) : gettype($identity)
-            ));
+            throw new Exception\RuntimeException(
+                sprintf(
+                    'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
+                    is_object($identity) ? get_class($identity) : gettype($identity)
+                )
+            );
         }
 
         return $this->convertRoles($identity->getRoles());
+    }
+
+    /**
+     * Check if the given roles match one of the identity roles
+     *
+     * This method is smart enough to automatically recursively extracts roles for hierarchical roles
+     *
+     * @param  string[]|RoleInterface[] $roles
+     * @return bool
+     */
+    public function matchIdentityRoles(array $roles)
+    {
+        $identityRoles = $this->getIdentityRoles();
+
+        // Too easy...
+        if (empty($identityRoles)) {
+            return false;
+        }
+
+        $roleNames = [];
+
+        foreach ($roles as $role) {
+            $roleNames[] = $role instanceof RoleInterface ? $role->getName() : (string)$role;
+        }
+
+        $identityRoles = $this->flattenRoles($identityRoles);
+
+        $identityRolesString = [];
+        foreach ($identityRoles as $identityRole) {
+            if ($identityRole instanceof RoleInterface) {
+                $identityRole = $identityRole->getName();
+            }
+            $identityRolesString[] = (string) $identityRole;
+        }
+
+        return count(array_intersect($roleNames, $identityRolesString)) > 0;
     }
 
     /**
@@ -148,7 +187,7 @@ class RoleService
         $collectedRoles = [];
         $toCollect      = [];
 
-        foreach ((array) $roles as $role) {
+        foreach ((array)$roles as $role) {
             // If it's already a RoleInterface, nothing to do as a RoleInterface contains everything already
             if ($role instanceof RoleInterface) {
                 $collectedRoles[] = $role;
@@ -156,7 +195,7 @@ class RoleService
             }
 
             // Otherwise, it's a string and hence we need to collect it
-            $toCollect[] = (string) $role;
+            $toCollect[] = (string)$role;
         }
 
         // Nothing to collect, we don't even need to hit the (potentially) costly role provider
@@ -165,5 +204,26 @@ class RoleService
         }
 
         return array_merge($collectedRoles, $this->roleProvider->getRoles($toCollect));
+    }
+
+    /**
+     * @param  RoleInterface[]|Traversable $roles
+     * @return \Generator
+     */
+    protected function flattenRoles($roles)
+    {
+        foreach ($roles as $role) {
+            yield $role;
+
+            if (!$role instanceof HierarchicalRoleInterface) {
+                continue;
+            }
+
+            $children = $this->flattenRoles($role->getChildren());
+
+            foreach ($children as $child) {
+                yield $child;
+            }
+        }
     }
 }

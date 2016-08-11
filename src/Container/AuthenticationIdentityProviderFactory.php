@@ -19,28 +19,38 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\Authentication\AuthenticationService;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Identity\AuthenticationIdentityProvider;
 
 /**
- * Factory to create a assertion plugin manager
+ * Factory to create the authentication identity provider
  *
- * @author  Aeneas Rekkas
- * @licence MIT
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @license MIT
  */
-class AssertionPluginManagerFactory implements FactoryInterface
+class AuthenticationIdentityProviderFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     * @return AssertionPluginManager
+     * Create an object
+     *
+     * @param  ContainerInterface $container
+     * @param  string             $requestedName
+     * @param  null|array         $options
+     * @return object
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config        = $container->get('config')['zfc_rbac']['assertion_manager'];
-        $pluginManager = new AssertionPluginManager($container, $config);
+        /* @var \Zend\Authentication\AuthenticationService $authenticationProvider */
+        $authenticationProvider = $container->get(AuthenticationService::class);
 
-        return $pluginManager;
+        return new AuthenticationIdentityProvider($authenticationProvider);
     }
 }

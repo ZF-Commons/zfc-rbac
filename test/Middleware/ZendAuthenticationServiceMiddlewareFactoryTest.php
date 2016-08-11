@@ -16,26 +16,28 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest\Middleware;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use PHPUnit\Framework\TestCase;
+use Zend\Authentication\AuthenticationService;
+use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Middleware\ZendAuthenticationServiceMiddleware;
+use ZfcRbac\Container\ZendAuthenticationServiceMiddlewareFactory;
 
 /**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @covers \ZfcRbac\Container\ZendAuthenticationServiceMiddlewareFactory
  */
-interface AssertionInterface
+class ZendAuthenticationServiceMiddlewareFactoryTest extends TestCase
 {
-    /**
-     * Check if this assertion is true
-     *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
-     * @return bool
-     */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    public function testFactory()
+    {
+        $serviceMock    = $this->createMock(AuthenticationService::class);
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService(AuthenticationService::class, $serviceMock);
+
+        $factory = new ZendAuthenticationServiceMiddlewareFactory();
+        $service = $factory($serviceManager);
+
+        $this->assertInstanceOf(ZendAuthenticationServiceMiddleware::class, $service);
+    }
 }

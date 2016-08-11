@@ -16,26 +16,38 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbac\Identity;
 
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
- * Interface that you can implement for dynamic assertions
+ * This provider uses the Zend authentication service to fetch the identity
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
+ * @license MIT
  */
-interface AssertionInterface
+class AuthenticationIdentityProvider implements IdentityProviderInterface
 {
     /**
-     * Check if this assertion is true
-     *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  mixed                         $context
-     * @return bool
+     * @var AuthenticationServiceInterface
      */
-    public function assert(AuthorizationServiceInterface $authorizationService, $context);
+    protected $authenticationService;
+
+    /**
+     * Constructor
+     *
+     * @param AuthenticationServiceInterface $authenticationService
+     */
+    public function __construct(AuthenticationServiceInterface $authenticationService)
+    {
+        $this->authenticationService = $authenticationService;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIdentity()
+    {
+        return $this->authenticationService->getIdentity();
+    }
 }
