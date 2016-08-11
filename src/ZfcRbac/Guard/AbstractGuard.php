@@ -46,9 +46,9 @@ abstract class AbstractGuard implements GuardInterface
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = AbstractGuard::EVENT_PRIORITY)
     {
-        $this->listeners[] = $events->attach(static::EVENT_NAME, [$this, 'onResult'], static::EVENT_PRIORITY);
+        $this->listeners[] = $events->attach(static::EVENT_NAME, [$this, 'onResult'], $priority);
     }
 
     /**
@@ -73,6 +73,13 @@ abstract class AbstractGuard implements GuardInterface
         $application  = $event->getApplication();
         $eventManager = $application->getEventManager();
 
-        $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+        if (method_exists($eventManager, 'triggerEvent')) {
+            // ZF3 EventManager
+            $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+            $eventManager->triggerEvent($event);
+        } else {
+            // ZF2 EventManager
+            $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+        }
     }
 }

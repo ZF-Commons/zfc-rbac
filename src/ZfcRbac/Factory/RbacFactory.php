@@ -18,9 +18,9 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\GeneratorStrategy;
-use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -31,16 +31,21 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class RbacFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return Rbac
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new Rbac(new GeneratorStrategy());
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $traversalStrategy = new GeneratorStrategy();
-        } else {
-            $traversalStrategy = new RecursiveRoleIteratorStrategy();
-        }
-
-        return new Rbac($traversalStrategy);
+        return $this($serviceLocator, Rbac::class);
     }
 }

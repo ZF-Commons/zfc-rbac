@@ -17,6 +17,7 @@
  */
 
 namespace ZfcRbacTest\Guard;
+
 use ZfcRbac\Guard\GuardInterface;
 
 /**

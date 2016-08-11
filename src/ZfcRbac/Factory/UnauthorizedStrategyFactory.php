@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\View\Strategy\UnauthorizedStrategy;
@@ -31,13 +32,24 @@ use ZfcRbac\View\Strategy\UnauthorizedStrategy;
 class UnauthorizedStrategyFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return UnauthorizedStrategy
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
+
+        return new UnauthorizedStrategy($moduleOptions->getUnauthorizedStrategy());
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get('ZfcRbac\Options\ModuleOptions');
-
-        return new UnauthorizedStrategy($moduleOptions->getUnauthorizedStrategy());
+        return $this($serviceLocator, UnauthorizedStrategy::class);
     }
 }

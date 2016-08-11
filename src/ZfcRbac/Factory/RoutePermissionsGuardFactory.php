@@ -18,8 +18,8 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\RouteGuard;
 use ZfcRbac\Guard\RoutePermissionsGuard;
@@ -31,12 +31,20 @@ use ZfcRbac\Guard\RoutePermissionsGuard;
  * @author  JM Lerouxw <jmleroux.pro@gmail.com>
  * @license MIT
  */
-class RoutePermissionsGuardFactory implements FactoryInterface, MutableCreationOptionsInterface
+class RoutePermissionsGuardFactory implements FactoryInterface
 {
     /**
      * @var array
      */
     protected $options = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->setCreationOptions($options);
+    }
 
     /**
      * {@inheritDoc}
@@ -47,22 +55,35 @@ class RoutePermissionsGuardFactory implements FactoryInterface, MutableCreationO
     }
 
     /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return RoutePermissionsGuard
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (null === $options) {
+            $options = [];
+        }
+
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
+
+        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
+        $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
+
+        $routeGuard = new RoutePermissionsGuard($authorizationService, $options);
+        $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
+
+        return $routeGuard;
+    }
+
+    /**
      * @param \Zend\ServiceManager\AbstractPluginManager|ServiceLocatorInterface $serviceLocator
      * @return RouteGuard
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $parentLocator = $serviceLocator->getServiceLocator();
-
-        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
-        $moduleOptions = $parentLocator->get('ZfcRbac\Options\ModuleOptions');
-
-        /* @var \ZfcRbac\Service\AuthorizationService $authorizationService */
-        $authorizationService = $parentLocator->get('ZfcRbac\Service\AuthorizationService');
-
-        $routeGuard = new RoutePermissionsGuard($authorizationService, $this->options);
-        $routeGuard->setProtectionPolicy($moduleOptions->getProtectionPolicy());
-
-        return $routeGuard;
+        return $this($serviceLocator->getServiceLocator(), RoutePermissionsGuard::class, $this->options);
     }
 }

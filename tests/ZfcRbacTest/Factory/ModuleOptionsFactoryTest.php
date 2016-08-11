@@ -39,4 +39,3 @@ class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZfcRbac\Options\ModuleOptions', $options);
     }
 }
- 

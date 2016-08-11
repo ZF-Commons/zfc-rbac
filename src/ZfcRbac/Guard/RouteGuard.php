@@ -19,7 +19,6 @@
 namespace ZfcRbac\Guard;
 
 use Zend\Mvc\MvcEvent;
-use ZfcRbac\Exception;
 use ZfcRbac\Service\RoleService;
 
 /**

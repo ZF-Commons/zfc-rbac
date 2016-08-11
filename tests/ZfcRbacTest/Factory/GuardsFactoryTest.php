@@ -51,9 +51,9 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $pluginManager = new GuardPluginManager();
-
         $serviceManager = new ServiceManager();
+        $pluginManager = new GuardPluginManager($serviceManager);
+
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
         $serviceManager->setService('ZfcRbac\Guard\GuardPluginManager', $pluginManager);
         $serviceManager->setService(
@@ -64,8 +64,6 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
             'ZfcRbac\Service\AuthorizationService',
             $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false)
         );
-
-        $pluginManager->setServiceLocator($serviceManager);
 
         $factory = new GuardsFactory();
         $guards  = $factory->createService($serviceManager);
@@ -85,11 +83,10 @@ class GuardsFactoryTest extends \PHPUnit_Framework_TestCase
             'guards' => []
         ]);
 
-        $pluginManager = new GuardPluginManager();
-
         $serviceManager = new ServiceManager();
+        $pluginManager = new GuardPluginManager($serviceManager);
+
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $moduleOptions);
-        $pluginManager->setServiceLocator($serviceManager);
 
         $factory = new GuardsFactory();
         $guards  = $factory->createService($serviceManager);

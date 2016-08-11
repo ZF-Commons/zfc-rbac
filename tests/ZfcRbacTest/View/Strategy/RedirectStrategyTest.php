@@ -121,7 +121,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals('/home', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
-	
+
     public function testWontRedirectWhenConnectedAndOptionDisabled()
     {
         $response = new HttpResponse();

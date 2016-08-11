@@ -23,7 +23,7 @@ use ZfcRbac\Exception;
 
 /**
  * Plugin manager to create assertions
- * 
+ *
  * @author  Aeneas Rekkas
  * @license MIT
  *
@@ -34,7 +34,7 @@ class AssertionPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc}
      */
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
         if ($plugin instanceof AssertionInterface) {
             return; // we're okay
@@ -44,6 +44,14 @@ class AssertionPluginManager extends AbstractPluginManager
             'Assertions must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
             is_object($plugin) ? get_class($plugin) : gettype($plugin)
         ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function validatePlugin($plugin)
+    {
+        $this->validate($plugin);
     }
 
     /**
