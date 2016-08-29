@@ -21,6 +21,7 @@ namespace ZfcRbac\Service;
 use Rbac\Role\RoleInterface;
 use Traversable;
 use ZfcRbac\Exception;
+use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
 /**
@@ -86,21 +87,13 @@ class RoleService
     /**
      * Get the identity roles from the current identity, applying some more logic
      *
-     * @param $identity
+     * @param IdentityInterface $identity
      * @return RoleInterface[]
-     * @throws Exception\RuntimeException
      */
-    public function getIdentityRoles($identity)
+    public function getIdentityRoles(IdentityInterface $identity)
     {
         if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
-        }
-
-        if (!$identity instanceof IdentityInterface) {
-            throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
-                is_object($identity) ? get_class($identity) : gettype($identity)
-            ));
         }
 
         return $this->convertRoles($identity->getRoles());
