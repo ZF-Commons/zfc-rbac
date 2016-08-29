@@ -28,7 +28,7 @@
   ],
   "require": {
     "php": ">=5.5",
-    "zendframework/zend-servicemanager": "^2.7 || ^3.0",
+    "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
     "zendframework/zend-stdlib": "^2.7 || ^3.0",
     "zfr/rbac": "~2.0"
   },
