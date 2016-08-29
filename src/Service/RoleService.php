@@ -20,7 +20,6 @@ namespace ZfcRbac\Service;
 
 use Rbac\Role\RoleInterface;
 use Traversable;
-use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
@@ -46,11 +45,11 @@ class RoleService
     /**
      * Constructor
      *
-     * @param RoleProviderInterface     $roleProvider
+     * @param RoleProviderInterface $roleProvider
      */
     public function __construct(RoleProviderInterface $roleProvider)
     {
-        $this->roleProvider     = $roleProvider;
+        $this->roleProvider = $roleProvider;
     }
 
     /**
