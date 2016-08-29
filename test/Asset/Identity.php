@@ -18,31 +18,26 @@
 
 namespace ZfcRbacTest\Asset;
 
-use ZfcRbac\Assertion\AssertionInterface;
-use ZfcRbac\Service\AuthorizationServiceInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Rbac\Permission\PermissionInterface;
+use ZfcRbac\Identity\IdentityInterface;
 
-class SimpleAssertion implements AssertionInterface
+class Identity implements IdentityInterface
 {
     /**
-     * @var bool
+     * Constructor
      */
-    protected $called = false;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function assert(AuthorizationServiceInterface $authorization, $context = false)
+    public function __construct(array $roles = [])
     {
-        $this->called = true;
-
-        return $context;
+        $this->roles = $roles;
     }
 
     /**
-     * @return bool
+     * @return array
      */
-    public function getCalled()
+    public function getRoles()
     {
-        return $this->called;
+        return $this->roles;
     }
 }

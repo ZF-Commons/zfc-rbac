@@ -21,6 +21,7 @@ namespace ZfcRbacTest\Container;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -41,7 +42,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             'object_repository'  => 'RoleObjectRepository'
         ];
 
-        $serviceManager->setService('RoleObjectRepository', $this->getMock(ObjectRepository::class));
+        $serviceManager->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
         $roleProvider = $pluginManager->get(ObjectRepositoryRoleProvider::class, $options);
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
@@ -58,11 +59,11 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             'class_name'         => 'Role'
         ];
 
-        $objectManager = $this->getMock(ObjectManager::class);
+        $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $objectManager->expects($this->once())
                       ->method('getRepository')
                       ->with($options['class_name'])
-                      ->will($this->returnValue($this->getMock(ObjectRepository::class)));
+                      ->will($this->returnValue($this->getMockBuilder(ObjectRepository::class)->getMock()));
 
         $serviceManager->setService('ObjectManager', $objectManager);
 
@@ -80,8 +81,8 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
             $pluginManager->get(ObjectRepositoryRoleProvider::class, []);
-        } catch (ServiceNotCreatedException $smException) {
-            while ($e = $smException->getPrevious()) {
+        } catch (ServiceNotCreatedException $e) {
+            while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
                     return true;
                 }
@@ -106,9 +107,9 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
             $pluginManager->get(ObjectRepositoryRoleProvider::class, [
                 'role_name_property' => 'name'
             ]);
-        } catch (ServiceNotCreatedException $smException) {
+        } catch (ServiceNotCreatedException $e) {
 
-            while ($e = $smException->getPrevious()) {
+            while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
                     return true;
                 }

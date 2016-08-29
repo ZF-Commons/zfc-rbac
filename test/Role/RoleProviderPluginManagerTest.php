@@ -30,8 +30,8 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
     {
-        $containerMock = $this->getMock(ContainerInterface::class);
-        $pluginMock    = $this->getMock(RoleProviderInterface::class);
+        $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $pluginMock    = $this->getMockBuilder(RoleProviderInterface::class)->getMock();
         $pluginManager = new RoleProviderPluginManager($containerMock);
 
         $this->assertNull($pluginManager->validatePlugin($pluginMock));
@@ -40,7 +40,7 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
     public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
     {
         $this->setExpectedException(RuntimeException::class);
-        $containerMock = $this->getMock(ContainerInterface::class);
+        $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $pluginManager = new RoleProviderPluginManager($containerMock);
 
         $plugin = new \stdClass();

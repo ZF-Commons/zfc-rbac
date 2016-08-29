@@ -30,7 +30,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testObjectRepositoryProviderGetRoles()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -42,7 +42,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testRoleCacheOnConsecutiveCalls()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -56,7 +56,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testClearRoleCache()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
@@ -71,7 +71,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowExceptionIfAskedRoleIsNotFound()
     {
-        $objectRepository = $this->getMock(ObjectRepository::class);
+        $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole       = new FlatRole('member');
         $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
         $result           = [$memberRole];
