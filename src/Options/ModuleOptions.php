@@ -30,25 +30,11 @@ use ZfcRbac\Exception;
 class ModuleOptions extends AbstractOptions
 {
     /**
-     * Key of the identity provider used to retrieve the identity
-     *
-     * @var string
-     */
-    protected $identityProvider = 'ZfcRbac\Identity\AuthenticationIdentityProvider';
-
-    /**
      * Guest role (used when no identity is found)
      *
      * @var string
      */
     protected $guestRole = 'guest';
-
-    /**
-     * Guards
-     *
-     * @var array
-     */
-    protected $guards = [];
 
     /**
      * Assertion map
@@ -71,29 +57,7 @@ class ModuleOptions extends AbstractOptions
      */
     public function __construct($options = null)
     {
-        $this->__strictMode__ = false;
         parent::__construct($options);
-    }
-
-    /**
-     * Set the key of the identity provider used to retrieve the identity
-     *
-     * @param  string $identityProvider
-     * @return void
-     */
-    public function setIdentityProvider($identityProvider)
-    {
-        $this->identityProvider = (string) $identityProvider;
-    }
-
-    /**
-     * Get the key of the identity provider used to retrieve the identity
-     *
-     * @return string
-     */
-    public function getIdentityProvider()
-    {
-        return $this->identityProvider;
     }
 
     /**
