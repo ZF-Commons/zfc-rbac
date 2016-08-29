@@ -19,6 +19,7 @@
 namespace ZfcRbac\Assertion;
 
 use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
  * Interface that you can implement for dynamic assertions
@@ -33,11 +34,9 @@ interface AssertionInterface
     /**
      * Check if this assertion is true
      *
-     * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
-     *
      * @param  AuthorizationService $authorizationService
      * @param  mixed                $context
      * @return bool
      */
-    public function assert(AuthorizationService $authorizationService);
+    public function assert(AuthorizationServiceInterface $authorizationService);
 }
