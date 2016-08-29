@@ -90,7 +90,7 @@ class RoleService
      * @param IdentityInterface $identity
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity)
+    public function getIdentityRoles(IdentityInterface $identity = null)
     {
         if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
