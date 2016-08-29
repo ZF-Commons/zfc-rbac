@@ -20,8 +20,8 @@ namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception\RuntimeException;
-use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
@@ -36,7 +36,9 @@ use ZfcRbac\Service\RoleService;
 class RoleServiceFactory implements FactoryInterface
 {
     /**
-     * {@inheritDoc}
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array              $options
      * @return RoleService
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
@@ -60,5 +62,14 @@ class RoleServiceFactory implements FactoryInterface
         $roleService->setGuestRole($moduleOptions->getGuestRole());
 
         return $roleService;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return RoleService
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, RoleService::class);
     }
 }

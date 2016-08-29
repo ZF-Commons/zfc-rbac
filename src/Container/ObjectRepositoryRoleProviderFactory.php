@@ -22,6 +22,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
@@ -34,7 +35,30 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 {
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
      * {@inheritDoc}
+     */
+    public function __construct(array $options = [])
+    {
+        $this->setCreationOptions($options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreationOptions(array $options)
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
      * @return ObjectRepositoryRoleProvider
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
@@ -64,5 +88,14 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
             'No object repository was found while creating the ZfcRbac object repository role provider. Are
              you sure you specified either the "object_repository" option or "object_manager"/"class_name" options?'
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return ObjectRepositoryRoleProvider
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator->getServiceLocator(), ObjectRepositoryRoleProvider::class, $this->options);
     }
 }
