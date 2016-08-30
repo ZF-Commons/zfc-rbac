@@ -19,7 +19,7 @@
 namespace ZfcRbac\Assertion;
 
 use Zend\ServiceManager\AbstractPluginManager;
-use ZfcRbac\Exception;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 
 /**
  * Plugin manager to create assertions
@@ -34,14 +34,16 @@ class AssertionPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc}
      */
-    public function validate($plugin)
+    public function validate($instance)
     {
-        if ($plugin instanceof AssertionInterface) {
+        if ($instance instanceof AssertionInterface) {
             return; // we're okay
         }
-        throw new Exception\RuntimeException(sprintf(
-            'Assertions must implement "ZfcRbac\Assertion\AssertionInterface", but "%s" was given',
-            is_object($plugin) ? get_class($plugin) : gettype($plugin)
+
+        throw new InvalidServiceException(sprintf(
+            'Assertion must implement "%s", but "%s" was given',
+            AssertionInterface::class,
+            is_object($instance) ? get_class($instance) : gettype($instance)
         ));
     }
 
@@ -52,6 +54,7 @@ class AssertionPluginManager extends AbstractPluginManager
     {
         $this->validate($plugin);
     }
+
     /**
      * {@inheritDoc}
      */

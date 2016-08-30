@@ -19,8 +19,8 @@
 namespace ZfcRbac\Role;
 
 use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
-use ZfcRbac\Exception;
 
 /**
  * Plugin manager to create role providers
@@ -49,15 +49,16 @@ class RoleProviderPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc}
      */
-    public function validate($plugin)
+    public function validate($instance)
     {
-        if ($plugin instanceof RoleProviderInterface) {
+        if ($instance instanceof RoleProviderInterface) {
             return; // we're okay
         }
 
-        throw new Exception\RuntimeException(sprintf(
-            'Role provider must implement "ZfcRbac\Role\RoleProviderInterface", but "%s" was given',
-            is_object($plugin) ? get_class($plugin) : gettype($plugin)
+        throw new InvalidServiceException(sprintf(
+            'Role provider must implement "%s", but "%s" was given',
+            RoleProviderInterface::class,
+            is_object($instance) ? get_class($instance) : gettype($instance)
         ));
     }
 

@@ -16,32 +16,32 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Role;
+namespace ZfcRbacTest\Assertion;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\InvalidServiceException;
-use ZfcRbac\Role\RoleProviderInterface;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Assertion\AssertionInterface;
+use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
- * @covers \ZfcRbac\Role\RoleProviderPluginManager
+ * @covers \ZfcRbac\Assertion\AssertionPluginManager
  */
-class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
+    public function testValidationOfPluginSucceedsIfAssertionInterfaceIsImplemented()
     {
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginMock    = $this->getMockBuilder(RoleProviderInterface::class)->getMock();
-        $pluginManager = new RoleProviderPluginManager($containerMock);
+        $pluginMock    = $this->getMockBuilder(AssertionInterface::class)->getMock();
+        $pluginManager = new AssertionPluginManager($containerMock);
 
         $this->assertNull($pluginManager->validatePlugin($pluginMock));
     }
 
-    public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
+    public function testValidationOfPluginFailsIfAssertionInterfaceIsNotImplemented()
     {
         $this->setExpectedException(InvalidServiceException::class);
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginManager = new RoleProviderPluginManager($containerMock);
+        $pluginManager = new AssertionPluginManager($containerMock);
 
         $plugin = new \stdClass();
         $pluginManager->validatePlugin($plugin);
