@@ -46,5 +46,26 @@ return [
          * Supported options depend of the role provider, so please refer to the official documentation
          */
         'role_provider' => [],
+
+        /**
+         * Defining the assertion map
+         *
+         * The assertion map can automatically map permissions to assertions. This means that every times you check for
+         * a permission methioned in the assertion map, you'll include the assertion in your check.
+         *
+         * example:
+         *   'assertion_map' => [
+         *     'article.edit' => 'AssertOwnerCanEditArticle'
+         *   ],
+         *
+         * If an assertion needs to be created via a factory use the `assertion_manager` config key.
+         *
+         * example:
+         *   'assertion_manager' => [
+         *     'AssertOwnerCanEditArticle' => \My\Namespace\AssertOwnerCanEditArticleFactory::class
+         *   ],
+         */
+        'assertion_map' => [
+        ],
     ]
 ];
