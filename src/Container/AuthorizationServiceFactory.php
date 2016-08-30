@@ -44,7 +44,7 @@ class AuthorizationServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /* @var Rbac $rbac */
-        $rbac = $container->get(Rbac::class);
+        $rbac = new Rbac();
 
         /* @var RoleService $roleService */
         $roleService = $container->get(RoleService::class);
