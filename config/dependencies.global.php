@@ -22,7 +22,7 @@ return [
             ZfcRbac\Assertion\AssertionPluginManager::class               => ZfcRbac\Container\AssertionPluginManagerFactory::class,
             ZfcRbac\Options\ModuleOptions::class                          => ZfcRbac\Container\ModuleOptionsFactory::class,
             ZfcRbac\Role\RoleProviderPluginManager::class                 => ZfcRbac\Container\RoleProviderPluginManagerFactory::class,
-            ZfcRbac\Service\AuthorizationService::class                   => ZfcRbac\Container\AuthorizationServiceFactory::class,
+            ZfcRbac\Service\AuthorizationServiceInterface::class                   => ZfcRbac\Container\AuthorizationServiceFactory::class,
             ZfcRbac\Service\RoleService::class                            => ZfcRbac\Container\RoleServiceFactory::class,
         ],
     ],

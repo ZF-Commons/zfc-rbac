@@ -18,7 +18,6 @@
 
 namespace ZfcRbac\Assertion;
 
-use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\AuthorizationServiceInterface;
 
 /**
@@ -34,8 +33,8 @@ interface AssertionInterface
     /**
      * Check if this assertion is true
      *
-     * @param  AuthorizationService $authorizationService
-     * @param  mixed                $context
+     * @param  AuthorizationServiceInterface $authorizationService
+     * @param  mixed                         $context
      * @return bool
      */
     public function assert(AuthorizationServiceInterface $authorizationService);
