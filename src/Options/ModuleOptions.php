@@ -50,6 +50,9 @@ class ModuleOptions extends AbstractOptions
      */
     protected $roleProvider = [];
 
+
+    protected $__strictMode__ = false;
+
     /**
      * Constructor
      *
