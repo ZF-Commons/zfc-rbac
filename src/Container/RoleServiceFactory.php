@@ -19,7 +19,7 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
