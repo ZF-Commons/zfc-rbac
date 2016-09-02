@@ -16,32 +16,22 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+return [
+    'dependencies' => [
+        'factories' => [
+            ZfcRbac\Assertion\AssertionPluginManager::class      => ZfcRbac\Container\AssertionPluginManagerFactory::class,
+            ZfcRbac\Options\ModuleOptions::class                 => ZfcRbac\Container\ModuleOptionsFactory::class,
+            ZfcRbac\Role\RoleProviderPluginManager::class        => ZfcRbac\Container\RoleProviderPluginManagerFactory::class,
+            ZfcRbac\Service\AuthorizationServiceInterface::class => ZfcRbac\Container\AuthorizationServiceFactory::class,
+            ZfcRbac\Service\RoleService::class                   => ZfcRbac\Container\RoleServiceFactory::class,
+        ],
+    ],
 
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationServiceInterface;
+    'zfc_rbac' => [
+        // Role provider plugin manager
+        'role_provider_manager' => [],
 
-/**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
- */
-interface AssertionInterface
-{
-    /**
-     * Check if this assertion is true
-     *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  IdentityInterface             $identity
-     * @param  mixed                         $context
-     * @return bool
-     */
-    public function assert(
-        AuthorizationServiceInterface $authorizationService,
-        IdentityInterface $identity = null,
-        $context = null
-    );
-}
+        // Assertion plugin manager
+        'assertion_manager'     => []
+    ]
+];

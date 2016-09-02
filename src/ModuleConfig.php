@@ -16,20 +16,25 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Identity;
+namespace ZfcRbac;
 
 /**
- * An identity provider is an object that returns an object that implement ZfcRbac\Identity\IdentityInterface
+ * Class ModuleConfig
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  Florent Blaison <florent.blaison@gmail.com>
  * @licence MIT
  */
-interface IdentityProviderInterface
+class ModuleConfig
 {
     /**
-     * Get the identity
-     *
-     * @return IdentityInterface|null
+     * @return array
      */
-    public function getIdentity();
+    public function __invoke(): array
+    {
+        $config = [];
+        $config = array_merge_recursive($config, require __DIR__ . '/../config/config.global.php');
+        $config = array_merge_recursive($config, require __DIR__ . '/../config/dependencies.global.php');
+
+        return $config;
+    }
 }

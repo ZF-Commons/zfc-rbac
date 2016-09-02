@@ -19,7 +19,8 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
@@ -31,11 +32,22 @@ use ZfcRbac\Options\ModuleOptions;
 class ModuleOptionsFactory implements FactoryInterface
 {
     /**
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array              $options
      * @return ModuleOptions
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         return new ModuleOptions($container->get('config')['zfc_rbac']);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return ModuleOptions
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, ModuleOptions::class);
     }
 }

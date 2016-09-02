@@ -16,32 +16,28 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest\Asset;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationServiceInterface;
 
-/**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
- */
-interface AssertionInterface
+class Identity implements IdentityInterface
 {
     /**
-     * Check if this assertion is true
-     *
-     * @param  AuthorizationServiceInterface $authorizationService
-     * @param  IdentityInterface             $identity
-     * @param  mixed                         $context
-     * @return bool
+     * Constructor
      */
-    public function assert(
-        AuthorizationServiceInterface $authorizationService,
-        IdentityInterface $identity = null,
-        $context = null
-    );
+    public function __construct(array $roles = [])
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
 }

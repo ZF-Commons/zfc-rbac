@@ -20,9 +20,7 @@ namespace ZfcRbac\Service;
 
 use Rbac\Role\RoleInterface;
 use Traversable;
-use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
 /**
@@ -33,10 +31,6 @@ use ZfcRbac\Role\RoleProviderInterface;
  */
 class RoleService
 {
-    /**
-     * @var IdentityProviderInterface
-     */
-    protected $identityProvider;
 
     /**
      * @var RoleProviderInterface
@@ -51,23 +45,11 @@ class RoleService
     /**
      * Constructor
      *
-     * @param IdentityProviderInterface $identityProvider
-     * @param RoleProviderInterface     $roleProvider
+     * @param RoleProviderInterface $roleProvider
      */
-    public function __construct(IdentityProviderInterface $identityProvider, RoleProviderInterface $roleProvider)
+    public function __construct(RoleProviderInterface $roleProvider)
     {
-        $this->identityProvider = $identityProvider;
-        $this->roleProvider     = $roleProvider;
-    }
-
-    /**
-     * Set the identity provider
-     *
-     * @param IdentityProviderInterface $identityProvider
-     */
-    public function setIdentityProvider(IdentityProviderInterface $identityProvider)
-    {
-        $this->identityProvider = $identityProvider;
+        $this->roleProvider = $roleProvider;
     }
 
     /**
@@ -102,32 +84,15 @@ class RoleService
     }
 
     /**
-     * Get the current identity from the identity provider
-     *
-     * @return IdentityInterface|null
-     */
-    public function getIdentity()
-    {
-        return $this->identityProvider->getIdentity();
-    }
-
-    /**
      * Get the identity roles from the current identity, applying some more logic
      *
+     * @param IdentityInterface $identity
      * @return RoleInterface[]
-     * @throws Exception\RuntimeException
      */
-    public function getIdentityRoles()
+    public function getIdentityRoles(IdentityInterface $identity = null)
     {
-        if (!$identity = $this->getIdentity()) {
+        if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
-        }
-
-        if (!$identity instanceof IdentityInterface) {
-            throw new Exception\RuntimeException(sprintf(
-                'ZfcRbac expects your identity to implement ZfcRbac\Identity\IdentityInterface, "%s" given',
-                is_object($identity) ? get_class($identity) : gettype($identity)
-            ));
         }
 
         return $this->convertRoles($identity->getRoles());

@@ -18,6 +18,8 @@
 
 namespace ZfcRbac\Service;
 
+use ZfcRbac\Identity\IdentityInterface;
+
 /**
  * Minimal interface for an authorization service
  *
@@ -29,9 +31,10 @@ interface AuthorizationServiceInterface
     /**
      * Check if the permission is granted to the current identity
      *
-     * @param  string $permission
-     * @param  mixed  $context
+     * @param  IdentityInterface|null $identity
+     * @param  string                 $permission
+     * @param  mixed                  $context
      * @return bool
      */
-    public function isGranted($permission, $context = null);
+    public function isGranted($identity, $permission, $context = null);
 }

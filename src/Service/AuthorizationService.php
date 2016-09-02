@@ -102,25 +102,11 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * Get the current identity from the role service
-     *
-     * @return IdentityInterface|null
+     * @inheritdoc
      */
-    public function getIdentity()
+    public function isGranted($identity, $permission, $context = null)
     {
-        return $this->roleService->getIdentity();
-    }
-
-    /**
-     * Check if the permission is granted to the current identity
-     *
-     * @param  string $permission
-     * @param  mixed  $context
-     * @return bool
-     */
-    public function isGranted($permission, $context = null)
-    {
-        $roles = $this->roleService->getIdentityRoles();
+        $roles = $this->roleService->getIdentityRoles($identity);
 
         if (empty($roles)) {
             return false;
@@ -131,28 +117,33 @@ class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[(string) $permission], $context);
+            return $this->assert($this->assertions[(string) $permission], $identity, $context);
         }
 
         return true;
     }
 
     /**
-     * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed                              $context
+     * @param string|callable|AssertionInterface $assertion
+     * @param IdentityInterface                  $identity
+     * @param mixed                              $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
-    protected function assert($assertion, $context = null)
+    protected function assert($assertion, IdentityInterface $identity = null, $context = null)
     {
         if (is_callable($assertion)) {
-            return $assertion($this, $context);
-        } elseif ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($this, $context);
-        } elseif (is_string($assertion)) {
+            return $assertion($this, $identity, $context);
+        }
+
+        if ($assertion instanceof AssertionInterface) {
+            return $assertion->assert($this, $identity, $context);
+        }
+
+        if (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
 
-            return $assertion->assert($this, $context);
+            return $assertion->assert($this, $identity, $context);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(

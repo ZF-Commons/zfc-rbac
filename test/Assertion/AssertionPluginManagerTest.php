@@ -16,40 +16,34 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Container;
+namespace ZfcRbacTest\Assertion;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Exception\InvalidServiceException;
+use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
- * Factory to create a assertion plugin manager
- *
- * @author  Aeneas Rekkas
- * @licence MIT
+ * @covers \ZfcRbac\Assertion\AssertionPluginManager
  */
-class AssertionPluginManagerFactory implements FactoryInterface
+class AssertionPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     * @return AssertionPluginManager
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function testValidationOfPluginSucceedsIfAssertionInterfaceIsImplemented()
     {
-        $config = $container->get('config')['zfc_rbac']['assertion_manager'];
+        $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $pluginMock    = $this->getMockBuilder(AssertionInterface::class)->getMock();
+        $pluginManager = new AssertionPluginManager($containerMock);
 
-        return new AssertionPluginManager($container, $config);
+        $this->assertNull($pluginManager->validatePlugin($pluginMock));
     }
 
-    /**
-     * {@inheritDoc}
-     * @return AssertionPluginManager
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function testValidationOfPluginFailsIfAssertionInterfaceIsNotImplemented()
     {
-        return $this($serviceLocator, AssertionPluginManager::class);
+        $this->setExpectedException(InvalidServiceException::class);
+        $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $pluginManager = new AssertionPluginManager($containerMock);
+
+        $plugin = new \stdClass();
+        $pluginManager->validatePlugin($plugin);
     }
 }

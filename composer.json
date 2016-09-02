@@ -26,16 +26,15 @@
       "email": "jmleroux.pro@gmail.com"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
     "php": ">=5.5",
-    "zendframework/zend-servicemanager": "dev-develop",
-    "zendframework/zend-stdlib": "dev-develop",
+    "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+    "zendframework/zend-stdlib": "^2.7 || ^3.0",
     "zfr/rbac": "~2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.0",
-    "squizlabs/php_codesniffer": "1.5.*",
+    "phpunit/phpunit": "~5.0",
+    "squizlabs/php_codesniffer": "^2.0",
     "doctrine/common": "~2.4"
   },
   "autoload": {

@@ -38,12 +38,7 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFactory()
     {
-        $this->markTestSkipped(
-            'Seems Rbac\Traversal\Strategy\TraversalStrategyInterface has been removed. Not sure what this does.'
-        );
-
         $options = new ModuleOptions([
-            'identity_provider'    => AuthenticationProvider::class,
             'guest_role'           => 'guest',
             'role_provider'        => [
                 \ZfcRbac\Role\InMemoryRoleProvider::class => [
@@ -52,19 +47,11 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
+        $rbac              = $this->getMockBuilder(Rbac::class)->getMock();
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService(ModuleOptions::class, $options);
         $serviceManager->setService(RoleProviderPluginManager::class, new RoleProviderPluginManager($serviceManager));
-        $serviceManager->setService(
-            AuthenticationProvider::class,
-            $this->getMock(IdentityProviderInterface::class)
-        );
-
-        $traversalStrategy = $this->getMock(TraversalStrategyInterface::class);
-        $rbac              = $this->getMock(Rbac::class, [], [], '', false);
-
-        $rbac->expects($this->once())->method('getTraversalStrategy')->will($this->returnValue($traversalStrategy));
-
         $serviceManager->setService(Rbac::class, $rbac);
 
         $factory     = new RoleServiceFactory();
@@ -72,7 +59,6 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
-        $this->assertAttributeSame($traversalStrategy, 'traversalStrategy', $roleService);
     }
 
     public function testThrowExceptionIfNoRoleProvider()
@@ -80,7 +66,6 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(RuntimeException::class);
 
         $options = new ModuleOptions([
-            'identity_provider' => AuthenticationProvider::class,
             'guest_role'        => 'guest',
             'role_provider'     => []
         ]);
@@ -89,7 +74,7 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(ModuleOptions::class, $options);
         $serviceManager->setService(
             AuthenticationProvider::class,
-            $this->getMock(IdentityProviderInterface::class)
+            $this->getMockBuilder(IdentityProviderInterface::class)->getMock()
         );
 
         $factory     = new RoleServiceFactory();
