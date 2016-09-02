@@ -134,9 +134,13 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         if (is_callable($assertion)) {
             return $assertion($this, $identity, $context);
-        } elseif ($assertion instanceof AssertionInterface) {
+        }
+
+        if ($assertion instanceof AssertionInterface) {
             return $assertion->assert($this, $identity, $context);
-        } elseif (is_string($assertion)) {
+        }
+
+        if (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
 
             return $assertion->assert($this, $identity, $context);
