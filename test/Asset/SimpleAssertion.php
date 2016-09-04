@@ -32,6 +32,7 @@ class SimpleAssertion implements AssertionInterface
      * {@inheritDoc}
      */
     public function assert(
+        $permission,
         IdentityInterface $identity = null,
         $context = null
     ) {

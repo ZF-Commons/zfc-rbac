@@ -220,7 +220,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
         $authorizationService->setAssertion(
             'foo',
-            function (IdentityInterface $identity = null, $context = null) use ($authorizationService, &$called) {
+            function ($permission, IdentityInterface $identity = null, $context = null) use ($authorizationService, &$called) {
                 $called = true;
 
                 return false;
