@@ -29,7 +29,7 @@ use ZfcRbac\Role\RoleProviderInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class RoleService
+class RoleService implements RoleServiceInterface
 {
 
     /**

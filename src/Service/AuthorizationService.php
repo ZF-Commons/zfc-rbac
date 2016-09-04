@@ -39,7 +39,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     protected $rbac;
 
     /**
-     * @var RoleService
+     * @var RoleServiceInterface
      */
     protected $roleService;
 
@@ -57,11 +57,14 @@ class AuthorizationService implements AuthorizationServiceInterface
      * Constructor
      *
      * @param Rbac                   $rbac
-     * @param RoleService            $roleService
+     * @param RoleServiceInterface   $roleService
      * @param AssertionPluginManager $assertionPluginManager
      */
-    public function __construct(Rbac $rbac, RoleService $roleService, AssertionPluginManager $assertionPluginManager)
-    {
+    public function __construct(
+        Rbac $rbac,
+        RoleServiceInterface $roleService,
+        AssertionPluginManager $assertionPluginManager
+    ) {
         $this->rbac                   = $rbac;
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
