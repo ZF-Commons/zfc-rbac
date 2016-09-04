@@ -87,9 +87,10 @@ class RoleService
      * Get the identity roles from the current identity, applying some more logic
      *
      * @param IdentityInterface $identity
+     * @param null              $context
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity = null)
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null)
     {
         if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
