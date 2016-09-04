@@ -22,6 +22,7 @@ use Rbac\Rbac;
 use Rbac\Role\RoleInterface;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
+use ZfcRbac\Service\RoleServiceInterface;
 use ZfcRbacTest\Asset\FlatRole;
 use ZfcRbacTest\Asset\Identity;
 use ZfcRbacTest\Asset\SimpleAssertion;
@@ -271,5 +272,19 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->setAssertion('bar', null);
 
         $this->assertFalse($authorizationService->hasAssertion('bar'));
+    }
+
+    public function testContextIsPassedToRoleService()
+    {
+        $identity               = new Identity([]);
+        $context                = 'context';
+
+        $rbac                   = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
+        $roleService            = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
+        $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
+
+        $roleService->expects($this->once())->method('getIdentityRoles')->with($identity, $context)->willReturn([]);
+        $authorizationService->isGranted($identity, 'foo', $context);
     }
 }
