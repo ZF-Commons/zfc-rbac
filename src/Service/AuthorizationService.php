@@ -117,7 +117,7 @@ class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[(string) $permission], $identity, $context);
+            return $this->assert($this->assertions[(string) $permission], $permission, $identity, $context);
         }
 
         return true;
@@ -125,25 +125,25 @@ class AuthorizationService implements AuthorizationServiceInterface
 
     /**
      * @param string|callable|AssertionInterface $assertion
+     * @param string                             $permission
      * @param IdentityInterface                  $identity
      * @param mixed                              $context
      * @return bool
-     * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
-    protected function assert($assertion, IdentityInterface $identity = null, $context = null)
+    protected function assert($assertion, $permission, IdentityInterface $identity = null, $context = null)
     {
         if (is_callable($assertion)) {
-            return $assertion($identity, $context);
+            return $assertion($permission, $identity, $context);
         }
 
         if ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($identity, $context);
+            return $assertion->assert($permission, $identity, $context);
         }
 
         if (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
 
-            return $assertion->assert($identity, $context);
+            return $assertion->assert($permission, $identity, $context);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(
