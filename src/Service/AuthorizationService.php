@@ -133,17 +133,17 @@ class AuthorizationService implements AuthorizationServiceInterface
     protected function assert($assertion, IdentityInterface $identity = null, $context = null)
     {
         if (is_callable($assertion)) {
-            return $assertion($this, $identity, $context);
+            return $assertion($identity, $context);
         }
 
         if ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($this, $identity, $context);
+            return $assertion->assert($identity, $context);
         }
 
         if (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
 
-            return $assertion->assert($this, $identity, $context);
+            return $assertion->assert($identity, $context);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(
