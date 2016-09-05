@@ -16,22 +16,25 @@
  * and is licensed under the MIT license.
  */
 
-return [
-    'dependencies' => [
-        'factories' => [
-            ZfcRbac\Assertion\AssertionPluginManager::class      => ZfcRbac\Container\AssertionPluginManagerFactory::class,
-            ZfcRbac\Options\ModuleOptions::class                 => ZfcRbac\Container\ModuleOptionsFactory::class,
-            ZfcRbac\Role\RoleProviderPluginManager::class        => ZfcRbac\Container\RoleProviderPluginManagerFactory::class,
-            ZfcRbac\Service\AuthorizationServiceInterface::class => ZfcRbac\Container\AuthorizationServiceFactory::class,
-            ZfcRbac\Service\RoleServiceInterface::class          => ZfcRbac\Container\RoleServiceFactory::class,
-        ],
-    ],
+namespace ZfcRbac\Service;
 
-    'zfc_rbac' => [
-        // Role provider plugin manager
-        'role_provider_manager' => [],
+use Rbac\Role\RoleInterface;
+use ZfcRbac\Identity\IdentityInterface;
 
-        // Assertion plugin manager
-        'assertion_manager'     => []
-    ]
-];
+/**
+ * Role service
+ *
+ * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @licence MIT
+ */
+interface RoleServiceInterface
+{
+    /**
+     * Get the identity roles from the current identity, applying some more logic
+     *
+     * @param null|IdentityInterface $identity
+     * @param mixed                   $context
+     * @return RoleInterface[]
+     */
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null);
+}
