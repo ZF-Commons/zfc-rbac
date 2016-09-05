@@ -33,11 +33,13 @@ interface AssertionInterface
     /**
      * Check if this assertion is true
      *
-     * @param  IdentityInterface             $identity
-     * @param  mixed                         $context
+     * @param string            $permission
+     * @param IdentityInterface $identity
+     * @param mixed             $context
      * @return bool
      */
     public function assert(
+        $permission,
         IdentityInterface $identity = null,
         $context = null
     );
