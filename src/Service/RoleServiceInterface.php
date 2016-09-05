@@ -32,8 +32,8 @@ interface RoleServiceInterface
     /**
      * Get the identity roles from the current identity, applying some more logic
      *
-     * @param IdentityInterface $identity
-     * @param null              $context
+     * @param null|IdentityInterface $identity
+     * @param mixed                   $context
      * @return RoleInterface[]
      */
     public function getIdentityRoles(IdentityInterface $identity = null, $context = null);
