@@ -24,6 +24,7 @@ use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
+use ZfcRbac\Service\RoleServiceInterface;
 
 /**
  * @covers \ZfcRbac\Container\AuthorizationServiceFactory
@@ -37,7 +38,7 @@ class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(\Rbac\Rbac::class, $this->getMockBuilder(\Rbac\Rbac::class)->getMock());
 
         $serviceManager->setService(
-            RoleService::class,
+            RoleServiceInterface::class,
             $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock()
         );
         $serviceManager->setService(
