@@ -19,6 +19,7 @@
 namespace ZfcRbac\Initializer;
 
 use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationServiceAwareInterface;
