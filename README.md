@@ -51,5 +51,5 @@ of ZfcRbac.
 
 ## Support
 
-- File issues at https://github.com/ZF-Commans/zfc-rbac/issues.
+- File issues at https://github.com/ZF-Commons/zfc-rbac/issues.
 - Ask questions in the [zf-common gitter](https://gitter.im/prolic/zfc-rbac) chat.
