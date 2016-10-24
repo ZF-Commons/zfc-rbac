@@ -48,3 +48,8 @@ The official documentation is available in the [/docs](/docs) folder.
 
 You can also find some Doctrine entities in the [/data](/data) folder that will help you to more quickly take advantage
 of ZfcRbac.
+
+## Support
+
+- File issues at https://github.com/ZF-Commans/zfc-rbac/issues.
+- Ask questions in the [zf-common gitter](https://gitter.im/prolic/zfc-rbac) chat.
