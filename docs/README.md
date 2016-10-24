@@ -1,6 +1,6 @@
 _Up-to-date with version 2.3.* of ZfcRbac_
 
-Welcome to the official ZfcRbac documentation. This documentation will help you to quickly understand how to use
+Welcome to the official ZfcRbac documentation. This documentation will help you quickly understand how to use
 and extend ZfcRbac.
 
 If you are looking for some information that is not listed in the documentation, please open an issue!
