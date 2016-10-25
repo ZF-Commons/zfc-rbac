@@ -85,111 +85,17 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 true,
                 true,
                 [
-                    'delete' => []
+                    'delete' => null
                 ]
             ],
-            // Simple is accepted from assertion map multiple
+            // Simple is accepted from assertion map using assertion set
             [
                 'admin',
                 'delete',
                 true,
                 true,
                 [
-                    'delete' => [
-                        'assertions' => 'ZfcRbacTest\Asset\SimpleAssertion'
-                    ]
-                ]
-            ],
-            // Simple is accepted from assertion map multiple
-            [
-                'admin',
-                'delete',
-                true,
-                true,
-                [
-                    'delete' => [
-                        'assertions' => 'ZfcRbacTest\Asset\SimpleAssertion'
-                    ]
-                ]
-            ],
-
-            // Simple is refused from assertion map with multiple assertions default condition
-            [
-                'admin',
-                'delete',
-                null,
-                false,
-                [
-                    'delete' => [
-                        'assertions' => [
-                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
-                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
-                        ]
-                    ]
-                ]
-            ],
-            // Simple is refused from assertion map with multiple assertions, condition AND
-            [
-                'admin',
-                'delete',
-                null,
-                false,
-                [
-                    'delete' => [
-                        'assertions' => [
-                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
-                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
-                        ],
-                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_AND
-                    ]
-                ]
-            ],
-            // Simple is accepted from assertion map with multiple assertions, condition OR
-            [
-                'admin',
-                'delete',
-                null,
-                true,
-                [
-                    'delete' => [
-                        'assertions' => [
-                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
-                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
-                        ],
-                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_OR
-                    ]
-                ]
-            ],
-            // Simple is accepted from assertion map with multiple assertions, condition AND
-            [
-                'admin',
-                'delete',
-                true,
-                true,
-                [
-                    'delete' => [
-                        'assertions' => [
-                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
-                            'ZfcRbacTest\Asset\SimpleAssertion'
-                        ],
-                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_AND
-                    ]
-                ]
-            ],
-            // Simple is refused from assertion map with multiple assertions, condition OR
-            [
-                'admin',
-                'delete',
-                false,
-                false,
-                [
-                    'delete' => [
-                        'assertions' => [
-                            'ZfcRbacTest\Asset\SimpleFalseAssertion',
-                            'ZfcRbacTest\Asset\SimpleAssertion'
-                        ],
-                        'condition' => \ZfcRbac\Assertion\AssertionInterface::CONDITION_OR
-                    ]
+                    'delete' => 'ZfcRbacTest\Asset\SimpleTrueAssertionSet'
                 ]
             ],
             // Simple is refused from no role
@@ -225,7 +131,8 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
             'invokables' => [
                 'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion',
                 'ZfcRbacTest\Asset\SimpleTrueAssertion' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
-                'ZfcRbacTest\Asset\SimpleFalseAssertion' => 'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                'ZfcRbacTest\Asset\SimpleFalseAssertion' => 'ZfcRbacTest\Asset\SimpleFalseAssertion',
+                'ZfcRbacTest\Asset\SimpleTrueAssertionSet' => 'ZfcRbacTest\Asset\SimpleTrueAssertionSet'
             ]
         ];
 
@@ -360,7 +267,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->isGranted('foo');
     }
     /**
-     * @covers ZfcRbac\Service\AuthorizationService::getIdentity
+     * @covers \ZfcRbac\Service\AuthorizationService::getIdentity
      */
     public function testGetIdentity()
     {

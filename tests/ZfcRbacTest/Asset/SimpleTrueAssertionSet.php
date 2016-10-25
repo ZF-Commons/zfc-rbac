@@ -16,28 +16,20 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Assertion;
+namespace ZfcRbacTest\Asset;
 
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Assertion\AssertionSet;
 
-/**
- * Interface that you can implement for dynamic assertions
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @author  Aeneas Rekkas
- * @author  Daniel Gimenes  <daniel@danielgimenes.com.br>
- * @licence MIT
- */
-interface AssertionInterface
+class SimpleTrueAssertionSet extends AssertionSet
 {
-    /**
-     * Check if this assertion is true
-     *
-     * @TODO: for v3, update the interface to typehint to AuthorizationServiceInterface instead
-     *
-     * @param  AuthorizationService $authorizationService
-     * @param  mixed                $context
-     * @return bool
-     */
-    public function assert(AuthorizationService $authorizationService);
+    public function __construct(array $assertions = array())
+    {
+        if (empty($assertions)) {
+            $assertions = [
+                new SimpleTrueAssertion(),
+                new SimpleAssertion(),
+            ];
+        }
+        parent::__construct($assertions);
+    }
 }

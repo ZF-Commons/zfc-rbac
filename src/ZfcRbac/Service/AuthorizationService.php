@@ -71,8 +71,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Set an assertion
      *
-     * @param string|PermissionInterface               $permission
-     * @param string|callable|AssertionInterface|array $assertion
+     * @param string|PermissionInterface         $permission
+     * @param string|callable|AssertionInterface $assertion
      * @return void
      */
     public function setAssertion($permission, $assertion)
@@ -122,65 +122,16 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function isGranted($permission, $context = null)
     {
         $roles = $this->roleService->getIdentityRoles();
-
         if (empty($roles)) {
             return false;
         }
-
         if (!$this->rbac->isGranted($roles, $permission)) {
             return false;
         }
-
-        if (!$this->hasAssertion($permission)) {
-            return true;
+        if ($this->hasAssertion($permission)) {
+            return $this->assert($this->assertions[(string) $permission], $context);
         }
-
-        // multiple assertions
-        if (is_array($this->assertions[(string)$permission])) {
-
-            $map = $this->assertions[(string)$permission];
-
-            if (empty($map['assertions'])) {
-                return true;
-            }
-
-            if (!is_array($map['assertions'])) {
-                // convert single assertion to array
-                $map['assertions'] = [$map['assertions']];
-            }
-
-            $condition = isset($map['condition'])
-                ? $map['condition']
-                : AssertionInterface::CONDITION_AND;
-
-            if (AssertionInterface::CONDITION_AND === $condition) {
-                foreach ($map['assertions'] as $assertion) {
-                    if (!$this->assert($assertion, $context)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            if (AssertionInterface::CONDITION_OR === $condition) {
-                foreach ($map['assertions'] as $assertion) {
-                    if ($this->assert($assertion, $context)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Condition must be either "AND" or "OR", %s given',
-                is_object($condition) ? get_class($condition) : gettype($condition)
-            ));
-        } else { // single assertion
-            return $this->assert($this->assertions[(string)$permission], $context);
-        }
-
+        return true;
     }
 
     /**
