@@ -122,15 +122,19 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function isGranted($permission, $context = null)
     {
         $roles = $this->roleService->getIdentityRoles();
+
         if (empty($roles)) {
             return false;
         }
+
         if (!$this->rbac->isGranted($roles, $permission)) {
             return false;
         }
+
         if ($this->hasAssertion($permission)) {
             return $this->assert($this->assertions[(string) $permission], $context);
         }
+
         return true;
     }
 
