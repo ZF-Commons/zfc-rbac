@@ -31,6 +31,12 @@ class RouteGuardFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
+        $serviceManager = new ServiceManager();
+
+        if (method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+        }
+
         $creationOptions = [
             'route' => 'role'
         ];
@@ -43,18 +49,49 @@ class RouteGuardFactoryTest extends \PHPUnit_Framework_TestCase
             'protection_policy' => GuardInterface::POLICY_ALLOW,
         ]);
 
-        $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
         $serviceManager->setService(
             'ZfcRbac\Service\RoleService',
             $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
         );
 
-        $pluginManager = new GuardPluginManager();
-        $pluginManager->setServiceLocator($serviceManager);
+        $pluginManager = new GuardPluginManager($serviceManager);
 
         $factory    = new RouteGuardFactory();
         $routeGuard = $factory->createService($pluginManager);
+
+        $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $routeGuard);
+        $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());
+    }
+
+    public function testFactoryV3()
+    {
+        $serviceManager = new ServiceManager();
+
+        if (!method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+        }
+
+        $creationOptions = [
+            'route' => 'role'
+        ];
+
+        $options = new ModuleOptions([
+            'identity_provider' => 'ZfcRbac\Identity\AuthenticationProvider',
+            'guards'            => [
+                'ZfcRbac\Guard\RouteGuard' => $creationOptions
+            ],
+            'protection_policy' => GuardInterface::POLICY_ALLOW,
+        ]);
+
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
+        $serviceManager->setService(
+            'ZfcRbac\Service\RoleService',
+            $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false)
+        );
+
+        $factory    = new RouteGuardFactory();
+        $routeGuard = $factory($serviceManager, 'ZfcRbac\Guard\RouteGuard');
 
         $this->assertInstanceOf('ZfcRbac\Guard\RouteGuard', $routeGuard);
         $this->assertEquals(GuardInterface::POLICY_ALLOW, $routeGuard->getProtectionPolicy());

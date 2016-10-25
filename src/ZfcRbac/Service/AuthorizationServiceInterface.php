@@ -24,7 +24,7 @@ use Rbac\Permission\PermissionInterface;
  * Minimal interface for an authorization service
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 interface AuthorizationServiceInterface
 {

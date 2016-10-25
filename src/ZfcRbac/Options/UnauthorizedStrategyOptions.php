@@ -24,7 +24,7 @@ use Zend\Stdlib\AbstractOptions;
  * Unauthorized strategy options
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class UnauthorizedStrategyOptions extends AbstractOptions
 {

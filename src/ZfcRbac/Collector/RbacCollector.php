@@ -35,7 +35,7 @@ use ZfcRbac\Exception\InvalidArgumentException;
  * RbacCollector
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RbacCollector implements CollectorInterface, Serializable
 {
@@ -232,6 +232,5 @@ class RbacCollector implements CollectorInterface, Serializable
         $this->collectedRoles  = $collection['roles'];
         $this->collectedPermissions =  $collection['permissions'];
         $this->collectedOptions = $collection['options'];
-
     }
 }

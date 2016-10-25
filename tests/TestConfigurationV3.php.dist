@@ -16,29 +16,18 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Factory;
-
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Factory\GuardPluginManagerFactory;
-use ZfcRbac\Guard\GuardPluginManager;
-
-/**
- * @covers \ZfcRbac\Factory\GuardPluginManagerFactory
- */
-class GuardPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
-{
-    public function testFactory()
-    {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', [
-            'zfc_rbac' => [
-                'guard_manager' => []
-            ]
-        ]);
-
-        $factory       = new GuardPluginManagerFactory();
-        $pluginManager = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf(GuardPluginManager::class, $pluginManager);
-    }
-}
+return [
+    'modules' => [
+        'Zend\Router',
+        'ZfcRbac',
+        'DoctrineModule',
+        'DoctrineORMModule',
+    ],
+    'module_listener_options' => [
+        'config_glob_paths' => [
+            __DIR__ . '/testing.config.php',
+        ],
+        'module_paths' => [
+        ],
+    ],
+];

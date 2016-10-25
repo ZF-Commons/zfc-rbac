@@ -22,7 +22,8 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Mvc\Router\Http\TreeRouteStack as V2TreeRouteStack;
+use Zend\Router\Http\TreeRouteStack;
 use ZfcRbac\Exception\UnauthorizedException;
 use ZfcRbac\Options\RedirectStrategyOptions;
 use ZfcRbac\View\Strategy\RedirectStrategy;
@@ -58,9 +59,9 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $response = new HttpResponse();
 
-        $router = new TreeRouteStack();
+        $router = $this->createTreeRouteStack();
         $router->addRoute('login', [
-            'type'    => 'Zend\Mvc\Router\Http\Literal',
+            'type'    => 'literal',
             'options' => [
                 'route' => '/login'
             ]
@@ -92,9 +93,9 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $response = new HttpResponse();
 
-        $router = new TreeRouteStack();
+        $router = $this->createTreeRouteStack();
         $router->addRoute('home', [
-                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'type'    => 'literal',
                 'options' => [
                     'route' => '/home'
                 ]
@@ -121,14 +122,14 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals('/home', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
-	
+
     public function testWontRedirectWhenConnectedAndOptionDisabled()
     {
         $response = new HttpResponse();
 
-        $router = new TreeRouteStack();
+        $router = $this->createTreeRouteStack();
         $router->addRoute('home', [
-                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'type'    => 'literal',
                 'options' => [
                     'route' => '/home'
                 ]
@@ -160,9 +161,9 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
         $request  = new HttpRequest();
         $request->setUri('http://example.com');
 
-        $router = new TreeRouteStack();
+        $router = $this->createTreeRouteStack();
         $router->addRoute('login', [
-                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'type'    => 'literal',
                 'options' => [
                     'route' => '/login'
                 ]
@@ -193,5 +194,11 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
             '/login?redirect-uri=http://example.com/',
             $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue()
         );
+    }
+
+    public function createTreeRouteStack($routePluginManager = null)
+    {
+        $class = class_exists(V2TreeRouteStack::class) ? V2TreeRouteStack::class : TreeRouteStack::class;
+        return new $class($routePluginManager);
     }
 }

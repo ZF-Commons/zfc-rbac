@@ -16,6 +16,7 @@
  * and is licensed under the MIT license.
  */
 
+use Zend\Mvc\Application;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 ini_set('error_reporting', E_ALL);
@@ -39,9 +40,13 @@ if (! isset($loader)) {
 
 $loader->add('ZfcRbacTest\\', __DIR__);
 
+$r = new \ReflectionClass(Application::class);
+$requiredParams = $r->getConstructor()->getNumberOfRequiredParameters();
+$version = $requiredParams == 1 ? 3 : 2;
+
 $configFiles = [
-    __DIR__ . '/TestConfiguration.php',
-    __DIR__ . '/TestConfiguration.php.dist'
+    sprintf(__DIR__ . '/TestConfigurationV%s.php', $version),
+    sprintf(__DIR__ . '/TestConfigurationV%s.php.dist', $version),
 ];
 
 foreach ($configFiles as $configFile) {

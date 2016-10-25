@@ -24,7 +24,7 @@ use Zend\Stdlib\AbstractOptions;
  * Redirect strategy options
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RedirectStrategyOptions extends AbstractOptions
 {

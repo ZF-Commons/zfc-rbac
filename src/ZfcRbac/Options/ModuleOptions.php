@@ -26,7 +26,7 @@ use ZfcRbac\Guard\GuardInterface;
  * Options for ZfcRbac module
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class ModuleOptions extends AbstractOptions
 {
@@ -120,7 +120,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Set the assertions options
-     * 
+     *
      * @param array $assertionMap
      * @return void
      */
@@ -131,7 +131,7 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Get the assertions options
-     * 
+     *
      * @return array
      */
     public function getAssertionMap()

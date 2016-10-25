@@ -81,8 +81,7 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
             $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false)
         );
 
-        $pluginManager = new GuardPluginManager();
-        $pluginManager->setServiceLocator($serviceManager);
+        $pluginManager = new GuardPluginManager($serviceManager);
 
         $guard = $pluginManager->get($type, $options);
 
@@ -93,7 +92,7 @@ class GuardPluginManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
 
-        $pluginManager = new GuardPluginManager();
+        $pluginManager = new GuardPluginManager(new ServiceManager());
         $pluginManager->get('stdClass');
     }
 }

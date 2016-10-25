@@ -18,9 +18,7 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Role\HierarchicalRoleInterface;
 use Rbac\Role\RoleInterface;
-use RecursiveIteratorIterator;
 use Traversable;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
@@ -32,7 +30,7 @@ use Rbac\Traversal\Strategy\TraversalStrategyInterface;
  * Role service
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class RoleService
 {

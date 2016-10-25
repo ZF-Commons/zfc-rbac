@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Role;
 
+use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -28,7 +29,7 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
     public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
     {
         $pluginMock    = $this->getMock('ZfcRbac\Role\RoleProviderInterface');
-        $pluginManager = new RoleProviderPluginManager();
+        $pluginManager = new RoleProviderPluginManager(new ServiceManager());
 
         $this->assertNull($pluginManager->validatePlugin($pluginMock));
     }
@@ -37,8 +38,7 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
 
-        $pluginManager  = new RoleProviderPluginManager();
+        $pluginManager  = new RoleProviderPluginManager(new ServiceManager());
         $pluginManager->get('stdClass', []);
     }
 }
- 

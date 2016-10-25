@@ -25,7 +25,7 @@ use ZfcRbac\Exception\RoleNotFoundException;
  * Role provider that uses Doctrine object repository to fetch roles
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class ObjectRepositoryRoleProvider implements RoleProviderInterface
 {

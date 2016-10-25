@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Role;
 
+use Rbac\Role\RoleInterface;
 use Rbac\Role\HierarchicalRole;
 use Rbac\Role\Role;
 
@@ -37,11 +38,20 @@ use Rbac\Role\Role;
  * follow the format :)
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
+     * Role storage
+     *
+     * @var array
+     */
+    private $roles = [];
+
+    /**
+     * Roles config
+     *
      * @var array
      */
     private $rolesConfig = [];
@@ -62,34 +72,50 @@ class InMemoryRoleProvider implements RoleProviderInterface
         $roles = [];
 
         foreach ($roleNames as $roleName) {
-            // If no config, we create a simple role with no permission
-            if (!isset($this->rolesConfig[$roleName])) {
-                $roles[] = new Role($roleName);
-                continue;
-            }
+            $roles[] = $this->getRole($roleName);
+        }
+        return $roles;
+    }
 
-            $roleConfig = $this->rolesConfig[$roleName];
-
-            if (isset($roleConfig['children'])) {
-                $role       = new HierarchicalRole($roleName);
-                $childRoles = (array) $roleConfig['children'];
-
-                foreach ($this->getRoles($childRoles) as $childRole) {
-                    $role->addChild($childRole);
-                }
-            } else {
-                $role = new Role($roleName);
-            }
-
-            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
-
-            foreach ($permissions as $permission) {
-                $role->addPermission($permission);
-            }
-
-            $roles[] = $role;
+    /**
+     * Get role by role name
+     *
+     * @param $roleName
+     * @return RoleInterface
+     */
+    protected function getRole($roleName)
+    {
+        if (isset($this->roles[$roleName])) {
+            return $this->roles[$roleName];
         }
 
-        return $roles;
+        // If no config, we create a simple role with no permission
+        if (!isset($this->rolesConfig[$roleName])) {
+            $role = new Role($roleName);
+            $this->roles[$roleName] = $role;
+            return $role;
+        }
+
+        $roleConfig = $this->rolesConfig[$roleName];
+
+        if (isset($roleConfig['children'])) {
+            $role = new HierarchicalRole($roleName);
+            $childRoles = (array)$roleConfig['children'];
+            foreach ($childRoles as $childRole) {
+                $childRole = $this->getRole($childRole);
+                $role->addChild($childRole);
+            }
+        } else {
+            $role = new Role($roleName);
+        }
+
+        $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+        foreach ($permissions as $permission) {
+            $role->addPermission($permission);
+        }
+
+        $this->roles[$roleName] = $role;
+
+        return $role;
     }
 }

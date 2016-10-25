@@ -17,6 +17,8 @@
  */
 namespace ZfcRbacTest\Factory;
 
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Factory\AuthorizationServiceDelegatorFactory;
 use ZfcRbacTest\Initializer\AuthorizationAwareFake;
 use ZfcRbacTest\Util\ServiceManagerFactory;
@@ -32,19 +34,18 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
     {
         $authServiceClassName = 'ZfcRbac\Service\AuthorizationService';
         $delegator            = new AuthorizationServiceDelegatorFactory();
-        $serviceLocator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $serviceLocator       = $this->prophesize(ServiceLocatorInterface::class);
+        $serviceLocator->willImplement(ContainerInterface::class);
+
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
 
         $callback = function () {
             return new AuthorizationAwareFake();
         };
 
-        $serviceLocator->expects($this->once())
-            ->method('get')
-            ->with($authServiceClassName)
-            ->will($this->returnValue($authorizationService));
+        $serviceLocator->get($authServiceClassName)->willReturn($authorizationService)->shouldBeCalled();
 
-        $decoratedInstance = $delegator->createDelegatorWithName($serviceLocator, 'name', 'requestedName', $callback);
+        $decoratedInstance = $delegator->createDelegatorWithName($serviceLocator->reveal(), 'name', 'requestedName', $callback);
 
         $this->assertEquals($authorizationService, $decoratedInstance->getAuthorizationService());
     }
@@ -73,6 +74,10 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = ServiceManagerFactory::getServiceManager();
 
+        if (method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+        }
+
         $serviceManager->setAllowOverride(true);
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
         $serviceManager->setService(
@@ -88,6 +93,36 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
 
         $serviceManager->addDelegator(
             'ZfcRbacTest\AuthorizationAware',
+            'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
+        );
+
+        $decoratedInstance = $serviceManager->get('ZfcRbacTest\AuthorizationAware');
+        $this->assertEquals($authorizationService, $decoratedInstance->getAuthorizationService());
+    }
+
+    public function testAuthorizationServiceIsInjectedWithDelegatorV3()
+    {
+        $serviceManager = ServiceManagerFactory::getServiceManager();
+
+        if (! method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+        }
+
+        $serviceManager->setAllowOverride(true);
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $authorizationService
+        );
+        $serviceManager->setAllowOverride(false);
+
+        $serviceManager->setInvokableClass(
+            'ZfcRbacTest\AuthorizationAware',
+            'ZfcRbacTest\Initializer\AuthorizationAwareFake'
+        );
+
+        $serviceManager->addDelegator(
+            'ZfcRbacTest\Initializer\AuthorizationAwareFake',
             'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
         );
 
@@ -119,10 +154,17 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
             'ZfcRbac\Factory\AuthorizationServiceDelegatorFactory'
         );
 
-        $this->setExpectedException(
-            'ZfcRbac\Exception\RuntimeException',
-            'The service ZfcRbacTest\AuthorizationAware must implement AuthorizationServiceAwareInterface.'
-        );
-        $serviceManager->get('ZfcRbacTest\AuthorizationAware');
+        $thrown = false;
+        try {
+            $serviceManager->get('ZfcRbacTest\AuthorizationAware');
+        } catch (\Exception $e) {
+            $thrown = true;
+            $this->assertStringEndsWith('The service ZfcRbacTest\AuthorizationAware must implement AuthorizationServiceAwareInterface.', $e->getMessage());
+            if ($e->getPrevious()) {
+                $this->assertInstanceOf('ZfcRbac\Exception\RuntimeException', $e->getPrevious());
+            }
+        }
+
+        $this->assertTrue($thrown);
     }
 }

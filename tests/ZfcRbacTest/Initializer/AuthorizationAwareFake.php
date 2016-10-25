@@ -27,6 +27,6 @@ use ZfcRbac\Service\AuthorizationServiceAwareInterface;
  */
 class AuthorizationAwareFake implements AuthorizationServiceAwareInterface
 {
-    
+
     use \ZfcRbac\Service\AuthorizationServiceAwareTrait;
 }

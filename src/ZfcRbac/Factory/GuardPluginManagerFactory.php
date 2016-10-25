@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Factory;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -27,21 +28,31 @@ use ZfcRbac\Guard\GuardPluginManager;
  * Factory to create a guard plugin manager
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class GuardPluginManagerFactory implements FactoryInterface
 {
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return GuardPluginManager
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config')['zfc_rbac']['guard_manager'];
+
+        $pluginManager = new GuardPluginManager($container, $config);
+
+        return $pluginManager;
+    }
+
     /**
      * {@inheritDoc}
      * @return GuardPluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config')['zfc_rbac']['guard_manager'];
-
-        $pluginManager = new GuardPluginManager(new Config($config));
-        $pluginManager->setServiceLocator($serviceLocator);
-
-        return $pluginManager;
+        return $this($serviceLocator, GuardPluginManager::class);
     }
 }

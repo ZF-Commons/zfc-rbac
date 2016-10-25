@@ -18,6 +18,7 @@
 
 namespace ZfcRbac\Initializer;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -32,17 +33,26 @@ use ZfcRbac\Service\AuthorizationServiceAwareInterface;
 class AuthorizationServiceInitializer implements InitializerInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param object $instance
+     */
+    public function __invoke(ContainerInterface $container, $instance)
+    {
+        if ($instance instanceof AuthorizationServiceAwareInterface) {
+            $authorizationService = $container->get('ZfcRbac\Service\AuthorizationService');
+            $instance->setAuthorizationService($authorizationService);
+        }
+    }
+
+    /**
      * @see \Zend\ServiceManager\InitializerInterface::initialize()
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
-        if ($instance instanceof AuthorizationServiceAwareInterface) {
-            if ($serviceLocator instanceof AbstractPluginManager) {
-                $serviceLocator = $serviceLocator->getServiceLocator();
-            }
-            
-            $authorizationService = $serviceLocator->get('ZfcRbac\Service\AuthorizationService');
-            $instance->setAuthorizationService($authorizationService);
+        if ($serviceLocator instanceof AbstractPluginManager) {
+            $serviceLocator = $serviceLocator->getServiceLocator();
         }
+
+        $this($serviceLocator, $instance);
     }
 }

@@ -31,8 +31,11 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $pluginManager  = new HelperPluginManager();
-        $pluginManager->setServiceLocator($serviceManager);
+        if (method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+        }
+
+        $pluginManager  = new HelperPluginManager($serviceManager);
 
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',
@@ -41,6 +44,24 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
 
         $factory   = new IsGrantedViewHelperFactory();
         $isGranted = $factory->createService($pluginManager);
+
+        $this->assertInstanceOf('ZfcRbac\View\Helper\IsGranted', $isGranted);
+    }
+
+    public function testFactoryV3()
+    {
+        $serviceManager = new ServiceManager();
+
+        if (! method_exists($serviceManager, 'build')) {
+            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+        }
+        $serviceManager->setService(
+            'ZfcRbac\Service\AuthorizationService',
+            $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface')
+        );
+
+        $factory   = new IsGrantedViewHelperFactory();
+        $isGranted = $factory($serviceManager, 'ZfcRbac\View\Helper\IsGranted');
 
         $this->assertInstanceOf('ZfcRbac\View\Helper\IsGranted', $isGranted);
     }

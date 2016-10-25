@@ -26,7 +26,7 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
  * Module class for ZfcRbac
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @license MIT
  */
 class Module implements BootstrapListenerInterface, ConfigProviderInterface
 {
@@ -45,7 +45,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
 
         // Register listeners, if any
         foreach ($guards as $guard) {
-            $eventManager->attachAggregate($guard);
+            $guard->attach($eventManager);
         }
     }
 

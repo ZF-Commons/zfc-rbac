@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Factory;
 
+use Interop\Container\ContainerInterface;
 use ZfcRbac\Factory\UnauthorizedStrategyFactory;
 
 /**
@@ -34,16 +35,13 @@ class UnauthorizedStrategyFactoryTest extends \PHPUnit_Framework_TestCase
                           ->method('getUnauthorizedStrategy')
                           ->will($this->returnValue($unauthorizedStrategyOptions));
 
-        $serviceLocatorMock = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $serviceLocatorMock->expects($this->once())
-                           ->method('get')
-                           ->with('ZfcRbac\Options\ModuleOptions')
-                           ->will($this->returnValue($moduleOptionsMock));
+        $serviceLocatorMock = $this->prophesize('Zend\ServiceManager\ServiceLocatorInterface');
+        $serviceLocatorMock->willImplement(ContainerInterface::class);
+        $serviceLocatorMock->get('ZfcRbac\Options\ModuleOptions')->willReturn($moduleOptionsMock)->shouldBeCalled();
 
         $factory              = new UnauthorizedStrategyFactory();
-        $unauthorizedStrategy = $factory->createService($serviceLocatorMock);
+        $unauthorizedStrategy = $factory->createService($serviceLocatorMock->reveal());
 
         $this->assertInstanceOf('ZfcRbac\View\Strategy\UnauthorizedStrategy', $unauthorizedStrategy);
     }
 }
- 
