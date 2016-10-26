@@ -410,7 +410,7 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
 
     public function testProperlySetUnauthorizedAndTriggerEventOnUnauthorization()
     {
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager = $this->getMock('Zend\EventManager\EventManager');
 
         $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
         $application->expects($this->once())
@@ -424,15 +424,9 @@ class RoutePermissionsGuardTest extends \PHPUnit_Framework_TestCase
         $event->setRouteMatch($routeMatch);
         $event->setApplication($application);
 
-        if (method_exists($eventManager, 'triggerEvent')) {
-            $eventManager->expects($this->once())
-                ->method('triggerEvent')
-                ->with($event);
-        } else {
-            $eventManager->expects($this->once())
-                ->method('trigger')
-                ->with(MvcEvent::EVENT_DISPATCH_ERROR);
-        }
+        $eventManager->expects($this->once())
+            ->method('triggerEvent')
+            ->with($event);
 
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationServiceInterface', [], [], '', false);
         $authorizationService->expects($this->once())

@@ -488,21 +488,15 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager = $this->getMock('Zend\EventManager\EventManager');
 
         $application->expects($this->once())
                     ->method('getEventManager')
                     ->will($this->returnValue($eventManager));
 
-        if (method_exists($eventManager, 'triggerEvent')) {
-            $eventManager->expects($this->once())
-                         ->method('triggerEvent')
-                         ->with($event);
-        } else {
-            $eventManager->expects($this->once())
-                         ->method('trigger')
-                         ->with(MvcEvent::EVENT_DISPATCH_ERROR);
-        }
+        $eventManager->expects($this->once())
+                     ->method('triggerEvent')
+                     ->with($event);
 
         $routeMatch->setParam('controller', 'MyController');
         $routeMatch->setParam('action', 'delete');

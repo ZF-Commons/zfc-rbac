@@ -68,18 +68,13 @@ abstract class AbstractGuard implements GuardInterface
             403
         ));
 
-        $event->stopPropagation(true);
-
         $application  = $event->getApplication();
         $eventManager = $application->getEventManager();
 
-        if (method_exists($eventManager, 'triggerEvent')) {
-            // ZF3 EventManager
-            $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-            $eventManager->triggerEvent($event);
-        } else {
-            // ZF2 EventManager
-            $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
-        }
+        $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+        $eventManager->triggerEvent($event);
+
+        // just in case
+        $event->stopPropagation(true);
     }
 }
