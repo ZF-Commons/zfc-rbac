@@ -43,7 +43,7 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
     /**
      * @var $condition string
      */
-    protected $condition = 'AND';
+    protected $condition = AssertionSet::CONDITION_AND;
 
     /**
      * Constructor.
@@ -177,7 +177,7 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
      */
     public function assert(AuthorizationService $authorizationService, $context = null)
     {
-        if (self::CONDITION_AND === $this->condition) {
+        if (AssertionSet::CONDITION_AND === $this->condition) {
             foreach ($this->assertions as $assertion) {
                 if (!$assertion->assert($authorizationService, $context)) {
                     return false;
@@ -187,7 +187,7 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
             return true;
         }
 
-        if (self::CONDITION_OR === $this->condition) {
+        if (AssertionSet::CONDITION_OR === $this->condition) {
             foreach ($this->assertions as $assertion) {
                 if ($assertion->assert($authorizationService, $context)) {
                     return true;
@@ -196,5 +196,10 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
 
             return false;
         }
+
+        throw new InvalidArgumentException(sprintf(
+            'Condition must be either "AND" or "OR", %s given',
+            is_object($this->condition) ? get_class($this->condition) : gettype($this->condition)
+        ));
     }
 }

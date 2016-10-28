@@ -236,12 +236,13 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     {
         $rbac                   = $this->getMock('Rbac\Rbac', [], [], '', false);
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $assertion              = new SimpleAssertion();
-        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
-            ['bar', null, $assertion],
-            ['foo', null, $assertion]
-        ]));
+        $assertionPluginConfig = [
+            'invokables' => [
+                'foo' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'bar' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+            ]
+        ];
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions(['foo' => 'bar', 'bar' => 'foo']);
@@ -258,12 +259,13 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     {
         $rbac                   = $this->getMock('Rbac\Rbac', [], [], '', false);
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $assertion              = new SimpleAssertion();
-        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
-            ['assertion1', null, $assertion],
-            ['assertion2', null, $assertion]
-        ]));
+        $assertionPluginConfig = [
+            'invokables' => [
+                'assertion1' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'assertion2' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+            ]
+        ];
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions(['foo' => ['assertion1', 'assertion2']]);
@@ -279,12 +281,13 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
     {
         $rbac                   = $this->getMock('Rbac\Rbac', [], [], '', false);
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $assertion              = new SimpleAssertion();
-        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
-            ['assertion1', null, $assertion],
-            ['assertion2', null, $assertion]
-        ]));
+        $assertionPluginConfig = [
+            'invokables' => [
+                'assertion1' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'assertion2' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+            ]
+        ];
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions(['foo' => ['assertions' => ['assertion1', 'assertion2']]]);
@@ -296,17 +299,17 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($authorizationService->hasAssertion('foo'));
     }
 
-
     public function testAssertionMapWithMultipleAssertionsWithCondition()
     {
         $rbac                   = $this->getMock('Rbac\Rbac', [], [], '', false);
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
-        $assertion              = new SimpleAssertion();
-        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
-            ['assertion1', null, $assertion],
-            ['assertion2', null, $assertion]
-        ]));
+        $assertionPluginConfig = [
+            'invokables' => [
+                'assertion1' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'assertion2' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+            ]
+        ];
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions(['foo' => [
@@ -320,7 +323,6 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($authorizationService->hasAssertion('foo'));
     }
-
 
     public function testThrowExceptionForInvalidAssertionCondition()
     {

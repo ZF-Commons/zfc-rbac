@@ -29,7 +29,6 @@ use ZfcRbacTest\Util\ServiceManagerFactory;
  */
 class AssertionSetTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testAssertDefaultOptions()
     {
         /** @var \ZfcRbac\Assertion\AssertionSet $assertionSet */
@@ -74,7 +73,6 @@ class AssertionSetTest extends \PHPUnit_Framework_TestCase
         $assertionSet->getAssertion('foo');
     }
 
-
     public function testIterator()
     {
         $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
@@ -95,8 +93,7 @@ class AssertionSetTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($assertionObject, $assertion);
     }
 
-
-    public function testThrowExceptionForInvalidConditionInSetter()
+    public function testThrowExceptionForInvalidConditionInAssertionsSetter()
     {
         $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
         $assertionSet = new AssertionSet();
@@ -111,10 +108,26 @@ class AssertionSetTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
 
         $assertionSet->setAssertions($assertionMap);
-
     }
 
+    public function testThrowExceptionForInvalidConditionWhileAsserting()
+    {
+        $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $assertionMap = [
+            'assertions' => [
+                'foo' => $assertionObject,
+                'bar' => $assertionObject
+            ],
+        ];
+        $assertionSet = new AssertionSet($assertionMap);
+        $assertionSet->setCondition('WRONG');
 
+        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
+
+        $assertionSet->assert($authorizationService);
+
+    }
     public function testConditionInSetter()
     {
         $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
@@ -178,5 +191,4 @@ class AssertionSetTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($assertionSet->assert($authorizationService, null));
 
     }
-
 }

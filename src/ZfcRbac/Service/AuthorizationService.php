@@ -86,7 +86,9 @@ class AuthorizationService implements AuthorizationServiceInterface
             // move assertion definition under a key 'assertions'.
             if (!isset($assertion['assertions'])) {
                 $assertion['assertions'] = (array)$assertion;
-            } elseif (!is_array($assertion['assertions'])) {
+            }
+
+            if (!is_array($assertion['assertions'])) {
                 $assertion['assertions'] = (array)$assertion['assertions'];
             }
 
