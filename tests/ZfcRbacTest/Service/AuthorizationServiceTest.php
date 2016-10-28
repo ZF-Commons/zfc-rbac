@@ -238,7 +238,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
         $assertion              = new SimpleAssertion();
-        $assertionPluginManager->method('get')->will($this->returnValueMap([
+        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
             ['bar', null, $assertion],
             ['foo', null, $assertion]
         ]));
@@ -260,7 +260,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
         $assertion              = new SimpleAssertion();
-        $assertionPluginManager->method('get')->will($this->returnValueMap([
+        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
             ['assertion1', null, $assertion],
             ['assertion2', null, $assertion]
         ]));
@@ -281,7 +281,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
         $assertion              = new SimpleAssertion();
-        $assertionPluginManager->method('get')->will($this->returnValueMap([
+        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
             ['assertion1', null, $assertion],
             ['assertion2', null, $assertion]
         ]));
@@ -303,7 +303,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
         $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
         $assertion              = new SimpleAssertion();
-        $assertionPluginManager->method('get')->will($this->returnValueMap([
+        $assertionPluginManager->expects($this->any())->method('get')->will($this->returnValueMap([
             ['assertion1', null, $assertion],
             ['assertion2', null, $assertion]
         ]));
