@@ -81,12 +81,12 @@ class AuthorizationService implements AuthorizationServiceInterface
         // if is name of the assertion, retrieve an actual instance from assertion plugin manager
         if (is_string($assertion)) {
             $assertion = $this->assertionPluginManager->get($assertion);
-        } else if (is_array($assertion)) { // else if multiple assertion definition, create assertion set.
+        } elseif (is_array($assertion)) { // else if multiple assertion definition, create assertion set.
 
             // move assertion definition under a key 'assertions'.
             if (!isset($assertion['assertions'])) {
                 $assertion['assertions'] = (array)$assertion;
-            } else if (!is_array($assertion['assertions'])) {
+            } elseif (!is_array($assertion['assertions'])) {
                 $assertion['assertions'] = (array)$assertion['assertions'];
             }
 
