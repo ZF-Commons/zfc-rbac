@@ -48,13 +48,11 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
     /**
      * Constructor.
      *
-     * @param AssertionInterface[] $assertions An array of assertions.
+     * @param array|AssertionInterface[] $assertions An array of assertions.
      */
     public function __construct(array $assertions = array())
     {
-        foreach ($assertions as $name => $assertion) {
-            $this->setAssertion($assertion, is_int($name) ? null : $name);
-        }
+        $this->setAssertions($assertions);
     }
 
     /**
@@ -64,8 +62,24 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
      *
      * @return $this
      */
-    public function setAssertions($assertions)
+    public function setAssertions(array $assertions)
     {
+        $this->assertions = [];
+
+        // if definition contains condition, set it.
+        if (isset($assertions['condition'])) {
+            if ($assertions['condition'] != self::CONDITION_AND && $assertions['condition'] != self::CONDITION_OR) {
+                throw new InvalidArgumentException('Invalid assertion condition given.');
+            }
+            $this->setCondition($assertions['condition']);
+        }
+
+        // if there are multiple assertions under a key 'assertions', get them.
+        if (isset($assertions['assertions']) && is_array($assertions['assertions'])) {
+            $assertions = $assertions['assertions'];
+        }
+
+        // set each assertion
         foreach ($assertions as $name => $assertion) {
             $this->setAssertion($assertion, is_int($name) ? null : $name);
         }
@@ -75,19 +89,17 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
     /**
      * Set an assertion.
      *
-     * @param AssertionInterface $assertion The assertion instance
-     *
-     * @param string             $name      A name/alias
-     *
+     * @param string|AssertionInterface $assertion The assertion instance or it's name
+     * @param string $name A name/alias
      * @return $this
      */
     public function setAssertion(AssertionInterface $assertion, $name = null)
     {
         if (null !== $name) {
             $this->assertions[$name] = $assertion;
+        } else {
+            $this->assertions[] = $assertion;
         }
-        $this->assertions[] = $assertion;
-        return $this;
     }
 
     /**
@@ -117,6 +129,16 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
             throw new InvalidArgumentException(sprintf('The assertion "%s" is not defined.', $name));
         }
         return $this->assertions[$name];
+    }
+
+    /**
+     * Gets all assertions.
+     *
+     * @return AssertionInterface[] The assertion instance
+     */
+    public function getAssertions()
+    {
+        return $this->assertions;
     }
 
     /**
@@ -175,9 +197,5 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
             return false;
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Condition must be either "AND" or "OR", %s given',
-            is_object($this->condition) ? get_class($this->condition) : gettype($this->condition)
-        ));
     }
 }
