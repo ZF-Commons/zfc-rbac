@@ -91,7 +91,7 @@ class AuthorizationService implements AuthorizationServiceInterface
             }
 
             // retrieve an actual instance from assertion plugin manager if necessary
-            foreach ($assertion['assertions'] as $key=>$value) {
+            foreach ($assertion['assertions'] as $key => $value) {
                 if (is_string($value)) {
                     $assertion['assertions'][$key] = $this->assertionPluginManager->get($value);
                 }

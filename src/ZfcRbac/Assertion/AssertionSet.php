@@ -196,6 +196,5 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
 
             return false;
         }
-
     }
 }
