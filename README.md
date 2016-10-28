@@ -2,6 +2,7 @@
 
 [![Master Branch Build Status](https://secure.travis-ci.org/ZF-Commons/zfc-rbac.png?branch=master)](http://travis-ci.org/ZF-Commons/zfc-rbac)
 [![Coverage Status](https://coveralls.io/repos/ZF-Commons/zfc-rbac/badge.png)](https://coveralls.io/r/ZF-Commons/zfc-rbac)
+[![Join the chat at https://gitter.im/ZFCommons/zfc-rbac](https://badges.gitter.im/ZFCommons/zfc-rbac.svg)](https://gitter.im/ZFCommons/zfc-rbac?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Latest Stable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/stable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
 [![Latest Unstable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/unstable.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/badges/quality-score.png?s=685a2b34dc626a0af9934f9c8d246b68a8cac884)](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/)
@@ -52,4 +53,4 @@ of ZfcRbac.
 ## Support
 
 - File issues at https://github.com/ZF-Commons/zfc-rbac/issues.
-- Ask questions in the [zf-common gitter](https://gitter.im/prolic/zfc-rbac) chat.
+- Ask questions in the [zf-common gitter](https://gitter.im/ZFCommons/zfc-rbac) chat.
