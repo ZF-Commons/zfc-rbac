@@ -78,31 +78,6 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function setAssertion($permission, $assertion)
     {
-        // if is name of the assertion, retrieve an actual instance from assertion plugin manager
-        if (is_string($assertion)) {
-            $assertion = $this->assertionPluginManager->get($assertion);
-        } elseif (is_array($assertion)) { // else if multiple assertion definition, create assertion set.
-
-            // move assertion definition under a key 'assertions'.
-            if (!isset($assertion['assertions'])) {
-                $assertion['assertions'] = (array)$assertion;
-            }
-
-            if (!is_array($assertion['assertions'])) {
-                $assertion['assertions'] = (array)$assertion['assertions'];
-            }
-
-            // retrieve an actual instance from assertion plugin manager if necessary
-            foreach ($assertion['assertions'] as $key => $value) {
-                if (is_string($value)) {
-                    $assertion['assertions'][$key] = $this->assertionPluginManager->get($value);
-                }
-            }
-
-            // create assertion set
-            $assertion = new AssertionSet($assertion);
-        }
-
         $this->assertions[(string) $permission] = $assertion;
     }
 
@@ -114,10 +89,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function setAssertions(array $assertions)
     {
-        $this->assertions = [];
-        foreach ($assertions as $permissionName => $assertionData) {
-            $this->setAssertion($permissionName, $assertionData);
-        }
+        $this->assertions = $assertions;
     }
 
     /**
@@ -168,8 +140,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed                              $context
+     * @param  string|callable|array|AssertionInterface $assertion
+     * @param  mixed                                    $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
@@ -178,6 +150,27 @@ class AuthorizationService implements AuthorizationServiceInterface
         if (is_callable($assertion)) {
             return $assertion($this, $context);
         } elseif ($assertion instanceof AssertionInterface) {
+            return $assertion->assert($this, $context);
+        } elseif (is_string($assertion)) { // retrieve an actual instance from assertion plugin manager
+            $assertion = $this->assertionPluginManager->get($assertion);
+            return $assertion->assert($this, $context);
+        } elseif (is_array($assertion)) { // else if multiple assertion definition, create assertion set.
+            // move assertion definition under a key 'assertions'.
+            if (!isset($assertion['assertions'])) {
+                $assertion['assertions'] = (array)$assertion;
+            }
+            // convert to an array
+            if (!is_array($assertion['assertions'])) {
+                $assertion['assertions'] = (array)$assertion['assertions'];
+            }
+            // retrieve an actual instance from assertion plugin manager if necessary
+            foreach ($assertion['assertions'] as $key => $value) {
+                if (is_string($value)) {
+                    $assertion['assertions'][$key] = $this->assertionPluginManager->get($value);
+                }
+            }
+            // create assertion set
+            $assertion = new AssertionSet($assertion);
             return $assertion->assert($this, $context);
         }
 

@@ -26,8 +26,7 @@ use ZfcRbac\Service\AuthorizationService;
  * @author  David Havl
  * @licence MIT
  */
-
-class AssertionSet implements AssertionInterface, \IteratorAggregate
+class AssertionSet implements AssertionInterface
 {
     /**
      * Condition constants
@@ -52,120 +51,28 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
      */
     public function __construct(array $assertions = array())
     {
-        $this->setAssertions($assertions);
-    }
-
-    /**
-     * Set assertions.
-     *
-     * @param AssertionInterface[] $assertions The assertions to set
-     *
-     * @return $this
-     */
-    public function setAssertions(array $assertions)
-    {
         $this->assertions = [];
 
         // if definition contains condition, set it.
         if (isset($assertions['condition'])) {
-            if ($assertions['condition'] != self::CONDITION_AND && $assertions['condition'] != self::CONDITION_OR) {
+            if ($assertions['condition'] != AssertionSet::CONDITION_AND
+                && $assertions['condition'] != AssertionSet::CONDITION_OR) {
                 throw new InvalidArgumentException('Invalid assertion condition given.');
             }
-            $this->setCondition($assertions['condition']);
+            $this->condition = $assertions['condition'];
         }
-
         // if there are multiple assertions under a key 'assertions', get them.
         if (isset($assertions['assertions']) && is_array($assertions['assertions'])) {
             $assertions = $assertions['assertions'];
         }
-
         // set each assertion
         foreach ($assertions as $name => $assertion) {
-            $this->setAssertion($assertion, is_int($name) ? null : $name);
+            if (is_int($name)) {
+                $this->assertions[] = $assertion;
+            } else {
+                $this->assertions[$name] = $assertion;
+            }
         }
-        return $this;
-    }
-
-    /**
-     * Set an assertion.
-     *
-     * @param string|AssertionInterface $assertion The assertion instance or it's name
-     * @param string $name A name/alias
-     * @return $this
-     */
-    public function setAssertion(AssertionInterface $assertion, $name = null)
-    {
-        if (null !== $name) {
-            $this->assertions[$name] = $assertion;
-        } else {
-            $this->assertions[] = $assertion;
-        }
-    }
-
-    /**
-     * Returns true if the assertion if defined.
-     *
-     * @param string $name The assertion name
-     *
-     * @return bool true if the assertion is defined, false otherwise
-     */
-    public function hasAssertion($name)
-    {
-        return isset($this->assertions[$name]);
-    }
-
-    /**
-     * Gets a assertion value.
-     *
-     * @param string $name The assertion name
-     *
-     * @return AssertionInterface The assertion instance
-     *
-     * @throws InvalidArgumentException if the assertion is not defined
-     */
-    public function getAssertion($name)
-    {
-        if (!$this->hasAssertion($name)) {
-            throw new InvalidArgumentException(sprintf('The assertion "%s" is not defined.', $name));
-        }
-        return $this->assertions[$name];
-    }
-
-    /**
-     * Gets all assertions.
-     *
-     * @return AssertionInterface[] The assertion instance
-     */
-    public function getAssertions()
-    {
-        return $this->assertions;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCondition()
-    {
-        return $this->condition;
-    }
-
-    /**
-     * Set condition
-     *
-     * @param string $condition
-     */
-    public function setCondition($condition)
-    {
-        $this->condition = $condition;
-    }
-
-    /**
-     * Retrieve an external iterator
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->assertions);
     }
 
     /**
@@ -177,6 +84,10 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
      */
     public function assert(AuthorizationService $authorizationService, $context = null)
     {
+        if (empty($this->assertions)) {
+            return true;
+        }
+
         if (AssertionSet::CONDITION_AND === $this->condition) {
             foreach ($this->assertions as $assertion) {
                 if (!$assertion->assert($authorizationService, $context)) {
@@ -197,9 +108,6 @@ class AssertionSet implements AssertionInterface, \IteratorAggregate
             return false;
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Condition must be either "AND" or "OR", %s given',
-            is_object($this->condition) ? get_class($this->condition) : gettype($this->condition)
-        ));
+        return false;
     }
 }

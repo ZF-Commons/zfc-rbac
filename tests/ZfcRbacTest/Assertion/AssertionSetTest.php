@@ -29,74 +29,98 @@ use ZfcRbacTest\Util\ServiceManagerFactory;
  */
 class AssertionSetTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAssertDefaultOptions()
+    public function assertionMapProvider()
     {
-        /** @var \ZfcRbac\Assertion\AssertionSet $assertionSet */
-        $assertionSet = new AssertionSet();
-
-        $this->assertEquals('AND', $assertionSet->getCondition());
-        $this->assertEquals([], $assertionSet->getAssertions());
+        return [
+            // simple
+            [
+                [
+                    'assertion1',
+                    'assertion2'
+                ],
+                [
+                    'assertion1',
+                    'assertion2'
+                ]
+            ],
+            // named
+            [
+                [
+                    'key1' => 'assertion1',
+                    'key2' => 'assertion2'
+                ],
+                [
+                    'key1' => 'assertion1',
+                    'key2' => 'assertion2'
+                ]
+            ],
+            // simple in assertion sub array
+            [
+                [
+                    'assertions' => [
+                        'assertion1',
+                        'assertion2'
+                    ]
+                ],
+                [
+                    'assertion1',
+                    'assertion2'
+                ]
+            ],
+            // named in assertion sub array
+            [
+                [
+                    'assertions' => [
+                        'key1' => 'assertion1',
+                        'key2' => 'assertion2'
+                    ]
+                ],
+                [
+                    'key1' => 'assertion1',
+                    'key2' => 'assertion2'
+                ]
+            ],
+        ];
     }
 
-    public function testAssertConstructor()
+    /**
+     * @dataProvider assertionMapProvider
+     */
+    public function testSetAssertions($assertionMap, $expected)
+    {
+        $assertionSet = new AssertionSet($assertionMap);
+        $reflProperty = new \ReflectionProperty($assertionSet, 'assertions');
+        $reflProperty->setAccessible(true);
+
+        $this->assertEquals($expected, $reflProperty->getValue($assertionSet));
+    }
+
+    public function testDefaultCondition()
+    {
+        $assertionSet  = new AssertionSet();
+
+        $reflProperty = new \ReflectionProperty($assertionSet, 'condition');
+        $reflProperty->setAccessible(true);
+
+        $this->assertEquals(AssertionSet::CONDITION_AND, $reflProperty->getValue($assertionSet));
+    }
+
+    public function testSetCondition()
+    {
+        $assertionMap = [
+            'condition' => AssertionSet::CONDITION_OR
+        ];
+
+        $assertionSet = new AssertionSet($assertionMap);
+        $reflProperty = new \ReflectionProperty($assertionSet, 'condition');
+        $reflProperty->setAccessible(true);
+
+        $this->assertEquals(AssertionSet::CONDITION_OR, $reflProperty->getValue($assertionSet));
+    }
+
+    public function testThrowExceptionForInvalidCondition()
     {
         $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
-
-        $assertionSet = new AssertionSet([
-            $assertionObject
-        ]);
-
-        $this->assertEquals('AND', $assertionSet->getCondition());
-        $this->assertEquals([$assertionObject], $assertionSet->getAssertions());
-    }
-
-    public function testSettersAndGetters()
-    {
-        $assertionSet = new AssertionSet();
-        $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
-
-        $assertionSet->setCondition(AssertionSet::CONDITION_OR);
-        $assertionSet->setAssertion($assertionObject, 'foo');
-
-        $this->assertEquals('OR', $assertionSet->getCondition());
-        $this->assertEquals(['foo' => $assertionObject], $assertionSet->getAssertions());
-        $this->assertTrue($assertionSet->hasAssertion('foo'));
-        $this->assertEquals($assertionObject, $assertionSet->getAssertion('foo'));
-
-    }
-
-
-    public function testThrowExceptionForInvalidAssertionName()
-    {
-        $assertionSet = new AssertionSet();
-        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
-        $assertionSet->getAssertion('foo');
-    }
-
-    public function testIterator()
-    {
-        $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
-
-        $assertionSet = new AssertionSet([
-            'foo' => $assertionObject,
-            'bar' => $assertionObject
-        ]);
-
-        $assertinName = null;
-        $assertion = null;
-        foreach ($assertionSet as $key=>$value) {
-            $assertinName = $key;
-            $assertion = $value;
-            break;
-        }
-        $this->assertEquals('foo', $assertinName);
-        $this->assertEquals($assertionObject, $assertion);
-    }
-
-    public function testThrowExceptionForInvalidConditionInAssertionsSetter()
-    {
-        $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
-        $assertionSet = new AssertionSet();
         $assertionMap = [
             'assertions' => [
                 'foo' => $assertionObject,
@@ -107,88 +131,65 @@ class AssertionSetTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
 
-        $assertionSet->setAssertions($assertionMap);
+        $assertionSet = new AssertionSet($assertionMap);
     }
 
-    public function testThrowExceptionForInvalidConditionWhileAsserting()
+    public function testAssertNoAssertions()
     {
-        $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $assertionSet = new AssertionSet();
+        $this->assertTrue($assertionSet->assert($authorizationService, null));
+    }
+
+    public function testAssertWithConditionAND()
+    {
+        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
+        $assertionTrue = new SimpleTrueAssertion();
+        $assertionFalse = new SimpleFalseAssertion();
         $assertionMap = [
+            'condition' => AssertionSet::CONDITION_AND,
             'assertions' => [
-                'foo' => $assertionObject,
-                'bar' => $assertionObject
-            ],
+                $assertionTrue,
+                $assertionFalse
+            ]
         ];
         $assertionSet = new AssertionSet($assertionMap);
-        $assertionSet->setCondition('WRONG');
+        $this->assertFalse($assertionSet->assert($authorizationService, null));
 
-        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
-
-        $assertionSet->assert($authorizationService);
-
-    }
-    public function testConditionInSetter()
-    {
-        $assertionObject = $this->getMock('ZfcRbac\Assertion\AssertionInterface');
-        $assertionSet = new AssertionSet();
         $assertionMap = [
+            'condition' => AssertionSet::CONDITION_AND,
             'assertions' => [
-                'foo' => $assertionObject,
-                'bar' => $assertionObject
-            ],
-            'condition' => AssertionSet::CONDITION_OR
+                $assertionTrue,
+                $assertionTrue
+            ]
         ];
-
-        $assertionSet->setAssertions($assertionMap);
-        $this->assertEquals(AssertionSet::CONDITION_OR, $assertionSet->getCondition());
-    }
-
-    public function testAssertWithConditionAnd()
-    {
-        $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
-        $assertionSet = new AssertionSet();
-        // Using an assertion object
-        $assertionTrue = new SimpleTrueAssertion();
-        $assertionFalse = new SimpleFalseAssertion();
-        $assertionSet->setAssertions([
-            $assertionTrue,
-            $assertionFalse
-        ]);
-        $this->assertFalse($assertionSet->assert($authorizationService, null));
-
-        $assertionSet->setAssertions([
-            $assertionTrue,
-            $assertionTrue
-        ]);
+        $assertionSet = new AssertionSet($assertionMap);
         $this->assertTrue($assertionSet->assert($authorizationService, null));
     }
 
-    public function testAssertWithConditionOr()
+    public function testAssertWithConditionOR()
     {
         $authorizationService = $this->getMock('ZfcRbac\Service\AuthorizationService', [], [], '', false);
-        $assertionSet = new AssertionSet();
-        $assertionSet->setCondition(AssertionSet::CONDITION_OR);
-        // Using an assertion object
         $assertionTrue = new SimpleTrueAssertion();
         $assertionFalse = new SimpleFalseAssertion();
-        $assertionSet->setAssertions([
-            $assertionTrue,
-            $assertionFalse
-        ]);
+        $assertionMap = [
+            'condition' => AssertionSet::CONDITION_OR,
+            'assertions' => [
+                $assertionTrue,
+                $assertionFalse
+            ]
+        ];
+        $assertionSet = new AssertionSet($assertionMap);
         $this->assertTrue($assertionSet->assert($authorizationService, null));
 
-        $assertionSet->setAssertions([
-            $assertionTrue,
-            $assertionTrue
-        ]);
-        $this->assertTrue($assertionSet->assert($authorizationService, null));
-
-        $assertionSet->setAssertions([
-            $assertionFalse,
-            $assertionFalse
-        ]);
+        $assertionMap = [
+            'condition' => AssertionSet::CONDITION_OR,
+            'assertions' => [
+                $assertionFalse,
+                $assertionFalse
+            ]
+        ];
+        $assertionSet = new AssertionSet($assertionMap);
         $this->assertFalse($assertionSet->assert($authorizationService, null));
-
     }
 }
