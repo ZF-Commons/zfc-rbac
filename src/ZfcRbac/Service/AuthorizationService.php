@@ -24,6 +24,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Result\AuthorizationResult;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -55,6 +56,11 @@ class AuthorizationService implements AuthorizationServiceInterface
     protected $assertions = [];
 
     /**
+     * @var AuthorizationResult
+     */
+    protected $authorizationResult;
+
+    /**
      * Constructor
      *
      * @param Rbac                   $rbac
@@ -66,6 +72,7 @@ class AuthorizationService implements AuthorizationServiceInterface
         $this->rbac                   = $rbac;
         $this->roleService            = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
+        $this->authorizationResult    = new AuthorizationResult();
     }
 
     /**
@@ -89,6 +96,14 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function setAssertions(array $assertions)
     {
         $this->assertions = $assertions;
+    }
+
+    /**
+     * @return AuthorizationResult
+     */
+    public function getAuthorizationResult()
+    {
+        return $this->authorizationResult;
     }
 
     /**
@@ -122,6 +137,10 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function isGranted($permission, $context = null)
     {
         $roles = $this->roleService->getIdentityRoles();
+
+        $this->authorizationResult->setPermission($permission);
+        $this->authorizationResult->setIdentity($this->getIdentity());
+        $this->authorizationResult->setRoles($roles);
 
         if (empty($roles)) {
             return false;
