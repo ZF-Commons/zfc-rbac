@@ -70,7 +70,7 @@ class ModuleOptions extends AbstractOptions
      * @param array $assertionMap
      * @return void
      */
-    public function setAssertionMap(array $assertionMap): void
+    public function setAssertionMap(array $assertionMap)
     {
         $this->assertionMap = $assertionMap;
     }
@@ -91,7 +91,7 @@ class ModuleOptions extends AbstractOptions
      * @param string $guestRole
      * @return void
      */
-    public function setGuestRole(string $guestRole): void
+    public function setGuestRole(string $guestRole)
     {
         $this->guestRole = $guestRole;
     }
@@ -112,7 +112,7 @@ class ModuleOptions extends AbstractOptions
      * @param  array $roleProvider
      * @throws Exception\RuntimeException
      */
-    public function setRoleProvider(array $roleProvider): void
+    public function setRoleProvider(array $roleProvider)
     {
         if (count($roleProvider) > 1) {
             throw new Exception\RuntimeException(

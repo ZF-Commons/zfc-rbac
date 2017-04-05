@@ -72,12 +72,12 @@ final class AuthorizationService implements AuthorizationServiceInterface
      * @param string|callable|AssertionInterface $assertion
      * @return void
      */
-    public function setAssertion(string $permission, $assertion): void
+    public function setAssertion(string $permission, $assertion)
     {
         $this->assertions[$permission] = $assertion;
     }
 
-    public function setAssertions(array $assertions): void
+    public function setAssertions(array $assertions)
     {
         $this->assertions = $assertions;
     }
