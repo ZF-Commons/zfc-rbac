@@ -24,10 +24,12 @@ matrix:
     - php: 7.1
       env:
         - DEPENDENCIES="--prefer-lowest --prefer-stable"
-    - php: hvvm
+    - php: hhvm
       env:
         - DEPENDENCIES=""
-    - php: hvvm
+    - php: hhvm
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
 
 before_script:
