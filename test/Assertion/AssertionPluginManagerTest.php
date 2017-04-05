@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Assertion;
 
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
@@ -26,7 +27,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 /**
  * @covers \ZfcRbac\Assertion\AssertionPluginManager
  */
-class AssertionPluginManagerTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerTest extends TestCase
 {
     public function testValidationOfPluginSucceedsIfAssertionInterfaceIsImplemented()
     {
@@ -39,7 +40,7 @@ class AssertionPluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidationOfPluginFailsIfAssertionInterfaceIsNotImplemented()
     {
-        $this->setExpectedException(InvalidServiceException::class);
+        $this->expectException(InvalidServiceException::class);
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $pluginManager = new AssertionPluginManager($containerMock);
 

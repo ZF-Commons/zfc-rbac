@@ -19,13 +19,14 @@
 namespace ZfcRbacTest\Role;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbacTest\Asset\FlatRole;
 
 /**
  * @covers \ZfcRbac\Role\ObjectRepositoryRoleProvider
  */
-class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderTest extends TestCase
 {
 
     public function testObjectRepositoryProviderGetRoles()
@@ -78,7 +79,7 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
         $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
 
-        $this->setExpectedException(
+        $this->expectException(
             'ZfcRbac\Exception\RoleNotFoundException',
             'Some roles were asked but could not be loaded from database: guest, admin'
         );

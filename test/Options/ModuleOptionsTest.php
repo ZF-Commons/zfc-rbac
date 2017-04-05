@@ -16,12 +16,13 @@
  * and is licensed under the MIT license.
  */
 namespace ZfcRbacTest;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Options\ModuleOptions
  */
-class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsTest extends TestCase
 {
     public function testAssertModuleDefaultOptions()
     {
@@ -50,7 +51,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowExceptionIfMoreThanOneRoleProviderIsSet()
     {
-        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+        $this->expectException('ZfcRbac\Exception\RuntimeException');
         $moduleOptions = new ModuleOptions();
         $moduleOptions->setRoleProvider(['foo', 'bar']);
     }

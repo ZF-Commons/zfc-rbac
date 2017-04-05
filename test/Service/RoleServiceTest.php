@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Service;
 
+use PHPUnit\Framework\TestCase;
 use Rbac\Role\RoleInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\RoleService;
@@ -26,7 +27,7 @@ use ZfcRbacTest\Asset\Identity;
 /**
  * @covers \ZfcRbac\Service\RoleService
  */
-class RoleServiceTest extends \PHPUnit_Framework_TestCase
+class RoleServiceTest extends TestCase
 {
     public function testReturnGuestRoleIfNoIdentityIsGiven()
     {

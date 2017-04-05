@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Role;
 
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
@@ -26,7 +27,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Role\RoleProviderPluginManager
  */
-class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
+class RoleProviderPluginManagerTest extends TestCase
 {
     public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
     {
@@ -39,7 +40,7 @@ class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
     {
-        $this->setExpectedException(InvalidServiceException::class);
+        $this->expectException(InvalidServiceException::class);
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $pluginManager = new RoleProviderPluginManager($containerMock);
 

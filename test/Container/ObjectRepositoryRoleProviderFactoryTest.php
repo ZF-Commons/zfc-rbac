@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Container;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceManager;
@@ -30,7 +31,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory
  */
-class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 {
     public function testFactoryUsingObjectRepository()
     {

@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AssertionPluginManagerFactory;
@@ -25,7 +26,7 @@ use ZfcRbac\Container\AssertionPluginManagerFactory;
 /**
  * @covers \ZfcRbac\Container\AssertionPluginManagerFactory
  */
-class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerFactoryTest extends TestCase
 {
     public function testFactory()
     {

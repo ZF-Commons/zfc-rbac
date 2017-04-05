@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AuthorizationServiceFactory;
@@ -29,7 +30,7 @@ use ZfcRbac\Service\RoleServiceInterface;
 /**
  * @covers \ZfcRbac\Container\AuthorizationServiceFactory
  */
-class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class AuthorizationServiceFactoryTest extends TestCase
 {
     public function testFactory()
     {

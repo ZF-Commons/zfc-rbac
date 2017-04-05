@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Service;
 
+use PHPUnit\Framework\TestCase;
 use Rbac\Rbac;
 use Rbac\Role\RoleInterface;
 use ZfcRbac\Identity\IdentityInterface;
@@ -32,7 +33,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
  */
-class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
+class AuthorizationServiceTest extends TestCase
 {
     public function grantedProvider()
     {
@@ -246,7 +247,7 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
-        $this->setExpectedException(\ZfcRbac\Exception\InvalidArgumentException::class);
+        $this->expectException(\ZfcRbac\Exception\InvalidArgumentException::class);
 
         $authorizationService->setAssertion('foo', new \stdClass());
         $authorizationService->isGranted(null, 'foo');

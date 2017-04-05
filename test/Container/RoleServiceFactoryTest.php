@@ -18,6 +18,7 @@
 
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\TraversalStrategyInterface;
 use Zend\ServiceManager\ServiceManager;
@@ -31,7 +32,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Container\RoleServiceFactory
  */
-class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class RoleServiceFactoryTest extends TestCase
 {
     /**
      * @markTestSkipped skipped
@@ -63,7 +64,7 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowExceptionIfNoRoleProvider()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $options = new ModuleOptions([
             'guest_role'        => 'guest',
