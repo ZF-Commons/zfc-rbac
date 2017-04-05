@@ -123,19 +123,15 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $roles = $this->roleService->getIdentityRoles();
 
-        if (empty($roles)) {
-            return false;
-        }
-
-        if (!$this->rbac->isGranted($roles, $permission)) {
-            return false;
+        if (!empty($roles) && $this->rbac->isGranted($roles, $permission)) {
+            return true;
         }
 
         if ($this->hasAssertion($permission)) {
             return $this->assert($this->assertions[(string) $permission], $context);
         }
 
-        return true;
+        return false;
     }
 
     /**
