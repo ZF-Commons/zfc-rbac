@@ -34,7 +34,7 @@
   "require-dev": {
     "malukenho/docheader": "^0.1",
     "phpunit/phpunit": "^6.0",
-    "squizlabs/php_codesniffer": "^2.0",
+    "friendsofphp/php-cs-fixer": "^2.1",
     "doctrine/common": "^2.4"
   },
   "autoload": {
