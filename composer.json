@@ -32,6 +32,7 @@
     "zendframework/zend-stdlib": "^2.7 || ^3.0"
   },
   "require-dev": {
+    "malukenho/docheader": "^0.1",
     "phpunit/phpunit": "^6.0",
     "squizlabs/php_codesniffer": "^2.0",
     "doctrine/common": "^2.4"
@@ -51,5 +52,16 @@
       "dev-master": "2.4-dev",
       "dev-develop": "3.0-dev"
     }
+  },
+  "scripts":           {
+    "check":            [
+      "@cs",
+      "@test",
+      "@header"
+    ],
+    "cs":               "php-cs-fixer fix -v --diff --dry-run",
+    "cs-fix":           "php-cs-fixer fix -v --diff",
+    "test":             "phpunit",
+    "header":           "docheader check src test"
   }
 }
