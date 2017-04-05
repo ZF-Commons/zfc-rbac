@@ -31,7 +31,7 @@ interface RoleInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Checks if a permission exists for this role (it does not check child roles)
@@ -39,5 +39,5 @@ interface RoleInterface
      * @param  string $permission
      * @return bool
      */
-    public function hasPermission($permission);
+    public function hasPermission(string $permission): bool;
 }

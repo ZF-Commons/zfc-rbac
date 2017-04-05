@@ -20,7 +20,6 @@
 namespace ZfcRbacTest\Rbac;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Rbac\Exception\RuntimeException;
 use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Rbac\Role\HierarchicalRole;
 use ZfcRbac\Rbac\Role\Role;
@@ -31,17 +30,6 @@ use ZfcRbac\Rbac\Role\Role;
  */
 class RbacTest extends TestCase
 {
-    /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
-     */
-    public function testEnforcePermissionAsString()
-    {
-        $this->expectException(RuntimeException::class);
-
-        $rbac = new Rbac();
-        $rbac->isGranted([], new \stdClass());
-    }
-
     /**
      * @covers \ZfcRbac\Rbac\Rbac::isGranted
      */

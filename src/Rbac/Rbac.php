@@ -20,7 +20,6 @@
 namespace ZfcRbac\Rbac;
 
 use Generator;
-use ZfcRbac\Rbac\Exception\RuntimeException;
 use ZfcRbac\Rbac\Role\HierarchicalRoleInterface;
 use ZfcRbac\Rbac\Role\RoleInterface;
 use Traversable;
@@ -37,15 +36,8 @@ class Rbac
      * @param  string                                    $permission
      * @return bool
      */
-    public function isGranted($roles, $permission)
+    public function isGranted($roles, string $permission): bool
     {
-        if (!is_string($permission)) {
-            throw new RuntimeException(sprintf(
-                'Permission must be a string, "%s" given',
-                is_object($permission) ? get_class($permission) : gettype($permission)
-            ));
-        }
-
         if ($roles instanceof RoleInterface) {
             $roles = [$roles];
         }
@@ -64,7 +56,7 @@ class Rbac
      * @param  RoleInterface[]|Traversable $roles
      * @return Generator
      */
-    protected function flattenRoles($roles)
+    protected function flattenRoles($roles): Generator
     {
         foreach ($roles as $role) {
             yield $role;

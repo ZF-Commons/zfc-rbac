@@ -146,7 +146,7 @@ class AuthorizationServiceTest extends TestCase
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
-        $rbac->expects($this->once())->method('isGranted')->willReturn($this->returnValue(true));
+        $rbac->expects($this->once())->method('isGranted')->willReturn(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $assertionPluginManager->expects($this->never())->method('get');
@@ -166,7 +166,7 @@ class AuthorizationServiceTest extends TestCase
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
-        $rbac->expects($this->once())->method('isGranted')->willReturn($this->returnValue(true));
+        $rbac->expects($this->once())->method('isGranted')->willReturn(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $assertionPluginManager->expects($this->never())->method('get');
@@ -189,7 +189,7 @@ class AuthorizationServiceTest extends TestCase
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
-        $rbac->expects($this->once())->method('isGranted')->willReturn($this->returnValue(true));
+        $rbac->expects($this->once())->method('isGranted')->willReturn(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $assertionPluginManager->expects($this->once())->method('get')->with('fooFactory')->willReturn($assertion);
@@ -212,7 +212,7 @@ class AuthorizationServiceTest extends TestCase
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
-        $rbac->expects($this->once())->method('isGranted')->willReturn($this->returnValue(true));
+        $rbac->expects($this->once())->method('isGranted')->willReturn(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $assertionPluginManager->expects($this->never())->method('get');

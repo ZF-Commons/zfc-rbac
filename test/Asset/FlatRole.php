@@ -74,10 +74,10 @@ class FlatRole extends Role
     /**
      * Add a permission
      *
-     * @param  PermissionInterface|string $permission
+     * @param  string $permission
      * @return void
      */
-    public function addPermission($permission)
+    public function addPermission(string $permission): void
     {
         if (is_string($permission)) {
             $name       = $permission;
