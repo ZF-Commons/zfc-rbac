@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Rbac;
+use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Exception;

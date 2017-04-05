@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Role;
 
-use Rbac\Role\RoleInterface;
+use ZfcRbac\Rbac\Role\RoleInterface;
 
 /**
  * A role provider is an object that collect roles from string and convert them to RoleInterface instances

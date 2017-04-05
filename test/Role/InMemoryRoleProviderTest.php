@@ -19,7 +19,8 @@
 namespace ZfcRbacTest\Role;
 
 use PHPUnit\Framework\TestCase;
-use Rbac\Role\HierarchicalRoleInterface;
+use ZfcRbac\Rbac\Role\HierarchicalRoleInterface;
+use ZfcRbac\Rbac\Role\RoleInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
 
 /**
@@ -60,7 +61,7 @@ class InMemoryRoleProviderTest extends TestCase
 
         // Test guest role
         $guestRole = $roles[2];
-        $this->assertInstanceOf(\Rbac\Role\RoleInterface::class, $guestRole);
+        $this->assertInstanceOf(RoleInterface::class, $guestRole);
         $this->assertNotInstanceOf(HierarchicalRoleInterface::class, $guestRole);
         $this->assertEquals('guest', $guestRole->getName());
         $this->assertFalse($guestRole->hasPermission('write'));

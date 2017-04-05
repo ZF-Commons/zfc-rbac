@@ -19,8 +19,8 @@
 namespace ZfcRbacTest\Service;
 
 use PHPUnit\Framework\TestCase;
-use Rbac\Rbac;
-use Rbac\Role\RoleInterface;
+use ZfcRbac\Rbac\Rbac;
+use ZfcRbac\Rbac\Role\RoleInterface;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;

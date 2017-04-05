@@ -20,7 +20,7 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
+use ZfcRbac\Rbac\Permission\PermissionInterface;
 use ZfcRbac\Identity\IdentityInterface;
 
 class Identity implements IdentityInterface

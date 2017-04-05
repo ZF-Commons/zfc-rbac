@@ -19,8 +19,8 @@
 namespace ZfcRbacTest\Container;
 
 use PHPUnit\Framework\TestCase;
-use Rbac\Rbac;
-use Rbac\Traversal\Strategy\TraversalStrategyInterface;
+use ZfcRbac\Rbac\Rbac;
+use ZfcRbac\Rbac\Traversal\Strategy\TraversalStrategyInterface;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleServiceFactory;
 use ZfcRbac\Exception\RuntimeException;

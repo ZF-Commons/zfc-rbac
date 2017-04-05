@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Service;
 
-use Rbac\Role\RoleInterface;
+use ZfcRbac\Rbac\Role\RoleInterface;
 use Traversable;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Role\RoleProviderInterface;

@@ -19,7 +19,7 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use Rbac\Rbac;
+use ZfcRbac\Rbac\Rbac;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
