@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace ZfcRbac\Role;
 
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
+use Zend\ServiceManager\Factory\InvokableFactory;
 use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 
 /**
@@ -34,49 +34,21 @@ use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
  */
 class RoleProviderPluginManager extends AbstractPluginManager
 {
+    protected $instanceOf = RoleProviderInterface::class;
+
     /**
      * @var array
      */
-    protected $invokableClasses = [
-        InMemoryRoleProvider::class => InMemoryRoleProvider::class,
+    protected $aliases = [
+        'inmemory'         => InMemoryRoleProvider::class,
+        'objectrepository' => ObjectRepositoryRoleProvider::class,
     ];
 
     /**
      * @var array
      */
     protected $factories = [
+        InMemoryRoleProvider::class         => InvokableFactory::class,
         ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class,
     ];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate($instance): void
-    {
-        if ($instance instanceof RoleProviderInterface) {
-            return; // we're okay
-        }
-
-        throw new InvalidServiceException(sprintf(
-            'Role provider must implement "%s", but "%s" was given',
-            RoleProviderInterface::class,
-            is_object($instance) ? get_class($instance) : gettype($instance)
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatePlugin($plugin): void
-    {
-        $this->validate($plugin);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function canonicalizeName($name)
-    {
-        return $name;
-    }
 }

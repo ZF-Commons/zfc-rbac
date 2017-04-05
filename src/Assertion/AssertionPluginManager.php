@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace ZfcRbac\Assertion;
 
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
 
 /**
  * Plugin manager to create assertions
@@ -33,35 +32,5 @@ use Zend\ServiceManager\Exception\InvalidServiceException;
  */
 class AssertionPluginManager extends AbstractPluginManager
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function validate($instance): void
-    {
-        if ($instance instanceof AssertionInterface) {
-            return; // we're okay
-        }
-
-        throw new InvalidServiceException(sprintf(
-            'Assertion must implement "%s", but "%s" was given',
-            AssertionInterface::class,
-            is_object($instance) ? get_class($instance) : gettype($instance)
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatePlugin($plugin): void
-    {
-        $this->validate($plugin);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function canonicalizeName($name)
-    {
-        return $name;
-    }
+    protected $instanceOf = AssertionInterface::class;
 }
