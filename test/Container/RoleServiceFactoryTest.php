@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,14 +21,13 @@
 namespace ZfcRbacTest\Container;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Rbac\Rbac;
-use ZfcRbac\Rbac\Traversal\Strategy\TraversalStrategyInterface;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleServiceFactory;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Identity\AuthenticationProvider;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -43,9 +44,9 @@ class RoleServiceFactoryTest extends TestCase
             'guest_role'           => 'guest',
             'role_provider'        => [
                 \ZfcRbac\Role\InMemoryRoleProvider::class => [
-                    'foo'
-                ]
-            ]
+                    'foo',
+                ],
+            ],
         ]);
 
         $rbac              = $this->getMockBuilder(Rbac::class)->getMock();
@@ -68,7 +69,7 @@ class RoleServiceFactoryTest extends TestCase
 
         $options = new ModuleOptions([
             'guest_role'        => 'guest',
-            'role_provider'     => []
+            'role_provider'     => [],
         ]);
 
         $serviceManager = new ServiceManager();

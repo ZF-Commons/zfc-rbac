@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,9 +20,9 @@
 
 namespace ZfcRbac\Service;
 
-use ZfcRbac\Rbac\Role\RoleInterface;
 use Traversable;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Rbac\Role\RoleInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
 /**
@@ -31,7 +33,6 @@ use ZfcRbac\Role\RoleProviderInterface;
  */
 class RoleService implements RoleServiceInterface
 {
-
     /**
      * @var RoleProviderInterface
      */

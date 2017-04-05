@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,7 +42,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     protected $options = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct(array $options = [])
     {
@@ -48,7 +50,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCreationOptions(array $options): void
     {
@@ -65,7 +67,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     {
         $objectRepository = null;
 
-        if (!isset($options['role_name_property'])) {
+        if (! isset($options['role_name_property'])) {
             throw new Exception\RuntimeException('The "role_name_property" option is missing');
         }
 
@@ -91,7 +93,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * @return ObjectRepositoryRoleProvider
      */
     public function createService(ServiceLocatorInterface $serviceLocator): ObjectRepositoryRoleProvider

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,13 +35,13 @@ class InMemoryRoleProviderTest extends TestCase
         $inMemoryProvider = new InMemoryRoleProvider([
             'admin' => [
                 'children'    => ['member'],
-                'permissions' => ['delete']
+                'permissions' => ['delete'],
             ],
             'member' => [
                 'children'    => ['guest'],
-                'permissions' => ['write']
+                'permissions' => ['write'],
             ],
-            'guest'
+            'guest',
         ]);
 
         $roles = $inMemoryProvider->getRoles(['admin', 'member', 'guest']);

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,8 +35,8 @@ class AssertionPluginManagerFactoryTest extends TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', [
             'zfc_rbac' => [
-                'assertion_manager' => []
-            ]
+                'assertion_manager' => [],
+            ],
         ]);
 
         $factory       = new AssertionPluginManagerFactory();

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,8 +35,8 @@ class RoleProviderPluginManagerFactoryTest extends TestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', [
             'zfc_rbac' => [
-                'role_provider_manager' => []
-            ]
+                'role_provider_manager' => [],
+            ],
         ]);
 
         $factory       = new RoleProviderPluginManagerFactory();

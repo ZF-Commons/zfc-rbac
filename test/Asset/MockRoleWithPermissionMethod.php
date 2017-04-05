@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,6 +33,7 @@ class MockRoleWithPermissionMethod implements RoleInterface
     {
         return 'role-with-permission-method';
     }
+
     public function hasPermission(string $permission): bool
     {
         return false;

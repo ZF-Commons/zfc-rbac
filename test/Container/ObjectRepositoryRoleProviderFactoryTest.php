@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -22,7 +24,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -40,7 +41,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 
         $options = [
             'role_name_property' => 'name',
-            'object_repository'  => 'RoleObjectRepository'
+            'object_repository'  => 'RoleObjectRepository',
         ];
 
         $serviceManager->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
@@ -57,7 +58,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
         $options = [
             'role_name_property' => 'name',
             'object_manager'     => 'ObjectManager',
-            'class_name'         => 'Role'
+            'class_name'         => 'Role',
         ];
 
         $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
@@ -107,10 +108,9 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
             $pluginManager->get(ObjectRepositoryRoleProvider::class, [
-                'role_name_property' => 'name'
+                'role_name_property' => 'name',
             ]);
         } catch (ServiceNotCreatedException $e) {
-
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
                     $this->assertTrue(true); // we got here

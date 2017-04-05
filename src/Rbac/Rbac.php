@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,9 +21,9 @@
 namespace ZfcRbac\Rbac;
 
 use Generator;
+use Traversable;
 use ZfcRbac\Rbac\Role\HierarchicalRoleInterface;
 use ZfcRbac\Rbac\Role\RoleInterface;
-use Traversable;
 
 /**
  * Rbac object. It is used to check a permission against roles
@@ -60,7 +62,7 @@ class Rbac
         foreach ($roles as $role) {
             yield $role;
 
-            if (!$role instanceof HierarchicalRoleInterface) {
+            if (! $role instanceof HierarchicalRoleInterface) {
                 continue;
             }
 

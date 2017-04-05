@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +34,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 class RoleProviderPluginManagerFactory implements FactoryInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * @return RoleProviderPluginManager
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RoleProviderPluginManager
@@ -43,7 +45,7 @@ class RoleProviderPluginManagerFactory implements FactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * @return RoleProviderPluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator): RoleProviderPluginManager

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -55,7 +57,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoles(array $roleNames): array
     {
@@ -63,7 +65,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
 
         foreach ($roleNames as $roleName) {
             // If no config, we create a simple role with no permission
-            if (!isset($this->rolesConfig[$roleName])) {
+            if (! isset($this->rolesConfig[$roleName])) {
                 $roles[] = new Role($roleName);
                 continue;
             }

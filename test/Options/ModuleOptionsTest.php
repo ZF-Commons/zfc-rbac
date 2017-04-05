@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,6 +18,7 @@
  * and is licensed under the MIT license.
  */
 namespace ZfcRbacTest;
+
 use PHPUnit\Framework\TestCase;
 use ZfcRbac\Options\ModuleOptions;
 
@@ -37,10 +40,10 @@ class ModuleOptionsTest extends TestCase
     public function testSettersAndGetters()
     {
         $moduleOptions = new ModuleOptions([
-            'guest_role'            => 'unknown',
-            'role_provider'         => [],
+            'guest_role'               => 'unknown',
+            'role_provider'            => [],
             'assertion_map'            => [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ]);
 

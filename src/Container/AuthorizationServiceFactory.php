@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,13 +21,12 @@
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use ZfcRbac\Rbac\Rbac;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 
 /**
@@ -63,7 +64,7 @@ class AuthorizationServiceFactory implements FactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * @return AuthorizationService
      */
     public function createService(ServiceLocatorInterface $serviceLocator): AuthorizationService

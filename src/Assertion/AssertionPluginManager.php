@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +34,7 @@ use Zend\ServiceManager\Exception\InvalidServiceException;
 class AssertionPluginManager extends AbstractPluginManager
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($instance): void
     {
@@ -48,7 +50,7 @@ class AssertionPluginManager extends AbstractPluginManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validatePlugin($plugin): void
     {
@@ -56,7 +58,7 @@ class AssertionPluginManager extends AbstractPluginManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function canonicalizeName($name)
     {

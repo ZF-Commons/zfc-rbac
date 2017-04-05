@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,17 +21,17 @@
 namespace ZfcRbacTest\Service;
 
 use PHPUnit\Framework\TestCase;
+use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Exception\InvalidArgumentException;
+use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Rbac\Role\RoleInterface;
-use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 use ZfcRbacTest\Asset\FlatRole;
 use ZfcRbacTest\Asset\Identity;
 use ZfcRbacTest\Asset\SimpleAssertion;
-use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -44,7 +46,7 @@ class AuthorizationServiceTest extends TestCase
                 'guest',
                 'read',
                 null,
-                true
+                true,
             ],
 
             // Simple is allowed from parent
@@ -52,7 +54,7 @@ class AuthorizationServiceTest extends TestCase
                 'member',
                 'read',
                 null,
-                true
+                true,
             ],
 
             // Simple is refused
@@ -60,7 +62,7 @@ class AuthorizationServiceTest extends TestCase
                 'guest',
                 'write',
                 null,
-                false
+                false,
             ],
 
             // Simple is refused from parent
@@ -68,7 +70,7 @@ class AuthorizationServiceTest extends TestCase
                 'guest',
                 'delete',
                 null,
-                false
+                false,
             ],
 
             // Simple is refused from assertion map
@@ -78,8 +80,8 @@ class AuthorizationServiceTest extends TestCase
                 false,
                 false,
                 [
-                    'delete' => SimpleAssertion::class
-                ]
+                    'delete' => SimpleAssertion::class,
+                ],
             ],
 
             // Simple is accepted from assertion map
@@ -89,8 +91,8 @@ class AuthorizationServiceTest extends TestCase
                 true,
                 true,
                 [
-                    'delete' => SimpleAssertion::class
-                ]
+                    'delete' => SimpleAssertion::class,
+                ],
             ],
 
             // Simple is refused from no role
@@ -98,7 +100,7 @@ class AuthorizationServiceTest extends TestCase
                 [],
                 'read',
                 null,
-                false
+                false,
             ],
         ];
     }
@@ -129,7 +131,6 @@ class AuthorizationServiceTest extends TestCase
         $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
-
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $assertionPluginManager->expects($this->never())->method('get');
 
@@ -140,7 +141,7 @@ class AuthorizationServiceTest extends TestCase
 
     public function testReturnsTrueForIdentityWhenHasPermissionButNoAssertionsExists()
     {
-        $role = new FlatRole('admin');
+        $role     = new FlatRole('admin');
         $identity = new Identity([$role]);
 
         $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
@@ -159,8 +160,8 @@ class AuthorizationServiceTest extends TestCase
 
     public function testUsesAssertionsAsInstances()
     {
-        $role = new FlatRole('admin');
-        $identity = new Identity([$role]);
+        $role      = new FlatRole('admin');
+        $identity  = new Identity([$role]);
         $assertion = new SimpleAssertion();
 
         $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
@@ -182,8 +183,8 @@ class AuthorizationServiceTest extends TestCase
 
     public function testUsesAssertionsAsStrings()
     {
-        $role = new FlatRole('admin');
-        $identity = new Identity([$role]);
+        $role      = new FlatRole('admin');
+        $identity  = new Identity([$role]);
         $assertion = new SimpleAssertion();
 
         $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
@@ -205,8 +206,8 @@ class AuthorizationServiceTest extends TestCase
 
     public function testUsesAssertionsAsCallable()
     {
-        $role = new FlatRole('admin');
-        $identity = new Identity([$role]);
+        $role      = new FlatRole('admin');
+        $identity  = new Identity([$role]);
         $assertion = new SimpleAssertion();
 
         $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();

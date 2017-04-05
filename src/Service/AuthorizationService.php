@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,11 +20,11 @@
 
 namespace ZfcRbac\Service;
 
-use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Rbac\Rbac;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is
@@ -86,7 +88,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isGranted(IdentityInterface $identity = null, string $permission, $context = null): bool
     {
@@ -96,7 +98,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
             return false;
         }
 
-        if (!$this->rbac->isGranted($roles, $permission)) {
+        if (! $this->rbac->isGranted($roles, $permission)) {
             return false;
         }
 
