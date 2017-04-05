@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -22,34 +21,23 @@ namespace ZfcRbac\Rbac\Role;
 /**
  * Simple implementation for a hierarchical role
  */
-class HierarchicalRole extends Role implements HierarchicalRoleInterface
+final class HierarchicalRole extends Role implements HierarchicalRoleInterface
 {
     /**
      * @var array|RoleInterface[]
      */
-    protected $children = [];
+    private $children = [];
 
-    /**
-     * {@inheritDoc}
-     */
     public function hasChildren(): bool
     {
         return !empty($this->children);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getChildren(): array
     {
         return $this->children;
     }
 
-    /**
-     * Add a child role
-     *
-     * @param RoleInterface $child
-     */
     public function addChild(RoleInterface $child): void
     {
         $this->children[$child->getName()] = $child;

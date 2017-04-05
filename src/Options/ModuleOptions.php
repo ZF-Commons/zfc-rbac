@@ -89,9 +89,9 @@ class ModuleOptions extends AbstractOptions
      * @param string $guestRole
      * @return void
      */
-    public function setGuestRole($guestRole): void
+    public function setGuestRole(string $guestRole): void
     {
-        $this->guestRole = (string) $guestRole;
+        $this->guestRole = $guestRole;
     }
 
     /**
@@ -121,11 +121,6 @@ class ModuleOptions extends AbstractOptions
         $this->roleProvider = $roleProvider;
     }
 
-    /**
-     * Get the configuration for the role provider
-     *
-     * @return array
-     */
     public function getRoleProvider(): array
     {
         return $this->roleProvider;

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,14 +34,9 @@ class Role implements RoleInterface
      */
     protected $permissions = [];
 
-    /**
-     * Constructor
-     *
-     * @param string $name
-     */
     public function __construct(string $name)
     {
-        $this->name = (string) $name;
+        $this->name = $name;
     }
 
     /**
@@ -61,21 +55,13 @@ class Role implements RoleInterface
         return $this->permissions;
     }
     
-    /**
-     * Add a permission
-     *
-     * @param string $permission
-     */
     public function addPermission(string $permission): void
     {
-        $this->permissions[(string) $permission] = $permission;
+        $this->permissions[$permission] = $permission;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function hasPermission(string $permission): bool
     {
-        return isset($this->permissions[(string) $permission]);
+        return isset($this->permissions[$permission]);
     }
 }

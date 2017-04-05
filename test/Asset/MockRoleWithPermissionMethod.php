@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,11 +27,11 @@ class MockRoleWithPermissionMethod implements RoleInterface
         return ['permission-method-a', 'permission-method-b'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'role-with-permission-method';
     }
-    public function hasPermission($permission)
+    public function hasPermission(string $permission): bool
     {
         return false;
     }

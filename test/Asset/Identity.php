@@ -18,25 +18,21 @@
 
 namespace ZfcRbacTest\Asset;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use ZfcRbac\Rbac\Permission\PermissionInterface;
 use ZfcRbac\Identity\IdentityInterface;
 
 class Identity implements IdentityInterface
 {
     /**
-     * Constructor
+     * @var array
      */
+    private $roles;
+
     public function __construct(array $roles = [])
     {
         $this->roles = $roles;
     }
 
-    /**
-     * @return array
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,8 +18,6 @@
 
 namespace ZfcRbac\Rbac\Role;
 
-use Traversable;
-
 /**
  * Interface for a hierarchical role
  *
@@ -28,17 +25,10 @@ use Traversable;
  */
 interface HierarchicalRoleInterface extends RoleInterface
 {
-    /**
-     * Check if the role has children
-     *
-     * @return bool
-     */
     public function hasChildren(): bool;
 
     /**
-     * Get child roles
-     *
-     * @return RoleInterface[]|Traversable
+     * @return RoleInterface[]
      */
     public function getChildren(): array;
 }

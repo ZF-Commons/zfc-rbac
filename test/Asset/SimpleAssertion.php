@@ -28,23 +28,14 @@ class SimpleAssertion implements AssertionInterface
      */
     protected $called = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function assert(
-        $permission,
-        IdentityInterface $identity = null,
-        $context = null
-    ): bool {
+    public function assert(string $permission, IdentityInterface $identity = null, $context = null): bool
+    {
         $this->called = true;
 
         return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function getCalled(): bool
+    public function gotCalled(): bool
     {
         return $this->called;
     }

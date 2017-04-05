@@ -39,7 +39,7 @@ interface AssertionInterface
      * @return bool
      */
     public function assert(
-        $permission,
+        string $permission,
         IdentityInterface $identity = null,
         $context = null
     ): bool;

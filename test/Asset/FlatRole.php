@@ -55,9 +55,9 @@ class FlatRole extends Role
     /**
      * Init the Doctrine collection
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
-        $this->name        = (string) $name;
+        $this->name        = $name;
         $this->permissions = new ArrayCollection();
     }
 

@@ -19,6 +19,7 @@
 namespace ZfcRbacTest\Service;
 
 use PHPUnit\Framework\TestCase;
+use ZfcRbac\Exception\InvalidArgumentException;
 use ZfcRbac\Rbac\Rbac;
 use ZfcRbac\Rbac\Role\RoleInterface;
 use ZfcRbac\Identity\IdentityInterface;
@@ -176,7 +177,7 @@ class AuthorizationServiceTest extends TestCase
 
         $authorizationService->isGranted($identity, 'foo');
 
-        $this->assertTrue($assertion->getCalled());
+        $this->assertTrue($assertion->gotCalled());
     }
 
     public function testUsesAssertionsAsStrings()
@@ -199,7 +200,7 @@ class AuthorizationServiceTest extends TestCase
 
         $authorizationService->isGranted($identity, 'foo');
 
-        $this->assertTrue($assertion->getCalled());
+        $this->assertTrue($assertion->gotCalled());
     }
 
     public function testUsesAssertionsAsCallable()
@@ -247,7 +248,7 @@ class AuthorizationServiceTest extends TestCase
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
-        $this->expectException(\ZfcRbac\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $authorizationService->setAssertion('foo', new \stdClass());
         $authorizationService->isGranted(null, 'foo');

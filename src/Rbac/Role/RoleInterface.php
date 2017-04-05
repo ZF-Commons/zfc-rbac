@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,18 +25,7 @@ namespace ZfcRbac\Rbac\Role;
  */
 interface RoleInterface
 {
-    /**
-     * Get the name of the role.
-     *
-     * @return string
-     */
     public function getName(): string;
 
-    /**
-     * Checks if a permission exists for this role (it does not check child roles)
-     *
-     * @param  string $permission
-     * @return bool
-     */
     public function hasPermission(string $permission): bool;
 }

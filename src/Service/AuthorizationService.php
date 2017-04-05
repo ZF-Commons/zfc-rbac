@@ -31,35 +31,28 @@ use ZfcRbac\Identity\IdentityInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class AuthorizationService implements AuthorizationServiceInterface
+final class AuthorizationService implements AuthorizationServiceInterface
 {
     /**
      * @var Rbac
      */
-    protected $rbac;
+    private $rbac;
 
     /**
      * @var RoleServiceInterface
      */
-    protected $roleService;
+    private $roleService;
 
     /**
      * @var AssertionPluginManager
      */
-    protected $assertionPluginManager;
+    private $assertionPluginManager;
 
     /**
      * @var array
      */
-    protected $assertions = [];
+    private $assertions = [];
 
-    /**
-     * Constructor
-     *
-     * @param Rbac                   $rbac
-     * @param RoleServiceInterface   $roleService
-     * @param AssertionPluginManager $assertionPluginManager
-     */
     public function __construct(
         Rbac $rbac,
         RoleServiceInterface $roleService,
@@ -79,35 +72,23 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function setAssertion(string $permission, $assertion): void
     {
-        $this->assertions[(string) $permission] = $assertion;
+        $this->assertions[$permission] = $assertion;
     }
 
-    /**
-     * Set assertions
-     *
-     * @param array $assertions
-     * @return void
-     */
     public function setAssertions(array $assertions): void
     {
         $this->assertions = $assertions;
     }
 
-    /**
-     * Checks if a assertion exists
-     *
-     * @param  string $permission
-     * @return bool
-     */
-    public function hasAssertion($permission): bool
+    public function hasAssertion(string $permission): bool
     {
-        return isset($this->assertions[(string) $permission]);
+        return isset($this->assertions[$permission]);
     }
 
     /**
      * @inheritdoc
      */
-    public function isGranted($identity, $permission, $context = null): bool
+    public function isGranted(IdentityInterface $identity = null, string $permission, $context = null): bool
     {
         $roles = $this->roleService->getIdentityRoles($identity, $context);
 
@@ -133,7 +114,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param mixed                              $context
      * @return bool
      */
-    protected function assert($assertion, $permission, IdentityInterface $identity = null, $context = null): bool
+    private function assert($assertion, string $permission, IdentityInterface $identity = null, $context = null): bool
     {
         if (is_callable($assertion)) {
             return $assertion($permission, $identity, $context);

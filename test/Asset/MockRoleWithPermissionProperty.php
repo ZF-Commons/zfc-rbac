@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,13 +22,11 @@ use ZfcRbac\Rbac\Role\RoleInterface;
 
 class MockRoleWithPermissionProperty implements RoleInterface
 {
-    private $permissions = ['permission-property-a', 'permission-property-b'];
-
-    public function getName()
+    public function getName(): string
     {
         return 'role-with-permission-property';
     }
-    public function hasPermission($permission)
+    public function hasPermission(string $permission): bool
     {
         return false;
     }
