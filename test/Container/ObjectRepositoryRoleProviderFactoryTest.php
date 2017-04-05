@@ -85,6 +85,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
         } catch (ServiceNotCreatedException $e) {
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
+                    $this->assertTrue(true); // we got here
                     return true;
                 }
             }
@@ -112,6 +113,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
+                    $this->assertTrue(true); // we got here
                     return true;
                 }
             }
