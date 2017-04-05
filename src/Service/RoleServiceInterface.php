@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace ZfcRbac\Service;
 
 use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Rbac\Role\RoleInterface;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * Role service

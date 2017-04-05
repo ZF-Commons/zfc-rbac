@@ -25,7 +25,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Rbac\Rbac;
+use ZfcRbac\Rbac;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleServiceInterface;
 

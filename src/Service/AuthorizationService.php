@@ -24,7 +24,7 @@ use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Rbac\Rbac;
+use ZfcRbac\Rbac;
 
 /**
  * Authorization service is a simple service that internally uses Rbac to check if identity is

@@ -21,8 +21,8 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Service;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Rbac\Role\RoleInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Role\RoleInterface;
 use ZfcRbac\Service\RoleService;
 use ZfcRbacTest\Asset\Identity;
 

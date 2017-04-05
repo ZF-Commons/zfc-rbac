@@ -20,9 +20,6 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Role;
 
-use ZfcRbac\Rbac\Role\HierarchicalRole;
-use ZfcRbac\Rbac\Role\Role;
-
 /**
  * Simple role providers that store them in memory (ideal for small websites)
  *

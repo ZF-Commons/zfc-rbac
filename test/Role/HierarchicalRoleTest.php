@@ -18,20 +18,20 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Rbac\Role;
+namespace ZfcRbacTest\Rbac;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Rbac\Role\HierarchicalRole;
-use ZfcRbac\Rbac\Role\HierarchicalRoleInterface;
+use ZfcRbac\Role\HierarchicalRole;
+use ZfcRbac\Role\HierarchicalRoleInterface;
 
 /**
- * @covers \ZfcRbac\Rbac\Role\HierarchicalRole
+ * @covers \ZfcRbac\Role\HierarchicalRole
  * @group  Coverage
  */
 class HierarchicalRoleTest extends TestCase
 {
     /**
-     * @covers \ZfcRbac\Rbac\Role\HierarchicalRole::addChild
+     * @covers \ZfcRbac\Role\HierarchicalRole::addChild
      */
     public function testCanAddChild()
     {
@@ -44,7 +44,7 @@ class HierarchicalRoleTest extends TestCase
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Role\HierarchicalRole::hasChildren
+     * @covers \ZfcRbac\Role\HierarchicalRole::hasChildren
      */
     public function testHasChildren()
     {
@@ -58,7 +58,7 @@ class HierarchicalRoleTest extends TestCase
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Role\HierarchicalRole::getChildren
+     * @covers \ZfcRbac\Role\HierarchicalRole::getChildren
      */
     public function testCanGetChildren()
     {

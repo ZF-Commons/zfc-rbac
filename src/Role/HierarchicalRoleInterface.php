@@ -18,30 +18,19 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Rbac\Role;
+namespace ZfcRbac\Role;
 
 /**
- * Simple implementation for a hierarchical role
+ * Interface for a hierarchical role
+ *
+ * A hierarchical role is a role that can have children.
  */
-final class HierarchicalRole extends Role implements HierarchicalRoleInterface
+interface HierarchicalRoleInterface extends RoleInterface
 {
+    public function hasChildren(): bool;
+
     /**
-     * @var array|RoleInterface[]
+     * @return RoleInterface[]
      */
-    private $children = [];
-
-    public function hasChildren(): bool
-    {
-        return ! empty($this->children);
-    }
-
-    public function getChildren(): array
-    {
-        return $this->children;
-    }
-
-    public function addChild(RoleInterface $child): void
-    {
-        $this->children[$child->getName()] = $child;
-    }
+    public function getChildren(): array;
 }

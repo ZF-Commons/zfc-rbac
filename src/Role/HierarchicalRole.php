@@ -18,16 +18,30 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Rbac\Role;
+namespace ZfcRbac\Role;
 
 /**
- * Interface for a flat role
- *
- * The role embeds all the information needed to evaluate if a given role has a given permission
+ * Simple implementation for a hierarchical role
  */
-interface RoleInterface
+final class HierarchicalRole extends Role implements HierarchicalRoleInterface
 {
-    public function getName(): string;
+    /**
+     * @var array|RoleInterface[]
+     */
+    private $children = [];
 
-    public function hasPermission(string $permission): bool;
+    public function hasChildren(): bool
+    {
+        return ! empty($this->children);
+    }
+
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    public function addChild(RoleInterface $child): void
+    {
+        $this->children[$child->getName()] = $child;
+    }
 }

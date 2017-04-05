@@ -18,52 +18,52 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Rbac\Role;
+namespace ZfcRbacTest\Role;
+
+use PHPUnit\Framework\TestCase;
+use ZfcRbac\Role\Role;
 
 /**
- * Simple implementation for a role without hierarchy
- * and using strings as permissions
+ * @covers \ZfcRbac\Role\Role
+ * @group Coverage
  */
-class Role implements RoleInterface
+class RoleTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var string[]
-     */
-    protected $permissions = [];
-
-    public function __construct(string $name)
+    public function testSetNameByConstructor()
     {
-        $this->name = $name;
+        $role = new Role('phpIsHell');
+        $this->assertEquals('phpIsHell', $role->getName());
     }
 
     /**
-     * {@inheritdoc}
+     * @covers \ZfcRbac\Role\Role::addPermission
      */
-    public function getName(): string
+    public function testRoleCanAddPermission()
     {
-        return $this->name;
+        $role = new Role('php');
+
+        $role->addPermission('debug');
+        $this->assertTrue($role->hasPermission('debug'));
+
+        $role->addPermission('delete');
+
+        $this->assertTrue($role->hasPermission('delete'));
     }
 
     /**
-     * @return string[]
+     * @covers \ZfcRbac\Role\Role::getPermissions
      */
-    public function getPermissions(): array
+    public function testRoleCanGetPermissions()
     {
-        return $this->permissions;
-    }
+        $role = new Role('php');
 
-    public function addPermission(string $permission): void
-    {
-        $this->permissions[$permission] = $permission;
-    }
+        $role->addPermission('foo');
+        $role->addPermission('bar');
 
-    public function hasPermission(string $permission): bool
-    {
-        return isset($this->permissions[$permission]);
+        $expectedPermissions = [
+            'foo' => 'foo',
+            'bar' => 'bar',
+        ];
+        $this->assertEquals($expectedPermissions, $role->getPermissions());
     }
 }

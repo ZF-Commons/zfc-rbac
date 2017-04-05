@@ -27,7 +27,7 @@ use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Identity\AuthenticationProvider;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Rbac\Rbac;
+use ZfcRbac\Rbac;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**

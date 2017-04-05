@@ -18,12 +18,12 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Rbac;
+namespace ZfcRbac;
 
 use Generator;
 use Traversable;
-use ZfcRbac\Rbac\Role\HierarchicalRoleInterface;
-use ZfcRbac\Rbac\Role\RoleInterface;
+use ZfcRbac\Role\HierarchicalRoleInterface;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * Rbac object. It is used to check a permission against roles
@@ -44,7 +44,7 @@ class Rbac
         }
 
         foreach ($this->flattenRoles($roles) as $role) {
-            /* @var RoleInterface $role */
+            /* @var \ZfcRbac\Role\RoleInterface $role */
             if ($role->hasPermission($permission)) {
                 return true;
             }

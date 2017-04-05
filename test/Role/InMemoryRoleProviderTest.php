@@ -21,9 +21,9 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Role;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Rbac\Role\HierarchicalRoleInterface;
-use ZfcRbac\Rbac\Role\RoleInterface;
+use ZfcRbac\Role\HierarchicalRoleInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * @covers \ZfcRbac\Role\InMemoryRoleProvider

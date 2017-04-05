@@ -21,9 +21,8 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use ZfcRbac\Rbac\Permission\PermissionInterface;
-use ZfcRbac\Rbac\Role\Role;
+use ZfcRbac\Role\Role;
 
 /**
  * @ORM\Entity

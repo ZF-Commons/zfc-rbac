@@ -18,24 +18,52 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Asset;
+namespace ZfcRbac\Role;
 
-use ZfcRbac\Role\RoleInterface;
-
-class MockRoleWithPermissionMethod implements RoleInterface
+/**
+ * Simple implementation for a role without hierarchy
+ * and using strings as permissions
+ */
+class Role implements RoleInterface
 {
-    public function getPermissions()
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string[]
+     */
+    protected $permissions = [];
+
+    public function __construct(string $name)
     {
-        return ['permission-method-a', 'permission-method-b'];
+        $this->name = $name;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName(): string
     {
-        return 'role-with-permission-method';
+        return $this->name;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    public function addPermission(string $permission): void
+    {
+        $this->permissions[$permission] = $permission;
     }
 
     public function hasPermission(string $permission): bool
     {
-        return false;
+        return isset($this->permissions[$permission]);
     }
 }

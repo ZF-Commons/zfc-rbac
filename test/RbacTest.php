@@ -18,43 +18,43 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Rbac;
+namespace ZfcRbacTest;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Rbac\Rbac;
-use ZfcRbac\Rbac\Role\HierarchicalRole;
-use ZfcRbac\Rbac\Role\Role;
+use ZfcRbac\Rbac;
+use ZfcRbac\Role\HierarchicalRole;
+use ZfcRbac\Role\Role;
 
 /**
- * @covers \ZfcRbac\Rbac\Rbac
+ * @covers \ZfcRbac\Rbac
  * @group  Coverage
  */
 class RbacTest extends TestCase
 {
     /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
+     * @covers \ZfcRbac\Rbac::isGranted
      */
     public function testCanConvertSingleRole()
     {
         $role = new Role('Foo');
         $role->addPermission('permission');
 
-        $rbac = new Rbac();
+        $rbac = new \ZfcRbac\Rbac();
 
         $this->assertTrue($rbac->isGranted($role, 'permission'));
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
+     * @covers \ZfcRbac\Rbac::isGranted
      */
     public function testCanUseEmptyArray()
     {
-        $rbac = new Rbac();
+        $rbac = new \ZfcRbac\Rbac();
         $this->assertFalse($rbac->isGranted([], 'permission'));
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
+     * @covers \ZfcRbac\Rbac::isGranted
      */
     public function testCanCheckMultipleRolesWithMatchingPermission()
     {
@@ -64,13 +64,13 @@ class RbacTest extends TestCase
         $role2->addPermission('permission');
 
         $roles = [$role1, $role2];
-        $rbac  = new Rbac();
+        $rbac  = new \ZfcRbac\Rbac();
 
         $this->assertTrue($rbac->isGranted($roles, 'permission'));
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
+     * @covers \ZfcRbac\Rbac::isGranted
      */
     public function testReturnFalseIfNoRoleHasPermission()
     {
@@ -78,13 +78,13 @@ class RbacTest extends TestCase
         $role2 = new Role('Bar');
 
         $roles = [$role1, $role2];
-        $rbac  = new Rbac();
+        $rbac  = new \ZfcRbac\Rbac();
 
         $this->assertFalse($rbac->isGranted($roles, 'permission'));
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
+     * @covers \ZfcRbac\Rbac::isGranted
      */
     public function testCanCheckHierarchicalRole()
     {
@@ -94,13 +94,13 @@ class RbacTest extends TestCase
         $parentRole = new HierarchicalRole('Foo');
         $parentRole->addChild($childRole);
 
-        $rbac = new Rbac();
+        $rbac = new \ZfcRbac\Rbac();
 
         $this->assertTrue($rbac->isGranted($parentRole, 'permission'));
     }
 
     /**
-     * @covers \ZfcRbac\Rbac\Rbac::isGranted
+     * @covers \ZfcRbac\Rbac::isGranted
      */
     public function testReturnFalseIfNoHierarchicalRoleHasPermission()
     {

@@ -22,9 +22,8 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use ZfcRbac\Rbac\Role\HierarchicalRole as BaseHierarchicalRole;
-use ZfcRbac\Rbac\Role\RoleInterface;
+use ZfcRbac\Role\HierarchicalRole as BaseHierarchicalRole;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * @ORM\Entity

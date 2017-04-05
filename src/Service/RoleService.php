@@ -22,7 +22,7 @@ namespace ZfcRbac\Service;
 
 use Traversable;
 use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Rbac\Role\RoleInterface;
+use ZfcRbac\Role\RoleInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
 /**

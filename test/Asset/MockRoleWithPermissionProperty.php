@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace ZfcRbacTest\Asset;
 
-use ZfcRbac\Rbac\Role\RoleInterface;
+use ZfcRbac\Role\RoleInterface;
 
 class MockRoleWithPermissionProperty implements RoleInterface
 {
