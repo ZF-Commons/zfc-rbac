@@ -50,7 +50,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function setCreationOptions(array $options)
+    public function setCreationOptions(array $options): void
     {
         $this->options = $options;
     }
@@ -61,7 +61,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
      * @param array|null         $options
      * @return ObjectRepositoryRoleProvider
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ObjectRepositoryRoleProvider
     {
         $objectRepository = null;
 
@@ -94,7 +94,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
      * {@inheritDoc}
      * @return ObjectRepositoryRoleProvider
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): ObjectRepositoryRoleProvider
     {
         return $this($serviceLocator->getServiceLocator(), ObjectRepositoryRoleProvider::class, $this->options);
     }

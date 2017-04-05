@@ -61,7 +61,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      *
      * @return void
      */
-    public function clearRoleCache()
+    public function clearRoleCache(): void
     {
         $this->roleCache = [];
     }
@@ -69,7 +69,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles(array $roleNames)
+    public function getRoles(array $roleNames): array
     {
         $key = implode($roleNames);
 

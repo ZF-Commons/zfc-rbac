@@ -41,7 +41,7 @@ class RoleServiceFactory implements FactoryInterface
      * @param array              $options
      * @return RoleService
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RoleService
     {
         /* @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
@@ -68,7 +68,7 @@ class RoleServiceFactory implements FactoryInterface
      * {@inheritDoc}
      * @return RoleService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RoleService
     {
         return $this($serviceLocator, RoleService::class);
     }

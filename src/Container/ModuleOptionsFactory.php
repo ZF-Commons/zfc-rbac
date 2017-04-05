@@ -37,7 +37,7 @@ class ModuleOptionsFactory implements FactoryInterface
      * @param array              $options
      * @return ModuleOptions
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ModuleOptions
     {
         return new ModuleOptions($container->get('config')['zfc_rbac']);
     }
@@ -46,7 +46,7 @@ class ModuleOptionsFactory implements FactoryInterface
      * {@inheritDoc}
      * @return ModuleOptions
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): ModuleOptions
     {
         return $this($serviceLocator, ModuleOptions::class);
     }

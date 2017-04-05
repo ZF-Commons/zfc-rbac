@@ -49,7 +49,7 @@ class RoleProviderPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc}
      */
-    public function validate($instance)
+    public function validate($instance): void
     {
         if ($instance instanceof RoleProviderInterface) {
             return; // we're okay
@@ -65,7 +65,7 @@ class RoleProviderPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc}
      */
-    public function validatePlugin($plugin)
+    public function validatePlugin($plugin): void
     {
         $this->validate($plugin);
     }

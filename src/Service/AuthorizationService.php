@@ -77,7 +77,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param string|callable|AssertionInterface $assertion
      * @return void
      */
-    public function setAssertion($permission, $assertion)
+    public function setAssertion(string $permission, $assertion): void
     {
         $this->assertions[(string) $permission] = $assertion;
     }
@@ -88,7 +88,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param array $assertions
      * @return void
      */
-    public function setAssertions(array $assertions)
+    public function setAssertions(array $assertions): void
     {
         $this->assertions = $assertions;
     }
@@ -99,7 +99,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param  string $permission
      * @return bool
      */
-    public function hasAssertion($permission)
+    public function hasAssertion($permission): bool
     {
         return isset($this->assertions[(string) $permission]);
     }
@@ -107,7 +107,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritdoc
      */
-    public function isGranted($identity, $permission, $context = null)
+    public function isGranted($identity, $permission, $context = null): bool
     {
         $roles = $this->roleService->getIdentityRoles($identity, $context);
 
@@ -133,7 +133,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param mixed                              $context
      * @return bool
      */
-    protected function assert($assertion, $permission, IdentityInterface $identity = null, $context = null)
+    protected function assert($assertion, $permission, IdentityInterface $identity = null, $context = null): bool
     {
         if (is_callable($assertion)) {
             return $assertion($permission, $identity, $context);

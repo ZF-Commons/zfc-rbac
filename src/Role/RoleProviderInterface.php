@@ -37,5 +37,5 @@ interface RoleProviderInterface
      * @param  string[] $roleNames
      * @return RoleInterface[]
      */
-    public function getRoles(array $roleNames);
+    public function getRoles(array $roleNames): array;
 }

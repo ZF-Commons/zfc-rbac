@@ -37,7 +37,7 @@ class AssertionPluginManagerFactory implements FactoryInterface
      * @param array|null         $options
      * @return AssertionPluginManager
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AssertionPluginManager
     {
         $config = $container->get('config')['zfc_rbac']['assertion_manager'];
 
@@ -48,7 +48,7 @@ class AssertionPluginManagerFactory implements FactoryInterface
      * {@inheritDoc}
      * @return AssertionPluginManager
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): AssertionPluginManager
     {
         return $this($serviceLocator, AssertionPluginManager::class);
     }

@@ -42,5 +42,5 @@ interface AssertionInterface
         $permission,
         IdentityInterface $identity = null,
         $context = null
-    );
+    ): bool;
 }

@@ -36,5 +36,5 @@ interface AuthorizationServiceInterface
      * @param  mixed                  $context
      * @return bool
      */
-    public function isGranted($identity, $permission, $context = null);
+    public function isGranted($identity, $permission, $context = null): bool;
 }

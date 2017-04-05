@@ -42,7 +42,7 @@ class AuthorizationServiceFactory implements FactoryInterface
      * @param array              $options
      * @return AuthorizationService
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AuthorizationService
     {
         /* @var Rbac $rbac */
         $rbac = new Rbac();
@@ -66,7 +66,7 @@ class AuthorizationServiceFactory implements FactoryInterface
      * {@inheritDoc}
      * @return AuthorizationService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): AuthorizationService
     {
         return $this($serviceLocator, AuthorizationService::class);
     }

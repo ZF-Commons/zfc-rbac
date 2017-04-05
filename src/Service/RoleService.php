@@ -57,7 +57,7 @@ class RoleService implements RoleServiceInterface
      *
      * @param RoleProviderInterface $roleProvider
      */
-    public function setRoleProvider(RoleProviderInterface $roleProvider)
+    public function setRoleProvider(RoleProviderInterface $roleProvider): void
     {
         $this->roleProvider = $roleProvider;
     }
@@ -68,7 +68,7 @@ class RoleService implements RoleServiceInterface
      * @param  string $guestRole
      * @return void
      */
-    public function setGuestRole($guestRole)
+    public function setGuestRole(string $guestRole): void
     {
         $this->guestRole = (string) $guestRole;
     }
@@ -78,7 +78,7 @@ class RoleService implements RoleServiceInterface
      *
      * @return string
      */
-    public function getGuestRole()
+    public function getGuestRole(): string
     {
         return $this->guestRole;
     }
@@ -90,7 +90,7 @@ class RoleService implements RoleServiceInterface
      * @param null              $context
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity = null, $context = null)
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): array
     {
         if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
@@ -105,7 +105,7 @@ class RoleService implements RoleServiceInterface
      * @param  array|Traversable $roles
      * @return RoleInterface[]
      */
-    protected function convertRoles($roles)
+    protected function convertRoles($roles): array
     {
         if ($roles instanceof Traversable) {
             $roles = iterator_to_array($roles);

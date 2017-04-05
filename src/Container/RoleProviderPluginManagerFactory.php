@@ -35,7 +35,7 @@ class RoleProviderPluginManagerFactory implements FactoryInterface
      * {@inheritDoc}
      * @return RoleProviderPluginManager
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RoleProviderPluginManager
     {
         $config        = $container->get('config')['zfc_rbac']['role_provider_manager'];
 
@@ -46,7 +46,7 @@ class RoleProviderPluginManagerFactory implements FactoryInterface
      * {@inheritDoc}
      * @return RoleProviderPluginManager
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RoleProviderPluginManager
     {
         return $this($serviceLocator, RoleProviderPluginManager::class);
     }

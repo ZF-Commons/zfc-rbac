@@ -35,16 +35,16 @@ class SimpleAssertion implements AssertionInterface
         $permission,
         IdentityInterface $identity = null,
         $context = null
-    ) {
+    ): bool {
         $this->called = true;
 
-        return $context;
+        return true;
     }
 
     /**
      * @return bool
      */
-    public function getCalled()
+    public function getCalled(): bool
     {
         return $this->called;
     }
