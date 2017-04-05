@@ -37,7 +37,7 @@ class RoleProviderPluginManagerTest extends TestCase
         $pluginMock    = $this->getMockBuilder(RoleProviderInterface::class)->getMock();
         $pluginManager = new RoleProviderPluginManager($containerMock);
 
-        $this->assertNull($pluginManager->validatePlugin($pluginMock));
+        $this->assertNull($pluginManager->validate($pluginMock));
     }
 
     public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
@@ -47,6 +47,6 @@ class RoleProviderPluginManagerTest extends TestCase
         $pluginManager = new RoleProviderPluginManager($containerMock);
 
         $plugin = new \stdClass();
-        $pluginManager->validatePlugin($plugin);
+        $pluginManager->validate($plugin);
     }
 }
