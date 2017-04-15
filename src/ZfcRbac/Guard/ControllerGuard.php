@@ -27,7 +27,7 @@ use ZfcRbac\Service\RoleService;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class ControllerGuard extends AbstractGuard
+class ControllerGuard extends AbstractAssertionGuard
 {
     use ProtectionPolicyTrait;
 
@@ -82,14 +82,17 @@ class ControllerGuard extends AbstractGuard
             $controller = strtolower($rule['controller']);
             $actions    = isset($rule['actions']) ? (array) $rule['actions'] : [];
             $roles      = (array) $rule['roles'];
+            $assertion  = isset($rule['assertion']) ? $rule['assertion'] : false;
 
             if (empty($actions)) {
-                $this->rules[$controller][0] = $roles;
+                $this->rules[$controller][0]['roles'] = $roles;
+                $this->rules[$controller][0]['assertion'] = $assertion;
                 continue;
             }
 
             foreach ($actions as $action) {
-                $this->rules[$controller][strtolower($action)] = $roles;
+                $this->rules[$controller][strtolower($action)]['roles'] = $roles;
+                $this->rules[$controller][strtolower($action)]['assertion'] = $assertion;
             }
         }
     }
@@ -113,17 +116,23 @@ class ControllerGuard extends AbstractGuard
         // if nothing is matched, we fallback to the protection policy logic
 
         if (isset($this->rules[$controller][$action])) {
-            $allowedRoles = $this->rules[$controller][$action];
+            $allowedRoles   = $this->rules[$controller][$action]['roles'];
+            $assertion      = $this->rules[$controller][$action]['assertion'];
         } elseif (isset($this->rules[$controller][0])) {
-            $allowedRoles = $this->rules[$controller][0];
+            $allowedRoles   = $this->rules[$controller][0]['roles'];
+            $assertion      = $this->rules[$controller][0]['assertion'];
         } else {
             return $this->protectionPolicy === self::POLICY_ALLOW;
         }
 
         if (in_array('*', $allowedRoles)) {
-            return true;
+            return ($assertion) ? $this->assert($assertion) : true;
         }
 
-        return $this->roleService->matchIdentityRoles($allowedRoles);
+        if ($this->roleService->matchIdentityRoles($allowedRoles)) {
+            return ($assertion) ? $this->assert($assertion) : true;
+        }
+        
+        return false;
     }
 }

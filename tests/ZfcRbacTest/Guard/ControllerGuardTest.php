@@ -65,9 +65,24 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                     ])
                 ],
                 'expected' => [
-                    'mycontroller'  => [0 => ['role1']],
-                    'mycontroller2' => [0 => ['role2', 'role3']],
-                    'mycontroller3' => [0 => ['role4']]
+                    'mycontroller'  => [
+                        [
+                            'roles' => ['role1'],
+                            'assertion' => false
+                        ]
+                    ],
+                    'mycontroller2' => [
+                        [
+                            'roles' => ['role2', 'role3'],
+                            'assertion' => false
+                        ]
+                    ],
+                    'mycontroller3' => [
+                        [
+                            'roles' => ['role4'],
+                            'assertion' => false
+                        ]
+                    ]
                 ]
             ],
 
@@ -92,14 +107,23 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expected' => [
                     'mycontroller'  => [
-                        'delete' => ['role1']
+                        'delete' => [
+                            'roles' => ['role1'],
+                            'assertion' => false
+                        ]
                     ],
                     'mycontroller2'  => [
-                        'delete' => ['role2']
+                        'delete' => [
+                            'roles' => ['role2'],
+                            'assertion' => false
+                        ]
                     ],
                     'mycontroller3'  => [
-                        'delete' => ['role3']
-                    ],
+                        'delete' => [
+                            'roles' => ['role3'],
+                            'assertion' => false
+                        ]
+                    ]
                 ]
             ],
 
@@ -119,12 +143,24 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expected' => [
                     'mycontroller'  => [
-                        'edit'   => ['role1'],
-                        'delete' => ['role1']
+                        'edit'   => [
+                            'roles' => ['role1'],
+                            'assertion' => false
+                        ],
+                        'delete' => [
+                            'roles' => ['role1'],
+                            'assertion' => false
+                        ]
                     ],
                     'mycontroller2'  => [
-                        'edit'   => ['role2'],
-                        'delete' => ['role2']
+                        'edit'   => [
+                            'roles' => ['role2'],
+                            'assertion' => false
+                        ],
+                        'delete' => [
+                            'roles' => ['role2'],
+                            'assertion' => false
+                        ]
                     ]
                 ]
             ],
@@ -145,8 +181,14 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expected' => [
                     'mycontroller'  => [
-                        'edit' => ['role1'],
-                        0      => ['role2']
+                        'edit' =>  [
+                            'roles' => ['role1'],
+                            'assertion' => false
+                        ],
+                        0      =>  [
+                            'roles' => ['role2'],
+                            'assertion' => false
+                        ]
                     ]
                 ]
             ]
@@ -394,6 +436,46 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase
                 'identityRole' => 'admin',
                 'isGranted'    => true,
                 'policy'       => GuardInterface::POLICY_DENY
+            ],
+            
+            // Test simple guard with assertions
+            [
+                'rules' => [
+                    [
+                        'controller' => 'BlogController',
+                        'roles'      => 'admin',
+                        'assertion'  => function ($identity) {
+                            return true;
+                        }
+                    ]
+                ],
+                'controller'   => 'BlogController',
+                'action'       => 'edit',
+                'rolesConfig'  => [
+                    'admin'
+                ],
+                'identityRole' => 'admin',
+                'isGranted'    => true,
+                'policy'       => GuardInterface::POLICY_ALLOW
+            ],
+            [
+                'rules' => [
+                    [
+                        'controller' => 'BlogController',
+                        'roles'      => 'admin',
+                        'assertion'  => function ($identity) {
+                            return false;
+                        }
+                    ]
+                ],
+                'controller'   => 'BlogController',
+                'action'       => 'edit',
+                'rolesConfig'  => [
+                    'admin'
+                ],
+                'identityRole' => 'admin',
+                'isGranted'    => false,
+                'policy'       => GuardInterface::POLICY_ALLOW
             ],
         ];
     }
