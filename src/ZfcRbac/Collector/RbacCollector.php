@@ -149,7 +149,11 @@ class RbacCollector implements CollectorInterface, Serializable
         $identityRoles = $roleService->getIdentityRoles();
 
         foreach ($identityRoles as $role) {
-            $roleName = $role->getName();
+            if (is_string($role)) {
+                $roleName = $role;
+            } else {
+                $roleName = $role->getName();
+            }
 
             if (!$role instanceof HierarchicalRoleInterface) {
                 $this->collectedRoles[] = $roleName;
@@ -165,7 +169,9 @@ class RbacCollector implements CollectorInterface, Serializable
                 }
             }
 
-            $this->collectPermissions($role);
+            if ($role instanceOf RoleInterface) {
+                $this->collectPermissions($role);
+            }
         }
     }
 
