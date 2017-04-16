@@ -19,7 +19,8 @@
 namespace ZfcRbacTest\Asset;
 
 use ZfcRbac\Assertion\AssertionInterface;
-use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Assertion\AuthorizationContext;
+use ZfcRbac\Service\AuthorizationServiceInterface;
 
 class SimpleAssertion implements AssertionInterface
 {
@@ -31,11 +32,11 @@ class SimpleAssertion implements AssertionInterface
     /**
      * {@inheritDoc}
      */
-    public function assert(AuthorizationService $authorization, $context = false)
+    public function assert(AuthorizationServiceInterface $authorization, AuthorizationContext $context)
     {
         $this->called = true;
 
-        return $context;
+        return $context->getContext();
     }
 
     /**

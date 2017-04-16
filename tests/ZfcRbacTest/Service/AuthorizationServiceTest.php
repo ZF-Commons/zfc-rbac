@@ -89,6 +89,28 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
 
+            // Check if permission is being set
+            [
+                'admin',
+                'delete',
+                'delete',
+                true,
+                [
+                    'delete' => 'ZfcRbacTest\Asset\PermissionAssertion'
+                ]
+            ],
+
+            // Check if permission is being set (failure)
+            [
+                'admin',
+                'delete',
+                'fail',
+                false,
+                [
+                    'delete' => 'ZfcRbacTest\Asset\PermissionAssertion'
+                ]
+            ],
+
             // Simple is refused from no role
             [
                 [],
@@ -120,7 +142,8 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $assertionPluginConfig = [
             'invokables' => [
-                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                'ZfcRbacTest\Asset\SimpleAssertion'     => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'ZfcRbacTest\Asset\PermissionAssertion' => 'ZfcRbacTest\Asset\PermissionAssertion'
             ]
         ];
 
