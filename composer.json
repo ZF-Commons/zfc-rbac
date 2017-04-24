@@ -28,7 +28,7 @@
   ],
   "require": {
     "php": "~5.6 || ~7.0",
-    "zendframework/zend-config": "~2.2",
+    "zendframework/zend-config": "~2.2 || ^3.1",
     "zendframework/zend-eventmanager": "^2.6.3 || ^3.0",
     "zendframework/zend-mvc": "~2.7 || ^3.0",
     "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
