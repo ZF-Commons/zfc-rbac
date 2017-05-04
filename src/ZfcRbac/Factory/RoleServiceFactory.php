@@ -56,6 +56,7 @@ class RoleServiceFactory implements FactoryInterface
         $pluginManager = $container->get('ZfcRbac\Role\RoleProviderPluginManager');
 
         /* @var \ZfcRbac\Role\RoleProviderInterface $roleProvider */
+        reset($roleProviderConfig);
         $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
 
         /* @var \Rbac\Traversal\Strategy\TraversalStrategyInterface $traversalStrategy */
