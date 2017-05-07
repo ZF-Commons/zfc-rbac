@@ -1,5 +1,7 @@
 # ZfcRbac
 
+[![Join the chat at https://gitter.im/ZFCommons/zfc-rbac](https://badges.gitter.im/ZFCommons/zfc-rbac.svg)](https://gitter.im/ZFCommons/zfc-rbac?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Master Branch Build Status](https://secure.travis-ci.org/ZF-Commons/zfc-rbac.png?branch=master)](http://travis-ci.org/ZF-Commons/zfc-rbac)
 [![Coverage Status](https://coveralls.io/repos/ZF-Commons/zfc-rbac/badge.png)](https://coveralls.io/r/ZF-Commons/zfc-rbac)
 [![Join the chat at https://gitter.im/ZFCommons/zfc-rbac](https://badges.gitter.im/ZFCommons/zfc-rbac.svg)](https://gitter.im/ZFCommons/zfc-rbac?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
