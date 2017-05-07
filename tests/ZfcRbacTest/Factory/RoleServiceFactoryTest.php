@@ -40,27 +40,93 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
+        $traversalStrategy = $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface');
+        $roleProvider = $this->getMock('\ZfcRbac\Role\RoleProviderInterface');
+
+        $rbac = $this
+            ->getMockBuilder('Rbac\Rbac')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $rbac->expects($this->once())
+            ->method('getTraversalStrategy')
+            ->will($this->returnValue(
+                $traversalStrategy
+            ));
+
+        $pluginManager = $this
+            ->getMockBuilder('\ZfcRbac\Role\RoleProviderPluginManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $pluginManager->expects($this->once())
+            ->method('get')
+            ->with('ZfcRbac\Role\InMemoryRoleProvider', ['foo'])
+            ->will($this->returnValue(
+                $roleProvider
+            ));
+
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
-        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', new RoleProviderPluginManager($serviceManager));
-        $serviceManager->setService(
-            'ZfcRbac\Identity\AuthenticationProvider',
-            $this->getMock('ZfcRbac\Identity\IdentityProviderInterface')
-        );
-
-        $traversalStrategy = $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface');
-        $rbac              = $this->getMock('Rbac\Rbac', [], [], '', false);
-
-        $rbac->expects($this->once())->method('getTraversalStrategy')->will($this->returnValue($traversalStrategy));
-
         $serviceManager->setService('Rbac\Rbac', $rbac);
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
+        $serviceManager->setService('ZfcRbac\Identity\AuthenticationProvider', $this->getMock('ZfcRbac\Identity\IdentityProviderInterface'));
 
-        $factory     = new RoleServiceFactory();
+        $factory = new RoleServiceFactory();
         $roleService = $factory->createService($serviceManager);
 
         $this->assertInstanceOf('ZfcRbac\Service\RoleService', $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertAttributeSame($traversalStrategy, 'traversalStrategy', $roleService);
+    }
+
+    public function testIfRoleArrayPointerBeyondArrayEnd()
+    {
+        $options = new ModuleOptions([
+            'identity_provider'    => 'ZfcRbac\Identity\AuthenticationProvider',
+            'guest_role'           => 'guest',
+            'role_provider'        => [
+                'ZfcRbac\Role\InMemoryRoleProvider' => [
+                    'foo'
+                ]
+            ]
+        ]);
+
+        // Simulate if array pointer beyond end of array. E.g after 'while(next($roleProvider)) { //do }'
+        $roleProvider = $options->getRoleProvider();
+        next($roleProvider);
+        $options->setRoleProvider($roleProvider);
+
+        $traversalStrategy = $this->getMock('Rbac\Traversal\Strategy\TraversalStrategyInterface');
+        $roleProvider = $this->getMock('\ZfcRbac\Role\RoleProviderInterface');
+
+        $rbac = $this
+            ->getMockBuilder('Rbac\Rbac')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $rbac->expects($this->once())
+            ->method('getTraversalStrategy')
+            ->will($this->returnValue(
+                $traversalStrategy
+            ));
+
+        $pluginManager = $this
+            ->getMockBuilder('\ZfcRbac\Role\RoleProviderPluginManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $pluginManager->expects($this->once())
+            ->method('get')
+            ->with('ZfcRbac\Role\InMemoryRoleProvider', ['foo'])
+            ->will($this->returnValue(
+                $roleProvider
+            ));
+
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', $options);
+        $serviceManager->setService('Rbac\Rbac', $rbac);
+        $serviceManager->setService('ZfcRbac\Role\RoleProviderPluginManager', $pluginManager);
+        $serviceManager->setService('ZfcRbac\Identity\AuthenticationProvider', $this->getMock('ZfcRbac\Identity\IdentityProviderInterface'));
+
+        $factory = new RoleServiceFactory();
+        $factory->createService($serviceManager);
     }
 
     public function testThrowExceptionIfNoRoleProvider()
@@ -81,6 +147,6 @@ class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory     = new RoleServiceFactory();
-        $roleService = $factory->createService($serviceManager);
+        $factory->createService($serviceManager);
     }
 }
