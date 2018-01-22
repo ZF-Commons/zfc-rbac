@@ -37,10 +37,8 @@ If you are looking for some information that is not listed in the documentation,
    1. [Injecting the AuthorizationService](/docs/06.%20Using%20the%20Authorization%20Service.md#injecting-the-authorization-service)
    2. [Checking permissions](/docs/06.%20Using%20the%20Authorization%20Service.md#checking-permissions-in-a-service)
        1. [In a service](/docs/06.%20Using%20the%20Authorization%20Service.md#checking-permissions-in-a-service)
-       2. [In a controller's action using the isGranted controller plugin]
-            (/docs/06.%20Using%20the%20Authorization%20Service.md#checking-permissions-in-a-controller)
-       3. [In a view using the isGranted view helper]
-            (/docs/06.%20Using%20the%20Authorization%20Service.md#checking-permissions-in-a-view)
+       2. [In a controller's action using the isGranted controller plugin](/docs/06.%20Using%20the%20Authorization%20Service.md#in-a-controller-)
+       3. [In a view using the isGranted view helper](/docs/06.%20Using%20the%20Authorization%20Service.md#in-a-view-)
    3. [Permissions and Assertions](/docs/06.%20Using%20the%20Authorization%20Service.md#permissions-and-assertions)
 
 7. [Cookbook](/docs/07.%20Cookbook.md)
