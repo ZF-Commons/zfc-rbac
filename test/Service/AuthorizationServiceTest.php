@@ -236,7 +236,32 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($called);
     }
 
-    public function testThrowExceptionForInvalidAssertion(): void
+    public function testAssertionsAsStringsAreCached()
+    {
+        $role = new FlatRole('admin');
+        $identity = new Identity([$role]);
+        $assertion = new SimpleAssertion();
+
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
+        $roleService->expects($this->any())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
+
+        $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
+        $rbac->expects($this->any())->method('isGranted')->willReturn(true);
+
+        $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
+        $assertionPluginManager->expects($this->once())->method('get')->with('fooFactory')->willReturn($assertion);
+
+        $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
+        $authorizationService->setAssertion('foo', 'fooFactory');
+
+        $authorizationService->isGranted($identity, 'foo');
+        $authorizationService->isGranted($identity, 'foo');
+
+        $this->assertTrue($assertion->gotCalled());
+        $this->assertSame(2, $assertion->calledTimes());
+    }
+    
+    public function testThrowExceptionForInvalidAssertion()
     {
         $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();

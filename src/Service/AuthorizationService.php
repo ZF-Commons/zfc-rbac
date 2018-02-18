@@ -122,7 +122,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if (is_string($assertion)) {
-            $assertion = $this->assertionPluginManager->get($assertion);
+            $this->assertions[$permission] = $assertion = $this->assertionPluginManager->get($assertion);
 
             return $assertion->assert($permission, $identity, $context);
         }
