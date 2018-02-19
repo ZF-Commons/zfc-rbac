@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Identity;
 
+use ZfcRbac\Role\RoleInterface;
+
 /**
  * Interface for an identity
  *
@@ -31,7 +33,7 @@ interface IdentityInterface
     /**
      * Get the list of roles of this identity
      *
-     * @return string[]|\Rbac\Role\RoleInterface[]
+     * @return string[]|RoleInterface[]
      */
     public function getRoles();
 }
