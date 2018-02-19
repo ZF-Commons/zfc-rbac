@@ -52,7 +52,7 @@ final class ObjectRepositoryRoleProvider implements RoleProviderInterface
      * @param ObjectRepository $objectRepository
      * @param string           $roleNameProperty
      */
-    public function __construct(ObjectRepository $objectRepository, $roleNameProperty)
+    public function __construct(ObjectRepository $objectRepository, string $roleNameProperty)
     {
         $this->objectRepository = $objectRepository;
         $this->roleNameProperty = $roleNameProperty;

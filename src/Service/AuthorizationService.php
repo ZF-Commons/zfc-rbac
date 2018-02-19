@@ -68,8 +68,8 @@ final class AuthorizationService implements AuthorizationServiceInterface
     /**
      * Set an assertion
      *
-     * @param string                             $permission
-     * @param string|callable|AssertionInterface $assertion
+     * @param string                                  $permission
+     * @param string|callable|AssertionInterface|null $assertion
      * @return void
      */
     public function setAssertion(string $permission, $assertion): void
