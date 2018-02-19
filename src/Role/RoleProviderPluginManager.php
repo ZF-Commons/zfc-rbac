@@ -39,14 +39,6 @@ class RoleProviderPluginManager extends AbstractPluginManager
     /**
      * @var array
      */
-    protected $aliases = [
-        'inmemory'         => InMemoryRoleProvider::class,
-        'objectrepository' => ObjectRepositoryRoleProvider::class,
-    ];
-
-    /**
-     * @var array
-     */
     protected $factories = [
         InMemoryRoleProvider::class         => InvokableFactory::class,
         ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class,
