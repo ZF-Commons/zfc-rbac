@@ -10,18 +10,18 @@ matrix:
   allow_failures:
     - php: hhvm
   include:
-    - php: 7.0
-      env:
-        - DEPENDENCIES=""
-    - php: 7.0
-      env:
-        - DEPENDENCIES="--prefer-lowest --prefer-stable"
     - php: 7.1
       env:
         - DEPENDENCIES=""
         - EXECUTE_CS_CHECK=true
         - TEST_COVERAGE=true
     - php: 7.1
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+    - php: 7.2
+      env:
+        - DEPENDENCIES=""
+    - php: 7.3
       env:
         - DEPENDENCIES="--prefer-lowest --prefer-stable"
     - php: hhvm
