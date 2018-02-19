@@ -90,7 +90,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function isGranted(IdentityInterface $identity = null, string $permission, $context = null): bool
+    public function isGranted(?IdentityInterface $identity, string $permission, $context = null): bool
     {
         $roles = $this->roleService->getIdentityRoles($identity, $context);
 
