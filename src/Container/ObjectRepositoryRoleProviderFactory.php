@@ -33,7 +33,7 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ObjectRepositoryRoleProviderFactory implements FactoryInterface
+final class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 {
     /**
      * @var array

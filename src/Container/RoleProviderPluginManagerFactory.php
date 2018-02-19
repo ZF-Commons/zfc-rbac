@@ -30,7 +30,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class RoleProviderPluginManagerFactory implements FactoryInterface
+final class RoleProviderPluginManagerFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RoleProviderPluginManager
     {

@@ -29,7 +29,7 @@ use ZfcRbac\Exception;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ModuleOptions extends AbstractOptions
+final class ModuleOptions extends AbstractOptions
 {
     /**
      * Guest role (used when no identity is found)

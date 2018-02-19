@@ -32,7 +32,7 @@ use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class RoleProviderPluginManager extends AbstractPluginManager
+final class RoleProviderPluginManager extends AbstractPluginManager
 {
     protected $instanceOf = RoleProviderInterface::class;
 

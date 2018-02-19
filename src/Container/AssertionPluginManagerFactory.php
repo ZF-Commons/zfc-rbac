@@ -30,7 +30,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
  * @author  Aeneas Rekkas
  * @licence MIT
  */
-class AssertionPluginManagerFactory implements FactoryInterface
+final class AssertionPluginManagerFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container

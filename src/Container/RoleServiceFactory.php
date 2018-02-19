@@ -34,7 +34,7 @@ use ZfcRbac\Service\RoleService;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class RoleServiceFactory implements FactoryInterface
+final class RoleServiceFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container

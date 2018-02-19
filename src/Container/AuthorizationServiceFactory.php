@@ -34,7 +34,7 @@ use ZfcRbac\Service\RoleServiceInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class AuthorizationServiceFactory implements FactoryInterface
+final class AuthorizationServiceFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container

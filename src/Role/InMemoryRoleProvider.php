@@ -38,7 +38,7 @@ namespace ZfcRbac\Role;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class InMemoryRoleProvider implements RoleProviderInterface
+final class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
      * @var array

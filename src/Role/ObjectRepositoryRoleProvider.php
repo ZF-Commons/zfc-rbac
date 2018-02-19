@@ -29,7 +29,7 @@ use ZfcRbac\Exception\RoleNotFoundException;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ObjectRepositoryRoleProvider implements RoleProviderInterface
+final class ObjectRepositoryRoleProvider implements RoleProviderInterface
 {
     /**
      * @var ObjectRepository

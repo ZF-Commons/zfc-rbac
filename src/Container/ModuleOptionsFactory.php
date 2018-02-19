@@ -30,7 +30,7 @@ use ZfcRbac\Options\ModuleOptions;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ModuleOptionsFactory implements FactoryInterface
+final class ModuleOptionsFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
