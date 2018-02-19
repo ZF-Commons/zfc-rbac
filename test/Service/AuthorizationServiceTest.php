@@ -27,7 +27,6 @@ use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Rbac;
 use ZfcRbac\Role\RoleInterface;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 use ZfcRbacTest\Asset\FlatRole;
 use ZfcRbacTest\Asset\Identity;
@@ -110,7 +109,7 @@ class AuthorizationServiceTest extends TestCase
         $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
@@ -128,7 +127,7 @@ class AuthorizationServiceTest extends TestCase
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
         $rbac->expects($this->never())->method('isGranted');
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
@@ -144,7 +143,7 @@ class AuthorizationServiceTest extends TestCase
         $role     = new FlatRole('admin');
         $identity = new Identity([$role]);
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
@@ -164,7 +163,7 @@ class AuthorizationServiceTest extends TestCase
         $identity  = new Identity([$role]);
         $assertion = new SimpleAssertion();
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
@@ -187,7 +186,7 @@ class AuthorizationServiceTest extends TestCase
         $identity  = new Identity([$role]);
         $assertion = new SimpleAssertion();
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
@@ -210,7 +209,7 @@ class AuthorizationServiceTest extends TestCase
         $identity  = new Identity([$role]);
         $assertion = new SimpleAssertion();
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue($identity->getRoles()));
 
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
@@ -243,7 +242,7 @@ class AuthorizationServiceTest extends TestCase
 
         $rbac->expects($this->once())->method('isGranted')->will($this->returnValue(true));
 
-        $roleService = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $roleService->expects($this->once())->method('getIdentityRoles')->will($this->returnValue([$role]));
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
@@ -258,7 +257,7 @@ class AuthorizationServiceTest extends TestCase
     public function testAssertionMap()
     {
         $rbac                   = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
-        $roleService            = $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock();
+        $roleService            = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 

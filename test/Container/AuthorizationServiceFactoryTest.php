@@ -26,7 +26,6 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 
 /**
@@ -42,7 +41,7 @@ class AuthorizationServiceFactoryTest extends TestCase
 
         $serviceManager->setService(
             RoleServiceInterface::class,
-            $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock()
         );
         $serviceManager->setService(
             AssertionPluginManager::class,
