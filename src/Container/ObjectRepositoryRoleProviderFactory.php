@@ -41,22 +41,6 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     protected $options = [];
 
     /**
-     * {@inheritdoc}
-     */
-    public function __construct(array $options = [])
-    {
-        $this->setCreationOptions($options);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreationOptions(array $options): void
-    {
-        $this->options = $options;
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param string             $requestedName
      * @param array|null         $options
