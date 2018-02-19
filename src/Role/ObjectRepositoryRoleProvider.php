@@ -74,6 +74,7 @@ final class ObjectRepositoryRoleProvider implements RoleProviderInterface
             return $this->roleCache[$key];
         }
 
+        /** @var RoleInterface[] $roles */
         $roles = $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
 
         // We allow more roles to be loaded than asked (although this should not happen because
