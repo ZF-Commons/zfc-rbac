@@ -23,8 +23,7 @@ namespace ZfcRbac\Container;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
@@ -90,14 +89,5 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
             'No object repository was found while creating the ZfcRbac object repository role provider. Are
              you sure you specified either the "object_repository" option or "object_manager"/"class_name" options?'
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return ObjectRepositoryRoleProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): ObjectRepositoryRoleProvider
-    {
-        return $this($serviceLocator->getServiceLocator(), ObjectRepositoryRoleProvider::class, $this->options);
     }
 }

@@ -21,8 +21,7 @@ declare(strict_types=1);
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Rbac;
@@ -61,14 +60,5 @@ class AuthorizationServiceFactory implements FactoryInterface
         $authorizationService->setAssertions($moduleOptions->getAssertionMap());
 
         return $authorizationService;
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return AuthorizationService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): AuthorizationService
-    {
-        return $this($serviceLocator, AuthorizationService::class);
     }
 }

@@ -21,8 +21,7 @@ declare(strict_types=1);
 namespace ZfcRbac\Container;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\RoleProviderInterface;
@@ -64,14 +63,5 @@ class RoleServiceFactory implements FactoryInterface
         $roleService->setGuestRole($moduleOptions->getGuestRole());
 
         return $roleService;
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return RoleService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): RoleService
-    {
-        return $this($serviceLocator, RoleService::class);
     }
 }
