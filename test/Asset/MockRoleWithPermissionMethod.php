@@ -24,7 +24,7 @@ use ZfcRbac\Role\RoleInterface;
 
 class MockRoleWithPermissionMethod implements RoleInterface
 {
-    public function getPermissions()
+    public function getPermissions(): array
     {
         return ['permission-method-a', 'permission-method-b'];
     }
@@ -36,6 +36,6 @@ class MockRoleWithPermissionMethod implements RoleInterface
 
     public function hasPermission(string $permission): bool
     {
-        return false;
+        return in_array($permission, $this->getPermissions(), true);
     }
 }
