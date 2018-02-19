@@ -103,7 +103,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[(string) $permission], $permission, $identity, $context);
+            return $this->assert($this->assertions[$permission], $permission, $identity, $context);
         }
 
         return true;
