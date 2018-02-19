@@ -46,7 +46,7 @@ final class InMemoryRoleProvider implements RoleProviderInterface
     private $rolesConfig = [];
 
     /**
-     * @param array
+     * @param array $rolesConfig
      */
     public function __construct(array $rolesConfig)
     {

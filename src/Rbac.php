@@ -39,6 +39,10 @@ class Rbac
      */
     public function isGranted($roles, string $permission): bool
     {
+        if ($roles instanceof Traversable) {
+            $roles = iterator_to_array($roles);
+        }
+
         if ($roles instanceof RoleInterface) {
             $roles = [$roles];
         }
@@ -54,10 +58,10 @@ class Rbac
     }
 
     /**
-     * @param  RoleInterface[]|Traversable $roles
+     * @param  RoleInterface[] $roles
      * @return Generator
      */
-    protected function flattenRoles($roles): Generator
+    protected function flattenRoles(array $roles): Generator
     {
         foreach ($roles as $role) {
             yield $role;

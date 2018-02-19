@@ -71,7 +71,7 @@ final class RoleService implements RoleServiceInterface
      */
     public function setGuestRole(string $guestRole): void
     {
-        $this->guestRole = (string) $guestRole;
+        $this->guestRole = $guestRole;
     }
 
     /**
@@ -115,7 +115,7 @@ final class RoleService implements RoleServiceInterface
         $collectedRoles = [];
         $toCollect      = [];
 
-        foreach ((array) $roles as $role) {
+        foreach ($roles as $role) {
             // If it's already a RoleInterface, nothing to do as a RoleInterface contains everything already
             if ($role instanceof RoleInterface) {
                 $collectedRoles[] = $role;
