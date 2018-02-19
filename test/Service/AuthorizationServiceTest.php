@@ -223,7 +223,7 @@ class AuthorizationServiceTest extends TestCase
         $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
         $authorizationService->setAssertion(
             'foo',
-            function ($permission, IdentityInterface $identity = null, $context = null) use ($authorizationService, &$called) {
+            function ($permission, IdentityInterface $identity = null, $context = null) use (&$called) {
                 $called = true;
 
                 return false;

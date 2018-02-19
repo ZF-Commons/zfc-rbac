@@ -20,14 +20,11 @@ declare(strict_types=1);
 
 namespace ZfcRbacTest\Container;
 
+use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleServiceFactory;
 use ZfcRbac\Exception\RuntimeException;
-use ZfcRbac\Identity\AuthenticationProvider;
-use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Rbac;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -35,10 +32,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  */
 class RoleServiceFactoryTest extends TestCase
 {
-    /**
-     * @markTestSkipped skipped
-     */
-    public function testFactory()
+    public function testCanCreateRoleService()
     {
         $options = new ModuleOptions([
             'guest_role'           => 'guest',
@@ -49,15 +43,13 @@ class RoleServiceFactoryTest extends TestCase
             ],
         ]);
 
-        $rbac              = $this->getMockBuilder(Rbac::class)->getMock();
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(ModuleOptions::class, $options);
-        $serviceManager->setService(RoleProviderPluginManager::class, new RoleProviderPluginManager($serviceManager));
-        $serviceManager->setService(Rbac::class, $rbac);
+        $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
+        $container->expects($this->at(1))->method('get')->with(RoleProviderPluginManager::class)->willReturn(new RoleProviderPluginManager($this->getMockBuilder(ContainerInterface::class)->getMock()));
 
         $factory     = new RoleServiceFactory();
-        $roleService = $factory($serviceManager, 'requestedName');
+        $roleService = $factory($container, 'requestedName');
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
@@ -72,14 +64,11 @@ class RoleServiceFactoryTest extends TestCase
             'role_provider'     => [],
         ]);
 
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(ModuleOptions::class, $options);
-        $serviceManager->setService(
-            AuthenticationProvider::class,
-            $this->getMockBuilder(IdentityProviderInterface::class)->getMock()
-        );
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
-        $factory     = new RoleServiceFactory();
-        $roleService = $factory($serviceManager, 'requestedName');
+        $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
+
+        $factory = new RoleServiceFactory();
+        $factory($container, 'requestedName');
     }
 }

@@ -80,10 +80,8 @@ class ObjectRepositoryRoleProviderTest extends TestCase
 
         $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
 
-        $this->expectException(
-            'ZfcRbac\Exception\RoleNotFoundException',
-            'Some roles were asked but could not be loaded from database: guest, admin'
-        );
+        $this->expectException('ZfcRbac\Exception\RoleNotFoundException');
+        $this->expectExceptionMessage('Some roles were asked but could not be loaded from database: guest, admin');
 
         $provider->getRoles(['guest', 'admin', 'member']);
     }

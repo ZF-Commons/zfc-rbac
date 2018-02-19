@@ -17,7 +17,7 @@ declare(strict_types=1);
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace ZfcRbacTest;
+namespace ZfcRbacTest\Options;
 
 use PHPUnit\Framework\TestCase;
 use ZfcRbac\Options\ModuleOptions;
@@ -27,7 +27,7 @@ use ZfcRbac\Options\ModuleOptions;
  */
 class ModuleOptionsTest extends TestCase
 {
-    public function testAssertModuleDefaultOptions()
+    public function testAssertModuleDefaultOptions(): void
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = new \ZfcRbac\Options\ModuleOptions();
@@ -37,7 +37,7 @@ class ModuleOptionsTest extends TestCase
         $this->assertInternalType('array', $moduleOptions->getAssertionMap());
     }
 
-    public function testSettersAndGetters()
+    public function testSettersAndGetters(): void
     {
         $moduleOptions = new ModuleOptions([
             'guest_role'               => 'unknown',
@@ -52,7 +52,7 @@ class ModuleOptionsTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
     }
 
-    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet()
+    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet(): void
     {
         $this->expectException('ZfcRbac\Exception\RuntimeException');
         $moduleOptions = new ModuleOptions();

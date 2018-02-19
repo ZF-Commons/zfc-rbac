@@ -18,7 +18,7 @@ declare(strict_types=1);
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Rbac;
+namespace ZfcRbacTest\Role;
 
 use PHPUnit\Framework\TestCase;
 use ZfcRbac\Role\HierarchicalRole;

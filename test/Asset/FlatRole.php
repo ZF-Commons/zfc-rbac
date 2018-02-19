@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use ZfcRbac\Rbac\Permission\PermissionInterface;
+use Doctrine\Common\Collections\Collection;
 use ZfcRbac\Role\Role;
 
 /**
@@ -47,9 +47,7 @@ class FlatRole extends Role
     protected $name;
 
     /**
-     * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name")
+     * @var Collection[]
      */
     protected $permissions;
 
@@ -58,7 +56,8 @@ class FlatRole extends Role
      */
     public function __construct(string $name)
     {
-        $this->name        = $name;
+        parent::__construct($name);
+
         $this->permissions = new ArrayCollection();
     }
 

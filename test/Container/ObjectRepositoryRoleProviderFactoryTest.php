@@ -37,12 +37,12 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     public function testFactoryUsingObjectRepository()
     {
         $serviceManager = new ServiceManager();
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
             'object_repository'  => 'RoleObjectRepository',
         ];
+        $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
         $serviceManager->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
