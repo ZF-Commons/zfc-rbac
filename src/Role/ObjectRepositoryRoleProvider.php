@@ -58,7 +58,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
         $this->roleNameProperty = $roleNameProperty;
     }
 
-    public function clearRoleCache()
+    public function clearRoleCache(): void
     {
         $this->roleCache = [];
     }

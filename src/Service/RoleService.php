@@ -58,7 +58,7 @@ class RoleService implements RoleServiceInterface
      *
      * @param RoleProviderInterface $roleProvider
      */
-    public function setRoleProvider(RoleProviderInterface $roleProvider)
+    public function setRoleProvider(RoleProviderInterface $roleProvider): void
     {
         $this->roleProvider = $roleProvider;
     }
@@ -69,7 +69,7 @@ class RoleService implements RoleServiceInterface
      * @param  string $guestRole
      * @return void
      */
-    public function setGuestRole(string $guestRole)
+    public function setGuestRole(string $guestRole): void
     {
         $this->guestRole = (string) $guestRole;
     }

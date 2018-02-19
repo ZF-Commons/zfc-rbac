@@ -52,7 +52,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function setCreationOptions(array $options)
+    public function setCreationOptions(array $options): void
     {
         $this->options = $options;
     }
