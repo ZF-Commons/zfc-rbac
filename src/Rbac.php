@@ -66,11 +66,7 @@ class Rbac
                 continue;
             }
 
-            $children = $this->flattenRoles($role->getChildren());
-
-            foreach ($children as $child) {
-                yield $child;
-            }
+            yield from $this->flattenRoles($role->getChildren());
         }
     }
 }
