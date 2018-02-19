@@ -23,8 +23,7 @@ namespace ZfcRbac\Container;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
@@ -34,7 +33,7 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-final class ObjectRepositoryRoleProviderFactory implements FactoryInterface
+final class ObjectRepositoryRoleProviderFactory
 {
     /**
      * @var array

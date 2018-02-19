@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Rbac;
@@ -35,7 +34,7 @@ use ZfcRbac\Service\RoleServiceInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-final class AuthorizationServiceFactory implements FactoryInterface
+final class AuthorizationServiceFactory
 {
     /**
      * @param ContainerInterface $container

@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -31,7 +30,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-final class RoleProviderPluginManagerFactory implements FactoryInterface
+final class RoleProviderPluginManagerFactory
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RoleProviderPluginManager
     {

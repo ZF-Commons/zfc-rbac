@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\RoleProviderInterface;
@@ -35,7 +34,7 @@ use ZfcRbac\Service\RoleService;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-final class RoleServiceFactory implements FactoryInterface
+final class RoleServiceFactory
 {
     /**
      * @param ContainerInterface $container

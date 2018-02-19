@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
@@ -31,7 +30,7 @@ use ZfcRbac\Options\ModuleOptions;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-final class ModuleOptionsFactory implements FactoryInterface
+final class ModuleOptionsFactory
 {
     /**
      * @param ContainerInterface $container

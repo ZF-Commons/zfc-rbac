@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
@@ -31,7 +30,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
  * @author  Aeneas Rekkas
  * @licence MIT
  */
-final class AssertionPluginManagerFactory implements FactoryInterface
+final class AssertionPluginManagerFactory
 {
     /**
      * @param ContainerInterface $container

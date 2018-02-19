@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace ZfcRbacTest\Container;
 
-use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
