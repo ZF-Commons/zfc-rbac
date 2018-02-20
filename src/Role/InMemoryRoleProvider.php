@@ -81,7 +81,7 @@ final class InMemoryRoleProvider implements RoleProviderInterface
                 $role = new Role($roleName);
             }
 
-            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+            $permissions = $roleConfig['permissions'] ?: [];
 
             foreach ($permissions as $permission) {
                 $role->addPermission($permission);
