@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,42 +17,33 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Container;
 
-use Zend\ServiceManager\ServiceManager;
+use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 
 /**
  * @covers \ZfcRbac\Container\AuthorizationServiceFactory
  */
-class AuthorizationServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class AuthorizationServiceFactoryTest extends TestCase
 {
-    public function testFactory()
+    public function testCanCreateAuthorizationService(): void
     {
-        $serviceManager = new ServiceManager();
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
-        $serviceManager->setService(\Rbac\Rbac::class, $this->getMockBuilder(\Rbac\Rbac::class)->getMock());
+        $container->expects($this->at(0))->method('get')->with(RoleServiceInterface::class)->willReturn($this->getMockBuilder(RoleServiceInterface::class)->getMock());
+        $container->expects($this->at(1))->method('get')->with(AssertionPluginManager::class)->willReturn($this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock());
+        $container->expects($this->at(2))->method('get')->with(ModuleOptions::class)->willReturn(new ModuleOptions());
 
-        $serviceManager->setService(
-            RoleServiceInterface::class,
-            $this->getMockBuilder(RoleService::class)->disableOriginalConstructor()->getMock()
-        );
-        $serviceManager->setService(
-            AssertionPluginManager::class,
-            $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock()
-        );
-        $serviceManager->setService(
-            ModuleOptions::class,
-            new ModuleOptions([])
-        );
-
-        $factory              = new AuthorizationServiceFactory();
-        $authorizationService = $factory($serviceManager, 'requestedName');
+        $factory = new AuthorizationServiceFactory();
+        $authorizationService = $factory($container);
 
         $this->assertInstanceOf(AuthorizationService::class, $authorizationService);
     }

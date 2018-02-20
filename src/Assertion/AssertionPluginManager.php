@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,10 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Assertion;
 
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
 
 /**
  * Plugin manager to create assertions
@@ -31,35 +33,5 @@ use Zend\ServiceManager\Exception\InvalidServiceException;
  */
 class AssertionPluginManager extends AbstractPluginManager
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function validate($instance)
-    {
-        if ($instance instanceof AssertionInterface) {
-            return; // we're okay
-        }
-
-        throw new InvalidServiceException(sprintf(
-            'Assertion must implement "%s", but "%s" was given',
-            AssertionInterface::class,
-            is_object($instance) ? get_class($instance) : gettype($instance)
-        ));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function validatePlugin($plugin)
-    {
-        $this->validate($plugin);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function canonicalizeName($name)
-    {
-        return $name;
-    }
+    protected $instanceOf = AssertionInterface::class;
 }

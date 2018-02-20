@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,9 +17,12 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Role;
 
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
@@ -26,24 +30,24 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Role\RoleProviderPluginManager
  */
-class RoleProviderPluginManagerTest extends \PHPUnit_Framework_TestCase
+class RoleProviderPluginManagerTest extends TestCase
 {
-    public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
+    public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented(): void
     {
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginMock    = $this->getMockBuilder(RoleProviderInterface::class)->getMock();
+        $pluginMock = $this->getMockBuilder(RoleProviderInterface::class)->getMock();
         $pluginManager = new RoleProviderPluginManager($containerMock);
 
-        $this->assertNull($pluginManager->validatePlugin($pluginMock));
+        $this->assertNull($pluginManager->validate($pluginMock));
     }
 
-    public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
+    public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented(): void
     {
-        $this->setExpectedException(InvalidServiceException::class);
+        $this->expectException(InvalidServiceException::class);
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $pluginManager = new RoleProviderPluginManager($containerMock);
 
         $plugin = new \stdClass();
-        $pluginManager->validatePlugin($plugin);
+        $pluginManager->validate($plugin);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,10 +17,12 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Role;
 
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
+use Zend\ServiceManager\Factory\InvokableFactory;
 use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 
 /**
@@ -30,51 +33,15 @@ use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @license MIT
  */
-class RoleProviderPluginManager extends AbstractPluginManager
+final class RoleProviderPluginManager extends AbstractPluginManager
 {
-    /**
-     * @var array
-     */
-    protected $invokableClasses = [
-        InMemoryRoleProvider::class => InMemoryRoleProvider::class
-    ];
+    protected $instanceOf = RoleProviderInterface::class;
 
     /**
      * @var array
      */
     protected $factories = [
-        ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class
+        InMemoryRoleProvider::class         => InvokableFactory::class,
+        ObjectRepositoryRoleProvider::class => ObjectRepositoryRoleProviderFactory::class,
     ];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function validate($instance)
-    {
-        if ($instance instanceof RoleProviderInterface) {
-            return; // we're okay
-        }
-
-        throw new InvalidServiceException(sprintf(
-            'Role provider must implement "%s", but "%s" was given',
-            RoleProviderInterface::class,
-            is_object($instance) ? get_class($instance) : gettype($instance)
-        ));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function validatePlugin($plugin)
-    {
-        $this->validate($plugin);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function canonicalizeName($name)
-    {
-        return $name;
-    }
 }

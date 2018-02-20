@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,14 +17,13 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
 use ZfcRbac\Service\RoleService;
 
@@ -33,17 +33,10 @@ use ZfcRbac\Service\RoleService;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class RoleServiceFactory implements FactoryInterface
+final class RoleServiceFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array              $options
-     * @return RoleService
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container): RoleService
     {
-        /* @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
 
         $roleProviderConfig = $moduleOptions->getRoleProvider();
@@ -52,24 +45,11 @@ class RoleServiceFactory implements FactoryInterface
             throw new RuntimeException('No role provider has been set for ZfcRbac');
         }
 
-        /* @var RoleProviderPluginManager $pluginManager */
         $pluginManager = $container->get(RoleProviderPluginManager::class);
-
-        /* @var RoleProviderInterface $roleProvider */
         $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
-
         $roleService = new RoleService($roleProvider);
         $roleService->setGuestRole($moduleOptions->getGuestRole());
 
         return $roleService;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return RoleService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, RoleService::class);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,68 +17,59 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Container;
 
-use Rbac\Rbac;
-use Rbac\Traversal\Strategy\TraversalStrategyInterface;
-use Zend\ServiceManager\ServiceManager;
+use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Container\RoleServiceFactory;
 use ZfcRbac\Exception\RuntimeException;
-use ZfcRbac\Identity\AuthenticationProvider;
-use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
  * @covers \ZfcRbac\Container\RoleServiceFactory
  */
-class RoleServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class RoleServiceFactoryTest extends TestCase
 {
-    /**
-     * @markTestSkipped skipped
-     */
-    public function testFactory()
+    public function testCanCreateRoleService(): void
     {
         $options = new ModuleOptions([
-            'guest_role'           => 'guest',
-            'role_provider'        => [
+            'guest_role'    => 'guest',
+            'role_provider' => [
                 \ZfcRbac\Role\InMemoryRoleProvider::class => [
-                    'foo'
-                ]
-            ]
+                    'foo',
+                ],
+            ],
         ]);
 
-        $rbac              = $this->getMockBuilder(Rbac::class)->getMock();
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(ModuleOptions::class, $options);
-        $serviceManager->setService(RoleProviderPluginManager::class, new RoleProviderPluginManager($serviceManager));
-        $serviceManager->setService(Rbac::class, $rbac);
+        $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
+        $container->expects($this->at(1))->method('get')->with(RoleProviderPluginManager::class)->willReturn(new RoleProviderPluginManager($this->getMockBuilder(ContainerInterface::class)->getMock()));
 
-        $factory     = new RoleServiceFactory();
-        $roleService = $factory($serviceManager, 'requestedName');
+        $factory = new RoleServiceFactory();
+        $roleService = $factory($container);
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
     }
 
-    public function testThrowExceptionIfNoRoleProvider()
+    public function testThrowExceptionIfNoRoleProvider(): void
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $options = new ModuleOptions([
-            'guest_role'        => 'guest',
-            'role_provider'     => []
+            'guest_role'    => 'guest',
+            'role_provider' => [],
         ]);
 
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService(ModuleOptions::class, $options);
-        $serviceManager->setService(
-            AuthenticationProvider::class,
-            $this->getMockBuilder(IdentityProviderInterface::class)->getMock()
-        );
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
-        $factory     = new RoleServiceFactory();
-        $roleService = $factory($serviceManager, 'requestedName');
+        $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
+
+        $factory = new RoleServiceFactory();
+        $factory($container);
     }
 }

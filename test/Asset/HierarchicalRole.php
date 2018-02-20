@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,20 +17,20 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
-use Rbac\Role\HierarchicalRole as BaseHierarchicalRole;
-use Rbac\Role\RoleInterface;
+use ZfcRbac\Role\HierarchicalRoleInterface;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="hierarchical_roles")
  */
-class HierarchicalRole extends BaseHierarchicalRole
+class HierarchicalRole implements HierarchicalRoleInterface
 {
     /**
      * @var int|null
@@ -55,7 +56,7 @@ class HierarchicalRole extends BaseHierarchicalRole
     protected $children;
 
     /**
-     * @var PermissionInterface[]|Collection
+     * @var string[]
      *
      * @ORM\ManyToMany(targetEntity="Permission", indexBy="name", fetch="EAGER")
      */
@@ -66,9 +67,9 @@ class HierarchicalRole extends BaseHierarchicalRole
      *
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
-        $this->name        = (string) $name;
+        $this->name = $name;
         $this->permissions = new ArrayCollection();
     }
 
@@ -82,19 +83,27 @@ class HierarchicalRole extends BaseHierarchicalRole
         return $this->id;
     }
 
-    /**
-     * Add a permission
-     *
-     * @param  PermissionInterface|string $permission
-     * @return void
-     */
-    public function addPermission($permission)
+    public function hasChildren(): bool
     {
-        if (is_string($permission)) {
-            $name       = $permission;
-            $permission = new Permission($name);
-        }
+        return ! empty($this->children);
+    }
 
-        $this->permissions[$permission->getName()] = $permission;
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+    }
+
+    public function addChild(RoleInterface $child): void
+    {
+        $this->children[$child->getName()] = $child;
     }
 }

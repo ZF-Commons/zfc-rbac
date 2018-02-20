@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,12 +17,14 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Container;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
@@ -30,17 +33,17 @@ use ZfcRbac\Role\RoleProviderPluginManager;
 /**
  * @covers \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory
  */
-class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 {
-    public function testFactoryUsingObjectRepository()
+    public function testFactoryUsingObjectRepository(): void
     {
         $serviceManager = new ServiceManager();
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
-            'object_repository'  => 'RoleObjectRepository'
+            'object_repository'  => 'RoleObjectRepository',
         ];
+        $pluginManager = new RoleProviderPluginManager($serviceManager);
 
         $serviceManager->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
@@ -48,15 +51,15 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
-    public function testFactoryUsingObjectManager()
+    public function testFactoryUsingObjectManager(): void
     {
         $serviceManager = new ServiceManager();
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
+        $pluginManager = new RoleProviderPluginManager($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
             'object_manager'     => 'ObjectManager',
-            'class_name'         => 'Role'
+            'class_name'         => 'Role',
         ];
 
         $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
@@ -74,17 +77,18 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     /**
      * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
      */
-    public function testThrowExceptionIfNoRoleNamePropertyIsSet()
+    public function testThrowExceptionIfNoRoleNamePropertyIsSet(): void
     {
         try {
             $serviceManager = new ServiceManager();
-            $pluginManager  = new RoleProviderPluginManager($serviceManager);
+            $pluginManager = new RoleProviderPluginManager($serviceManager);
 
             $pluginManager->get(ObjectRepositoryRoleProvider::class, []);
         } catch (ServiceNotCreatedException $e) {
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
-                    return true;
+                    $this->assertTrue(true); // we got here
+                    return;
                 }
             }
         }
@@ -98,20 +102,20 @@ class ObjectRepositoryRoleProviderFactoryTest extends \PHPUnit_Framework_TestCas
     /**
      * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
      */
-    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
+    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet(): void
     {
         try {
             $serviceManager = new ServiceManager();
-            $pluginManager  = new RoleProviderPluginManager($serviceManager);
+            $pluginManager = new RoleProviderPluginManager($serviceManager);
 
             $pluginManager->get(ObjectRepositoryRoleProvider::class, [
-                'role_name_property' => 'name'
+                'role_name_property' => 'name',
             ]);
         } catch (ServiceNotCreatedException $e) {
-
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
-                    return true;
+                    $this->assertTrue(true); // we got here
+                    return;
                 }
             }
         }

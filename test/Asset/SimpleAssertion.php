@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,6 +17,8 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Asset;
 
 use ZfcRbac\Assertion\AssertionInterface;
@@ -28,23 +31,14 @@ class SimpleAssertion implements AssertionInterface
      */
     protected $called = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function assert(
-        $permission,
-        IdentityInterface $identity = null,
-        $context = null
-    ) {
+    public function assert(string $permission, IdentityInterface $identity = null, $context = null): bool
+    {
         $this->called = true;
 
-        return $context;
+        return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function getCalled()
+    public function gotCalled(): bool
     {
         return $this->called;
     }

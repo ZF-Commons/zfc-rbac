@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,12 +17,13 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
-use Rbac\Role\Role;
+use Doctrine\Common\Collections\Collection;
+use ZfcRbac\Role\Role;
 
 /**
  * @ORM\Entity
@@ -46,18 +48,17 @@ class FlatRole extends Role
     protected $name;
 
     /**
-     * @var PermissionInterface[]|\Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Permission", indexBy="name")
+     * @var Collection[]
      */
     protected $permissions;
 
     /**
      * Init the Doctrine collection
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
-        $this->name        = (string) $name;
+        parent::__construct($name);
+
         $this->permissions = new ArrayCollection();
     }
 
@@ -74,13 +75,13 @@ class FlatRole extends Role
     /**
      * Add a permission
      *
-     * @param  PermissionInterface|string $permission
+     * @param  string $permission
      * @return void
      */
-    public function addPermission($permission)
+    public function addPermission(string $permission): void
     {
         if (is_string($permission)) {
-            $name       = $permission;
+            $name = $permission;
             $permission = new Permission($name);
         }
 

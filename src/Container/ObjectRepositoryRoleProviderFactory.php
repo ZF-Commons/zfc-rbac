@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,13 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Container;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
@@ -32,53 +31,22 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ObjectRepositoryRoleProviderFactory implements FactoryInterface
+final class ObjectRepositoryRoleProviderFactory
 {
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct(array $options = [])
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = []): ObjectRepositoryRoleProvider
     {
-        $this->setCreationOptions($options);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setCreationOptions(array $options)
-    {
-        $this->options = $options;
-    }
-
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     * @return ObjectRepositoryRoleProvider
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
-    {
-        $objectRepository = null;
-
-        if (!isset($options['role_name_property'])) {
+        if (! isset($options['role_name_property'])) {
             throw new Exception\RuntimeException('The "role_name_property" option is missing');
         }
 
         if (isset($options['object_repository'])) {
-            /* @var ObjectRepository $objectRepository */
             $objectRepository = $container->get($options['object_repository']);
 
             return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);
         }
 
-        if (isset($options['object_manager']) && isset($options['class_name'])) {
-            /* @var ObjectManager $objectManager */
-            $objectManager    = $container->get($options['object_manager']);
+        if (isset($options['object_manager'], $options['class_name'])) {
+            $objectManager = $container->get($options['object_manager']);
             $objectRepository = $objectManager->getRepository($options['class_name']);
 
             return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);
@@ -88,14 +56,5 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
             'No object repository was found while creating the ZfcRbac object repository role provider. Are
              you sure you specified either the "object_repository" option or "object_manager"/"class_name" options?'
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return ObjectRepositoryRoleProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator->getServiceLocator(), ObjectRepositoryRoleProvider::class, $this->options);
     }
 }

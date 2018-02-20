@@ -19,22 +19,31 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbac\Identity;
+namespace ZfcRbacTest;
 
-use ZfcRbac\Role\RoleInterface;
+use PHPUnit\Framework\TestCase;
+use ZfcRbac\ModuleConfig;
 
 /**
- * Interface for an identity
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * @author  Bas Kamer <baskamer@gmail.com>
+ * @covers  \ZfcRbac\ModuleConfig
  */
-interface IdentityInterface
+class ModuleConfigTest extends TestCase
 {
-    /**
-     * Get the list of roles of this identity
-     *
-     * @return string[]|RoleInterface[]
-     */
-    public function getRoles();
+    public function testCanBeInvoked(): void
+    {
+        $moduleConfig = new ModuleConfig();
+
+        static::assertTrue(is_callable($moduleConfig));
+    }
+
+    public function testGetArrayWith(): void
+    {
+        $moduleConfig = new ModuleConfig();
+        $config = $moduleConfig->__invoke();
+
+        $this->assertInternalType('array', $config);
+        $this->assertArrayHasKey('zfc_rbac', $config);
+        $this->assertArrayHasKey('dependencies', $config);
+    }
 }

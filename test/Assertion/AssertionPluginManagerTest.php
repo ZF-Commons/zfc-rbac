@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,9 +17,12 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Assertion;
 
 use Interop\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
@@ -26,24 +30,24 @@ use ZfcRbac\Assertion\AssertionPluginManager;
 /**
  * @covers \ZfcRbac\Assertion\AssertionPluginManager
  */
-class AssertionPluginManagerTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerTest extends TestCase
 {
     public function testValidationOfPluginSucceedsIfAssertionInterfaceIsImplemented()
     {
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginMock    = $this->getMockBuilder(AssertionInterface::class)->getMock();
+        $pluginMock = $this->getMockBuilder(AssertionInterface::class)->getMock();
         $pluginManager = new AssertionPluginManager($containerMock);
 
-        $this->assertNull($pluginManager->validatePlugin($pluginMock));
+        $this->assertNull($pluginManager->validate($pluginMock));
     }
 
     public function testValidationOfPluginFailsIfAssertionInterfaceIsNotImplemented()
     {
-        $this->setExpectedException(InvalidServiceException::class);
+        $this->expectException(InvalidServiceException::class);
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $pluginManager = new AssertionPluginManager($containerMock);
 
         $plugin = new \stdClass();
-        $pluginManager->validatePlugin($plugin);
+        $pluginManager->validate($plugin);
     }
 }

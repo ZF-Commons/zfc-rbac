@@ -1,5 +1,3 @@
-<?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,25 +14,3 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-
-declare(strict_types=1);
-
-namespace ZfcRbac\Identity;
-
-use ZfcRbac\Role\RoleInterface;
-
-/**
- * Interface for an identity
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
- */
-interface IdentityInterface
-{
-    /**
-     * Get the list of roles of this identity
-     *
-     * @return string[]|RoleInterface[]
-     */
-    public function getRoles();
-}

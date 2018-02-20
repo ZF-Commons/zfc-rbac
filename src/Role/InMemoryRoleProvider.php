@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,10 +17,9 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
+declare(strict_types=1);
 
-use Rbac\Role\HierarchicalRole;
-use Rbac\Role\Role;
+namespace ZfcRbac\Role;
 
 /**
  * Simple role providers that store them in memory (ideal for small websites)
@@ -39,7 +39,7 @@ use Rbac\Role\Role;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class InMemoryRoleProvider implements RoleProviderInterface
+final class InMemoryRoleProvider implements RoleProviderInterface
 {
     /**
      * @var array
@@ -47,7 +47,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
     private $rolesConfig = [];
 
     /**
-     * @param array
+     * @param array $rolesConfig
      */
     public function __construct(array $rolesConfig)
     {
@@ -55,15 +55,15 @@ class InMemoryRoleProvider implements RoleProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getRoles(array $roleNames)
+    public function getRoles(array $roleNames): array
     {
         $roles = [];
 
         foreach ($roleNames as $roleName) {
             // If no config, we create a simple role with no permission
-            if (!isset($this->rolesConfig[$roleName])) {
+            if (! isset($this->rolesConfig[$roleName])) {
                 $roles[] = new Role($roleName);
                 continue;
             }
@@ -71,7 +71,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
             $roleConfig = $this->rolesConfig[$roleName];
 
             if (isset($roleConfig['children'])) {
-                $role       = new HierarchicalRole($roleName);
+                $role = new HierarchicalRole($roleName);
                 $childRoles = (array) $roleConfig['children'];
 
                 foreach ($this->getRoles($childRoles) as $childRole) {
@@ -81,7 +81,7 @@ class InMemoryRoleProvider implements RoleProviderInterface
                 $role = new Role($roleName);
             }
 
-            $permissions = isset($roleConfig['permissions']) ? $roleConfig['permissions'] : [];
+            $permissions = $roleConfig['permissions'] ?? [];
 
             foreach ($permissions as $permission) {
                 $role->addPermission($permission);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,15 +16,20 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace ZfcRbacTest;
+
+declare(strict_types=1);
+
+namespace ZfcRbacTest\Options;
+
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Options\ModuleOptions
  */
-class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsTest extends TestCase
 {
-    public function testAssertModuleDefaultOptions()
+    public function testAssertModuleDefaultOptions(): void
     {
         /** @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
         $moduleOptions = new \ZfcRbac\Options\ModuleOptions();
@@ -33,13 +39,13 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $moduleOptions->getAssertionMap());
     }
 
-    public function testSettersAndGetters()
+    public function testSettersAndGetters(): void
     {
         $moduleOptions = new ModuleOptions([
-            'guest_role'            => 'unknown',
-            'role_provider'         => [],
-            'assertion_map'            => [
-                'foo' => 'bar'
+            'guest_role'    => 'unknown',
+            'role_provider' => [],
+            'assertion_map' => [
+                'foo' => 'bar',
             ],
         ]);
 
@@ -48,9 +54,9 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
     }
 
-    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet()
+    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet(): void
     {
-        $this->setExpectedException('ZfcRbac\Exception\RuntimeException');
+        $this->expectException('ZfcRbac\Exception\RuntimeException');
         $moduleOptions = new ModuleOptions();
         $moduleOptions->setRoleProvider(['foo', 'bar']);
     }

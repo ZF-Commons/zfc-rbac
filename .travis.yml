@@ -1,33 +1,45 @@
-sudo: false
-
 language: php
 
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - hhvm
-
-env:
-  matrix:
-    - PREFER_LOWEST="--prefer-lowest"
-    - PREFER_LOWEST=""
-
-before_script:
-  - composer self-update
-  - composer update --prefer-source $PREFER_LOWEST
-
-script:
-  - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
-  - ./vendor/bin/phpcs --standard=PSR2 ./src/
-
-after_script:
-  - php vendor/bin/coveralls -v
-
-notifications:
-  irc: "irc.freenode.org#zftalk.modules"
-  email: true
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
 
 matrix:
-  allow_failures:
-    - php: hhvm
+  include:
+    - php: 7.1
+      env:
+        - DEPENDENCIES=""
+        - EXECUTE_CS_CHECK=true
+        - TEST_COVERAGE=true
+    - php: 7.1
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+    - php: 7.2
+      env:
+        - DEPENDENCIES=""
+    - php: 7.2
+      env:
+        - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
+before_script:
+  - mkdir -p "$HOME/.php-cs-fixer"
+  - phpenv config-rm xdebug.ini
+  - composer self-update
+  - composer update $DEPENDENCIES
+
+script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml; else ./vendor/bin/phpunit; fi
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run; fi
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/docheader check src/ tests/; fi
+
+after_success:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then php vendor/bin/coveralls -v; fi
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/90753b5c820315c57410
+    on_success: change  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: never     # options: [always|never|change] default: always

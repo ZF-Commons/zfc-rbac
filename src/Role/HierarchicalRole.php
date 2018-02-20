@@ -19,22 +19,30 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbac\Identity;
-
-use ZfcRbac\Role\RoleInterface;
+namespace ZfcRbac\Role;
 
 /**
- * Interface for an identity
- *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * Simple implementation for a hierarchical role
  */
-interface IdentityInterface
+final class HierarchicalRole extends Role implements HierarchicalRoleInterface
 {
     /**
-     * Get the list of roles of this identity
-     *
-     * @return string[]|RoleInterface[]
+     * @var array|RoleInterface[]
      */
-    public function getRoles();
+    private $children = [];
+
+    public function hasChildren(): bool
+    {
+        return ! empty($this->children);
+    }
+
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    public function addChild(RoleInterface $child): void
+    {
+        $this->children[$child->getName()] = $child;
+    }
 }

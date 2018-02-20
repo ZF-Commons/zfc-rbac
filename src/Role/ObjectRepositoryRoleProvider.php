@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,6 +17,8 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Role;
 
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -27,7 +30,7 @@ use ZfcRbac\Exception\RoleNotFoundException;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ObjectRepositoryRoleProvider implements RoleProviderInterface
+final class ObjectRepositoryRoleProvider implements RoleProviderInterface
 {
     /**
      * @var ObjectRepository
@@ -44,32 +47,18 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     private $roleCache = [];
 
-    /**
-     * Constructor
-     *
-     * @param ObjectRepository $objectRepository
-     * @param string           $roleNameProperty
-     */
-    public function __construct(ObjectRepository $objectRepository, $roleNameProperty)
+    public function __construct(ObjectRepository $objectRepository, string $roleNameProperty)
     {
         $this->objectRepository = $objectRepository;
         $this->roleNameProperty = $roleNameProperty;
     }
 
-    /**
-     * Clears the role cache
-     *
-     * @return void
-     */
-    public function clearRoleCache()
+    public function clearRoleCache(): void
     {
         $this->roleCache = [];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getRoles(array $roleNames)
+    public function getRoles(array $roleNames): array
     {
         $key = implode($roleNames);
 
@@ -77,6 +66,7 @@ class ObjectRepositoryRoleProvider implements RoleProviderInterface
             return $this->roleCache[$key];
         }
 
+        /** @var RoleInterface[] $roles */
         $roles = $this->objectRepository->findBy([$this->roleNameProperty => $roleNames]);
 
         // We allow more roles to be loaded than asked (although this should not happen because

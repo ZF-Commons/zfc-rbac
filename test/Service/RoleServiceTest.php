@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,19 +17,22 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Service;
 
-use Rbac\Role\RoleInterface;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Role\RoleInterface;
 use ZfcRbac\Service\RoleService;
 use ZfcRbacTest\Asset\Identity;
 
 /**
  * @covers \ZfcRbac\Service\RoleService
  */
-class RoleServiceTest extends \PHPUnit_Framework_TestCase
+class RoleServiceTest extends TestCase
 {
-    public function testReturnGuestRoleIfNoIdentityIsGiven()
+    public function testReturnGuestRoleIfNoIdentityIsGiven(): void
     {
         $roleService = new RoleService(new InMemoryRoleProvider([]));
 
@@ -42,7 +46,7 @@ class RoleServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('guest', $result[0]->getName());
     }
 
-    public function testReturnGuestRoleIfGuestIdentityIsGiven()
+    public function testReturnGuestRoleIfGuestIdentityIsGiven(): void
     {
         $roleService = new RoleService(new InMemoryRoleProvider([]));
 

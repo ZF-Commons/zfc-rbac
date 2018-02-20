@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,10 +17,12 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Service;
 
-use Rbac\Role\RoleInterface;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * Role service
@@ -36,5 +39,5 @@ interface RoleServiceInterface
      * @param mixed                   $context
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity = null, $context = null);
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): array;
 }

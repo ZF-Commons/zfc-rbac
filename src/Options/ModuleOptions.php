@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,6 +17,8 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Options;
 
 use Zend\Stdlib\AbstractOptions;
@@ -27,7 +30,7 @@ use ZfcRbac\Exception;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ModuleOptions extends AbstractOptions
+final class ModuleOptions extends AbstractOptions
 {
     /**
      * Guest role (used when no identity is found)
@@ -53,7 +56,7 @@ class ModuleOptions extends AbstractOptions
     /**
      * Constructor
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct($options = null)
     {
@@ -68,7 +71,7 @@ class ModuleOptions extends AbstractOptions
      * @param array $assertionMap
      * @return void
      */
-    public function setAssertionMap(array $assertionMap)
+    public function setAssertionMap(array $assertionMap): void
     {
         $this->assertionMap = $assertionMap;
     }
@@ -78,7 +81,7 @@ class ModuleOptions extends AbstractOptions
      *
      * @return array
      */
-    public function getAssertionMap()
+    public function getAssertionMap(): array
     {
         return $this->assertionMap;
     }
@@ -89,9 +92,9 @@ class ModuleOptions extends AbstractOptions
      * @param string $guestRole
      * @return void
      */
-    public function setGuestRole($guestRole)
+    public function setGuestRole(string $guestRole): void
     {
-        $this->guestRole = (string) $guestRole;
+        $this->guestRole = $guestRole;
     }
 
     /**
@@ -99,7 +102,7 @@ class ModuleOptions extends AbstractOptions
      *
      * @return string
      */
-    public function getGuestRole()
+    public function getGuestRole(): string
     {
         return $this->guestRole;
     }
@@ -110,7 +113,7 @@ class ModuleOptions extends AbstractOptions
      * @param  array $roleProvider
      * @throws Exception\RuntimeException
      */
-    public function setRoleProvider(array $roleProvider)
+    public function setRoleProvider(array $roleProvider): void
     {
         if (count($roleProvider) > 1) {
             throw new Exception\RuntimeException(
@@ -121,12 +124,7 @@ class ModuleOptions extends AbstractOptions
         $this->roleProvider = $roleProvider;
     }
 
-    /**
-     * Get the configuration for the role provider
-     *
-     * @return array
-     */
-    public function getRoleProvider()
+    public function getRoleProvider(): array
     {
         return $this->roleProvider;
     }

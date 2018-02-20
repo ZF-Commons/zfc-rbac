@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,11 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Options\ModuleOptions;
 
 /**
@@ -29,25 +30,10 @@ use ZfcRbac\Options\ModuleOptions;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class ModuleOptionsFactory implements FactoryInterface
+final class ModuleOptionsFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array              $options
-     * @return ModuleOptions
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container): ModuleOptions
     {
         return new ModuleOptions($container->get('config')['zfc_rbac']);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return ModuleOptions
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, ModuleOptions::class);
     }
 }

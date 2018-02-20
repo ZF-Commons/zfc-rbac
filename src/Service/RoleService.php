@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,11 +17,13 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Service;
 
-use Rbac\Role\RoleInterface;
 use Traversable;
 use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Role\RoleInterface;
 use ZfcRbac\Role\RoleProviderInterface;
 
 /**
@@ -29,9 +32,8 @@ use ZfcRbac\Role\RoleProviderInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class RoleService implements RoleServiceInterface
+final class RoleService implements RoleServiceInterface
 {
-
     /**
      * @var RoleProviderInterface
      */
@@ -42,43 +44,22 @@ class RoleService implements RoleServiceInterface
      */
     protected $guestRole = '';
 
-    /**
-     * Constructor
-     *
-     * @param RoleProviderInterface $roleProvider
-     */
     public function __construct(RoleProviderInterface $roleProvider)
     {
         $this->roleProvider = $roleProvider;
     }
 
-    /**
-     * Set the role provider
-     *
-     * @param RoleProviderInterface $roleProvider
-     */
-    public function setRoleProvider(RoleProviderInterface $roleProvider)
+    public function setRoleProvider(RoleProviderInterface $roleProvider): void
     {
         $this->roleProvider = $roleProvider;
     }
 
-    /**
-     * Set the guest role
-     *
-     * @param  string $guestRole
-     * @return void
-     */
-    public function setGuestRole($guestRole)
+    public function setGuestRole(string $guestRole): void
     {
-        $this->guestRole = (string) $guestRole;
+        $this->guestRole = $guestRole;
     }
 
-    /**
-     * Get the guest role
-     *
-     * @return string
-     */
-    public function getGuestRole()
+    public function getGuestRole(): string
     {
         return $this->guestRole;
     }
@@ -90,7 +71,7 @@ class RoleService implements RoleServiceInterface
      * @param null              $context
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity = null, $context = null)
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): array
     {
         if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
@@ -105,16 +86,16 @@ class RoleService implements RoleServiceInterface
      * @param  array|Traversable $roles
      * @return RoleInterface[]
      */
-    protected function convertRoles($roles)
+    protected function convertRoles($roles): array
     {
         if ($roles instanceof Traversable) {
             $roles = iterator_to_array($roles);
         }
 
         $collectedRoles = [];
-        $toCollect      = [];
+        $toCollect = [];
 
-        foreach ((array) $roles as $role) {
+        foreach ($roles as $role) {
             // If it's already a RoleInterface, nothing to do as a RoleInterface contains everything already
             if ($role instanceof RoleInterface) {
                 $collectedRoles[] = $role;

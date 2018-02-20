@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,11 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 
 /**
@@ -29,27 +30,12 @@ use ZfcRbac\Assertion\AssertionPluginManager;
  * @author  Aeneas Rekkas
  * @licence MIT
  */
-class AssertionPluginManagerFactory implements FactoryInterface
+final class AssertionPluginManagerFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     * @return AssertionPluginManager
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container): AssertionPluginManager
     {
         $config = $container->get('config')['zfc_rbac']['assertion_manager'];
 
         return new AssertionPluginManager($container, $config);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return AssertionPluginManager
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, AssertionPluginManager::class);
     }
 }

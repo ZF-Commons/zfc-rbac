@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,8 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AssertionPluginManagerFactory;
@@ -25,19 +29,19 @@ use ZfcRbac\Container\AssertionPluginManagerFactory;
 /**
  * @covers \ZfcRbac\Container\AssertionPluginManagerFactory
  */
-class AssertionPluginManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class AssertionPluginManagerFactoryTest extends TestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', [
             'zfc_rbac' => [
-                'assertion_manager' => []
-            ]
+                'assertion_manager' => [],
+            ],
         ]);
 
-        $factory       = new AssertionPluginManagerFactory();
-        $pluginManager = $factory($serviceManager, 'requestedName');
+        $factory = new AssertionPluginManagerFactory();
+        $pluginManager = $factory($serviceManager);
 
         $this->assertInstanceOf(AssertionPluginManager::class, $pluginManager);
     }

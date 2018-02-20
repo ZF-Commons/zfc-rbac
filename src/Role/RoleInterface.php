@@ -19,22 +19,16 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbac\Identity;
-
-use ZfcRbac\Role\RoleInterface;
+namespace ZfcRbac\Role;
 
 /**
- * Interface for an identity
+ * Interface for a flat role
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * The role embeds all the information needed to evaluate if a given role has a given permission
  */
-interface IdentityInterface
+interface RoleInterface
 {
-    /**
-     * Get the list of roles of this identity
-     *
-     * @return string[]|RoleInterface[]
-     */
-    public function getRoles();
+    public function getName(): string;
+
+    public function hasPermission(string $permission): bool;
 }

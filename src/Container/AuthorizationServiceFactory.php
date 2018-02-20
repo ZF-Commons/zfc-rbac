@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,16 +17,15 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Rbac\Rbac;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Rbac;
 use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 
 /**
@@ -34,40 +34,18 @@ use ZfcRbac\Service\RoleServiceInterface;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class AuthorizationServiceFactory implements FactoryInterface
+final class AuthorizationServiceFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array              $options
-     * @return AuthorizationService
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container): AuthorizationService
     {
-        /* @var Rbac $rbac */
         $rbac = new Rbac();
-
-        /* @var RoleServiceInterface $roleService */
         $roleService = $container->get(RoleServiceInterface::class);
-
-        /* @var AssertionPluginManager $assertionPluginManager */
         $assertionPluginManager = $container->get(AssertionPluginManager::class);
-
-        /* @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
 
         $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
         $authorizationService->setAssertions($moduleOptions->getAssertionMap());
 
         return $authorizationService;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return AuthorizationService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, AuthorizationService::class);
     }
 }

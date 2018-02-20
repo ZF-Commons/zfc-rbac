@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,8 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Container;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\ModuleOptionsFactory;
 use ZfcRbac\Options\ModuleOptions;
@@ -25,9 +29,9 @@ use ZfcRbac\Options\ModuleOptions;
 /**
  * @covers \ZfcRbac\Container\ModuleOptionsFactory
  */
-class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
+class ModuleOptionsFactoryTest extends TestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $config = ['zfc_rbac' => []];
 
@@ -35,9 +39,8 @@ class ModuleOptionsFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('config', $config);
 
         $factory = new ModuleOptionsFactory();
-        $options = $factory($serviceManager, 'requestedName');
+        $options = $factory($serviceManager);
 
         $this->assertInstanceOf(ModuleOptions::class, $options);
     }
 }
- 

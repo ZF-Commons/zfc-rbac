@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,28 +17,32 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Role;
 
-use Rbac\Role\HierarchicalRoleInterface;
+use PHPUnit\Framework\TestCase;
+use ZfcRbac\Role\HierarchicalRoleInterface;
 use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * @covers \ZfcRbac\Role\InMemoryRoleProvider
  */
-class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
+class InMemoryRoleProviderTest extends TestCase
 {
-    public function testInMemoryProvider()
+    public function testInMemoryProvider(): void
     {
         $inMemoryProvider = new InMemoryRoleProvider([
             'admin' => [
                 'children'    => ['member'],
-                'permissions' => ['delete']
+                'permissions' => ['delete'],
             ],
             'member' => [
                 'children'    => ['guest'],
-                'permissions' => ['write']
+                'permissions' => ['write'],
             ],
-            'guest'
+            'guest',
         ]);
 
         $roles = $inMemoryProvider->getRoles(['admin', 'member', 'guest']);
@@ -59,7 +64,7 @@ class InMemoryRoleProviderTest extends \PHPUnit_Framework_TestCase
 
         // Test guest role
         $guestRole = $roles[2];
-        $this->assertInstanceOf(\Rbac\Role\RoleInterface::class, $guestRole);
+        $this->assertInstanceOf(RoleInterface::class, $guestRole);
         $this->assertNotInstanceOf(HierarchicalRoleInterface::class, $guestRole);
         $this->assertEquals('guest', $guestRole->getName());
         $this->assertFalse($guestRole->hasPermission('write'));

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,36 +17,38 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Role;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbacTest\Asset\FlatRole;
 
 /**
  * @covers \ZfcRbac\Role\ObjectRepositoryRoleProvider
  */
-class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderTest extends TestCase
 {
-
-    public function testObjectRepositoryProviderGetRoles()
+    public function testObjectRepositoryProviderGetRoles(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
 
         $this->assertEquals($result, $provider->getRoles(['member']));
     }
 
-    public function testRoleCacheOnConsecutiveCalls()
+    public function testRoleCacheOnConsecutiveCalls(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         // note exactly once, consecutive call come from cache
         $objectRepository->expects($this->exactly(1))->method('findBy')->will($this->returnValue($result));
@@ -54,12 +57,12 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $provider->getRoles(['member']);
     }
 
-    public function testClearRoleCache()
+    public function testClearRoleCache(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         // note exactly twice, as cache is cleared
         $objectRepository->expects($this->exactly(2))->method('findBy')->will($this->returnValue($result));
@@ -69,19 +72,17 @@ class ObjectRepositoryRoleProviderTest extends \PHPUnit_Framework_TestCase
         $provider->getRoles(['member']);
     }
 
-    public function testThrowExceptionIfAskedRoleIsNotFound()
+    public function testThrowExceptionIfAskedRoleIsNotFound(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
 
-        $this->setExpectedException(
-            'ZfcRbac\Exception\RoleNotFoundException',
-            'Some roles were asked but could not be loaded from database: guest, admin'
-        );
+        $this->expectException('ZfcRbac\Exception\RoleNotFoundException');
+        $this->expectExceptionMessage('Some roles were asked but could not be loaded from database: guest, admin');
 
         $provider->getRoles(['guest', 'admin', 'member']);
     }

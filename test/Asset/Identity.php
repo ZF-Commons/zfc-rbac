@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,27 +17,25 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbacTest\Asset;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Identity\IdentityInterface;
 
 class Identity implements IdentityInterface
 {
     /**
-     * Constructor
+     * @var array
      */
+    private $roles;
+
     public function __construct(array $roles = [])
     {
         $this->roles = $roles;
     }
 
-    /**
-     * @return array
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,11 +17,11 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac\Container;
 
-use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
@@ -29,25 +30,12 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class RoleProviderPluginManagerFactory implements FactoryInterface
+final class RoleProviderPluginManagerFactory
 {
-    /**
-     * {@inheritDoc}
-     * @return RoleProviderPluginManager
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container): RoleProviderPluginManager
     {
-        $config        = $container->get('config')['zfc_rbac']['role_provider_manager'];
+        $config = $container->get('config')['zfc_rbac']['role_provider_manager'];
 
         return new RoleProviderPluginManager($container, $config);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return RoleProviderPluginManager
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, RoleProviderPluginManager::class);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,6 +16,8 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
+
+declare(strict_types=1);
 
 namespace ZfcRbac\Service;
 
@@ -36,5 +39,5 @@ interface AuthorizationServiceInterface
      * @param  mixed                  $context
      * @return bool
      */
-    public function isGranted($identity, $permission, $context = null);
+    public function isGranted(?IdentityInterface $identity, string $permission, $context = null): bool;
 }

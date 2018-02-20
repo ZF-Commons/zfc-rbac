@@ -19,22 +19,19 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbac\Identity;
-
-use ZfcRbac\Role\RoleInterface;
+namespace ZfcRbac\Role;
 
 /**
- * Interface for an identity
+ * Interface for a hierarchical role
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
+ * A hierarchical role is a role that can have children.
  */
-interface IdentityInterface
+interface HierarchicalRoleInterface extends RoleInterface
 {
+    public function hasChildren(): bool;
+
     /**
-     * Get the list of roles of this identity
-     *
-     * @return string[]|RoleInterface[]
+     * @return RoleInterface[]
      */
-    public function getRoles();
+    public function getChildren(): array;
 }

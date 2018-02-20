@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,6 +17,8 @@
  * and is licensed under the MIT license.
  */
 
+declare(strict_types=1);
+
 namespace ZfcRbac;
 
 /**
@@ -26,9 +29,6 @@ namespace ZfcRbac;
  */
 class ModuleConfig
 {
-    /**
-     * @return array
-     */
     public function __invoke(): array
     {
         $config = [];

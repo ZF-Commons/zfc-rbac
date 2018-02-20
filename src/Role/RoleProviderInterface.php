@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,9 +17,9 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbac\Role;
+declare(strict_types=1);
 
-use Rbac\Role\RoleInterface;
+namespace ZfcRbac\Role;
 
 /**
  * A role provider is an object that collect roles from string and convert them to RoleInterface instances
@@ -37,5 +38,5 @@ interface RoleProviderInterface
      * @param  string[] $roleNames
      * @return RoleInterface[]
      */
-    public function getRoles(array $roleNames);
+    public function getRoles(array $roleNames): array;
 }

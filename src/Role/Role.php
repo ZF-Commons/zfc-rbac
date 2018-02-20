@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,68 +17,48 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfcRbacTest\Asset;
+declare(strict_types=1);
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Rbac\Permission\PermissionInterface;
+namespace ZfcRbac\Role;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="permissions")
+ * Simple implementation for a role without hierarchy
+ * and using strings as permissions
  */
-class Permission implements PermissionInterface
+class Role implements RoleInterface
 {
     /**
-     * @var int|null
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", length=32, unique=true)
+     * @var string
      */
     protected $name;
 
     /**
-     * Constructor
+     * @var string[]
      */
-    public function __construct($name)
+    protected $permissions = [];
+
+    public function __construct(string $name)
     {
-        $this->name  = (string) $name;
-        $this->roles = new ArrayCollection();
+        $this->name = $name;
     }
 
-    /**
-     * Get the permission identifier
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get the permission name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function getPermissions(): array
     {
-        return $this->getName();
+        return $this->permissions;
+    }
+
+    public function addPermission(string $permission): void
+    {
+        $this->permissions[$permission] = $permission;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return isset($this->permissions[$permission]);
     }
 }
