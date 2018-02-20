@@ -40,7 +40,7 @@ class RbacTest extends TestCase
         $role = new Role('Foo');
         $role->addPermission('permission');
 
-        $rbac = new \ZfcRbac\Rbac();
+        $rbac = new Rbac();
 
         $this->assertTrue($rbac->isGranted($role, 'permission'));
     }
@@ -50,7 +50,7 @@ class RbacTest extends TestCase
      */
     public function testCanUseEmptyArray()
     {
-        $rbac = new \ZfcRbac\Rbac();
+        $rbac = new Rbac();
         $this->assertFalse($rbac->isGranted([], 'permission'));
     }
 
@@ -65,7 +65,7 @@ class RbacTest extends TestCase
         $role2->addPermission('permission');
 
         $roles = [$role1, $role2];
-        $rbac = new \ZfcRbac\Rbac();
+        $rbac = new Rbac();
 
         $this->assertTrue($rbac->isGranted($roles, 'permission'));
     }
