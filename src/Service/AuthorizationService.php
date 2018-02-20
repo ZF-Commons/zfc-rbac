@@ -56,11 +56,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
      */
     private $assertions = [];
 
-    public function __construct(
-        Rbac $rbac,
-        RoleServiceInterface $roleService,
-        AssertionPluginManager $assertionPluginManager
-    ) {
+    public function __construct(Rbac $rbac, RoleServiceInterface $roleService, AssertionPluginManager $assertionPluginManager) {
         $this->rbac = $rbac;
         $this->roleService = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
@@ -88,9 +84,6 @@ final class AuthorizationService implements AuthorizationServiceInterface
         return isset($this->assertions[$permission]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isGranted(?IdentityInterface $identity, string $permission, $context = null): bool
     {
         $roles = $this->roleService->getIdentityRoles($identity, $context);

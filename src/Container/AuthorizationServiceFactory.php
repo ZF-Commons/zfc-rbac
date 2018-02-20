@@ -38,16 +38,9 @@ final class AuthorizationServiceFactory
 {
     public function __invoke(ContainerInterface $container): AuthorizationService
     {
-        /* @var Rbac $rbac */
         $rbac = new Rbac();
-
-        /* @var RoleServiceInterface $roleService */
         $roleService = $container->get(RoleServiceInterface::class);
-
-        /* @var AssertionPluginManager $assertionPluginManager */
         $assertionPluginManager = $container->get(AssertionPluginManager::class);
-
-        /* @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
 
         $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);

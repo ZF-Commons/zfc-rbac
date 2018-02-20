@@ -42,17 +42,11 @@ class Role implements RoleInterface
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string[]
-     */
     public function getPermissions(): array
     {
         return $this->permissions;

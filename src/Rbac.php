@@ -48,7 +48,7 @@ class Rbac
             $roles = [$roles];
         }
 
-        foreach ($this->flattenRoles($roles) as $role) {
+        foreach ($this->flattenRoles(...$roles) as $role) {
             /* @var \ZfcRbac\Role\RoleInterface $role */
             if ($role->hasPermission($permission)) {
                 return true;
@@ -58,17 +58,13 @@ class Rbac
         return false;
     }
 
-    /**
-     * @param  RoleInterface[] $roles
-     * @return Generator
-     */
-    protected function flattenRoles(array $roles): Generator
+    private function flattenRoles(RoleInterface ...$roles): Generator
     {
         foreach ($roles as $role) {
             yield $role;
 
             if ($role instanceof HierarchicalRoleInterface) {
-                yield from $this->flattenRoles($role->getChildren());
+                yield from $this->flattenRoles(...$role->getChildren());
             }
         }
     }

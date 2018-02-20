@@ -47,12 +47,6 @@ final class ObjectRepositoryRoleProvider implements RoleProviderInterface
      */
     private $roleCache = [];
 
-    /**
-     * Constructor
-     *
-     * @param ObjectRepository $objectRepository
-     * @param string           $roleNameProperty
-     */
     public function __construct(ObjectRepository $objectRepository, string $roleNameProperty)
     {
         $this->objectRepository = $objectRepository;
@@ -64,9 +58,6 @@ final class ObjectRepositoryRoleProvider implements RoleProviderInterface
         $this->roleCache = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoles(array $roleNames): array
     {
         $key = implode($roleNames);

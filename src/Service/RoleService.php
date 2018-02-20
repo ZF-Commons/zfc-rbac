@@ -44,42 +44,21 @@ final class RoleService implements RoleServiceInterface
      */
     protected $guestRole = '';
 
-    /**
-     * Constructor
-     *
-     * @param RoleProviderInterface $roleProvider
-     */
     public function __construct(RoleProviderInterface $roleProvider)
     {
         $this->roleProvider = $roleProvider;
     }
 
-    /**
-     * Set the role provider
-     *
-     * @param RoleProviderInterface $roleProvider
-     */
     public function setRoleProvider(RoleProviderInterface $roleProvider): void
     {
         $this->roleProvider = $roleProvider;
     }
 
-    /**
-     * Set the guest role
-     *
-     * @param  string $guestRole
-     * @return void
-     */
     public function setGuestRole(string $guestRole): void
     {
         $this->guestRole = $guestRole;
     }
 
-    /**
-     * Get the guest role
-     *
-     * @return string
-     */
     public function getGuestRole(): string
     {
         return $this->guestRole;
