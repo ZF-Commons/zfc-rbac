@@ -37,8 +37,6 @@ final class ObjectRepositoryRoleProviderFactory
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = []): ObjectRepositoryRoleProvider
     {
-        $objectRepository = null;
-
         if (! isset($options['role_name_property'])) {
             throw new Exception\RuntimeException('The "role_name_property" option is missing');
         }
