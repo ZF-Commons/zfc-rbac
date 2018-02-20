@@ -32,7 +32,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  */
 final class RoleProviderPluginManagerFactory
 {
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RoleProviderPluginManager
+    public function __invoke(ContainerInterface $container): RoleProviderPluginManager
     {
         $config = $container->get('config')['zfc_rbac']['role_provider_manager'];
 

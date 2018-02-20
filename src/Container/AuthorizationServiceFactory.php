@@ -36,13 +36,7 @@ use ZfcRbac\Service\RoleServiceInterface;
  */
 final class AuthorizationServiceFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array              $options
-     * @return AuthorizationService
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AuthorizationService
+    public function __invoke(ContainerInterface $container): AuthorizationService
     {
         /* @var Rbac $rbac */
         $rbac = new Rbac();

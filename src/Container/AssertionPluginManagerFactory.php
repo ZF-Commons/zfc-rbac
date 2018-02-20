@@ -32,13 +32,7 @@ use ZfcRbac\Assertion\AssertionPluginManager;
  */
 final class AssertionPluginManagerFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     * @return AssertionPluginManager
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AssertionPluginManager
+    public function __invoke(ContainerInterface $container): AssertionPluginManager
     {
         $config = $container->get('config')['zfc_rbac']['assertion_manager'];
 

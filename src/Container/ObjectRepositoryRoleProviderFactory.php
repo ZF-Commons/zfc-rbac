@@ -35,18 +35,7 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  */
 final class ObjectRepositoryRoleProviderFactory
 {
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     * @return ObjectRepositoryRoleProvider
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ObjectRepositoryRoleProvider
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = []): ObjectRepositoryRoleProvider
     {
         $objectRepository = null;
 
@@ -55,14 +44,12 @@ final class ObjectRepositoryRoleProviderFactory
         }
 
         if (isset($options['object_repository'])) {
-            /* @var ObjectRepository $objectRepository */
             $objectRepository = $container->get($options['object_repository']);
 
             return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);
         }
 
-        if (isset($options['object_manager']) && isset($options['class_name'])) {
-            /* @var ObjectManager $objectManager */
+        if (isset($options['object_manager'], $options['class_name'])) {
             $objectManager = $container->get($options['object_manager']);
             $objectRepository = $objectManager->getRepository($options['class_name']);
 

@@ -33,14 +33,6 @@ use ZfcRbac\Identity\IdentityInterface;
  */
 interface AssertionInterface
 {
-    /**
-     * Check if this assertion is true
-     *
-     * @param string            $permission
-     * @param IdentityInterface $identity
-     * @param mixed             $context
-     * @return bool
-     */
     public function assert(
         string $permission,
         IdentityInterface $identity = null,

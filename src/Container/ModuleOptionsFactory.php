@@ -32,13 +32,7 @@ use ZfcRbac\Options\ModuleOptions;
  */
 final class ModuleOptionsFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array              $options
-     * @return ModuleOptions
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ModuleOptions
+    public function __invoke(ContainerInterface $container): ModuleOptions
     {
         return new ModuleOptions($container->get('config')['zfc_rbac']);
     }
