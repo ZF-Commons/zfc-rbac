@@ -31,7 +31,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  */
 class RoleProviderPluginManagerFactoryTest extends TestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', [

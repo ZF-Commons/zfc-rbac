@@ -31,7 +31,7 @@ use ZfcRbacTest\Asset\FlatRole;
  */
 class ObjectRepositoryRoleProviderTest extends TestCase
 {
-    public function testObjectRepositoryProviderGetRoles()
+    public function testObjectRepositoryProviderGetRoles(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole = new FlatRole('member');
@@ -43,7 +43,7 @@ class ObjectRepositoryRoleProviderTest extends TestCase
         $this->assertEquals($result, $provider->getRoles(['member']));
     }
 
-    public function testRoleCacheOnConsecutiveCalls()
+    public function testRoleCacheOnConsecutiveCalls(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole = new FlatRole('member');
@@ -57,7 +57,7 @@ class ObjectRepositoryRoleProviderTest extends TestCase
         $provider->getRoles(['member']);
     }
 
-    public function testClearRoleCache()
+    public function testClearRoleCache(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole = new FlatRole('member');
@@ -72,7 +72,7 @@ class ObjectRepositoryRoleProviderTest extends TestCase
         $provider->getRoles(['member']);
     }
 
-    public function testThrowExceptionIfAskedRoleIsNotFound()
+    public function testThrowExceptionIfAskedRoleIsNotFound(): void
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $memberRole = new FlatRole('member');

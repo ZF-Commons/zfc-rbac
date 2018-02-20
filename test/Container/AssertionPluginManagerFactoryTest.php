@@ -31,7 +31,7 @@ use ZfcRbac\Container\AssertionPluginManagerFactory;
  */
 class AssertionPluginManagerFactoryTest extends TestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', [

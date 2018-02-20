@@ -35,7 +35,7 @@ class RbacTest extends TestCase
     /**
      * @covers \ZfcRbac\Rbac::isGranted
      */
-    public function testCanConvertSingleRole()
+    public function testCanConvertSingleRole(): void
     {
         $role = new Role('Foo');
         $role->addPermission('permission');
@@ -48,7 +48,7 @@ class RbacTest extends TestCase
     /**
      * @covers \ZfcRbac\Rbac::isGranted
      */
-    public function testCanUseEmptyArray()
+    public function testCanUseEmptyArray(): void
     {
         $rbac = new Rbac();
         $this->assertFalse($rbac->isGranted([], 'permission'));
@@ -57,7 +57,7 @@ class RbacTest extends TestCase
     /**
      * @covers \ZfcRbac\Rbac::isGranted
      */
-    public function testCanCheckMultipleRolesWithMatchingPermission()
+    public function testCanCheckMultipleRolesWithMatchingPermission(): void
     {
         $role1 = new Role('Foo');
 
@@ -73,7 +73,7 @@ class RbacTest extends TestCase
     /**
      * @covers \ZfcRbac\Rbac::isGranted
      */
-    public function testReturnFalseIfNoRoleHasPermission()
+    public function testReturnFalseIfNoRoleHasPermission(): void
     {
         $role1 = new Role('Foo');
         $role2 = new Role('Bar');
@@ -87,7 +87,7 @@ class RbacTest extends TestCase
     /**
      * @covers \ZfcRbac\Rbac::isGranted
      */
-    public function testCanCheckHierarchicalRole()
+    public function testCanCheckHierarchicalRole(): void
     {
         $childRole = new Role('Bar');
         $childRole->addPermission('permission');
@@ -103,7 +103,7 @@ class RbacTest extends TestCase
     /**
      * @covers \ZfcRbac\Rbac::isGranted
      */
-    public function testReturnFalseIfNoHierarchicalRoleHasPermission()
+    public function testReturnFalseIfNoHierarchicalRoleHasPermission(): void
     {
         $childRole = new Role('Bar');
 

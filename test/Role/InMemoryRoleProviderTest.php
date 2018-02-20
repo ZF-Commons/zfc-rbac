@@ -31,7 +31,7 @@ use ZfcRbac\Role\RoleInterface;
  */
 class InMemoryRoleProviderTest extends TestCase
 {
-    public function testInMemoryProvider()
+    public function testInMemoryProvider(): void
     {
         $inMemoryProvider = new InMemoryRoleProvider([
             'admin' => [

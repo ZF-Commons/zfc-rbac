@@ -32,7 +32,7 @@ use ZfcRbacTest\Asset\Identity;
  */
 class RoleServiceTest extends TestCase
 {
-    public function testReturnGuestRoleIfNoIdentityIsGiven()
+    public function testReturnGuestRoleIfNoIdentityIsGiven(): void
     {
         $roleService = new RoleService(new InMemoryRoleProvider([]));
 
@@ -46,7 +46,7 @@ class RoleServiceTest extends TestCase
         $this->assertEquals('guest', $result[0]->getName());
     }
 
-    public function testReturnGuestRoleIfGuestIdentityIsGiven()
+    public function testReturnGuestRoleIfGuestIdentityIsGiven(): void
     {
         $roleService = new RoleService(new InMemoryRoleProvider([]));
 

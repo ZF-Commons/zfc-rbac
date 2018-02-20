@@ -35,7 +35,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  */
 class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 {
-    public function testFactoryUsingObjectRepository()
+    public function testFactoryUsingObjectRepository(): void
     {
         $serviceManager = new ServiceManager();
 
@@ -51,7 +51,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
-    public function testFactoryUsingObjectManager()
+    public function testFactoryUsingObjectManager(): void
     {
         $serviceManager = new ServiceManager();
         $pluginManager = new RoleProviderPluginManager($serviceManager);
@@ -77,7 +77,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     /**
      * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
      */
-    public function testThrowExceptionIfNoRoleNamePropertyIsSet()
+    public function testThrowExceptionIfNoRoleNamePropertyIsSet(): void
     {
         try {
             $serviceManager = new ServiceManager();
@@ -88,7 +88,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
                     $this->assertTrue(true); // we got here
-                    return true;
+                    return;
                 }
             }
         }
@@ -102,7 +102,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     /**
      * This is required due to the fact that the ServiceManager catches ALL exceptions and throws it's own...
      */
-    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet()
+    public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet(): void
     {
         try {
             $serviceManager = new ServiceManager();
@@ -115,7 +115,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             while ($e = $e->getPrevious()) {
                 if ($e instanceof RuntimeException) {
                     $this->assertTrue(true); // we got here
-                    return true;
+                    return;
                 }
             }
         }

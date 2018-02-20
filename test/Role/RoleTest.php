@@ -30,7 +30,7 @@ use ZfcRbac\Role\Role;
  */
 class RoleTest extends TestCase
 {
-    public function testSetNameByConstructor()
+    public function testSetNameByConstructor(): void
     {
         $role = new Role('phpIsHell');
         $this->assertEquals('phpIsHell', $role->getName());
@@ -39,7 +39,7 @@ class RoleTest extends TestCase
     /**
      * @covers \ZfcRbac\Role\Role::addPermission
      */
-    public function testRoleCanAddPermission()
+    public function testRoleCanAddPermission(): void
     {
         $role = new Role('php');
 
@@ -54,7 +54,7 @@ class RoleTest extends TestCase
     /**
      * @covers \ZfcRbac\Role\Role::getPermissions
      */
-    public function testRoleCanGetPermissions()
+    public function testRoleCanGetPermissions(): void
     {
         $role = new Role('php');
 

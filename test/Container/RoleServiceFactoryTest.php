@@ -33,7 +33,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  */
 class RoleServiceFactoryTest extends TestCase
 {
-    public function testCanCreateRoleService()
+    public function testCanCreateRoleService(): void
     {
         $options = new ModuleOptions([
             'guest_role'    => 'guest',
@@ -56,7 +56,7 @@ class RoleServiceFactoryTest extends TestCase
         $this->assertEquals('guest', $roleService->getGuestRole());
     }
 
-    public function testThrowExceptionIfNoRoleProvider()
+    public function testThrowExceptionIfNoRoleProvider(): void
     {
         $this->expectException(RuntimeException::class);
 

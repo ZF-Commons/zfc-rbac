@@ -38,7 +38,7 @@ use ZfcRbacTest\Asset\SimpleAssertion;
  */
 class AuthorizationServiceTest extends TestCase
 {
-    public function grantedProvider()
+    public function grantedProvider(): array
     {
         return [
             // Simple is granted
@@ -105,7 +105,7 @@ class AuthorizationServiceTest extends TestCase
         ];
     }
 
-    public function testDoNotCallAssertionIfThePermissionIsNotGranted()
+    public function testDoNotCallAssertionIfThePermissionIsNotGranted(): void
     {
         $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
@@ -121,7 +121,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($authorizationService->isGranted(null, 'foo'));
     }
 
-    public function testReturnsFalseForIdentityWithoutRoles()
+    public function testReturnsFalseForIdentityWithoutRoles(): void
     {
         $identity = new Identity();
 
@@ -139,7 +139,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($authorizationService->isGranted($identity, 'foo'));
     }
 
-    public function testReturnsTrueForIdentityWhenHasPermissionButNoAssertionsExists()
+    public function testReturnsTrueForIdentityWhenHasPermissionButNoAssertionsExists(): void
     {
         $role = new FlatRole('admin');
         $identity = new Identity([$role]);
@@ -158,7 +158,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($authorizationService->isGranted($identity, 'foo'));
     }
 
-    public function testUsesAssertionsAsInstances()
+    public function testUsesAssertionsAsInstances(): void
     {
         $role = new FlatRole('admin');
         $identity = new Identity([$role]);
@@ -181,7 +181,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($assertion->gotCalled());
     }
 
-    public function testUsesAssertionsAsStrings()
+    public function testUsesAssertionsAsStrings(): void
     {
         $role = new FlatRole('admin');
         $identity = new Identity([$role]);
@@ -204,7 +204,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($assertion->gotCalled());
     }
 
-    public function testUsesAssertionsAsCallable()
+    public function testUsesAssertionsAsCallable(): void
     {
         $role = new FlatRole('admin');
         $identity = new Identity([$role]);
@@ -236,7 +236,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($called);
     }
 
-    public function testThrowExceptionForInvalidAssertion()
+    public function testThrowExceptionForInvalidAssertion(): void
     {
         $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
@@ -255,7 +255,7 @@ class AuthorizationServiceTest extends TestCase
         $authorizationService->isGranted(null, 'foo');
     }
 
-    public function testAssertionMap()
+    public function testAssertionMap(): void
     {
         $rbac = $this->getMockBuilder(Rbac::class)->disableOriginalConstructor()->getMock();
         $roleService = $this->getMockBuilder(RoleServiceInterface::class)->disableOriginalConstructor()->getMock();
@@ -272,7 +272,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($authorizationService->hasAssertion('bar'));
     }
 
-    public function testContextIsPassedToRoleService()
+    public function testContextIsPassedToRoleService(): void
     {
         $identity = new Identity([]);
         $context = 'context';

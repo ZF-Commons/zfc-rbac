@@ -34,7 +34,7 @@ use ZfcRbac\Service\RoleServiceInterface;
  */
 class AuthorizationServiceFactoryTest extends TestCase
 {
-    public function testCanCreateAuthorizationService()
+    public function testCanCreateAuthorizationService(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 

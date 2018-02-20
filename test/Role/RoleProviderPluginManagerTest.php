@@ -32,7 +32,7 @@ use ZfcRbac\Role\RoleProviderPluginManager;
  */
 class RoleProviderPluginManagerTest extends TestCase
 {
-    public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented()
+    public function testValidationOfPluginSucceedsIfRoleProviderInterfaceIsImplemented(): void
     {
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $pluginMock = $this->getMockBuilder(RoleProviderInterface::class)->getMock();
@@ -41,7 +41,7 @@ class RoleProviderPluginManagerTest extends TestCase
         $this->assertNull($pluginManager->validate($pluginMock));
     }
 
-    public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented()
+    public function testValidationOfPluginFailsIfRoleProviderInterfaceIsNotImplemented(): void
     {
         $this->expectException(InvalidServiceException::class);
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();

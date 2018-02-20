@@ -31,7 +31,7 @@ use ZfcRbac\Options\ModuleOptions;
  */
 class ModuleOptionsFactoryTest extends TestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $config = ['zfc_rbac' => []];
 

@@ -34,7 +34,7 @@ class HierarchicalRoleTest extends TestCase
     /**
      * @covers \ZfcRbac\Role\HierarchicalRole::addChild
      */
-    public function testCanAddChild()
+    public function testCanAddChild(): void
     {
         $role = new HierarchicalRole('role');
         $child = new HierarchicalRole('child');
@@ -47,7 +47,7 @@ class HierarchicalRoleTest extends TestCase
     /**
      * @covers \ZfcRbac\Role\HierarchicalRole::hasChildren
      */
-    public function testHasChildren()
+    public function testHasChildren(): void
     {
         $role = new HierarchicalRole('role');
 
@@ -61,7 +61,7 @@ class HierarchicalRoleTest extends TestCase
     /**
      * @covers \ZfcRbac\Role\HierarchicalRole::getChildren
      */
-    public function testCanGetChildren()
+    public function testCanGetChildren(): void
     {
         $role = new HierarchicalRole('role');
         $child1 = new HierarchicalRole('child 1');
