@@ -24,13 +24,6 @@ matrix:
     - php: 7.2
       env:
         - DEPENDENCIES="--prefer-lowest --prefer-stable"
-    - php: hhvm
-      env:
-        - DEPENDENCIES=""
-    - php: hhvm
-      env:
-        - DEPENDENCIES="--prefer-lowest --prefer-stable"
-
 
 before_script:
   - mkdir -p "$HOME/.php-cs-fixer"
