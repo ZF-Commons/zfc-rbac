@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Container;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;

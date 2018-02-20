@@ -57,7 +57,7 @@ class Rbac
 
         return false;
     }
-    
+
     protected function flattenRoles(array $roles): Generator
     {
         foreach ($roles as $role) {

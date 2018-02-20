@@ -56,7 +56,8 @@ final class AuthorizationService implements AuthorizationServiceInterface
      */
     private $assertions = [];
 
-    public function __construct(Rbac $rbac, RoleServiceInterface $roleService, AssertionPluginManager $assertionPluginManager) {
+    public function __construct(Rbac $rbac, RoleServiceInterface $roleService, AssertionPluginManager $assertionPluginManager)
+    {
         $this->rbac = $rbac;
         $this->roleService = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
