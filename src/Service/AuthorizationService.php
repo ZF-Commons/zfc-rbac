@@ -23,6 +23,7 @@ namespace ZfcRbac\Service;
 
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AssertionSet;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Rbac;
@@ -122,13 +123,19 @@ final class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if (is_string($assertion)) {
-            $assertion = $this->assertionPluginManager->get($assertion);
+            $this->assertions[$permission] = $assertion = $this->assertionPluginManager->get($assertion);
+
+            return $assertion->assert($permission, $identity, $context);
+        }
+
+        if (is_array($assertion)) {
+            $this->assertions[$permission] = $assertion = new AssertionSet($this->assertionPluginManager, $assertion);
 
             return $assertion->assert($permission, $identity, $context);
         }
 
         throw new Exception\InvalidArgumentException(sprintf(
-            'Assertion must be callable, string or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
+            'Assertion must be callable, string, array or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
             is_object($assertion) ? get_class($assertion) : gettype($assertion)
         ));
     }

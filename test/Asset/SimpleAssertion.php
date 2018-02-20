@@ -27,18 +27,33 @@ use ZfcRbac\Identity\IdentityInterface;
 class SimpleAssertion implements AssertionInterface
 {
     /**
+     * @var int
+     */
+    protected $called = 0;
+
+    /**
      * @var bool
      */
-    protected $called = false;
+    protected $willAssert;
+
+    public function __construct(bool $willAssert = true)
+    {
+        $this->willAssert = $willAssert;
+    }
 
     public function assert(string $permission, IdentityInterface $identity = null, $context = null): bool
     {
-        $this->called = true;
+        $this->called++;
 
-        return true;
+        return $this->willAssert;
     }
 
     public function gotCalled(): bool
+    {
+        return (bool) $this->called;
+    }
+
+    public function calledTimes(): int
     {
         return $this->called;
     }
