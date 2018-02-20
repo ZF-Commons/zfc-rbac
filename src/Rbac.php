@@ -67,11 +67,9 @@ class Rbac
         foreach ($roles as $role) {
             yield $role;
 
-            if (! $role instanceof HierarchicalRoleInterface) {
-                continue;
+            if ($role instanceof HierarchicalRoleInterface) {
+                yield from $this->flattenRoles($role->getChildren());
             }
-
-            yield from $this->flattenRoles($role->getChildren());
         }
     }
 }
