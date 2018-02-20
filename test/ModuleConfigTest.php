@@ -40,7 +40,7 @@ class ModuleConfigTest extends TestCase
     public function testGetArrayWith()
     {
         $moduleConfig = new ModuleConfig();
-        $config       = $moduleConfig->__invoke();
+        $config = $moduleConfig->__invoke();
 
         $this->assertInternalType('array', $config);
         $this->assertArrayHasKey('zfc_rbac', $config);

@@ -42,7 +42,7 @@ class AuthorizationServiceFactoryTest extends TestCase
         $container->expects($this->at(1))->method('get')->with(AssertionPluginManager::class)->willReturn($this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock());
         $container->expects($this->at(2))->method('get')->with(ModuleOptions::class)->willReturn(new ModuleOptions());
 
-        $factory              = new AuthorizationServiceFactory();
+        $factory = new AuthorizationServiceFactory();
         $authorizationService = $factory($container, 'requestedName');
 
         $this->assertInstanceOf(AuthorizationService::class, $authorizationService);

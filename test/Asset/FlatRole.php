@@ -81,7 +81,7 @@ class FlatRole extends Role
     public function addPermission(string $permission): void
     {
         if (is_string($permission)) {
-            $name       = $permission;
+            $name = $permission;
             $permission = new Permission($name);
         }
 

@@ -65,7 +65,7 @@ class RbacTest extends TestCase
         $role2->addPermission('permission');
 
         $roles = [$role1, $role2];
-        $rbac  = new \ZfcRbac\Rbac();
+        $rbac = new \ZfcRbac\Rbac();
 
         $this->assertTrue($rbac->isGranted($roles, 'permission'));
     }
@@ -79,7 +79,7 @@ class RbacTest extends TestCase
         $role2 = new Role('Bar');
 
         $roles = [$role1, $role2];
-        $rbac  = new \ZfcRbac\Rbac();
+        $rbac = new \ZfcRbac\Rbac();
 
         $this->assertFalse($rbac->isGranted($roles, 'permission'));
     }
@@ -89,7 +89,7 @@ class RbacTest extends TestCase
      */
     public function testCanCheckHierarchicalRole()
     {
-        $childRole  = new Role('Bar');
+        $childRole = new Role('Bar');
         $childRole->addPermission('permission');
 
         $parentRole = new HierarchicalRole('Foo');
@@ -105,7 +105,7 @@ class RbacTest extends TestCase
      */
     public function testReturnFalseIfNoHierarchicalRoleHasPermission()
     {
-        $childRole  = new Role('Bar');
+        $childRole = new Role('Bar');
 
         $parentRole = new HierarchicalRole('Foo');
         $parentRole->addChild($childRole);

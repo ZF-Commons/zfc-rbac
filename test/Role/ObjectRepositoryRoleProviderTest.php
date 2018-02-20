@@ -34,9 +34,9 @@ class ObjectRepositoryRoleProviderTest extends TestCase
     public function testObjectRepositoryProviderGetRoles()
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
 
@@ -46,9 +46,9 @@ class ObjectRepositoryRoleProviderTest extends TestCase
     public function testRoleCacheOnConsecutiveCalls()
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         // note exactly once, consecutive call come from cache
         $objectRepository->expects($this->exactly(1))->method('findBy')->will($this->returnValue($result));
@@ -60,9 +60,9 @@ class ObjectRepositoryRoleProviderTest extends TestCase
     public function testClearRoleCache()
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         // note exactly twice, as cache is cleared
         $objectRepository->expects($this->exactly(2))->method('findBy')->will($this->returnValue($result));
@@ -75,9 +75,9 @@ class ObjectRepositoryRoleProviderTest extends TestCase
     public function testThrowExceptionIfAskedRoleIsNotFound()
     {
         $objectRepository = $this->getMockBuilder(ObjectRepository::class)->getMock();
-        $memberRole       = new FlatRole('member');
-        $provider         = new ObjectRepositoryRoleProvider($objectRepository, 'name');
-        $result           = [$memberRole];
+        $memberRole = new FlatRole('member');
+        $provider = new ObjectRepositoryRoleProvider($objectRepository, 'name');
+        $result = [$memberRole];
 
         $objectRepository->expects($this->once())->method('findBy')->will($this->returnValue($result));
 

@@ -35,7 +35,7 @@ class AssertionPluginManagerTest extends TestCase
     public function testValidationOfPluginSucceedsIfAssertionInterfaceIsImplemented()
     {
         $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginMock    = $this->getMockBuilder(AssertionInterface::class)->getMock();
+        $pluginMock = $this->getMockBuilder(AssertionInterface::class)->getMock();
         $pluginManager = new AssertionPluginManager($containerMock);
 
         $this->assertNull($pluginManager->validate($pluginMock));

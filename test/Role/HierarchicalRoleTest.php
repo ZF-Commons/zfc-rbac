@@ -36,7 +36,7 @@ class HierarchicalRoleTest extends TestCase
      */
     public function testCanAddChild()
     {
-        $role  = new HierarchicalRole('role');
+        $role = new HierarchicalRole('role');
         $child = new HierarchicalRole('child');
 
         $role->addChild($child);
@@ -63,7 +63,7 @@ class HierarchicalRoleTest extends TestCase
      */
     public function testCanGetChildren()
     {
-        $role   = new HierarchicalRole('role');
+        $role = new HierarchicalRole('role');
         $child1 = new HierarchicalRole('child 1');
         $child2 = new HierarchicalRole('child 2');
 

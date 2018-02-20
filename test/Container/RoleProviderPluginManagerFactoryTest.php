@@ -40,7 +40,7 @@ class RoleProviderPluginManagerFactoryTest extends TestCase
             ],
         ]);
 
-        $factory       = new RoleProviderPluginManagerFactory();
+        $factory = new RoleProviderPluginManagerFactory();
         $pluginManager = $factory($serviceManager, 'requestedName');
 
         $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);

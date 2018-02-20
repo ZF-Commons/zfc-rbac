@@ -43,7 +43,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             'role_name_property' => 'name',
             'object_repository'  => 'RoleObjectRepository',
         ];
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
+        $pluginManager = new RoleProviderPluginManager($serviceManager);
 
         $serviceManager->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
@@ -54,7 +54,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     public function testFactoryUsingObjectManager()
     {
         $serviceManager = new ServiceManager();
-        $pluginManager  = new RoleProviderPluginManager($serviceManager);
+        $pluginManager = new RoleProviderPluginManager($serviceManager);
 
         $options = [
             'role_name_property' => 'name',
@@ -81,7 +81,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     {
         try {
             $serviceManager = new ServiceManager();
-            $pluginManager  = new RoleProviderPluginManager($serviceManager);
+            $pluginManager = new RoleProviderPluginManager($serviceManager);
 
             $pluginManager->get(ObjectRepositoryRoleProvider::class, []);
         } catch (ServiceNotCreatedException $e) {
@@ -106,7 +106,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     {
         try {
             $serviceManager = new ServiceManager();
-            $pluginManager  = new RoleProviderPluginManager($serviceManager);
+            $pluginManager = new RoleProviderPluginManager($serviceManager);
 
             $pluginManager->get(ObjectRepositoryRoleProvider::class, [
                 'role_name_property' => 'name',

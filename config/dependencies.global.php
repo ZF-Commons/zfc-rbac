@@ -34,6 +34,6 @@ return [
         'role_provider_manager' => [],
 
         // Assertion plugin manager
-        'assertion_manager'     => [],
+        'assertion_manager' => [],
     ],
 ];

@@ -36,8 +36,8 @@ class RoleServiceFactoryTest extends TestCase
     public function testCanCreateRoleService()
     {
         $options = new ModuleOptions([
-            'guest_role'           => 'guest',
-            'role_provider'        => [
+            'guest_role'    => 'guest',
+            'role_provider' => [
                 \ZfcRbac\Role\InMemoryRoleProvider::class => [
                     'foo',
                 ],
@@ -49,7 +49,7 @@ class RoleServiceFactoryTest extends TestCase
         $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
         $container->expects($this->at(1))->method('get')->with(RoleProviderPluginManager::class)->willReturn(new RoleProviderPluginManager($this->getMockBuilder(ContainerInterface::class)->getMock()));
 
-        $factory     = new RoleServiceFactory();
+        $factory = new RoleServiceFactory();
         $roleService = $factory($container, 'requestedName');
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
@@ -61,8 +61,8 @@ class RoleServiceFactoryTest extends TestCase
         $this->expectException(RuntimeException::class);
 
         $options = new ModuleOptions([
-            'guest_role'        => 'guest',
-            'role_provider'     => [],
+            'guest_role'    => 'guest',
+            'role_provider' => [],
         ]);
 
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();

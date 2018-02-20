@@ -63,7 +63,7 @@ final class ObjectRepositoryRoleProviderFactory
 
         if (isset($options['object_manager']) && isset($options['class_name'])) {
             /* @var ObjectManager $objectManager */
-            $objectManager    = $container->get($options['object_manager']);
+            $objectManager = $container->get($options['object_manager']);
             $objectRepository = $objectManager->getRepository($options['class_name']);
 
             return new ObjectRepositoryRoleProvider($objectRepository, $options['role_name_property']);

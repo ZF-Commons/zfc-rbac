@@ -61,8 +61,8 @@ final class AuthorizationService implements AuthorizationServiceInterface
         RoleServiceInterface $roleService,
         AssertionPluginManager $assertionPluginManager
     ) {
-        $this->rbac                   = $rbac;
-        $this->roleService            = $roleService;
+        $this->rbac = $rbac;
+        $this->roleService = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
     }
 

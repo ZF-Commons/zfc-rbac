@@ -114,7 +114,7 @@ final class RoleService implements RoleServiceInterface
         }
 
         $collectedRoles = [];
-        $toCollect      = [];
+        $toCollect = [];
 
         foreach ($roles as $role) {
             // If it's already a RoleInterface, nothing to do as a RoleInterface contains everything already

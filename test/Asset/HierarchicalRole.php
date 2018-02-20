@@ -69,7 +69,7 @@ class HierarchicalRole implements HierarchicalRoleInterface
      */
     public function __construct(string $name)
     {
-        $this->name        = $name;
+        $this->name = $name;
         $this->permissions = new ArrayCollection();
     }
 
