@@ -29,7 +29,7 @@ class AssertionSet implements AssertionInterface
     /**
      * Condition constants
      */
-    const CONDITION_OR  = 'condition_or';
+    const CONDITION_OR = 'condition_or';
     const CONDITION_AND = 'condition_and';
 
     /**
@@ -57,7 +57,7 @@ class AssertionSet implements AssertionInterface
             unset($assertions['condition']);
         }
 
-        $this->assertions             = $assertions;
+        $this->assertions = $assertions;
         $this->assertionPluginManager = $assertionPluginManager;
     }
 
@@ -84,7 +84,7 @@ class AssertionSet implements AssertionInterface
                     break;
                 case is_array($assertion):
                     $this->assertions[$index] = $assertion = new AssertionSet($this->assertionPluginManager, $assertion);
-                    $asserted                 = $assertion->assert($permission, $identity, $context);
+                    $asserted = $assertion->assert($permission, $identity, $context);
                     break;
                 default:
                     throw new Exception\InvalidArgumentException(sprintf(

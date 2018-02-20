@@ -36,7 +36,7 @@ class AssertionSetTest extends TestCase
     public function testImplementsAssertionInterface()
     {
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, []);
+        $assertionSet = new AssertionSet($assertionPluginManager, []);
 
         $this->assertInstanceOf(AssertionInterface::class, $assertionSet);
     }
@@ -44,7 +44,7 @@ class AssertionSetTest extends TestCase
     public function testWhenNoAssertionsArePresentTheAssertionWillFail()
     {
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, []);
+        $assertionSet = new AssertionSet($assertionPluginManager, []);
 
         $this->assertFalse($assertionSet->assert('foo'));
     }
@@ -52,7 +52,7 @@ class AssertionSetTest extends TestCase
     public function testAcceptsAnAndCondition()
     {
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['condition' => AssertionSet::CONDITION_AND]);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['condition' => AssertionSet::CONDITION_AND]);
 
         $this->assertFalse($assertionSet->assert('foo'));
     }
@@ -60,7 +60,7 @@ class AssertionSetTest extends TestCase
     public function testAcceptsAnOrCondition()
     {
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['condition' => AssertionSet::CONDITION_OR]);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['condition' => AssertionSet::CONDITION_OR]);
 
         $this->assertFalse($assertionSet->assert('foo'));
     }
@@ -79,7 +79,7 @@ class AssertionSetTest extends TestCase
         $barAssertion = new SimpleAssertion(false);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['fooFactory', 'barFactory']);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['fooFactory', 'barFactory']);
 
         $assertionPluginManager->expects($this->at(0))->method('get')->with('fooFactory')->willReturn($fooAssertion);
         $assertionPluginManager->expects($this->at(1))->method('get')->with('barFactory')->willReturn($barAssertion);
@@ -96,7 +96,7 @@ class AssertionSetTest extends TestCase
         $barAssertion = new SimpleAssertion(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['fooFactory', 'barFactory', 'condition' => AssertionSet::CONDITION_AND]);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['fooFactory', 'barFactory', 'condition' => AssertionSet::CONDITION_AND]);
 
         $assertionPluginManager->expects($this->at(0))->method('get')->with('fooFactory')->willReturn($fooAssertion);
 
@@ -112,7 +112,7 @@ class AssertionSetTest extends TestCase
         $barAssertion = new SimpleAssertion(false);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['fooFactory', 'barFactory', 'condition' => AssertionSet::CONDITION_OR]);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['fooFactory', 'barFactory', 'condition' => AssertionSet::CONDITION_OR]);
 
         $assertionPluginManager->expects($this->at(0))->method('get')->with('fooFactory')->willReturn($fooAssertion);
 
@@ -127,7 +127,7 @@ class AssertionSetTest extends TestCase
         $fooAssertion = new SimpleAssertion(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['fooFactory']);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['fooFactory']);
 
         $assertionPluginManager->expects($this->once())->method('get')->with('fooFactory')->willReturn($fooAssertion);
 
@@ -143,7 +143,7 @@ class AssertionSetTest extends TestCase
         $fooAssertion = new SimpleAssertion(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['fooFactory']);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['fooFactory']);
 
         $assertionPluginManager->expects($this->once())->method('get')->with('fooFactory')->willReturn($fooAssertion);
 
@@ -157,7 +157,7 @@ class AssertionSetTest extends TestCase
         $fooAssertion = new SimpleAssertion(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, [$fooAssertion]);
+        $assertionSet = new AssertionSet($assertionPluginManager, [$fooAssertion]);
 
         $this->assertTrue($assertionSet->assert('permission'));
 
@@ -166,7 +166,7 @@ class AssertionSetTest extends TestCase
 
     public function testUsesAssertionsAsCallables()
     {
-        $called       = false;
+        $called = false;
         $fooAssertion = function ($permission, IdentityInterface $identity = null, $context = null) use (&$called) {
             $called = true;
 
@@ -174,7 +174,7 @@ class AssertionSetTest extends TestCase
         };
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, [$fooAssertion]);
+        $assertionSet = new AssertionSet($assertionPluginManager, [$fooAssertion]);
 
         $this->assertTrue($assertionSet->assert('permission'));
 
@@ -187,7 +187,7 @@ class AssertionSetTest extends TestCase
         $barAssertion = new SimpleAssertion(true);
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, ['fooFactory', ['barFactory']]);
+        $assertionSet = new AssertionSet($assertionPluginManager, ['fooFactory', ['barFactory']]);
 
         $assertionPluginManager->expects($this->at(0))->method('get')->with('fooFactory')->willReturn($fooAssertion);
         $assertionPluginManager->expects($this->at(1))->method('get')->with('barFactory')->willReturn($barAssertion);
@@ -203,7 +203,7 @@ class AssertionSetTest extends TestCase
         $fooAssertion = new \stdClass();
 
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, [$fooAssertion]);
+        $assertionSet = new AssertionSet($assertionPluginManager, [$fooAssertion]);
 
         $this->expectException(InvalidArgumentException::class);
         $this->assertTrue($assertionSet->assert('permission'));
@@ -215,7 +215,7 @@ class AssertionSetTest extends TestCase
     public function testMatrix(array $assertions, bool $expectedResult, array $assertionCalledCount)
     {
         $assertionPluginManager = $this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock();
-        $assertionSet           = new AssertionSet($assertionPluginManager, $assertions);
+        $assertionSet = new AssertionSet($assertionPluginManager, $assertions);
 
         $this->assertSame($expectedResult, $assertionSet->assert('permission'));
 
