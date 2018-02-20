@@ -41,7 +41,7 @@ class AssertionPluginManagerFactoryTest extends TestCase
         ]);
 
         $factory = new AssertionPluginManagerFactory();
-        $pluginManager = $factory($serviceManager, 'requestedName');
+        $pluginManager = $factory($serviceManager);
 
         $this->assertInstanceOf(AssertionPluginManager::class, $pluginManager);
     }

@@ -50,7 +50,7 @@ class RoleServiceFactoryTest extends TestCase
         $container->expects($this->at(1))->method('get')->with(RoleProviderPluginManager::class)->willReturn(new RoleProviderPluginManager($this->getMockBuilder(ContainerInterface::class)->getMock()));
 
         $factory = new RoleServiceFactory();
-        $roleService = $factory($container, 'requestedName');
+        $roleService = $factory($container);
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
         $this->assertEquals('guest', $roleService->getGuestRole());
@@ -70,6 +70,6 @@ class RoleServiceFactoryTest extends TestCase
         $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
 
         $factory = new RoleServiceFactory();
-        $factory($container, 'requestedName');
+        $factory($container);
     }
 }

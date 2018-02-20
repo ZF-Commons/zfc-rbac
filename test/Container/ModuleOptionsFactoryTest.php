@@ -39,7 +39,7 @@ class ModuleOptionsFactoryTest extends TestCase
         $serviceManager->setService('config', $config);
 
         $factory = new ModuleOptionsFactory();
-        $options = $factory($serviceManager, 'requestedName');
+        $options = $factory($serviceManager);
 
         $this->assertInstanceOf(ModuleOptions::class, $options);
     }

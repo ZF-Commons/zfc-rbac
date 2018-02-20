@@ -43,7 +43,7 @@ class AuthorizationServiceFactoryTest extends TestCase
         $container->expects($this->at(2))->method('get')->with(ModuleOptions::class)->willReturn(new ModuleOptions());
 
         $factory = new AuthorizationServiceFactory();
-        $authorizationService = $factory($container, 'requestedName');
+        $authorizationService = $factory($container);
 
         $this->assertInstanceOf(AuthorizationService::class, $authorizationService);
     }
