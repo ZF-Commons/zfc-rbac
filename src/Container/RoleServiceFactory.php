@@ -24,7 +24,7 @@ namespace ZfcRbac\Container;
 use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Service\RoleService;
 
 /**
@@ -39,15 +39,7 @@ final class RoleServiceFactory
     {
         $moduleOptions = $container->get(ModuleOptions::class);
 
-        $roleProviderConfig = $moduleOptions->getRoleProvider();
-
-        if (empty($roleProviderConfig)) {
-            throw new RuntimeException('No role provider has been set for ZfcRbac');
-        }
-
-        $pluginManager = $container->get(RoleProviderPluginManager::class);
-        $roleProvider = $pluginManager->get(key($roleProviderConfig), current($roleProviderConfig));
-        $roleService = new RoleService($roleProvider);
+        $roleService = new RoleService($container->get(RoleProviderInterface::class));
         $roleService->setGuestRole($moduleOptions->getGuestRole());
 
         return $roleService;

@@ -19,30 +19,23 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbacTest\Container;
+namespace ZfcRbac\Container;
 
-use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Container\RoleProviderPluginManagerFactory;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use Psr\Container\ContainerInterface;
+use ZfcRbac\Role\InMemoryRoleProvider;
 
 /**
- * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
+ * Factory used to create an in memory role provider
+ *
+ * @author  Vytautas Stankus
+ * @licence MIT
  */
-class RoleProviderPluginManagerFactoryTest extends TestCase
+final class InMemoryRoleProviderFactory
 {
-    public function testFactory(): void
+    public function __invoke(ContainerInterface $container): InMemoryRoleProvider
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', [
-            'zfc_rbac' => [
-                'role_provider_manager' => [],
-            ],
-        ]);
-
-        $factory = new RoleProviderPluginManagerFactory();
-        $pluginManager = $factory($serviceManager);
-
-        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
+        return new InMemoryRoleProvider(
+            $container->get('config')['zfc_rbac']['role_provider'][InMemoryRoleProvider::class] ?? []
+        );
     }
 }
