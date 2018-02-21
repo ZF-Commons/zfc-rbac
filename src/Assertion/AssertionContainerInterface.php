@@ -21,20 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Assertion;
 
-use Zend\ServiceManager\AbstractPluginManager;
-
-/**
- * Plugin manager to create assertions
- *
- * @author  Aeneas Rekkas
- * @licence MIT
- */
-final class AssertionPluginManager extends AbstractPluginManager implements AssertionContainerInterface
+interface AssertionContainerInterface
 {
-    protected $instanceOf = AssertionInterface::class;
-
-    public function get($name): AssertionInterface
-    {
-        return parent::get($name);
-    }
+    public function get($name): AssertionInterface;
 }

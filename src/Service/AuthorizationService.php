@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Service;
 
-use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AssertionContainerInterface;
 use ZfcRbac\Assertion\AssertionSet;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Rbac;
@@ -46,7 +46,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
     private $roleService;
 
     /**
-     * @var AssertionPluginManager
+     * @var AssertionContainerInterface
      */
     private $assertionPluginManager;
 
@@ -58,7 +58,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
     public function __construct(
         Rbac $rbac,
         RoleServiceInterface $roleService,
-        AssertionPluginManager $assertionPluginManager,
+        AssertionContainerInterface $assertionPluginManager,
         array $assertions = []
     ) {
         $this->rbac = $rbac;

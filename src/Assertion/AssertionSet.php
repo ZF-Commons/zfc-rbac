@@ -33,7 +33,7 @@ final class AssertionSet implements AssertionInterface
     const CONDITION_AND = 'condition_and';
 
     /**
-     * @var AssertionPluginManager
+     * @var AssertionContainerInterface
      */
     private $assertionPluginManager;
 
@@ -44,7 +44,7 @@ final class AssertionSet implements AssertionInterface
 
     private $condition = self::CONDITION_AND;
 
-    public function __construct(AssertionPluginManager $assertionPluginManager, array $assertions)
+    public function __construct(AssertionContainerInterface $assertionPluginManager, array $assertions)
     {
         if (isset($assertions['condition'])) {
             if ($assertions['condition'] !== AssertionSet::CONDITION_AND
