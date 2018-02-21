@@ -45,7 +45,7 @@ class RoleServiceFactoryTest extends TestCase
         ]);
 
         $container = new ServiceManager(['services' => [
-            ModuleOptions::class => $options,
+            ModuleOptions::class         => $options,
             RoleProviderInterface::class => new InMemoryRoleProvider([]),
         ]]);
 

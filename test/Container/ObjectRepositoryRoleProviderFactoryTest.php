@@ -43,13 +43,13 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
                     ObjectRepositoryRoleProvider::class => [
                         'role_name_property' => 'name',
                         'object_repository'  => 'RoleObjectRepository',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
         $container->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
-        $roleProvider = (new ObjectRepositoryRoleProviderFactory)($container);
+        $roleProvider = (new ObjectRepositoryRoleProviderFactory())($container);
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
@@ -63,9 +63,9 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
                         'role_name_property' => 'name',
                         'object_manager'     => 'ObjectManager',
                         'class_name'         => 'Role',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
         $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $objectManager->expects($this->once())
@@ -75,7 +75,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 
         $container->setService('ObjectManager', $objectManager);
 
-        $roleProvider = (new ObjectRepositoryRoleProviderFactory)($container);
+        $roleProvider = (new ObjectRepositoryRoleProviderFactory())($container);
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
@@ -91,11 +91,11 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
         $container->setService('config', [
             'zfc_rbac' => [
                 'role_provider' => [
-                    ObjectRepositoryRoleProvider::class => []
-                ]
-            ]
+                    ObjectRepositoryRoleProvider::class => [],
+                ],
+            ],
         ]);
-        (new ObjectRepositoryRoleProviderFactory)($container);
+        (new ObjectRepositoryRoleProviderFactory())($container);
     }
 
     /**
@@ -113,10 +113,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
                 'role_provider' => [
                     ObjectRepositoryRoleProvider::class => [
                         'role_name_property' => 'name',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
-        (new ObjectRepositoryRoleProviderFactory)($container);
+        (new ObjectRepositoryRoleProviderFactory())($container);
     }
 }

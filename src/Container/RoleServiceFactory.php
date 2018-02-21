@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace ZfcRbac\Container;
 
 use Psr\Container\ContainerInterface;
-use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\RoleProviderInterface;
 use ZfcRbac\Service\RoleService;
