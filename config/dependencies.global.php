@@ -32,9 +32,6 @@ return [
     ],
 
     'zfc_rbac' => [
-        // Role provider plugin manager
-        'role_provider_manager' => [],
-
         // Assertion plugin manager
         'assertion_manager' => [],
     ],
