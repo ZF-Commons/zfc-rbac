@@ -53,7 +53,6 @@ class RoleServiceFactoryTest extends TestCase
         $roleService = $factory($container);
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
-        $this->assertEquals('guest', $roleService->getGuestRole());
     }
 
     public function testThrowExceptionIfNoRoleProvider(): void

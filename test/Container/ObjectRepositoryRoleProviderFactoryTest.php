@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 use ZfcRbac\Exception\RuntimeException;
+use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
 /**
@@ -37,16 +38,14 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     public function testFactoryUsingObjectRepository(): void
     {
         $container = new ServiceManager();
-        $container->setService('config', [
-            'zfc_rbac' => [
-                'role_provider' => [
-                    ObjectRepositoryRoleProvider::class => [
-                        'role_name_property' => 'name',
-                        'object_repository'  => 'RoleObjectRepository',
-                    ],
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [
+                    'role_name_property' => 'name',
+                    'object_repository'  => 'RoleObjectRepository',
                 ],
             ],
-        ]);
+        ]));
         $container->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
         $roleProvider = (new ObjectRepositoryRoleProviderFactory())($container);
@@ -56,17 +55,15 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
     public function testFactoryUsingObjectManager(): void
     {
         $container = new ServiceManager();
-        $container->setService('config', [
-            'zfc_rbac' => [
-                'role_provider' => [
-                    ObjectRepositoryRoleProvider::class => [
-                        'role_name_property' => 'name',
-                        'object_manager'     => 'ObjectManager',
-                        'class_name'         => 'Role',
-                    ],
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [
+                    'role_name_property' => 'name',
+                    'object_manager'     => 'ObjectManager',
+                    'class_name'         => 'Role',
                 ],
             ],
-        ]);
+        ]));
         $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $objectManager->expects($this->once())
             ->method('getRepository')
@@ -88,13 +85,11 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
         $this->expectExceptionMessage('The "role_name_property" option is missing');
 
         $container = new ServiceManager();
-        $container->setService('config', [
-            'zfc_rbac' => [
-                'role_provider' => [
-                    ObjectRepositoryRoleProvider::class => [],
-                ],
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [],
             ],
-        ]);
+        ]));
         (new ObjectRepositoryRoleProviderFactory())($container);
     }
 
@@ -108,15 +103,13 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
              you sure you specified either the "object_repository" option or "object_manager"/"class_name" options?');
 
         $container = new ServiceManager();
-        $container->setService('config', [
-            'zfc_rbac' => [
-                'role_provider' => [
-                    ObjectRepositoryRoleProvider::class => [
-                        'role_name_property' => 'name',
-                    ],
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [
+                    'role_name_property' => 'name',
                 ],
             ],
-        ]);
+        ]));
         (new ObjectRepositoryRoleProviderFactory())($container);
     }
 }

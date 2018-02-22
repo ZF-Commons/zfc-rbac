@@ -39,13 +39,10 @@ class RoleServiceTest extends TestCase
 {
     public function testReturnGuestRoleIfNoIdentityIsGiven(): void
     {
-        $roleService = new RoleService(new InMemoryRoleProvider([]));
-
-        $roleService->setGuestRole('guest');
+        $roleService = new RoleService(new InMemoryRoleProvider([]), 'guest');
 
         $result = $roleService->getIdentityRoles(null);
 
-        $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertCount(1, $result);
         $this->assertInstanceOf(RoleInterface::class, $result[0]);
         $this->assertEquals('guest', $result[0]->getName());
@@ -53,15 +50,12 @@ class RoleServiceTest extends TestCase
 
     public function testReturnGuestRoleIfGuestIdentityIsGiven(): void
     {
-        $roleService = new RoleService(new InMemoryRoleProvider([]));
-
-        $roleService->setGuestRole('guest');
+        $roleService = new RoleService(new InMemoryRoleProvider([]), 'guest');
 
         $identity = new Identity(['guest']);
 
         $result = $roleService->getIdentityRoles($identity);
 
-        $this->assertEquals('guest', $roleService->getGuestRole());
         $this->assertCount(1, $result);
         $this->assertInstanceOf(RoleInterface::class, $result[0]);
         $this->assertEquals('guest', $result[0]->getName());

@@ -38,9 +38,6 @@ final class RoleServiceFactory
     {
         $moduleOptions = $container->get(ModuleOptions::class);
 
-        $roleService = new RoleService($container->get(RoleProviderInterface::class));
-        $roleService->setGuestRole($moduleOptions->getGuestRole());
-
-        return $roleService;
+        return new RoleService($container->get(RoleProviderInterface::class), $moduleOptions->getGuestRole());
     }
 }

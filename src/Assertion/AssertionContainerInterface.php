@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Assertion;
 
-interface AssertionContainerInterface
+use Psr\Container\ContainerInterface;
+
+interface AssertionContainerInterface extends ContainerInterface
 {
     public function get($name): AssertionInterface;
 }

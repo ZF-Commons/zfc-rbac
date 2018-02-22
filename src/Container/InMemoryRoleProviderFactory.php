@@ -34,8 +34,10 @@ final class InMemoryRoleProviderFactory
 {
     public function __invoke(ContainerInterface $container): InMemoryRoleProvider
     {
+        $moduleOptions = $container->get(ModuleOptions::class);
+
         return new InMemoryRoleProvider(
-            $container->get('config')['zfc_rbac']['role_provider'][InMemoryRoleProvider::class] ?? []
+            $moduleOptions->getRoleProvider()[InMemoryRoleProvider::class] ?? []
         );
     }
 }
