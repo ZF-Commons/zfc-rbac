@@ -86,7 +86,7 @@ final class RoleService implements RoleServiceInterface
      * @param  array|Traversable $roles
      * @return RoleInterface[]
      */
-    protected function convertRoles($roles): array
+    private function convertRoles($roles): array
     {
         if ($roles instanceof Traversable) {
             $roles = iterator_to_array($roles);
