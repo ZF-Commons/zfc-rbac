@@ -42,12 +42,15 @@ class InMemoryRoleProviderTest extends TestCase
                 'children'    => ['guest'],
                 'permissions' => ['write'],
             ],
+            'mrx' => [
+                'permissions' => ['write', 'delete'],
+            ],
             'guest',
         ]);
 
-        $roles = $inMemoryProvider->getRoles(['admin', 'member', 'guest']);
+        $roles = $inMemoryProvider->getRoles(['admin', 'member', 'guest', 'mrx']);
 
-        $this->assertCount(3, $roles);
+        $this->assertCount(4, $roles);
 
         // Test admin role
         $adminRole = $roles[0];
@@ -69,5 +72,13 @@ class InMemoryRoleProviderTest extends TestCase
         $this->assertEquals('guest', $guestRole->getName());
         $this->assertFalse($guestRole->hasPermission('write'));
         $this->assertFalse($guestRole->hasPermission('delete'));
+
+        // Test mrx role
+        $guestRole = $roles[3];
+        $this->assertInstanceOf(RoleInterface::class, $guestRole);
+        $this->assertNotInstanceOf(HierarchicalRoleInterface::class, $guestRole);
+        $this->assertEquals('mrx', $guestRole->getName());
+        $this->assertTrue($guestRole->hasPermission('write'));
+        $this->assertTrue($guestRole->hasPermission('delete'));
     }
 }
