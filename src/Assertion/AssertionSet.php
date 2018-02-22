@@ -24,7 +24,7 @@ namespace ZfcRbac\Assertion;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 
-class AssertionSet implements AssertionInterface
+final class AssertionSet implements AssertionInterface
 {
     /**
      * Condition constants
