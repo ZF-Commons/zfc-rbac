@@ -37,7 +37,7 @@ ZfcRbac only officially supports installation through Composer. For Composer doc
 Install the module:
 
 ```sh
-$ php composer.phar require zf-commons/zfc-rbac:~2.4
+$ php composer.phar require zf-commons/zfc-rbac:^3.0
 ```
 
 Enable the module by adding `ZfcRbac` key to your `application.config.php` file. Customize the module by copy-pasting
@@ -45,12 +45,12 @@ the `zfc_rbac.global.php.dist` file to your `config/autoload` folder.
 
 ## Documentation
 
-The official documentation is available in the [/docs](/docs) folder.
+The official documentation is available in the [/docs](docs/) folder.
 
-You can also find some Doctrine entities in the [/data](/data) folder that will help you to more quickly take advantage
+You can also find some Doctrine entities in the [/data](data/) folder that will help you to more quickly take advantage
 of ZfcRbac.
 
 ## Support
 
 - File issues at https://github.com/ZF-Commons/zfc-rbac/issues.
-- Ask questions in the [zf-common gitter](https://gitter.im/prolic/zfc-rbac) chat.
+- Ask questions in the [zf-common gitter](https://gitter.im/ZFCommons/zfc-rbac) chat.
