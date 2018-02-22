@@ -38,14 +38,13 @@ final class AuthorizationServiceFactory
 {
     public function __invoke(ContainerInterface $container): AuthorizationService
     {
-        $rbac = new Rbac();
-        $roleService = $container->get(RoleServiceInterface::class);
-        $assertionPluginManager = $container->get(AssertionPluginManager::class);
         $moduleOptions = $container->get(ModuleOptions::class);
 
-        $authorizationService = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
-        $authorizationService->setAssertions($moduleOptions->getAssertionMap());
-
-        return $authorizationService;
+        return new AuthorizationService(
+            $container->get(Rbac::class),
+            $container->get(RoleServiceInterface::class),
+            $container->get(AssertionPluginManager::class),
+            $moduleOptions->getAssertionMap()
+        );
     }
 }

@@ -21,10 +21,8 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Service;
 
-use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionSet;
-use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Rbac;
 
@@ -55,35 +53,18 @@ final class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @var array
      */
-    private $assertions = [];
+    private $assertions;
 
-    public function __construct(Rbac $rbac, RoleServiceInterface $roleService, AssertionPluginManager $assertionPluginManager)
-    {
+    public function __construct(
+        Rbac $rbac,
+        RoleServiceInterface $roleService,
+        AssertionPluginManager $assertionPluginManager,
+        array $assertions = []
+    ) {
         $this->rbac = $rbac;
         $this->roleService = $roleService;
         $this->assertionPluginManager = $assertionPluginManager;
-    }
-
-    /**
-     * Set an assertion
-     *
-     * @param string                                  $permission
-     * @param string|callable|AssertionInterface|null $assertion
-     * @return void
-     */
-    public function setAssertion(string $permission, $assertion): void
-    {
-        $this->assertions[$permission] = $assertion;
-    }
-
-    public function setAssertions(array $assertions): void
-    {
         $this->assertions = $assertions;
-    }
-
-    public function hasAssertion(string $permission): bool
-    {
-        return isset($this->assertions[$permission]);
     }
 
     public function isGranted(?IdentityInterface $identity, string $permission, $context = null): bool
@@ -98,45 +79,18 @@ final class AuthorizationService implements AuthorizationServiceInterface
             return false;
         }
 
-        if ($this->hasAssertion($permission)) {
-            return $this->assert($this->assertions[$permission], $permission, $identity, $context);
+        if (! empty($this->assertions[$permission])) {
+            if (\is_array($this->assertions[$permission])) {
+                $permissionAssertions = $this->assertions[$permission];
+            } else {
+                $permissionAssertions = [$this->assertions[$permission]];
+            }
+
+            $assertionSet = new AssertionSet($this->assertionPluginManager, $permissionAssertions);
+
+            return $assertionSet->assert($permission, $identity, $context);
         }
 
         return true;
-    }
-
-    /**
-     * @param string|callable|AssertionInterface $assertion
-     * @param string                             $permission
-     * @param IdentityInterface                  $identity
-     * @param mixed                              $context
-     * @return bool
-     */
-    private function assert($assertion, string $permission, IdentityInterface $identity = null, $context = null): bool
-    {
-        if (is_callable($assertion)) {
-            return $assertion($permission, $identity, $context);
-        }
-
-        if ($assertion instanceof AssertionInterface) {
-            return $assertion->assert($permission, $identity, $context);
-        }
-
-        if (is_string($assertion)) {
-            $this->assertions[$permission] = $assertion = $this->assertionPluginManager->get($assertion);
-
-            return $assertion->assert($permission, $identity, $context);
-        }
-
-        if (is_array($assertion)) {
-            $this->assertions[$permission] = $assertion = new AssertionSet($this->assertionPluginManager, $assertion);
-
-            return $assertion->assert($permission, $identity, $context);
-        }
-
-        throw new Exception\InvalidArgumentException(sprintf(
-            'Assertion must be callable, string, array or implement ZfcRbac\Assertion\AssertionInterface, "%s" given',
-            is_object($assertion) ? get_class($assertion) : gettype($assertion)
-        ));
     }
 }
