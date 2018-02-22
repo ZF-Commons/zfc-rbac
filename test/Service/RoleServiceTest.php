@@ -76,7 +76,6 @@ class RoleServiceTest extends TestCase
         $result = $roleService->getIdentityRoles($identity->reveal());
 
         $this->assertCount(3, $result);
-        $this->assertCount(3, $result);
         $this->assertInstanceOf(RoleInterface::class, $result[0]);
         $this->assertEquals($roles[0], $result[0]->getName());
         $this->assertEquals($roles[1], $result[1]->getName());
@@ -95,7 +94,6 @@ class RoleServiceTest extends TestCase
         $result = $roleService->getIdentityRoles($identity);
 
         $this->assertCount(3, $result);
-        $this->assertCount(3, $result);
         $this->assertInstanceOf(RoleInterface::class, $result[0]);
         $this->assertEquals($roles, $result);
     }
@@ -111,7 +109,6 @@ class RoleServiceTest extends TestCase
 
         $result = $roleService->getIdentityRoles($identity);
 
-        $this->assertCount(3, $result);
         $this->assertCount(3, $result);
         $this->assertInstanceOf(RoleInterface::class, $result[0]);
 
