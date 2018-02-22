@@ -80,10 +80,10 @@ final class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if (! empty($this->assertions[$permission])) {
-            if (! \is_array($this->assertions[$permission])) {
-                $permissionAssertions = [$this->assertions[$permission]];
-            } else {
+            if (\is_array($this->assertions[$permission])) {
                 $permissionAssertions = $this->assertions[$permission];
+            } else {
+                $permissionAssertions = [$this->assertions[$permission]];
             }
 
             $assertionSet = new AssertionSet($this->assertionPluginManager, $permissionAssertions);

@@ -22,12 +22,16 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Service;
 
 use PHPUnit\Framework\TestCase;
+use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AssertionSet;
 use ZfcRbac\Exception\InvalidArgumentException;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Rbac;
+use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Role\RoleInterface;
 use ZfcRbac\Service\AuthorizationService;
+use ZfcRbac\Service\RoleService;
 use ZfcRbac\Service\RoleServiceInterface;
 use ZfcRbacTest\Asset\FlatRole;
 use ZfcRbacTest\Asset\Identity;
@@ -80,7 +84,7 @@ class AuthorizationServiceTest extends TestCase
                 false,
                 false,
                 [
-                    'delete' => SimpleAssertion::class,
+                    'delete' => 'false_assertion',
                 ],
             ],
 
@@ -91,7 +95,7 @@ class AuthorizationServiceTest extends TestCase
                 true,
                 true,
                 [
-                    'delete' => SimpleAssertion::class,
+                    'delete' => 'true_assertion',
                 ],
             ],
 
@@ -102,7 +106,86 @@ class AuthorizationServiceTest extends TestCase
                 null,
                 false,
             ],
+
+            // Nested is accepted from assertion map
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        [
+                            'false_assertion',
+                            'true_assertion',
+                            'condition' => AssertionSet::CONDITION_OR,
+                        ],
+                        'true_assertion',
+                        'condition' => AssertionSet::CONDITION_AND,
+                    ],
+                    'sleep' => 'false_assertion',
+                ],
+            ],
+
+            // If possible will not required will not execute all assertions from assertion map
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'false_assertion',
+                        [
+                            'false_assertion',
+                            'never_executed',
+                            'condition' => AssertionSet::CONDITION_AND,
+                        ],
+                        [
+                            'true_assertion',
+                            'never_executed',
+                            'condition' => AssertionSet::CONDITION_OR,
+                        ],
+                        'never_executed',
+                        'condition' => AssertionSet::CONDITION_OR,
+                    ],
+                ],
+            ],
         ];
+    }
+
+    /**
+     * @dataProvider grantedProvider
+     */
+    public function testGranted($role, $permission, $context, bool $isGranted, array $assertions = []): void
+    {
+        $roleConfig = [
+            'admin'  => [
+                'children'    => ['member'],
+                'permissions' => ['delete'],
+            ],
+            'member' => [
+                'children'    => ['guest'],
+                'permissions' => ['write'],
+            ],
+            'guest'  => [
+                'permissions' => ['read'],
+            ],
+        ];
+
+        $assertionPluginConfig = [
+            'services' => [
+                'true_assertion'  => new SimpleAssertion(true),
+                'false_assertion' => new SimpleAssertion(false),
+            ],
+        ];
+
+        $roleService = new RoleService(new InMemoryRoleProvider($roleConfig));
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
+        $identity = new Identity((array) $role);
+        $authorizationService = new AuthorizationService(new Rbac(), $roleService, $assertionPluginManager, $assertions);
+
+        $this->assertEquals($isGranted, $authorizationService->isGranted($identity, $permission, $context));
     }
 
     public function testDoNotCallAssertionIfThePermissionIsNotGranted(): void
