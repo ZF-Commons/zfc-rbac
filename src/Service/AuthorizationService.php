@@ -46,14 +46,14 @@ final class AuthorizationService implements AuthorizationServiceInterface
     private $roleService;
 
     /**
+     * @var AssertionPluginManager
+     */
+    private $assertionPluginManager;
+
+    /**
      * @var array
      */
     private $assertions;
-
-    /**
-     * @var AssertionSet
-     */
-    private $assertionSet;
 
     public function __construct(
         Rbac $rbac,
@@ -63,8 +63,8 @@ final class AuthorizationService implements AuthorizationServiceInterface
     ) {
         $this->rbac = $rbac;
         $this->roleService = $roleService;
+        $this->assertionPluginManager = $assertionPluginManager;
         $this->assertions = $assertions;
-        $this->assertionSet = new AssertionSet($assertionPluginManager, $this->assertions);
     }
 
     public function isGranted(?IdentityInterface $identity, string $permission, $context = null): bool
@@ -80,7 +80,9 @@ final class AuthorizationService implements AuthorizationServiceInterface
         }
 
         if (! empty($this->assertions[$permission])) {
-            return $this->assertionSet->assert($permission, $identity, $context);
+            $assertionSet = new AssertionSet($this->assertionPluginManager, $this->assertions);
+
+            return $assertionSet->assert($permission, $identity, $context);
         }
 
         return true;
