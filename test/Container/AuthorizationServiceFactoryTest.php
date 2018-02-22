@@ -26,6 +26,7 @@ use Psr\Container\ContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Rbac;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleServiceInterface;
 
@@ -36,14 +37,14 @@ class AuthorizationServiceFactoryTest extends TestCase
 {
     public function testCanCreateAuthorizationService(): void
     {
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
-
-        $container->expects($this->at(0))->method('get')->with(RoleServiceInterface::class)->willReturn($this->getMockBuilder(RoleServiceInterface::class)->getMock());
-        $container->expects($this->at(1))->method('get')->with(AssertionPluginManager::class)->willReturn($this->getMockBuilder(AssertionPluginManager::class)->disableOriginalConstructor()->getMock());
-        $container->expects($this->at(2))->method('get')->with(ModuleOptions::class)->willReturn(new ModuleOptions());
+        $container = $this->prophesize(ContainerInterface::class);
+        $container->get(ModuleOptions::class)->willReturn(new ModuleOptions([]));
+        $container->get(RoleServiceInterface::class)->willReturn($this->createMock(RoleServiceInterface::class));
+        $container->get(AssertionPluginManager::class)->willReturn($this->createMock(AssertionPluginManager::class));
+        $container->get(Rbac::class)->willReturn(new Rbac());
 
         $factory = new AuthorizationServiceFactory();
-        $authorizationService = $factory($container);
+        $authorizationService = $factory($container->reveal());
 
         $this->assertInstanceOf(AuthorizationService::class, $authorizationService);
     }

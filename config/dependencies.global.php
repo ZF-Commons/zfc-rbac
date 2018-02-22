@@ -26,6 +26,7 @@ return [
             ZfcRbac\Role\RoleProviderPluginManager::class        => ZfcRbac\Container\RoleProviderPluginManagerFactory::class,
             ZfcRbac\Service\AuthorizationServiceInterface::class => ZfcRbac\Container\AuthorizationServiceFactory::class,
             ZfcRbac\Service\RoleServiceInterface::class          => ZfcRbac\Container\RoleServiceFactory::class,
+            ZfcRbac\Rbac::class                                  => \Zend\ServiceManager\Factory\InvokableFactory::class,
         ],
     ],
 
