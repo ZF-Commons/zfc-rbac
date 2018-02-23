@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace ZfcRbac\Container;
 
 use Psr\Container\ContainerInterface;
-use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AssertionContainerInterface;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Rbac;
 use ZfcRbac\Service\AuthorizationService;
@@ -43,7 +43,7 @@ final class AuthorizationServiceFactory
         return new AuthorizationService(
             $container->get(Rbac::class),
             $container->get(RoleServiceInterface::class),
-            $container->get(AssertionPluginManager::class),
+            $container->get(AssertionContainerInterface::class),
             $moduleOptions->getAssertionMap()
         );
     }

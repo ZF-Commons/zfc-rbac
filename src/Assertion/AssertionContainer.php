@@ -29,7 +29,7 @@ use Zend\ServiceManager\AbstractPluginManager;
  * @author  Aeneas Rekkas
  * @licence MIT
  */
-final class AssertionPluginManager extends AbstractPluginManager implements AssertionContainerInterface
+final class AssertionContainer extends AbstractPluginManager implements AssertionContainerInterface
 {
     protected $instanceOf = AssertionInterface::class;
 

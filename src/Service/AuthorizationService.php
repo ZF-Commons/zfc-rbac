@@ -48,7 +48,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @var AssertionContainerInterface
      */
-    private $assertionPluginManager;
+    private $assertionContainer;
 
     /**
      * @var array
@@ -58,12 +58,12 @@ final class AuthorizationService implements AuthorizationServiceInterface
     public function __construct(
         Rbac $rbac,
         RoleServiceInterface $roleService,
-        AssertionContainerInterface $assertionPluginManager,
+        AssertionContainerInterface $assertionContainer,
         array $assertions = []
     ) {
         $this->rbac = $rbac;
         $this->roleService = $roleService;
-        $this->assertionPluginManager = $assertionPluginManager;
+        $this->assertionContainer = $assertionContainer;
         $this->assertions = $assertions;
     }
 
@@ -86,7 +86,7 @@ final class AuthorizationService implements AuthorizationServiceInterface
                 $permissionAssertions = [$this->assertions[$permission]];
             }
 
-            $assertionSet = new AssertionSet($this->assertionPluginManager, $permissionAssertions);
+            $assertionSet = new AssertionSet($this->assertionContainer, $permissionAssertions);
 
             return $assertionSet->assert($permission, $identity, $context);
         }

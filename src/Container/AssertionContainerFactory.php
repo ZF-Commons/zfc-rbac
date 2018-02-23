@@ -19,30 +19,23 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbacTest\Container;
+namespace ZfcRbac\Container;
 
-use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Assertion\AssertionPluginManager;
-use ZfcRbac\Container\AssertionPluginManagerFactory;
+use Psr\Container\ContainerInterface;
+use ZfcRbac\Assertion\AssertionContainer;
 
 /**
- * @covers \ZfcRbac\Container\AssertionPluginManagerFactory
+ * Factory to create a assertion plugin manager
+ *
+ * @author  Aeneas Rekkas
+ * @licence MIT
  */
-class AssertionPluginManagerFactoryTest extends TestCase
+final class AssertionContainerFactory
 {
-    public function testFactory(): void
+    public function __invoke(ContainerInterface $container): AssertionContainer
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', [
-            'zfc_rbac' => [
-                'assertion_manager' => [],
-            ],
-        ]);
+        $config = $container->get('config')['zfc_rbac']['assertion_manager'];
 
-        $factory = new AssertionPluginManagerFactory();
-        $pluginManager = $factory($serviceManager);
-
-        $this->assertInstanceOf(AssertionPluginManager::class, $pluginManager);
+        return new AssertionContainer($container, $config);
     }
 }
