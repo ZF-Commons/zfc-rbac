@@ -63,7 +63,7 @@ class RoleServiceTest extends TestCase
 
     public function testReturnTraversableRolesFromIdentityGiven(): void
     {
-        $roleService = new RoleService(new InMemoryRoleProvider([]));
+        $roleService = new RoleService(new InMemoryRoleProvider([]), 'guest');
         $identity = $this->prophesize(IdentityInterface::class);
         $identity->getRoles()->willReturn($roles = new \ArrayIterator(['first', 'second', 'third']));
 
@@ -81,7 +81,7 @@ class RoleServiceTest extends TestCase
         $roleProvider = $this->prophesize(RoleProviderInterface::class);
         $roleProvider->getRoles(Argument::any())->shouldNotBeCalled();
 
-        $roleService = new RoleService($roleProvider->reveal());
+        $roleService = new RoleService($roleProvider->reveal(), 'guest');
         $roles = [new Role('first'), new HierarchicalRole('second'), new Role('third')];
         $identity = new Identity($roles);
 
@@ -98,7 +98,7 @@ class RoleServiceTest extends TestCase
         $roles = [new Role('first'), new HierarchicalRole('second'), 'third'];
         $roleProvider->getRoles(['third'])->shouldBeCalled()->willReturn([new Role('third')]);
 
-        $roleService = new RoleService($roleProvider->reveal());
+        $roleService = new RoleService($roleProvider->reveal(), 'guest');
         $identity = new Identity($roles);
 
         $result = $roleService->getIdentityRoles($identity);

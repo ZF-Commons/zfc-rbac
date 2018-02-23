@@ -181,7 +181,7 @@ class AuthorizationServiceTest extends TestCase
             ],
         ];
 
-        $roleService = new RoleService(new InMemoryRoleProvider($roleConfig));
+        $roleService = new RoleService(new InMemoryRoleProvider($roleConfig), 'guest');
         $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $identity = new Identity((array) $role);
         $authorizationService = new AuthorizationService(new Rbac(), $roleService, $assertionPluginManager, $assertions);
