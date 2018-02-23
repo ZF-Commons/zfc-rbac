@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Service;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\Assertion\AssertionContainerInterface;
 use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Assertion\AssertionContainerInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionSet;
 use ZfcRbac\Exception\InvalidArgumentException;
