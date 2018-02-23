@@ -40,7 +40,7 @@ final class AssertionSet implements AssertionInterface
     /**
      * @var array
      */
-    private $assertions = [];
+    private $assertions;
 
     private $condition = self::CONDITION_AND;
 
