@@ -53,11 +53,4 @@ class ModuleOptionsTest extends TestCase
         $this->assertEquals([], $moduleOptions->getRoleProvider());
         $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
     }
-
-    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet(): void
-    {
-        $this->expectException('ZfcRbac\Exception\RuntimeException');
-        $moduleOptions = new ModuleOptions();
-        $moduleOptions->setRoleProvider(['foo', 'bar']);
-    }
 }
