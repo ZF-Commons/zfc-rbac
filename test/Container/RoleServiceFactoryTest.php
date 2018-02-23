@@ -36,7 +36,7 @@ class RoleServiceFactoryTest extends TestCase
     public function testCanCreateRoleService(): void
     {
         $options = new ModuleOptions([
-            'guest_role'    => 'guest',
+            'guest_role' => 'guest',
             'role_provider' => [
                 \ZfcRbac\Role\InMemoryRoleProvider::class => [
                     'foo',
@@ -45,7 +45,7 @@ class RoleServiceFactoryTest extends TestCase
         ]);
 
         $container = new ServiceManager(['services' => [
-            ModuleOptions::class         => $options,
+            ModuleOptions::class => $options,
             RoleProviderInterface::class => new InMemoryRoleProvider([]),
         ]]);
 
@@ -60,7 +60,7 @@ class RoleServiceFactoryTest extends TestCase
         $this->expectException(\Psr\Container\NotFoundExceptionInterface::class);
 
         $options = new ModuleOptions([
-            'guest_role'    => 'guest',
+            'guest_role' => 'guest',
             'role_provider' => [],
         ]);
 

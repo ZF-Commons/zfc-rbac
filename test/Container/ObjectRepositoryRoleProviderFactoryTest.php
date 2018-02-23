@@ -42,7 +42,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             'role_provider' => [
                 ObjectRepositoryRoleProvider::class => [
                     'role_name_property' => 'name',
-                    'object_repository'  => 'RoleObjectRepository',
+                    'object_repository' => 'RoleObjectRepository',
                 ],
             ],
         ]));
@@ -59,8 +59,8 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
             'role_provider' => [
                 ObjectRepositoryRoleProvider::class => [
                     'role_name_property' => 'name',
-                    'object_manager'     => 'ObjectManager',
-                    'class_name'         => 'Role',
+                    'object_manager' => 'ObjectManager',
+                    'class_name' => 'Role',
                 ],
             ],
         ]));

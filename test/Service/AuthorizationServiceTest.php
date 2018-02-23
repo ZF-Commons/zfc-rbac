@@ -161,22 +161,22 @@ class AuthorizationServiceTest extends TestCase
     public function testGranted($role, $permission, $context, bool $isGranted, array $assertions = []): void
     {
         $roleConfig = [
-            'admin'  => [
-                'children'    => ['member'],
+            'admin' => [
+                'children' => ['member'],
                 'permissions' => ['delete'],
             ],
             'member' => [
-                'children'    => ['guest'],
+                'children' => ['guest'],
                 'permissions' => ['write'],
             ],
-            'guest'  => [
+            'guest' => [
                 'permissions' => ['read'],
             ],
         ];
 
         $assertionPluginConfig = [
             'services' => [
-                'true_assertion'  => new SimpleAssertion(true),
+                'true_assertion' => new SimpleAssertion(true),
                 'false_assertion' => new SimpleAssertion(false),
             ],
         ];

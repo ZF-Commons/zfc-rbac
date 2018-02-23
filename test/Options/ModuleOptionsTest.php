@@ -42,7 +42,7 @@ class ModuleOptionsTest extends TestCase
     public function testSettersAndGetters(): void
     {
         $moduleOptions = new ModuleOptions([
-            'guest_role'    => 'unknown',
+            'guest_role' => 'unknown',
             'role_provider' => [],
             'assertion_map' => [
                 'foo' => 'bar',

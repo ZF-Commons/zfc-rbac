@@ -35,11 +35,11 @@ class InMemoryRoleProviderTest extends TestCase
     {
         $inMemoryProvider = new InMemoryRoleProvider([
             'admin' => [
-                'children'    => ['member'],
+                'children' => ['member'],
                 'permissions' => ['delete'],
             ],
             'member' => [
-                'children'    => ['guest'],
+                'children' => ['guest'],
                 'permissions' => ['write'],
             ],
             'mrx' => [
