@@ -23,6 +23,7 @@ namespace ZfcRbac\Container;
 
 use Psr\Container\ContainerInterface;
 use ZfcRbac\Exception;
+use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 
 /**
@@ -33,8 +34,11 @@ use ZfcRbac\Role\ObjectRepositoryRoleProvider;
  */
 final class ObjectRepositoryRoleProviderFactory
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = []): ObjectRepositoryRoleProvider
+    public function __invoke(ContainerInterface $container): ObjectRepositoryRoleProvider
     {
+        $moduleOptions = $container->get(ModuleOptions::class);
+        $options = $moduleOptions->getRoleProvider()[ObjectRepositoryRoleProvider::class] ?? [];
+
         if (! isset($options['role_name_property'])) {
             throw new Exception\RuntimeException('The "role_name_property" option is missing');
         }

@@ -42,7 +42,7 @@ class ModuleOptionsTest extends TestCase
     public function testSettersAndGetters(): void
     {
         $moduleOptions = new ModuleOptions([
-            'guest_role'    => 'unknown',
+            'guest_role' => 'unknown',
             'role_provider' => [],
             'assertion_map' => [
                 'foo' => 'bar',
@@ -52,12 +52,5 @@ class ModuleOptionsTest extends TestCase
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
         $this->assertEquals([], $moduleOptions->getRoleProvider());
         $this->assertEquals(['foo' => 'bar'], $moduleOptions->getAssertionMap());
-    }
-
-    public function testThrowExceptionIfMoreThanOneRoleProviderIsSet(): void
-    {
-        $this->expectException('ZfcRbac\Exception\RuntimeException');
-        $moduleOptions = new ModuleOptions();
-        $moduleOptions->setRoleProvider(['foo', 'bar']);
     }
 }

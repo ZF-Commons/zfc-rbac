@@ -19,23 +19,11 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbac\Container;
+namespace ZfcRbac\Assertion;
 
 use Psr\Container\ContainerInterface;
-use ZfcRbac\Assertion\AssertionPluginManager;
 
-/**
- * Factory to create a assertion plugin manager
- *
- * @author  Aeneas Rekkas
- * @licence MIT
- */
-final class AssertionPluginManagerFactory
+interface AssertionContainerInterface extends ContainerInterface
 {
-    public function __invoke(ContainerInterface $container): AssertionPluginManager
-    {
-        $config = $container->get('config')['zfc_rbac']['assertion_manager'];
-
-        return new AssertionPluginManager($container, $config);
-    }
+    public function get($name): AssertionInterface;
 }

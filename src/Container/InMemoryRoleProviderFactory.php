@@ -22,20 +22,23 @@ declare(strict_types=1);
 namespace ZfcRbac\Container;
 
 use Psr\Container\ContainerInterface;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Options\ModuleOptions;
+use ZfcRbac\Role\InMemoryRoleProvider;
 
 /**
- * Factory to create a role provider plugin manager
+ * Factory used to create an in memory role provider
  *
- * @author  Michaël Gallego <mic.gallego@gmail.com>
+ * @author  Vytautas Stankus
  * @licence MIT
  */
-final class RoleProviderPluginManagerFactory
+final class InMemoryRoleProviderFactory
 {
-    public function __invoke(ContainerInterface $container): RoleProviderPluginManager
+    public function __invoke(ContainerInterface $container): InMemoryRoleProvider
     {
-        $config = $container->get('config')['zfc_rbac']['role_provider_manager'];
+        $moduleOptions = $container->get(ModuleOptions::class);
 
-        return new RoleProviderPluginManager($container, $config);
+        return new InMemoryRoleProvider(
+            $moduleOptions->getRoleProvider()[InMemoryRoleProvider::class] ?? []
+        );
     }
 }

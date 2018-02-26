@@ -21,19 +21,17 @@ declare(strict_types=1);
 return [
     'dependencies' => [
         'factories' => [
-            ZfcRbac\Assertion\AssertionPluginManager::class      => ZfcRbac\Container\AssertionPluginManagerFactory::class,
-            ZfcRbac\Options\ModuleOptions::class                 => ZfcRbac\Container\ModuleOptionsFactory::class,
-            ZfcRbac\Role\RoleProviderPluginManager::class        => ZfcRbac\Container\RoleProviderPluginManagerFactory::class,
+            ZfcRbac\Assertion\AssertionContainerInterface::class => ZfcRbac\Container\AssertionContainerFactory::class,
+            ZfcRbac\Options\ModuleOptions::class => ZfcRbac\Container\ModuleOptionsFactory::class,
+            ZfcRbac\Role\InMemoryRoleProvider::class => ZfcRbac\Container\InMemoryRoleProviderFactory::class,
+            ZfcRbac\Role\ObjectRepositoryRoleProvider::class => ZfcRbac\Container\ObjectRepositoryRoleProviderFactory::class,
             ZfcRbac\Service\AuthorizationServiceInterface::class => ZfcRbac\Container\AuthorizationServiceFactory::class,
-            ZfcRbac\Service\RoleServiceInterface::class          => ZfcRbac\Container\RoleServiceFactory::class,
-            ZfcRbac\Rbac::class                                  => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            ZfcRbac\Service\RoleServiceInterface::class => ZfcRbac\Container\RoleServiceFactory::class,
+            ZfcRbac\Rbac::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
         ],
     ],
 
     'zfc_rbac' => [
-        // Role provider plugin manager
-        'role_provider_manager' => [],
-
         // Assertion plugin manager
         'assertion_manager' => [],
     ],

@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace ZfcRbacTest\Container;
 
-use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
+use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Container\RoleServiceFactory;
-use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use ZfcRbac\Role\InMemoryRoleProvider;
+use ZfcRbac\Role\RoleProviderInterface;
 
 /**
  * @covers \ZfcRbac\Container\RoleServiceFactory
@@ -36,7 +36,7 @@ class RoleServiceFactoryTest extends TestCase
     public function testCanCreateRoleService(): void
     {
         $options = new ModuleOptions([
-            'guest_role'    => 'guest',
+            'guest_role' => 'guest',
             'role_provider' => [
                 \ZfcRbac\Role\InMemoryRoleProvider::class => [
                     'foo',
@@ -44,30 +44,29 @@ class RoleServiceFactoryTest extends TestCase
             ],
         ]);
 
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
-
-        $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
-        $container->expects($this->at(1))->method('get')->with(RoleProviderPluginManager::class)->willReturn(new RoleProviderPluginManager($this->getMockBuilder(ContainerInterface::class)->getMock()));
+        $container = new ServiceManager(['services' => [
+            ModuleOptions::class => $options,
+            RoleProviderInterface::class => new InMemoryRoleProvider([]),
+        ]]);
 
         $factory = new RoleServiceFactory();
         $roleService = $factory($container);
 
         $this->assertInstanceOf(\ZfcRbac\Service\RoleService::class, $roleService);
-        $this->assertEquals('guest', $roleService->getGuestRole());
     }
 
     public function testThrowExceptionIfNoRoleProvider(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\Psr\Container\NotFoundExceptionInterface::class);
 
         $options = new ModuleOptions([
-            'guest_role'    => 'guest',
+            'guest_role' => 'guest',
             'role_provider' => [],
         ]);
 
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
-
-        $container->expects($this->at(0))->method('get')->with(ModuleOptions::class)->willReturn($options);
+        $container = new ServiceManager(['services' => [
+            ModuleOptions::class => $options,
+        ]]);
 
         $factory = new RoleServiceFactory();
         $factory($container);

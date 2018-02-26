@@ -24,11 +24,11 @@ namespace ZfcRbacTest\Container;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 use ZfcRbac\Exception\RuntimeException;
+use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
-use ZfcRbac\Role\RoleProviderPluginManager;
 
 /**
  * @covers \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory
@@ -37,40 +37,42 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
 {
     public function testFactoryUsingObjectRepository(): void
     {
-        $serviceManager = new ServiceManager();
+        $container = new ServiceManager();
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [
+                    'role_name_property' => 'name',
+                    'object_repository' => 'RoleObjectRepository',
+                ],
+            ],
+        ]));
+        $container->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
 
-        $options = [
-            'role_name_property' => 'name',
-            'object_repository'  => 'RoleObjectRepository',
-        ];
-        $pluginManager = new RoleProviderPluginManager($serviceManager);
-
-        $serviceManager->setService('RoleObjectRepository', $this->getMockBuilder(ObjectRepository::class)->getMock());
-
-        $roleProvider = $pluginManager->get(ObjectRepositoryRoleProvider::class, $options);
+        $roleProvider = (new ObjectRepositoryRoleProviderFactory())($container);
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
     public function testFactoryUsingObjectManager(): void
     {
-        $serviceManager = new ServiceManager();
-        $pluginManager = new RoleProviderPluginManager($serviceManager);
-
-        $options = [
-            'role_name_property' => 'name',
-            'object_manager'     => 'ObjectManager',
-            'class_name'         => 'Role',
-        ];
-
+        $container = new ServiceManager();
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [
+                    'role_name_property' => 'name',
+                    'object_manager' => 'ObjectManager',
+                    'class_name' => 'Role',
+                ],
+            ],
+        ]));
         $objectManager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $objectManager->expects($this->once())
-                      ->method('getRepository')
-                      ->with($options['class_name'])
-                      ->will($this->returnValue($this->getMockBuilder(ObjectRepository::class)->getMock()));
+            ->method('getRepository')
+            ->with('Role')
+            ->will($this->returnValue($this->getMockBuilder(ObjectRepository::class)->getMock()));
 
-        $serviceManager->setService('ObjectManager', $objectManager);
+        $container->setService('ObjectManager', $objectManager);
 
-        $roleProvider = $pluginManager->get(ObjectRepositoryRoleProvider::class, $options);
+        $roleProvider = (new ObjectRepositoryRoleProviderFactory())($container);
         $this->assertInstanceOf(ObjectRepositoryRoleProvider::class, $roleProvider);
     }
 
@@ -79,24 +81,16 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
      */
     public function testThrowExceptionIfNoRoleNamePropertyIsSet(): void
     {
-        try {
-            $serviceManager = new ServiceManager();
-            $pluginManager = new RoleProviderPluginManager($serviceManager);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The "role_name_property" option is missing');
 
-            $pluginManager->get(ObjectRepositoryRoleProvider::class, []);
-        } catch (ServiceNotCreatedException $e) {
-            while ($e = $e->getPrevious()) {
-                if ($e instanceof RuntimeException) {
-                    $this->assertTrue(true); // we got here
-                    return;
-                }
-            }
-        }
-
-        $this->fail(
-            'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory::createService() :: '
-            .'ZfcRbac\Exception\RuntimeException was not found in the previous Exceptions'
-        );
+        $container = new ServiceManager();
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [],
+            ],
+        ]));
+        (new ObjectRepositoryRoleProviderFactory())($container);
     }
 
     /**
@@ -104,25 +98,18 @@ class ObjectRepositoryRoleProviderFactoryTest extends TestCase
      */
     public function testThrowExceptionIfNoObjectManagerNorObjectRepositoryIsSet(): void
     {
-        try {
-            $serviceManager = new ServiceManager();
-            $pluginManager = new RoleProviderPluginManager($serviceManager);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No object repository was found while creating the ZfcRbac object repository role provider. Are
+             you sure you specified either the "object_repository" option or "object_manager"/"class_name" options?');
 
-            $pluginManager->get(ObjectRepositoryRoleProvider::class, [
-                'role_name_property' => 'name',
-            ]);
-        } catch (ServiceNotCreatedException $e) {
-            while ($e = $e->getPrevious()) {
-                if ($e instanceof RuntimeException) {
-                    $this->assertTrue(true); // we got here
-                    return;
-                }
-            }
-        }
-
-        $this->fail(
-             'ZfcRbac\Factory\ObjectRepositoryRoleProviderFactory::createService() :: '
-            .'ZfcRbac\Exception\RuntimeException was not found in the previous Exceptions'
-        );
+        $container = new ServiceManager();
+        $container->setService(ModuleOptions::class, new ModuleOptions([
+            'role_provider' => [
+                ObjectRepositoryRoleProvider::class => [
+                    'role_name_property' => 'name',
+                ],
+            ],
+        ]));
+        (new ObjectRepositoryRoleProviderFactory())($container);
     }
 }

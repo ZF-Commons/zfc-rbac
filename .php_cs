@@ -18,8 +18,7 @@ class Config extends PhpCsFixerConfig
             '@PHP71Migration' => true,
             'array_syntax' => ['syntax' => 'short'],
             'binary_operator_spaces' => [
-                'align_double_arrow' => true,
-                'align_equals' => false,
+                'default' => 'single_space',
             ],
             'blank_line_after_opening_tag' => true,
             'blank_line_after_namespace' => true,

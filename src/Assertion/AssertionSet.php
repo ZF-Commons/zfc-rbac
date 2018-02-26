@@ -33,18 +33,18 @@ final class AssertionSet implements AssertionInterface
     const CONDITION_AND = 'condition_and';
 
     /**
-     * @var AssertionPluginManager
+     * @var AssertionContainerInterface
      */
-    private $assertionPluginManager;
+    private $assertionContainer;
 
     /**
      * @var array
      */
-    private $assertions = [];
+    private $assertions;
 
     private $condition = self::CONDITION_AND;
 
-    public function __construct(AssertionPluginManager $assertionPluginManager, array $assertions)
+    public function __construct(AssertionContainerInterface $assertionContainer, array $assertions)
     {
         if (isset($assertions['condition'])) {
             if ($assertions['condition'] !== AssertionSet::CONDITION_AND
@@ -58,7 +58,7 @@ final class AssertionSet implements AssertionInterface
         }
 
         $this->assertions = $assertions;
-        $this->assertionPluginManager = $assertionPluginManager;
+        $this->assertionContainer = $assertionContainer;
     }
 
     public function assert(string $permission, IdentityInterface $identity = null, $context = null): bool
@@ -78,12 +78,12 @@ final class AssertionSet implements AssertionInterface
                     $asserted = $assertion->assert($permission, $identity, $context);
                     break;
                 case is_string($assertion):
-                    $this->assertions[$index] = $assertion = $this->assertionPluginManager->get($assertion);
+                    $this->assertions[$index] = $assertion = $this->assertionContainer->get($assertion);
 
                     $asserted = $assertion->assert($permission, $identity, $context);
                     break;
                 case is_array($assertion):
-                    $this->assertions[$index] = $assertion = new AssertionSet($this->assertionPluginManager, $assertion);
+                    $this->assertions[$index] = $assertion = new AssertionSet($this->assertionContainer, $assertion);
                     $asserted = $assertion->assert($permission, $identity, $context);
                     break;
                 default:

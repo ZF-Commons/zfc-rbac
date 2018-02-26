@@ -23,31 +23,39 @@ namespace ZfcRbacTest\Assertion;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\Exception\InvalidServiceException;
+use Psr\Container\ContainerExceptionInterface;
+use Zend\ServiceManager\Factory\InvokableFactory;
+use ZfcRbac\Assertion\AssertionContainer;
 use ZfcRbac\Assertion\AssertionInterface;
-use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbacTest\Asset\SimpleAssertion;
 
 /**
- * @covers \ZfcRbac\Assertion\AssertionPluginManager
+ * @covers \ZfcRbac\Assertion\AssertionContainer
  */
-class AssertionPluginManagerTest extends TestCase
+class AssertionContainerTest extends TestCase
 {
     public function testValidationOfPluginSucceedsIfAssertionInterfaceIsImplemented()
     {
-        $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginMock = $this->getMockBuilder(AssertionInterface::class)->getMock();
-        $pluginManager = new AssertionPluginManager($containerMock);
+        $containerMock = $this->createMock(ContainerInterface::class);
+        $container = new AssertionContainer($containerMock, [
+            'factories' => [
+                SimpleAssertion::class => InvokableFactory::class,
+            ],
+        ]);
 
-        $this->assertNull($pluginManager->validate($pluginMock));
+        $this->assertInstanceOf(AssertionInterface::class, $container->get(SimpleAssertion::class));
     }
 
     public function testValidationOfPluginFailsIfAssertionInterfaceIsNotImplemented()
     {
-        $this->expectException(InvalidServiceException::class);
-        $containerMock = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $pluginManager = new AssertionPluginManager($containerMock);
+        $containerMock = $this->createMock(ContainerInterface::class);
+        $container = new AssertionContainer($containerMock, [
+            'factories' => [
+                \stdClass::class => InvokableFactory::class,
+            ],
+        ]);
 
-        $plugin = new \stdClass();
-        $pluginManager->validate($plugin);
+        $this->expectException(ContainerExceptionInterface::class);
+        $this->assertInstanceOf(AssertionInterface::class, $container->get(\stdClass::class));
     }
 }

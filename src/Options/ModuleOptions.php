@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace ZfcRbac\Options;
 
 use Zend\Stdlib\AbstractOptions;
-use ZfcRbac\Exception;
 
 /**
  * Options for ZfcRbac module
@@ -111,16 +110,9 @@ final class ModuleOptions extends AbstractOptions
      * Set the configuration for the role provider
      *
      * @param  array $roleProvider
-     * @throws Exception\RuntimeException
      */
     public function setRoleProvider(array $roleProvider): void
     {
-        if (count($roleProvider) > 1) {
-            throw new Exception\RuntimeException(
-                'You can only have one role provider'
-            );
-        }
-
         $this->roleProvider = $roleProvider;
     }
 

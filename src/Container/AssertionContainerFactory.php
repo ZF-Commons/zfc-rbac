@@ -19,30 +19,23 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbacTest\Container;
+namespace ZfcRbac\Container;
 
-use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
-use ZfcRbac\Container\RoleProviderPluginManagerFactory;
-use ZfcRbac\Role\RoleProviderPluginManager;
+use Psr\Container\ContainerInterface;
+use ZfcRbac\Assertion\AssertionContainer;
 
 /**
- * @covers \ZfcRbac\Container\RoleProviderPluginManagerFactory
+ * Factory to create a assertion plugin manager
+ *
+ * @author  Aeneas Rekkas
+ * @licence MIT
  */
-class RoleProviderPluginManagerFactoryTest extends TestCase
+final class AssertionContainerFactory
 {
-    public function testFactory(): void
+    public function __invoke(ContainerInterface $container): AssertionContainer
     {
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService('config', [
-            'zfc_rbac' => [
-                'role_provider_manager' => [],
-            ],
-        ]);
+        $config = $container->get('config')['zfc_rbac']['assertion_manager'];
 
-        $factory = new RoleProviderPluginManagerFactory();
-        $pluginManager = $factory($serviceManager);
-
-        $this->assertInstanceOf(RoleProviderPluginManager::class, $pluginManager);
+        return new AssertionContainer($container, $config);
     }
 }

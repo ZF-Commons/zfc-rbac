@@ -23,7 +23,7 @@ namespace ZfcRbacTest\Container;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbac\Assertion\AssertionContainerInterface;
 use ZfcRbac\Container\AuthorizationServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Rbac;
@@ -40,7 +40,7 @@ class AuthorizationServiceFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class);
         $container->get(ModuleOptions::class)->willReturn(new ModuleOptions([]));
         $container->get(RoleServiceInterface::class)->willReturn($this->createMock(RoleServiceInterface::class));
-        $container->get(AssertionPluginManager::class)->willReturn($this->createMock(AssertionPluginManager::class));
+        $container->get(AssertionContainerInterface::class)->willReturn($this->createMock(AssertionContainerInterface::class));
         $container->get(Rbac::class)->willReturn(new Rbac());
 
         $factory = new AuthorizationServiceFactory();
