@@ -114,4 +114,20 @@ class RbacTest extends TestCase
 
         $this->assertFalse($rbac->isGranted($parentRole, 'permission'));
     }
+
+    /**
+     * @covers \ZfcRbac\Rbac::isGranted
+     */
+    public function testCanCheckTraversableAsRolesList(): void
+    {
+        $role1 = new Role('Foo');
+
+        $role2 = new Role('Bar');
+        $role2->addPermission('permission');
+
+        $roles = new \ArrayIterator([$role1, $role2]);
+        $rbac = new Rbac();
+
+        $this->assertTrue($rbac->isGranted($roles, 'permission'));
+    }
 }
