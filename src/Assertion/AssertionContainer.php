@@ -38,6 +38,6 @@ final class AssertionContainer extends AbstractPluginManager implements Assertio
      */
     public function get($name, array $options = null): AssertionInterface
     {
-        return parent::get($name, $options);
+        return parent::get($name);
     }
 }
