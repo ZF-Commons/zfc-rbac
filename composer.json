@@ -54,15 +54,15 @@
       "dev-develop": "3.0-dev"
     }
   },
-  "scripts":           {
-    "check":            [
+  "scripts": {
+    "check": [
       "@cs",
       "@test",
       "@header"
     ],
-    "cs":               "php-cs-fixer fix -v --diff --dry-run",
-    "cs-fix":           "php-cs-fixer fix -v --diff",
-    "test":             "phpunit",
-    "header":           "docheader check src test"
+    "cs": "php-cs-fixer fix -v --diff --dry-run",
+    "cs-fix": "php-cs-fixer fix -v --diff",
+    "test": "phpunit",
+    "header": "docheader check src test"
   }
 }

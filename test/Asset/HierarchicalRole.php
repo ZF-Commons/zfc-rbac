@@ -88,7 +88,7 @@ class HierarchicalRole implements HierarchicalRoleInterface
         return ! empty($this->children);
     }
 
-    public function getChildren(): array
+    public function getChildren(): iterable
     {
         return $this->children;
     }

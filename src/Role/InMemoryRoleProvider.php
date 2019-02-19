@@ -57,7 +57,7 @@ final class InMemoryRoleProvider implements RoleProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoles(array $roleNames): array
+    public function getRoles(iterable $roleNames): iterable
     {
         $roles = [];
 

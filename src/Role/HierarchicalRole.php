@@ -24,19 +24,54 @@ namespace ZfcRbac\Role;
 /**
  * Simple implementation for a hierarchical role
  */
-final class HierarchicalRole extends Role implements HierarchicalRoleInterface
+final class HierarchicalRole implements HierarchicalRoleInterface
 {
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string[]
+     */
+    private $permissions = [];
+
     /**
      * @var array|RoleInterface[]
      */
     private $children = [];
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    public function addPermission(string $permission): void
+    {
+        $this->permissions[$permission] = $permission;
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return isset($this->permissions[$permission]);
+    }
 
     public function hasChildren(): bool
     {
         return ! empty($this->children);
     }
 
-    public function getChildren(): array
+    public function getChildren(): iterable
     {
         return $this->children;
     }

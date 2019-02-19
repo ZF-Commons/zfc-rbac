@@ -23,13 +23,13 @@ namespace ZfcRbacTest\Asset;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ZfcRbac\Role\Role;
+use ZfcRbac\Role\RoleInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="roles")
  */
-class FlatRole extends Role
+class FlatRole implements RoleInterface
 {
     /**
      * @var int|null
@@ -57,8 +57,7 @@ class FlatRole extends Role
      */
     public function __construct(string $name)
     {
-        parent::__construct($name);
-
+        $this->name = $name;
         $this->permissions = new ArrayCollection();
     }
 
@@ -72,19 +71,13 @@ class FlatRole extends Role
         return $this->id;
     }
 
-    /**
-     * Add a permission
-     *
-     * @param  string $permission
-     * @return void
-     */
-    public function addPermission(string $permission): void
+    public function getName(): string
     {
-        if (is_string($permission)) {
-            $name = $permission;
-            $permission = new Permission($name);
-        }
+        return $this->name;
+    }
 
-        $this->permissions[$permission->getName()] = $permission;
+    public function hasPermission(string $permission): bool
+    {
+        return isset($this->permissions[$permission]);
     }
 }

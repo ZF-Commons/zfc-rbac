@@ -58,7 +58,7 @@ final class ObjectRepositoryRoleProvider implements RoleProviderInterface
         $this->roleCache = [];
     }
 
-    public function getRoles(array $roleNames): array
+    public function getRoles(iterable $roleNames): iterable
     {
         $key = implode($roleNames);
 
