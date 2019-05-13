@@ -36,5 +36,5 @@ interface IdentityInterface
      *
      * @return string[]|RoleInterface[]
      */
-    public function getRoles();
+    public function getRoles(): iterable;
 }

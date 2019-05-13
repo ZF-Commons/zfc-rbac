@@ -25,17 +25,17 @@ namespace ZfcRbac\Role;
  * Simple implementation for a role without hierarchy
  * and using strings as permissions
  */
-class Role implements RoleInterface
+final class Role implements RoleInterface
 {
     /**
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @var string[]
      */
-    protected $permissions = [];
+    private $permissions = [];
 
     public function __construct(string $name)
     {

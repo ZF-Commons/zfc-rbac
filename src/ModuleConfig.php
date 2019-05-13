@@ -27,7 +27,7 @@ namespace ZfcRbac;
  * @author  Florent Blaison <florent.blaison@gmail.com>
  * @licence MIT
  */
-class ModuleConfig
+final class ModuleConfig
 {
     public function __invoke(): array
     {

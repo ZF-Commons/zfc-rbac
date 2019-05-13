@@ -109,7 +109,7 @@ final class ModuleOptions extends AbstractOptions
     /**
      * Set the configuration for the role provider
      *
-     * @param  array $roleProvider
+     * @param array $roleProvider
      */
     public function setRoleProvider(array $roleProvider): void
     {

@@ -57,7 +57,7 @@ final class RoleService implements RoleServiceInterface
      * @param null              $context
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): array
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): iterable
     {
         if (null === $identity) {
             return $this->convertRoles([$this->guestRole]);
@@ -72,12 +72,8 @@ final class RoleService implements RoleServiceInterface
      * @param  array|Traversable $roles
      * @return RoleInterface[]
      */
-    private function convertRoles($roles): array
+    private function convertRoles(iterable $roles): iterable
     {
-        if ($roles instanceof Traversable) {
-            $roles = iterator_to_array($roles);
-        }
-
         $collectedRoles = [];
         $toCollect = [];
 

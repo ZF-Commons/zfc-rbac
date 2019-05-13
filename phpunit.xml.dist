@@ -9,7 +9,6 @@
         stopOnFailure="false"
         processIsolation="false"
         backupGlobals="false"
-        syntaxCheck="true"
         >
     <testsuite name="ZfcRbac tests">
         <directory>./test</directory>
@@ -20,7 +19,6 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="./build/coverage" charset="UTF-8"
-             yui="true" highlight="true" lowUpperBound="80" highLowerBound="90"/>
+        <log type="coverage-html" target="./build/coverage" lowUpperBound="80" highLowerBound="90"/>
     </logging>
 </phpunit>

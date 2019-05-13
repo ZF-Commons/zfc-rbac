@@ -39,5 +39,5 @@ interface RoleServiceInterface
      * @param mixed                   $context
      * @return RoleInterface[]
      */
-    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): array;
+    public function getIdentityRoles(IdentityInterface $identity = null, $context = null): iterable;
 }

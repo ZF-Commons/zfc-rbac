@@ -79,18 +79,18 @@ final class AuthorizationService implements AuthorizationServiceInterface
             return false;
         }
 
-        if (! empty($this->assertions[$permission])) {
-            if (\is_array($this->assertions[$permission])) {
-                $permissionAssertions = $this->assertions[$permission];
-            } else {
-                $permissionAssertions = [$this->assertions[$permission]];
-            }
-
-            $assertionSet = new AssertionSet($this->assertionContainer, $permissionAssertions);
-
-            return $assertionSet->assert($permission, $identity, $context);
+        if (empty($this->assertions[$permission])) {
+            return true;
         }
 
-        return true;
+        if (\is_array($this->assertions[$permission])) {
+            $permissionAssertions = $this->assertions[$permission];
+        } else {
+            $permissionAssertions = [$this->assertions[$permission]];
+        }
+
+        $assertionSet = new AssertionSet($this->assertionContainer, $permissionAssertions);
+
+        return $assertionSet->assert($permission, $identity, $context);
     }
 }

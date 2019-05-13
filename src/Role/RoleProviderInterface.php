@@ -38,5 +38,5 @@ interface RoleProviderInterface
      * @param  string[] $roleNames
      * @return RoleInterface[]
      */
-    public function getRoles(array $roleNames): array;
+    public function getRoles(iterable $roleNames): iterable;
 }

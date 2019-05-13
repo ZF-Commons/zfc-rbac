@@ -35,7 +35,7 @@ class Identity implements IdentityInterface
         $this->roles = $roles;
     }
 
-    public function getRoles(): array
+    public function getRoles(): iterable
     {
         return $this->roles;
     }
