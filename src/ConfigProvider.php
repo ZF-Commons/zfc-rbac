@@ -28,14 +28,6 @@ namespace ZfcRbac;
  */
 final class ConfigProvider
 {
-    /**
-     * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     *
-     * @return array
-     */
     public function __invoke()
     {
         return [
@@ -44,9 +36,6 @@ final class ConfigProvider
         ];
     }
 
-    /**
-     * Returns the container dependencies
-     */
     public function getDependencyConfig(): array
     {
         return [
@@ -62,9 +51,6 @@ final class ConfigProvider
         ];
     }
 
-    /**
-     * Get module configuration
-     */
     public function getModuleConfig(): array
     {
         return [
