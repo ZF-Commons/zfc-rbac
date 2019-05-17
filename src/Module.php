@@ -21,20 +21,17 @@ declare(strict_types=1);
 
 namespace ZfcRbac;
 
-/**
- * Class ModuleConfig
- *
- * @author  Florent Blaison <florent.blaison@gmail.com>
- * @licence MIT
- */
-final class ModuleConfig
+final class Module
 {
-    public function __invoke(): array
+    /**
+     * Return default ZfcRbac configuration for zend-mvc applications.
+     */
+    public function getConfig()
     {
-        $config = [];
-        $config = array_merge_recursive($config, require __DIR__ . '/../config/config.global.php');
-        $config = array_merge_recursive($config, require __DIR__ . '/../config/dependencies.global.php');
-
-        return $config;
+        $provider = new ConfigProvider();
+        return [
+            'service_manager' => $provider->getDependencyConfig(),
+            'zfc_rbac' => $provider->getModuleConfig(),
+        ];
     }
 }

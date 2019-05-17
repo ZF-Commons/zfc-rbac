@@ -22,28 +22,22 @@ declare(strict_types=1);
 namespace ZfcRbacTest;
 
 use PHPUnit\Framework\TestCase;
-use ZfcRbac\ModuleConfig;
+use ZfcRbac\ConfigProvider;
+use ZfcRbac\Module;
 
 /**
- * @author  Bas Kamer <baskamer@gmail.com>
- * @covers  \ZfcRbac\ModuleConfig
+ * @covers  \ZfcRbac\Module
  */
-class ModuleConfigTest extends TestCase
+class ModuleTest extends TestCase
 {
-    public function testCanBeInvoked(): void
+    public function testProvidesExpectedConfiguration()
     {
-        $moduleConfig = new ModuleConfig();
-
-        static::assertTrue(is_callable($moduleConfig));
-    }
-
-    public function testGetArrayWith(): void
-    {
-        $moduleConfig = new ModuleConfig();
-        $config = $moduleConfig->__invoke();
-
-        $this->assertInternalType('array', $config);
-        $this->assertArrayHasKey('zfc_rbac', $config);
-        $this->assertArrayHasKey('dependencies', $config);
+        $provider = new ConfigProvider();
+        $module = new Module();
+        $expected = [
+            'service_manager' => $provider->getDependencyConfig(),
+            'zfc_rbac' => $provider->getModuleConfig(),
+        ];
+        $this->assertEquals($expected, $module->getConfig());
     }
 }
