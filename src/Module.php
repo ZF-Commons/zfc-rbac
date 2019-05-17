@@ -29,6 +29,7 @@ final class Module
     public function getConfig()
     {
         $provider = new ConfigProvider();
+
         return [
             'service_manager' => $provider->getDependencyConfig(),
             'zfc_rbac' => $provider->getModuleConfig(),
