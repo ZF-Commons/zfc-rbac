@@ -75,4 +75,31 @@ class HierarchicalRoleTest extends TestCase
         $this->assertCount(2, $children);
         $this->assertContainsOnlyInstancesOf(HierarchicalRoleInterface::class, $children);
     }
+
+    /**
+     * @covers \ZfcRbac\Role\HierarchicalRole::addPermission
+     */
+    public function testRoleCanAddPermission(): void
+    {
+        $role = new HierarchicalRole('php');
+        $role->addPermission('debug');
+        $this->assertTrue($role->hasPermission('debug'));
+        $role->addPermission('delete');
+        $this->assertTrue($role->hasPermission('delete'));
+    }
+
+    /**
+     * @covers \ZfcRbac\Role\HierarchicalRole::getPermissions
+     */
+    public function testRoleCanGetPermissions(): void
+    {
+        $role = new HierarchicalRole('php');
+        $role->addPermission('foo');
+        $role->addPermission('bar');
+        $expectedPermissions = [
+            'foo' => 'foo',
+            'bar' => 'bar',
+        ];
+        $this->assertEquals($expectedPermissions, $role->getPermissions());
+    }
 }

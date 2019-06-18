@@ -19,31 +19,20 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbacTest;
+namespace ZfcRbac;
 
-use PHPUnit\Framework\TestCase;
-use ZfcRbac\ModuleConfig;
-
-/**
- * @author  Bas Kamer <baskamer@gmail.com>
- * @covers  \ZfcRbac\ModuleConfig
- */
-class ModuleConfigTest extends TestCase
+final class Module
 {
-    public function testCanBeInvoked(): void
+    /**
+     * Return default ZfcRbac configuration for zend-mvc applications.
+     */
+    public function getConfig()
     {
-        $moduleConfig = new ModuleConfig();
+        $provider = new ConfigProvider();
 
-        static::assertTrue(is_callable($moduleConfig));
-    }
-
-    public function testGetArrayWith(): void
-    {
-        $moduleConfig = new ModuleConfig();
-        $config = $moduleConfig->__invoke();
-
-        $this->assertInternalType('array', $config);
-        $this->assertArrayHasKey('zfc_rbac', $config);
-        $this->assertArrayHasKey('dependencies', $config);
+        return [
+            'service_manager' => $provider->getDependencyConfig(),
+            'zfc_rbac' => $provider->getModuleConfig(),
+        ];
     }
 }

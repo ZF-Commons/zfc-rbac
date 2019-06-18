@@ -19,22 +19,25 @@
 
 declare(strict_types=1);
 
-namespace ZfcRbac;
+namespace ZfcRbacTest;
+
+use PHPUnit\Framework\TestCase;
+use ZfcRbac\ConfigProvider;
+use ZfcRbac\Module;
 
 /**
- * Class ModuleConfig
- *
- * @author  Florent Blaison <florent.blaison@gmail.com>
- * @licence MIT
+ * @covers  \ZfcRbac\Module
  */
-final class ModuleConfig
+class ModuleTest extends TestCase
 {
-    public function __invoke(): array
+    public function testProvidesExpectedConfiguration()
     {
-        $config = [];
-        $config = array_merge_recursive($config, require __DIR__ . '/../config/config.global.php');
-        $config = array_merge_recursive($config, require __DIR__ . '/../config/dependencies.global.php');
-
-        return $config;
+        $provider = new ConfigProvider();
+        $module = new Module();
+        $expected = [
+            'service_manager' => $provider->getDependencyConfig(),
+            'zfc_rbac' => $provider->getModuleConfig(),
+        ];
+        $this->assertEquals($expected, $module->getConfig());
     }
 }

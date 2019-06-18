@@ -24,6 +24,14 @@
     {
       "name": "Jean-Marie Leroux",
       "email": "jmleroux.pro@gmail.com"
+    },
+    {
+      "name": "Florent Blaison",
+      "email": "florent.blaison@gmail.com"
+    },
+    {
+      "name": "Bas Kamer",
+      "email": "baskamer@gmail.com"
     }
   ],
   "require": {
@@ -52,6 +60,10 @@
     "branch-alias": {
       "dev-master": "2.4-dev",
       "dev-develop": "3.0-dev"
+    },
+    "zf": {
+      "component": "ZfcRbac",
+      "config-provider": "ZfcRbac\\ConfigProvider"
     }
   },
   "scripts": {
