@@ -19,8 +19,8 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\View\Strategy\UnauthorizedStrategy;
 
 /**

@@ -18,8 +18,8 @@
 
 namespace ZfcRbacTest\Factory;
 
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\HelperPluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\HelperPluginManager;
 use ZfcRbac\Factory\IsGrantedViewHelperFactory;
 
 /**
@@ -32,7 +32,7 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         if (method_exists($serviceManager, 'build')) {
-            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+            $this->markTestSkipped('this test is only vor Laminas-servicemanager v2');
         }
 
         $pluginManager  = new HelperPluginManager($serviceManager);
@@ -53,7 +53,7 @@ class IsGrantedViewHelperFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         if (! method_exists($serviceManager, 'build')) {
-            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+            $this->markTestSkipped('this test is only vor Laminas-servicemanager v3');
         }
         $serviceManager->setService(
             'ZfcRbac\Service\AuthorizationService',

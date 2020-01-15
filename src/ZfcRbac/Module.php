@@ -18,9 +18,9 @@
 
 namespace ZfcRbac;
 
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Laminas\EventManager\EventInterface;
+use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
+use Laminas\ModuleManager\Feature\ConfigProviderInterface;
 
 /**
  * Module class for ZfcRbac
@@ -35,7 +35,7 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface
      */
     public function onBootstrap(EventInterface $event)
     {
-        /* @var \Zend\Mvc\Application $application */
+        /* @var \Laminas\Mvc\Application $application */
         $application    = $event->getTarget();
         $serviceManager = $application->getServiceManager();
         $eventManager   = $application->getEventManager();

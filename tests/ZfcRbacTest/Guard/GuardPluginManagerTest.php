@@ -18,7 +18,7 @@
 
 namespace ZfcRbacTest\Guard;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Guard\GuardPluginManager;
 use ZfcRbac\Options\ModuleOptions;
 

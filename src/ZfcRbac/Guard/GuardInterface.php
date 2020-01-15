@@ -18,8 +18,8 @@
 
 namespace ZfcRbac\Guard;
 
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * Interface that each guard must implement

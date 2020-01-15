@@ -18,9 +18,9 @@
 
 namespace ZfcRbacTest\Guard;
 
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
-use Zend\Router\RouteMatch;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router\RouteMatch as V2RouteMatch;
+use Laminas\Router\RouteMatch;
 use ZfcRbac\Guard\ControllerGuard;
 use ZfcRbac\Guard\ControllerPermissionsGuard;
 use ZfcRbac\Guard\GuardInterface;
@@ -45,7 +45,7 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
     {
         $guard = new ControllerPermissionsGuard($this->getMockAuthorizationService());
 
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager = $this->getMock('Laminas\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
             ->method('attach')
             ->with(ControllerGuard::EVENT_NAME);
@@ -428,8 +428,8 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
             'action' => 'edit',
         ]);
 
-        $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $application  = $this->getMock('Laminas\Mvc\Application', [], [], '', false);
+        $eventManager = $this->getMock('Laminas\EventManager\EventManagerInterface');
 
         $application->expects($this->never())
             ->method('getEventManager')
@@ -474,8 +474,8 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
             'action' => 'delete',
         ]);
 
-        $application  = $this->getMock('Zend\Mvc\Application', [], [], '', false);
-        $eventManager = $this->getMock('Zend\EventManager\EventManager');
+        $application  = $this->getMock('Laminas\Mvc\Application', [], [], '', false);
+        $eventManager = $this->getMock('Laminas\EventManager\EventManager');
 
         $application->expects($this->once())
             ->method('getEventManager')

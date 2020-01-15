@@ -19,8 +19,8 @@
 namespace ZfcRbacTest\Collector;
 
 use Rbac\Role\RoleInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Rbac\Role;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Permissions\Rbac\Role;
 use ZfcRbac\Collector\RbacCollector;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Options\ModuleOptions;
@@ -128,9 +128,9 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
             'identity_role' => 'member'
         ];
 
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $serviceManager = $this->getMock('Laminas\ServiceManager\ServiceLocatorInterface');
 
-        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
+        $application = $this->getMock('Laminas\Mvc\Application', [], [], '', false);
         $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
 
         $mvcEvent = new MvcEvent();
@@ -241,9 +241,9 @@ class RbacCollectorTest extends \PHPUnit_Framework_TestCase
      */
     private function collectPermissionsPropertyTestBase(RoleInterface $role)
     {
-        $serviceManager = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $serviceManager = $this->getMock('Laminas\ServiceManager\ServiceLocatorInterface');
 
-        $application = $this->getMock('Zend\Mvc\Application', [], [], '', false);
+        $application = $this->getMock('Laminas\Mvc\Application', [], [], '', false);
         $application->expects($this->once())->method('getServiceManager')->will($this->returnValue($serviceManager));
 
         $mvcEvent = new MvcEvent();

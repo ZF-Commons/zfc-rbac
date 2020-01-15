@@ -31,13 +31,13 @@ class AuthenticationIdentityProviderTest extends \PHPUnit_Framework_TestCase
     protected $identityProvider;
 
     /**
-     * @var \Zend\Authentication\AuthenticationService|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Laminas\Authentication\AuthenticationService|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $authenticationService;
 
     public function setUp()
     {
-        $this->authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $this->authenticationService = $this->getMock('Laminas\Authentication\AuthenticationService');
         $this->identityProvider = new AuthenticationIdentityProvider($this->authenticationService);
     }
 

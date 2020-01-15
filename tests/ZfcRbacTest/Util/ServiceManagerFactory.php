@@ -18,8 +18,8 @@
 
 namespace ZfcRbacTest\Util;
 
-use Zend\Mvc\Service\ServiceManagerConfig;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Mvc\Service\ServiceManagerConfig;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Base test case to be used when a new service manager instance is required
@@ -67,7 +67,7 @@ abstract class ServiceManagerFactory
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->setAllowOverride(true);
 
-        /* @var $moduleManager \Zend\ModuleManager\ModuleManagerInterface */
+        /* @var $moduleManager \Laminas\ModuleManager\ModuleManagerInterface */
         $moduleManager = $serviceManager->get('ModuleManager');
 
         $moduleManager->loadModules();

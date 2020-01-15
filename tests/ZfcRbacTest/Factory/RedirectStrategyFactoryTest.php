@@ -19,7 +19,7 @@
 namespace ZfcRbacTest\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Factory\RedirectStrategyFactory;
 
 /**
@@ -36,14 +36,14 @@ class RedirectStrategyFactoryTest extends \PHPUnit_Framework_TestCase
                           ->method('getRedirectStrategy')
                           ->will($this->returnValue($redirectStrategyOptions));
 
-        $authenticationServiceMock = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationServiceMock = $this->getMock('Laminas\Authentication\AuthenticationService');
 
         $serviceLocatorMock = $this->prophesize(ServiceLocatorInterface::class);
         $serviceLocatorMock->willImplement(ContainerInterface::class);
         $serviceLocatorMock->get('ZfcRbac\Options\ModuleOptions')
                            ->willReturn($moduleOptionsMock)
                            ->shouldBeCalled();
-        $serviceLocatorMock->get('Zend\Authentication\AuthenticationService')
+        $serviceLocatorMock->get('Laminas\Authentication\AuthenticationService')
                            ->willReturn($authenticationServiceMock)
                            ->shouldBeCalled();
 

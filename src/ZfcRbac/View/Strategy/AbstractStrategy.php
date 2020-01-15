@@ -18,9 +18,9 @@
 
 namespace ZfcRbac\View\Strategy;
 
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * Abstract strategy for any unauthorized access

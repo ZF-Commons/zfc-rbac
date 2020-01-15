@@ -18,8 +18,8 @@
 
 namespace ZfcRbacTest\View\Strategy;
 
-use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\MvcEvent;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\Mvc\MvcEvent;
 use ZfcRbac\Exception\UnauthorizedException;
 use ZfcRbac\Options\UnauthorizedStrategyOptions;
 use ZfcRbac\View\Strategy\UnauthorizedStrategy;
@@ -34,7 +34,7 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $strategyListener = new UnauthorizedStrategy(new UnauthorizedStrategyOptions());
 
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager = $this->getMock('Laminas\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
                      ->method('attach')
                      ->with(MvcEvent::EVENT_DISPATCH_ERROR);
@@ -59,6 +59,6 @@ class UnauthorizedStrategyTest extends \PHPUnit_Framework_TestCase
         $unauthorizedStrategy->onError($mvcEvent);
 
         $this->assertEquals(403, $mvcEvent->getResponse()->getStatusCode());
-        $this->assertInstanceOf('Zend\View\Model\ModelInterface', $mvcEvent->getResult());
+        $this->assertInstanceOf('Laminas\View\Model\ModelInterface', $mvcEvent->getResult());
     }
 }

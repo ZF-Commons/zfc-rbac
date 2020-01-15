@@ -20,7 +20,7 @@ namespace ZfcRbacTest\Role;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Rbac\Traversal\RecursiveRoleIterator;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Role\ObjectRepositoryRoleProvider;
 use ZfcRbacTest\Asset\FlatRole;
 use ZfcRbacTest\Asset\HierarchicalRole;

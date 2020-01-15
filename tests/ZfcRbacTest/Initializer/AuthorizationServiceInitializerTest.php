@@ -18,7 +18,7 @@
 namespace ZfcRbacTest\Initializer;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Initializer\AuthorizationServiceInitializer;
 
 /**

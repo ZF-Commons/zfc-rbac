@@ -18,7 +18,7 @@
 
 namespace ZfcRbacTest\Factory;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
 
 /**
@@ -30,8 +30,8 @@ class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestC
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'Zend\Authentication\AuthenticationService',
-            $this->getMock('Zend\Authentication\AuthenticationService')
+            'Laminas\Authentication\AuthenticationService',
+            $this->getMock('Laminas\Authentication\AuthenticationService')
         );
 
         $factory                = new AuthenticationIdentityProviderFactory();

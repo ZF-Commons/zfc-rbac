@@ -8,13 +8,12 @@
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/badges/quality-score.png?s=685a2b34dc626a0af9934f9c8d246b68a8cac884)](https://scrutinizer-ci.com/g/ZF-Commons/zfc-rbac/)
 [![Total Downloads](https://poser.pugx.org/zf-commons/zfc-rbac/downloads.png)](https://packagist.org/packages/zf-commons/zfc-rbac)
 
-ZfcRbac is an access control module for Zend Framework 2, based on the RBAC permission model.
+ZfcRbac is an access control module for Laminas (Zend Framework 2), based on the RBAC permission model.
 
 ## Requirements
 
 - PHP 5.6, PHP 7.0 or higher
 - [Rbac component](https://github.com/zf-fr/rbac): this is actually a prototype for the ZF3 Rbac component.
-- [Zend Framework 2.2 or higher](http://www.github.com/zendframework/zf2)
 
 > If you are looking for older version of ZfcRbac, please refer to the 0.2.x branch.
 > If you are using ZfcRbac 1.0, please upgrade to 2.0.
@@ -22,8 +21,8 @@ ZfcRbac is an access control module for Zend Framework 2, based on the RBAC perm
 ## Optional
 
 - [DoctrineModule](https://github.com/doctrine/DoctrineModule): if you want to use some built-in role and permission providers.
-- [ZendDeveloperTools](https://github.com/zendframework/ZendDeveloperTools): if you want to have useful stats added to
-the Zend Developer toolbar.
+- [LaminasDeveloperTools](https://github.com/laminas/laminas-developer-tools): if you want to have useful stats added to
+the Laminas Developer toolbar.
 
 ## Upgrade
 

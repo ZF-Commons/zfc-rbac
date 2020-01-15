@@ -18,7 +18,7 @@
 
 namespace ZfcRbacTest\Asset;
 
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 use ZfcRbac\Guard\AbstractGuard;
 
 class DummyGuard extends AbstractGuard

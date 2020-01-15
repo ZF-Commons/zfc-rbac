@@ -18,9 +18,9 @@
 
 namespace ZfcRbac\View\Strategy;
 
-use Zend\Authentication\AuthenticationServiceInterface;
-use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\MvcEvent;
+use Laminas\Authentication\AuthenticationServiceInterface;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\Mvc\MvcEvent;
 use ZfcRbac\Exception\UnauthorizedExceptionInterface;
 use ZfcRbac\Options\RedirectStrategyOptions;
 

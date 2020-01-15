@@ -18,9 +18,9 @@
 
 namespace ZfcRbacTest\Guard;
 
-use Zend\EventManager\EventManager;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\EventManager;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\MvcEvent;
 use ZfcRbacTest\Asset\DummyGuard;
 
 /**

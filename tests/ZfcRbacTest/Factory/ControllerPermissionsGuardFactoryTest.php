@@ -18,7 +18,7 @@
 
 namespace ZfcRbacTest\Factory;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\ControllerPermissionsGuardFactory;
 use ZfcRbac\Guard\GuardInterface;
 use ZfcRbac\Guard\GuardPluginManager;
@@ -34,7 +34,7 @@ class ControllerPermissionsGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         if (method_exists($serviceManager, 'build')) {
-            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+            $this->markTestSkipped('this test is only vor Laminas-servicemanager v2');
         }
 
         $creationOptions = [
@@ -69,7 +69,7 @@ class ControllerPermissionsGuardFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = new ServiceManager();
 
         if (!method_exists($serviceManager, 'build')) {
-            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+            $this->markTestSkipped('this test is only vor Laminas-servicemanager v3');
         }
 
         $creationOptions = [

@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Role;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 use ZfcRbac\Exception;
 
 /**

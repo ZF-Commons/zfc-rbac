@@ -19,8 +19,8 @@
 namespace ZfcRbac\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Guard\ControllerPermissionsGuard;
 
 /**
@@ -77,7 +77,7 @@ class ControllerPermissionsGuardFactory implements FactoryInterface
     }
 
     /**
-     * @param \Zend\ServiceManager\AbstractPluginManager|ServiceLocatorInterface $serviceLocator
+     * @param \Laminas\ServiceManager\AbstractPluginManager|ServiceLocatorInterface $serviceLocator
      * @return ControllerPermissionsGuard
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

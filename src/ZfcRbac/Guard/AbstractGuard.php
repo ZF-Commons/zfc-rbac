@@ -18,9 +18,9 @@
 
 namespace ZfcRbac\Guard;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateTrait;
+use Laminas\Mvc\MvcEvent;
 use ZfcRbac\Exception;
 
 /**

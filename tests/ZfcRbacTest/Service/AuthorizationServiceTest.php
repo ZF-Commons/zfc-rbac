@@ -20,7 +20,7 @@ namespace ZfcRbacTest\Service;
 
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;

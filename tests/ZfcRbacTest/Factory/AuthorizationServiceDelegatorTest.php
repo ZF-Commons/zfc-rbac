@@ -18,7 +18,7 @@
 namespace ZfcRbacTest\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Factory\AuthorizationServiceDelegatorFactory;
 use ZfcRbacTest\Initializer\AuthorizationAwareFake;
 use ZfcRbacTest\Util\ServiceManagerFactory;
@@ -75,7 +75,7 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
         $serviceManager = ServiceManagerFactory::getServiceManager();
 
         if (method_exists($serviceManager, 'build')) {
-            $this->markTestSkipped('this test is only vor zend-servicemanager v2');
+            $this->markTestSkipped('this test is only vor Laminas-servicemanager v2');
         }
 
         $serviceManager->setAllowOverride(true);
@@ -105,7 +105,7 @@ class AuthorizationServiceDelegatorTest extends \PHPUnit_Framework_TestCase
         $serviceManager = ServiceManagerFactory::getServiceManager();
 
         if (! method_exists($serviceManager, 'build')) {
-            $this->markTestSkipped('this test is only vor zend-servicemanager v3');
+            $this->markTestSkipped('this test is only vor Laminas-servicemanager v3');
         }
 
         $serviceManager->setAllowOverride(true);

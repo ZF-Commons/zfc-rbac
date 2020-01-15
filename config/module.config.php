@@ -23,48 +23,49 @@ return [
             'ZfcRbac\Guards' => 'ZfcRbac\Factory\GuardsFactory',
 
             /* Factories that map to a class */
-            'Rbac\Rbac'                                       => 'ZfcRbac\Factory\RbacFactory',
-            'ZfcRbac\Assertion\AssertionPluginManager'        => 'ZfcRbac\Factory\AssertionPluginManagerFactory',
-            'ZfcRbac\Collector\RbacCollector'                 => \Zend\ServiceManager\Factory\InvokableFactory::class,
-            'ZfcRbac\Guard\GuardPluginManager'                => 'ZfcRbac\Factory\GuardPluginManagerFactory',
+            'Rbac\Rbac' => 'ZfcRbac\Factory\RbacFactory',
+            'ZfcRbac\Assertion\AssertionPluginManager' => 'ZfcRbac\Factory\AssertionPluginManagerFactory',
+            'ZfcRbac\Collector\RbacCollector' => \Laminas\ServiceManager\Factory\InvokableFactory::class,
+            'ZfcRbac\Guard\GuardPluginManager' => 'ZfcRbac\Factory\GuardPluginManagerFactory',
             'ZfcRbac\Identity\AuthenticationIdentityProvider' => 'ZfcRbac\Factory\AuthenticationIdentityProviderFactory',
-            'ZfcRbac\Options\ModuleOptions'                   => 'ZfcRbac\Factory\ModuleOptionsFactory',
-            'ZfcRbac\Role\RoleProviderPluginManager'          => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
-            'ZfcRbac\Service\AuthorizationService'            => 'ZfcRbac\Factory\AuthorizationServiceFactory',
-            'ZfcRbac\Service\RoleService'                     => 'ZfcRbac\Factory\RoleServiceFactory',
-            'ZfcRbac\View\Strategy\RedirectStrategy'          => 'ZfcRbac\Factory\RedirectStrategyFactory',
-            'ZfcRbac\View\Strategy\UnauthorizedStrategy'      => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
+            'ZfcRbac\Options\ModuleOptions' => 'ZfcRbac\Factory\ModuleOptionsFactory',
+            'ZfcRbac\Role\RoleProviderPluginManager' => 'ZfcRbac\Factory\RoleProviderPluginManagerFactory',
+            'ZfcRbac\Service\AuthorizationService' => 'ZfcRbac\Factory\AuthorizationServiceFactory',
+            'ZfcRbac\Service\RoleService' => 'ZfcRbac\Factory\RoleServiceFactory',
+            'ZfcRbac\View\Strategy\RedirectStrategy' => 'ZfcRbac\Factory\RedirectStrategyFactory',
+            'ZfcRbac\View\Strategy\UnauthorizedStrategy' => 'ZfcRbac\Factory\UnauthorizedStrategyFactory',
         ],
     ],
 
     'view_helpers' => [
         'factories' => [
             'ZfcRbac\View\Helper\IsGranted' => 'ZfcRbac\Factory\IsGrantedViewHelperFactory',
-            'ZfcRbac\View\Helper\HasRole'   => 'ZfcRbac\Factory\HasRoleViewHelperFactory'
+            'ZfcRbac\View\Helper\HasRole' => 'ZfcRbac\Factory\HasRoleViewHelperFactory',
         ],
         'aliases' => [
             'isGranted' => 'ZfcRbac\View\Helper\IsGranted',
-            'hasRole'   => 'ZfcRbac\View\Helper\HasRole'
-        ]
+            'hasRole' => 'ZfcRbac\View\Helper\HasRole',
+        ],
     ],
 
     'controller_plugins' => [
         'factories' => [
-            'ZfcRbac\Mvc\Controller\Plugin\IsGranted' => 'ZfcRbac\Factory\IsGrantedPluginFactory'
+            'ZfcRbac\Mvc\Controller\Plugin\IsGranted' => 'ZfcRbac\Factory\IsGrantedPluginFactory',
         ],
         'aliases' => [
-            'isGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted'
-        ]
+            'isGranted' => 'ZfcRbac\Mvc\Controller\Plugin\IsGranted',
+        ],
     ],
 
     'view_manager' => [
         'template_map' => [
-            'error/403'                             => __DIR__ . '/../view/error/403.phtml',
-            'zend-developer-tools/toolbar/zfc-rbac' => __DIR__ . '/../view/zend-developer-tools/toolbar/zfc-rbac.phtml'
-        ]
+            'error/403' => __DIR__ . '/../view/error/403.phtml',
+            'laminas-developer-tools/toolbar/zfc-rbac' => __DIR__ . '/../view/laminas-developer-tools/toolbar/zfc-rbac.phtml',
+            'zend-developer-tools/toolbar/zfc-rbac' => __DIR__ . '/../view/laminas-developer-tools/toolbar/zfc-rbac.phtml',
+        ],
     ],
 
-    'zenddevelopertools' => [
+    'laminas-developer-tools' => [
         'profiler' => [
             'collectors' => [
                 'zfc_rbac' => 'ZfcRbac\Collector\RbacCollector',
@@ -72,7 +73,7 @@ return [
         ],
         'toolbar' => [
             'entries' => [
-                'zfc_rbac' => 'zend-developer-tools/toolbar/zfc-rbac',
+                'zfc_rbac' => 'laminas-developer-tools/toolbar/zfc-rbac',
             ],
         ],
     ],
@@ -85,6 +86,6 @@ return [
         'role_provider_manager' => [],
 
         // Assertion plugin manager
-        'assertion_manager' => []
-    ]
+        'assertion_manager' => [],
+    ],
 ];

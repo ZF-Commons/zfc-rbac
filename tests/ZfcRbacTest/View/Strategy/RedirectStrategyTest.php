@@ -18,12 +18,12 @@
 
 namespace ZfcRbacTest\View\Strategy;
 
-use Zend\Authentication\AuthenticationService;
-use Zend\Http\Request as HttpRequest;
-use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\TreeRouteStack as V2TreeRouteStack;
-use Zend\Router\Http\TreeRouteStack;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Http\Request as HttpRequest;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router\Http\TreeRouteStack as V2TreeRouteStack;
+use Laminas\Router\Http\TreeRouteStack;
 use ZfcRbac\Exception\UnauthorizedException;
 use ZfcRbac\Options\RedirectStrategyOptions;
 use ZfcRbac\View\Strategy\RedirectStrategy;
@@ -38,7 +38,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $strategyListener = new RedirectStrategy(new RedirectStrategyOptions(), new AuthenticationService());
 
-        $eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $eventManager = $this->getMock('Laminas\EventManager\EventManagerInterface');
         $eventManager->expects($this->once())
                      ->method('attach')
                      ->with(MvcEvent::EVENT_DISPATCH_ERROR);
@@ -77,14 +77,14 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
             'append_previous_uri'            => false
         ]);
 
-        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService = $this->getMock('Laminas\Authentication\AuthenticationService');
         $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(false));
 
         $redirectStrategy = new RedirectStrategy($options, $authenticationService);
 
         $redirectStrategy->onError($mvcEvent);
 
-        $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
+        $this->assertInstanceOf('Laminas\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals('/login', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
@@ -111,14 +111,14 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
             'append_previous_uri'            => false
         ]);
 
-        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService = $this->getMock('Laminas\Authentication\AuthenticationService');
         $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(true));
 
         $redirectStrategy = new RedirectStrategy($options, $authenticationService);
 
         $redirectStrategy->onError($mvcEvent);
 
-        $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
+        $this->assertInstanceOf('Laminas\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals('/home', $mvcEvent->getResponse()->getHeaders()->get('Location')->getFieldValue());
     }
@@ -144,7 +144,7 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
             'redirect_when_connected' => false
         ]);
 
-        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService = $this->getMock('Laminas\Authentication\AuthenticationService');
         $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(true));
 
         $redirectStrategy = new RedirectStrategy($options, $authenticationService);
@@ -181,14 +181,14 @@ class RedirectStrategyTest extends \PHPUnit_Framework_TestCase
             'previous_uri_query_key'         => 'redirect-uri'
         ]);
 
-        $authenticationService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $authenticationService = $this->getMock('Laminas\Authentication\AuthenticationService');
         $authenticationService->expects($this->once())->method('hasIdentity')->will($this->returnValue(false));
 
         $redirectStrategy = new RedirectStrategy($options, $authenticationService);
 
         $redirectStrategy->onError($mvcEvent);
 
-        $this->assertInstanceOf('Zend\Stdlib\ResponseInterface', $mvcEvent->getResult());
+        $this->assertInstanceOf('Laminas\Stdlib\ResponseInterface', $mvcEvent->getResult());
         $this->assertEquals(302, $mvcEvent->getResponse()->getStatusCode());
         $this->assertEquals(
             '/login?redirect-uri=http://example.com/',

@@ -18,7 +18,7 @@
 
 namespace ZfcRbacTest\Factory;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\RoleServiceFactory;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\RoleProviderPluginManager;

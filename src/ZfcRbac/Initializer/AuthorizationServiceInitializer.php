@@ -19,9 +19,9 @@
 namespace ZfcRbac\Initializer;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\InitializerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\InitializerInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationServiceAwareInterface;
 
 /**
@@ -45,7 +45,7 @@ class AuthorizationServiceInitializer implements InitializerInterface
     }
 
     /**
-     * @see \Zend\ServiceManager\InitializerInterface::initialize()
+     * @see \Laminas\ServiceManager\InitializerInterface::initialize()
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {

@@ -18,7 +18,7 @@
 
 namespace ZfcRbac\Guard;
 
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 use ZfcRbac\Service\RoleService;
 
 /**

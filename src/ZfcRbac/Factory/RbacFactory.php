@@ -21,8 +21,8 @@ namespace ZfcRbac\Factory;
 use Interop\Container\ContainerInterface;
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\GeneratorStrategy;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>

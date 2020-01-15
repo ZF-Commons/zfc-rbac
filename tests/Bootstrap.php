@@ -16,7 +16,7 @@
  * and is licensed under the MIT license.
  */
 
-use Zend\Mvc\Application;
+use Laminas\Mvc\Application;
 use ZfcRbacTest\Util\ServiceManagerFactory;
 
 ini_set('error_reporting', E_ALL);
