@@ -36,8 +36,8 @@
   ],
   "require": {
     "php": "^7.1",
-    "zendframework/zend-servicemanager": "^3.3",
-    "zendframework/zend-stdlib": "^3.1"
+    "laminas/laminas-servicemanager": "^3.3",
+    "laminas/laminas-stdlib": "^3.1"
   },
   "require-dev": {
     "malukenho/docheader": "^0.1.7",

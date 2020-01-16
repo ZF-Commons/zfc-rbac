@@ -46,7 +46,7 @@ final class ConfigProvider
                 \ZfcRbac\Role\ObjectRepositoryRoleProvider::class => \ZfcRbac\Container\ObjectRepositoryRoleProviderFactory::class,
                 \ZfcRbac\Service\AuthorizationServiceInterface::class => \ZfcRbac\Container\AuthorizationServiceFactory::class,
                 \ZfcRbac\Service\RoleServiceInterface::class => \ZfcRbac\Container\RoleServiceFactory::class,
-                \ZfcRbac\Rbac::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
+                \ZfcRbac\Rbac::class => \Laminas\ServiceManager\Factory\InvokableFactory::class,
             ],
         ];
     }

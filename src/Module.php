@@ -24,7 +24,7 @@ namespace ZfcRbac;
 final class Module
 {
     /**
-     * Return default ZfcRbac configuration for zend-mvc applications.
+     * Return default ZfcRbac configuration for laminas-mvc applications.
      */
     public function getConfig()
     {

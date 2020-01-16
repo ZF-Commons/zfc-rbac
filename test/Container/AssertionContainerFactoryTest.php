@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace ZfcRbacTest\Container;
 
 use PHPUnit\Framework\TestCase;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Assertion\AssertionContainer;
 use ZfcRbac\Container\AssertionContainerFactory;
 

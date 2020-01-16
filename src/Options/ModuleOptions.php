@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace ZfcRbac\Options;
 
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * Options for ZfcRbac module

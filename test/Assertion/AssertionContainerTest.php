@@ -24,7 +24,7 @@ namespace ZfcRbacTest\Assertion;
 use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use ZfcRbac\Assertion\AssertionContainer;
 use ZfcRbac\Assertion\AssertionInterface;
 use ZfcRbacTest\Asset\SimpleAssertion;
