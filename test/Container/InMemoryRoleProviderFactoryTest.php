@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace ZfcRbacTest\Container;
 
-use PHPUnit\Framework\TestCase;
 use Laminas\ServiceManager\ServiceManager;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Container\InMemoryRoleProviderFactory;
 use ZfcRbac\Options\ModuleOptions;
 use ZfcRbac\Role\InMemoryRoleProvider;

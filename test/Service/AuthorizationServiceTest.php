@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace ZfcRbacTest\Service;
 
-use PHPUnit\Framework\TestCase;
 use Laminas\ServiceManager\ServiceManager;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Assertion\AssertionContainer;
 use ZfcRbac\Assertion\AssertionContainerInterface;
 use ZfcRbac\Assertion\AssertionSet;

@@ -23,8 +23,8 @@ namespace ZfcRbacTest\Container;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use PHPUnit\Framework\TestCase;
 use Laminas\ServiceManager\ServiceManager;
+use PHPUnit\Framework\TestCase;
 use ZfcRbac\Container\ObjectRepositoryRoleProviderFactory;
 use ZfcRbac\Exception\RuntimeException;
 use ZfcRbac\Options\ModuleOptions;
