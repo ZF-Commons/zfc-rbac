@@ -32,8 +32,7 @@
     "laminas/laminas-eventmanager": "^2.6.3 || ^3.0",
     "laminas/laminas-mvc": "~2.7 || ^3.0",
     "laminas/laminas-servicemanager": "^2.7.5 || ^3.0.3",
-    "zfr/rbac": "~1.2",
-    "laminas/laminas-dependency-plugin": "^1.0"
+    "zfr/rbac": "~1.2"
   },
   "require-dev": {
     "laminas/laminas-authentication": "~2.2",
