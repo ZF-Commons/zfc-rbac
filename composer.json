@@ -35,7 +35,7 @@
     }
   ],
   "require": {
-    "php": "^7.1",
+    "php": "^7.2",
     "zendframework/zend-servicemanager": "^3.3",
     "zendframework/zend-stdlib": "^3.1"
   },
