@@ -35,8 +35,8 @@ class ModuleOptionsTest extends TestCase
         $moduleOptions = new \ZfcRbac\Options\ModuleOptions();
 
         $this->assertEquals('guest', $moduleOptions->getGuestRole());
-        $this->assertInternalType('array', $moduleOptions->getRoleProvider());
-        $this->assertInternalType('array', $moduleOptions->getAssertionMap());
+        $this->assertIsArray($moduleOptions->getRoleProvider());
+        $this->assertIsArray($moduleOptions->getAssertionMap());
     }
 
     public function testSettersAndGetters(): void
