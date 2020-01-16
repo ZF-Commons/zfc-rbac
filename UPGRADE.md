@@ -3,7 +3,7 @@
 ## From v2.x to v3
 
 - ZfcRbac is no longer a ZF2 module. Instead, it fully embraces middlewares and can be used for any middleware
-library like Zend\Expressive. As a consequence, its scope has been dramatically reduced and now only provide
+library like Mezzio. As a consequence, its scope has been dramatically reduced and now only provide
 the base logic for authorization.
 
 ## From v2.2 to v2.3

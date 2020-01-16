@@ -24,7 +24,7 @@ namespace ZfcRbac;
 /**
  * The configuration provider for the ZfcRbac module
  *
- * @see https://docs.zendframework.com/zend-component-installer/
+ * @see https://docs.laminas.dev/laminas-component-installer/
  */
 final class ConfigProvider
 {

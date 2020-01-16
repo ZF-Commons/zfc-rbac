@@ -1,11 +1,11 @@
 {
   "name": "zf-commons/zfc-rbac",
-  "description": "Zend Framework 2 Module that provides a layer of features of Zend\\Permissions\\Rbac",
+  "description": "Laminas Module that provides a layer of features of Laminas\\Permissions\\Rbac",
   "type": "library",
   "license": "MIT",
   "keywords": [
     "module",
-    "zf2",
+    "laminas",
     "rbac",
     "permissions"
   ],
