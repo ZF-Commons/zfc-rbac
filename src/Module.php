@@ -26,7 +26,7 @@ final class Module
     /**
      * Return default ZfcRbac configuration for zend-mvc applications.
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         $provider = new ConfigProvider();
 
