@@ -35,6 +35,9 @@ class RedirectStrategyFactoryTest extends \PHPUnit_Framework_TestCase
         $moduleOptionsMock->expects($this->once())
                           ->method('getRedirectStrategy')
                           ->will($this->returnValue($redirectStrategyOptions));
+        $moduleOptionsMock->expects($this->once())
+            ->method('getAuthenticationService')
+            ->will($this->returnValue('Zend\Authentication\AuthenticationService'));
 
         $authenticationServiceMock = $this->getMock('Zend\Authentication\AuthenticationService');
 

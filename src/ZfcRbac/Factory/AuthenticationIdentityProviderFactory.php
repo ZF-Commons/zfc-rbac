@@ -39,8 +39,10 @@ class AuthenticationIdentityProviderFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        /* @var \ZfcRbac\Options\ModuleOptions $moduleOptions */
+        $moduleOptions = $container->get('ZfcRbac\Options\ModuleOptions');
         /* @var \Zend\Authentication\AuthenticationService $authenticationProvider */
-        $authenticationProvider = $container->get('Zend\Authentication\AuthenticationService');
+        $authenticationProvider = $container->get($moduleOptions->getAuthenticationService());
 
         return new AuthenticationIdentityProvider($authenticationProvider);
     }

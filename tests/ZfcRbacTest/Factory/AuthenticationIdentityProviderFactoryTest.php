@@ -20,6 +20,7 @@ namespace ZfcRbacTest\Factory;
 
 use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Factory\AuthenticationIdentityProviderFactory;
+use ZfcRbac\Options\ModuleOptions;
 
 /**
  * @covers \ZfcRbac\Factory\AuthenticationIdentityProviderFactory
@@ -29,6 +30,7 @@ class AuthenticationIdentityProviderFactoryTest extends \PHPUnit_Framework_TestC
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
+        $serviceManager->setService('ZfcRbac\Options\ModuleOptions', new ModuleOptions());
         $serviceManager->setService(
             'Zend\Authentication\AuthenticationService',
             $this->getMock('Zend\Authentication\AuthenticationService')
