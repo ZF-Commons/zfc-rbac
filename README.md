@@ -1,5 +1,16 @@
 # ZfcRbac
 
+**ZfcRbac has been deprecatad**
+
+Continue using 
+
+[LmcRbacMvc](https://github.com/Laminas-Commons/LmcRbacMvc) (now at 3.0.0) for version 2.x of ZfcRbac 
+
+or 
+
+[LmcRbac](https://github.com/Laminas-Commons/LmcRbac) (now at 1.0.0) for version 3.x of ZfcRbac
+
+
 [![Develop Branch Build Status](https://travis-ci.org/ZF-Commons/zfc-rbac.svg?branch=develop)](http://travis-ci.org/ZF-Commons/zfc-rbac)
 [![Coverage Status](https://coveralls.io/repos/github/ZF-Commons/zfc-rbac/badge.svg?branch=develop)](https://coveralls.io/github/ZF-Commons/zfc-rbac?branch=develop)
 [![Latest Stable Version](https://poser.pugx.org/zf-commons/zfc-rbac/v/stable)](https://packagist.org/packages/zf-commons/zfc-rbac)
