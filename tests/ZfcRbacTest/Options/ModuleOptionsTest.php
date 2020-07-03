@@ -44,6 +44,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
     public function testSettersAndGetters()
     {
         $moduleOptions = new ModuleOptions([
+            'authentication_service' => 'authentication_service_name',
             'identity_provider'     => 'IdentityProvider',
             'guest_role'            => 'unknown',
             'guards'                => [],
@@ -61,6 +62,7 @@ class ModuleOptionsTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
+        $this->assertEquals('authentication_service_name', $moduleOptions->getAuthenticationService());
         $this->assertEquals('IdentityProvider', $moduleOptions->getIdentityProvider());
         $this->assertEquals('unknown', $moduleOptions->getGuestRole());
         $this->assertEquals([], $moduleOptions->getGuards());

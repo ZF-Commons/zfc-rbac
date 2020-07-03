@@ -87,6 +87,13 @@ class ModuleOptions extends AbstractOptions
     protected $redirectStrategy;
 
     /**
+     * Authentication service name
+     *
+     * @var string
+     */
+    protected $authenticationService = 'Zend\Authentication\AuthenticationService';
+
+    /**
      * Constructor
      *
      * {@inheritDoc}
@@ -283,5 +290,25 @@ class ModuleOptions extends AbstractOptions
         }
 
         return $this->redirectStrategy;
+    }
+
+    /**
+     * Get authentication service name
+     *
+     * @return string
+     */
+    public function getAuthenticationService()
+    {
+        return $this->authenticationService;
+    }
+
+    /**
+     * Set authentication service name
+     *
+     * @param string $authenticationService
+     */
+    public function setAuthenticationService($authenticationService)
+    {
+        $this->authenticationService = $authenticationService;
     }
 }
