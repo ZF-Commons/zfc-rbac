@@ -73,9 +73,34 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
                     ])
                 ],
                 'expected' => [
-                    'mycontroller'  => [0 => ['post.manage']],
-                    'mycontroller2' => [0 => ['post.update', 'post.delete']],
-                    'mycontroller3' => [0 => ['post.manage']]
+                    'mycontroller'  => [0 => ['post.manage'], 1 => GuardInterface::CONDITION_AND,],
+                    'mycontroller2' => [0 => ['post.update', 'post.delete'], 1 => GuardInterface::CONDITION_AND,],
+                    'mycontroller3' => [0 => ['post.manage'], 1 => GuardInterface::CONDITION_AND,]
+                ]
+            ],
+            // Without actions condition or
+            [
+                'rules'    => [
+                    [
+                        'controller'  => 'MyController',
+                        'permissions' => 'post.manage',
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ],
+                    [
+                        'controller'  => 'MyController2',
+                        'permissions' => ['post.update', 'post.delete'],
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ],
+                    new \ArrayIterator([
+                        'controller'  => 'MyController3',
+                        'permissions' => new \ArrayIterator(['post.manage']),
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ])
+                ],
+                'expected' => [
+                    'mycontroller'  => [0 => ['post.manage'], 1 => GuardInterface::CONDITION_OR,],
+                    'mycontroller2' => [0 => ['post.update', 'post.delete'], 1 => GuardInterface::CONDITION_OR,],
+                    'mycontroller3' => [0 => ['post.manage'], 1 => GuardInterface::CONDITION_OR,]
                 ]
             ],
             // With one action
@@ -99,13 +124,53 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
                 ],
                 'expected' => [
                     'mycontroller'  => [
-                        'delete' => ['permission1']
+                        'delete' => ['permission1'],
+                        1        => GuardInterface::CONDITION_AND,
                     ],
                     'mycontroller2' => [
-                        'delete' => ['permission2']
+                        'delete' => ['permission2'],
+                        1        => GuardInterface::CONDITION_AND,
                     ],
                     'mycontroller3' => [
-                        'delete' => ['permission3']
+                        'delete' => ['permission3'],
+                        1        => GuardInterface::CONDITION_AND,
+                    ],
+                ]
+            ],
+            // With one action and condition or
+            [
+                'rules'    => [
+                    [
+                        'controller'  => 'MyController',
+                        'actions'     => 'DELETE',
+                        'permissions' => 'permission1',
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ],
+                    [
+                        'controller'  => 'MyController2',
+                        'actions'     => ['delete'],
+                        'permissions' => 'permission2',
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ],
+                    new \ArrayIterator([
+                        'controller'  => 'MyController3',
+                        'actions'     => new \ArrayIterator(['DELETE']),
+                        'permissions' => new \ArrayIterator(['permission3']),
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ])
+                ],
+                'expected' => [
+                    'mycontroller'  => [
+                        'delete' => ['permission1'],
+                        1        => GuardInterface::CONDITION_OR,
+                    ],
+                    'mycontroller2' => [
+                        'delete' => ['permission2'],
+                        1        => GuardInterface::CONDITION_OR,
+                    ],
+                    'mycontroller3' => [
+                        'delete' => ['permission3'],
+                        1        => GuardInterface::CONDITION_OR,
                     ],
                 ]
             ],
@@ -126,11 +191,42 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
                 'expected' => [
                     'mycontroller'  => [
                         'edit'   => ['permission1'],
-                        'delete' => ['permission1']
+                        'delete' => ['permission1'],
+                        1        => GuardInterface::CONDITION_AND,
                     ],
                     'mycontroller2' => [
                         'edit'   => ['permission2'],
-                        'delete' => ['permission2']
+                        'delete' => ['permission2'],
+                        1        => GuardInterface::CONDITION_AND,
+                    ]
+                ]
+            ],
+            // With multiple actions condition or
+            [
+                'rules'    => [
+                    [
+                        'controller'  => 'MyController',
+                        'actions'     => ['EDIT', 'delete'],
+                        'permissions' => 'permission1',
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ],
+                    new \ArrayIterator([
+                        'controller'  => 'MyController2',
+                        'actions'     => new \ArrayIterator(['edit', 'DELETE']),
+                        'permissions' => new \ArrayIterator(['permission2']),
+                        'condition'   => GuardInterface::CONDITION_OR,
+                    ])
+                ],
+                'expected' => [
+                    'mycontroller'  => [
+                        'edit'   => ['permission1'],
+                        'delete' => ['permission1'],
+                        1        => GuardInterface::CONDITION_OR,
+                    ],
+                    'mycontroller2' => [
+                        'edit'   => ['permission2'],
+                        'delete' => ['permission2'],
+                        1        => GuardInterface::CONDITION_OR,
                     ]
                 ]
             ],
@@ -141,17 +237,43 @@ class ControllerPermissionsGuardTest extends \PHPUnit_Framework_TestCase
                     [
                         'controller'  => 'MyController',
                         'actions'     => ['edit'],
-                        'permissions' => 'permission1'
+                        'permissions' => 'permission1',
                     ],
                     [
                         'controller'  => 'MyController',
-                        'permissions' => 'permission2'
+                        'permissions' => 'permission2',
                     ]
                 ],
                 'expected' => [
                     'mycontroller' => [
                         'edit' => ['permission1'],
-                        0      => ['permission2']
+                        0      => ['permission2'],
+                        1      => GuardInterface::CONDITION_AND,
+                    ]
+                ]
+            ],
+            // Test that that if a rule is set globally to the controller, it does not override any
+            // action specific rule that may have been specified before
+            // OR condition
+            [
+                'rules'    => [
+                    [
+                        'controller'  => 'MyController',
+                        'actions'     => ['edit'],
+                        'permissions' => 'permission1',
+                        'condition'   => GuardInterface::CONDITION_OR
+                    ],
+                    [
+                        'controller'  => 'MyController',
+                        'permissions' => 'permission2',
+                        'condition'   => GuardInterface::CONDITION_OR
+                    ]
+                ],
+                'expected' => [
+                    'mycontroller' => [
+                        'edit' => ['permission1'],
+                        0      => ['permission2'],
+                        1      => GuardInterface::CONDITION_OR,
                     ]
                 ]
             ]

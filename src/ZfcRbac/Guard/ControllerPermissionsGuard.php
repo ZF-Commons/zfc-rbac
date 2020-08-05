@@ -68,8 +68,9 @@ class ControllerPermissionsGuard extends AbstractGuard
      *
      * [
      *     'controller' => 'ControllerName',
-     *     'actions'    => []/string
-     *     'roles'      => []/string
+     *     'actions'    => []/string,
+     *     'roles'      => []/string,
+     *     'condition'  => GuardInterface::CONDITION_AND/GuardInterface::CONDITION_OR
      * ]
      *
      * @param  array $rules
@@ -83,6 +84,9 @@ class ControllerPermissionsGuard extends AbstractGuard
             $controller  = strtolower($rule['controller']);
             $actions     = isset($rule['actions']) ? (array)$rule['actions'] : [];
             $permissions = (array)$rule['permissions'];
+
+            // Set condition AND is default
+            $this->rules[$controller][1] = isset($rule['condition'])? $rule['condition'] :GuardInterface::CONDITION_AND;
 
             if (empty($actions)) {
                 $this->rules[$controller][0] = $permissions;
@@ -130,11 +134,38 @@ class ControllerPermissionsGuard extends AbstractGuard
             return true;
         }
 
-        foreach ($allowedPermissions as $permission) {
-            if (!$this->authorizationService->isGranted($permission)) {
-                return false;
+        /**
+         * GuardInterface::CONDITION_AND|GuardInterface::CONDITION_OR
+         * Default condition is 'AND' and it is set in 'setRules' method
+         *
+         * @var string Guard permissions condition
+         */
+        $condition = $this->rules[$controller][1];
+
+        if (GuardInterface::CONDITION_AND === $condition) {
+            foreach ($allowedPermissions as $permission) {
+                if (!$this->authorizationService->isGranted($permission)) {
+                    return false;
+                }
             }
+
+            return true;
         }
+
+        if (GuardInterface::CONDITION_OR === $condition) {
+            foreach ($allowedPermissions as $permission) {
+                if ($this->authorizationService->isGranted($permission)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            'Condition must be either "AND" or "OR", %s given',
+            is_object($condition) ? get_class($condition) : gettype($condition)
+        ));
 
         return true;
     }
