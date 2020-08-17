@@ -22,6 +22,7 @@ use Rbac\Rbac;
 use Rbac\Permission\PermissionInterface;
 use ZfcRbac\Assertion\AssertionPluginManager;
 use ZfcRbac\Assertion\AssertionInterface;
+use ZfcRbac\Assertion\AssertionSet;
 use ZfcRbac\Exception;
 use ZfcRbac\Identity\IdentityInterface;
 
@@ -72,7 +73,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * Set an assertion
      *
      * @param string|PermissionInterface         $permission
-     * @param string|callable|AssertionInterface $assertion
+     * @param string|callable|array|AssertionInterface $assertion
      * @return void
      */
     public function setAssertion($permission, $assertion)
@@ -139,8 +140,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * @param  string|callable|AssertionInterface $assertion
-     * @param  mixed                              $context
+     * @param  string|callable|array|AssertionInterface $assertion
+     * @param  mixed                                    $context
      * @return bool
      * @throws Exception\InvalidArgumentException If an invalid assertion is passed
      */
@@ -150,9 +151,26 @@ class AuthorizationService implements AuthorizationServiceInterface
             return $assertion($this, $context);
         } elseif ($assertion instanceof AssertionInterface) {
             return $assertion->assert($this, $context);
-        } elseif (is_string($assertion)) {
+        } elseif (is_string($assertion)) { // retrieve an actual instance from assertion plugin manager
             $assertion = $this->assertionPluginManager->get($assertion);
-
+            return $assertion->assert($this, $context);
+        } elseif (is_array($assertion)) { // else if multiple assertion definition, create assertion set.
+            // move assertion definition under a key 'assertions'.
+            if (!isset($assertion['assertions'])) {
+                $assertion['assertions'] = (array)$assertion;
+            }
+            // convert to an array
+            if (!is_array($assertion['assertions'])) {
+                $assertion['assertions'] = (array)$assertion['assertions'];
+            }
+            // retrieve an actual instance from assertion plugin manager if necessary
+            foreach ($assertion['assertions'] as $key => $value) {
+                if (is_string($value)) {
+                    $assertion['assertions'][$key] = $this->assertionPluginManager->get($value);
+                }
+            }
+            // create assertion set
+            $assertion = new AssertionSet($assertion);
             return $assertion->assert($this, $context);
         }
 

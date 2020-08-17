@@ -21,11 +21,14 @@ namespace ZfcRbacTest\Service;
 use Rbac\Rbac;
 use Rbac\Traversal\Strategy\RecursiveRoleIteratorStrategy;
 use Zend\ServiceManager\ServiceManager;
+use ZfcRbac\Assertion\AssertionSet;
 use ZfcRbac\Role\InMemoryRoleProvider;
 use ZfcRbac\Service\AuthorizationService;
 use ZfcRbac\Service\RoleService;
-use ZfcRbacTest\Asset\SimpleAssertion;
 use ZfcRbac\Assertion\AssertionPluginManager;
+use ZfcRbacTest\Asset\SimpleAssertion;
+use ZfcRbacTest\Asset\SimpleFalseAssertion;
+use ZfcRbacTest\Asset\SimpleTrueAssertion;
 
 /**
  * @covers \ZfcRbac\Service\AuthorizationService
@@ -78,17 +81,166 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
 
-            // Simple is accepted from assertion map
+            // Simple is accepted with empty assertions
             [
                 'admin',
                 'delete',
                 true,
                 true,
                 [
-                    'delete' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                    'delete' => null
                 ]
             ],
-
+            // Simple is accepted from assertion map using assertion set
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => 'ZfcRbacTest\Asset\SimpleTrueAssertionSet'
+                ]
+            ],
+            // Simple is accepted from assertion map using assertion
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => new SimpleTrueAssertion()
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                        'ZfcRbacTest\Asset\SimpleTrueAssertion'
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions
+            [
+                'admin',
+                'delete',
+                true,
+                false,
+                [
+                    'delete' => [
+                        'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                        'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions in named sub array
+            [
+                'admin',
+                'delete',
+                true,
+                false,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                        ]
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions and condition OR
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'condition' => AssertionSet::CONDITION_OR,
+                        'assertions' => [
+                            'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                            'ZfcRbacTest\Asset\SimpleFalseAssertion'
+                        ]
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        new SimpleTrueAssertion(),
+                        new SimpleTrueAssertion()
+                    ]
+                ]
+            ],
+            // Simple is refused from assertion map using multiple assertions and default condition
+            [
+                'admin',
+                'delete',
+                true,
+                false,
+                [
+                    'delete' => [
+                        new SimpleTrueAssertion(),
+                        new SimpleFalseAssertion()
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions under a key
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'assertions' => [
+                            new SimpleTrueAssertion(),
+                            new SimpleTrueAssertion()
+                        ]
+                    ]
+                ]
+            ],
+            // Simple is accepted from assertion map using multiple assertions and condition OR
+            [
+                'admin',
+                'delete',
+                true,
+                true,
+                [
+                    'delete' => [
+                        'condition' => AssertionSet::CONDITION_OR,
+                        'assertions' => [
+                            new SimpleTrueAssertion(),
+                            new SimpleFalseAssertion()
+                        ]
+                    ]
+                ]
+            ],
+            // Simple is refused from assertion map using multiple assertions and condition OR
+            [
+                'admin',
+                'delete',
+                true,
+                false,
+                [
+                    'delete' => [
+                        'condition' => AssertionSet::CONDITION_OR,
+                        'assertions' => [
+                            new SimpleFalseAssertion(),
+                            new SimpleFalseAssertion()
+                        ]
+                    ]
+                ]
+            ],
             // Simple is refused from no role
             [
                 [],
@@ -120,7 +272,10 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
 
         $assertionPluginConfig = [
             'invokables' => [
-                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion'
+                'ZfcRbacTest\Asset\SimpleAssertion' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'ZfcRbacTest\Asset\SimpleTrueAssertion' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+                'ZfcRbacTest\Asset\SimpleFalseAssertion' => 'ZfcRbacTest\Asset\SimpleFalseAssertion',
+                'ZfcRbacTest\Asset\SimpleTrueAssertionSet' => 'ZfcRbacTest\Asset\SimpleTrueAssertionSet'
             ]
         ];
 
@@ -181,6 +336,25 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->isGranted('foo');
     }
 
+    public function testThrowExceptionForInvalidAssertionCondition()
+    {
+        $role = $this->getMock('Rbac\Role\RoleInterface');
+        $rbac = $this->getMock('Rbac\Rbac', [], [], '', false);
+
+        $rbac->expects($this->any())->method('isGranted')->will($this->returnValue(true));
+
+        $roleService = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
+        $roleService->expects($this->any())->method('getIdentityRoles')->will($this->returnValue([$role]));
+
+        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
+
+        $this->setExpectedException('ZfcRbac\Exception\InvalidArgumentException');
+
+        $authorizationService->setAssertion('foo', ['assertions' => 'bar', 'condition' => new \stdClass()]);
+        $authorizationService->isGranted('foo');
+    }
+
     public function testDynamicAssertions()
     {
         $role = $this->getMock('Rbac\Role\RoleInterface');
@@ -219,11 +393,17 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($assertion->getCalled());
     }
 
-    public function testAssertionMap()
+    public function testAssertionMapWithSingleAssertions()
     {
         $rbac                   = $this->getMock('Rbac\Rbac', [], [], '', false);
         $roleService            = $this->getMock('ZfcRbac\Service\RoleService', [], [], '', false);
-        $assertionPluginManager = $this->getMock('ZfcRbac\Assertion\AssertionPluginManager', [], [], '', false);
+        $assertionPluginConfig = [
+            'invokables' => [
+                'foo' => 'ZfcRbacTest\Asset\SimpleAssertion',
+                'bar' => 'ZfcRbacTest\Asset\SimpleTrueAssertion',
+            ]
+        ];
+        $assertionPluginManager = new AssertionPluginManager(new ServiceManager(), $assertionPluginConfig);
         $authorizationService   = new AuthorizationService($rbac, $roleService, $assertionPluginManager);
 
         $authorizationService->setAssertions(['foo' => 'bar', 'bar' => 'foo']);
@@ -234,10 +414,12 @@ class AuthorizationServiceTest extends \PHPUnit_Framework_TestCase
         $authorizationService->setAssertion('bar', null);
 
         $this->assertFalse($authorizationService->hasAssertion('bar'));
+
+        $authorizationService->isGranted('foo');
     }
 
     /**
-     * @covers ZfcRbac\Service\AuthorizationService::getIdentity
+     * @covers \ZfcRbac\Service\AuthorizationService::getIdentity
      */
     public function testGetIdentity()
     {
